@@ -5,34 +5,28 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>DB67B876-199A-43DA-BA2A-4420174A5DB3</string>
+	<string>885837E5-2EF5-4A2B-AEB6-59F45B7D082D</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Coiffeur</string>
+	<string>Fragaria</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>2c98d930-c015-0410-94db-d7ee84b40496++68</key>
 		<string>https://svn.home.leuski.net/Coiffeur/trunk</string>
-		<key>2c98d930-c015-0410-94db-d7ee84b40496++6894</key>
-		<string>https://svn.home.leuski.net/SCEditor/trunk</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Coiffeur.xcodeproj</string>
+	<string>3rd_party/Fragaria-master/Fragaria.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2c98d930-c015-0410-94db-d7ee84b40496++68</key>
-		<string>../..</string>
-		<key>2c98d930-c015-0410-94db-d7ee84b40496++6894</key>
-		<string>../../../SCEditor</string>
+		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectRepositoryRootDictionary</key>
 	<dict>
 		<key>2c98d930-c015-0410-94db-d7ee84b40496++68</key>
 		<string>https://svn.home.leuski.net</string>
-		<key>2c98d930-c015-0410-94db-d7ee84b40496++6894</key>
-		<string>https://svn.home.leuski.net</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://svn.home.leuski.net/Coiffeur/trunk/Coiffeur.xcodeproj</string>
+	<string>https://svn.home.leuski.net/Coiffeur/trunk/3rd_party/Fragaria-master/Fragaria.xcodeproj</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
@@ -46,14 +40,6 @@
 			<string>2c98d930-c015-0410-94db-d7ee84b40496++68</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Coiffeur</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.subversion</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2c98d930-c015-0410-94db-d7ee84b40496++6894</string>
-			<key>IDESourceControlWCCName</key>
-			<string>SCEditor</string>
 		</dict>
 	</array>
 </dict>

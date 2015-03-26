@@ -37,3 +37,13 @@
 }
 
 @end
+
+@implementation ALRoot (model)
+
+- (NSSet*)filteredChildren
+{
+	return self.children;
+}
+
+
+@end

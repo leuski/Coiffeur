@@ -8,10 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ALRoot;
-
+@class ALCoiffeurModelController;
 @interface Document : NSPersistentDocument
-@property (nonatomic, strong) ALRoot* root;
+@property (nonatomic, strong) ALCoiffeurModelController* model;
 
 - (IBAction)uncrustify:(id)sender;
 

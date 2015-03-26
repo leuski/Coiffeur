@@ -176,7 +176,7 @@ typedef enum  {
 			
 		} else {
 			ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																			matchingPredicate:[NSPredicate predicateWithFormat:@"key = %@", head]
+																					withPredicate:[NSPredicate predicateWithFormat:@"key = %@", head]
 																									error:nil];
 			if (option) {
 				option.value = tokens[1];

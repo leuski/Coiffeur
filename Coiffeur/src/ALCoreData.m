@@ -7,7 +7,6 @@
 //
 
 #import "ALCoreData.h"
-#import "NSData+ALBase64.h"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
@@ -15,6 +14,7 @@ static NSString* const kALTrue = @"true";
 static NSString* const kALFalse = @"false";
 #pragma clang diagnostic pop
 
+#define ALLogError NSLog
 
 @implementation NSManagedObjectContext (ALCoreData)
 

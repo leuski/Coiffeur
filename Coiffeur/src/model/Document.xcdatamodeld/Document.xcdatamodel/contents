@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1514" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Node" representedClassName="ALNode" isAbstract="YES" syncable="YES">
+        <attribute name="documentation" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="leaf" transient="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="name" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Node" inverseName="parent" inverseEntity="Node" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Node" inverseName="children" inverseEntity="Node" syncable="YES"/>
+    </entity>
+    <entity name="Option" representedClassName="ALOption" parentEntity="Node" syncable="YES">
+        <attribute name="key" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="value" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Root" representedClassName="ALRoot" parentEntity="Node" syncable="YES"/>
+    <entity name="Section" representedClassName="ALSection" parentEntity="Node" syncable="YES"/>
+    <elements>
+        <element name="Option" positionX="-63" positionY="-18" width="128" height="73"/>
+        <element name="Section" positionX="-54" positionY="18" width="128" height="43"/>
+        <element name="Node" positionX="-18" positionY="81" width="128" height="148"/>
+        <element name="Root" positionX="18" positionY="144" width="128" height="43"/>
+    </elements>
+</model>

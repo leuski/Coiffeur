@@ -13,5 +13,6 @@
 @property (nonatomic, strong, readonly) NSPredicate* predicate;
 @property (nonatomic, strong, readonly) NSArray* tokens;
 @property (nonatomic, strong, readonly) NSSet* filteredChildren;
+@property (nonatomic, assign, readonly) NSUInteger depth;
 @end
 

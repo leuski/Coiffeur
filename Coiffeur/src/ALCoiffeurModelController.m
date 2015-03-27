@@ -50,6 +50,30 @@ typedef enum  {
 	ALOptionDescription
 } _ALState;
 
+- (void)parseSection:(ALSection*)ioSection line:(NSString*)line
+{
+	line = [line trimComment];
+	if ([line length]) {
+		ioSection.title = [ioSection.title stringByAppendingString:line separatedBy:@" "];
+	}
+}
+
+- (void)parseOption:(ALOption*)ioOption firstLine:(NSString*)line
+{
+	NSUInteger c = 0;
+	for(NSString* v in [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]) {
+		++c;
+		if (c == 1) {
+			ioOption.key = ioOption.name = v;
+		} else {
+			if ([v isEqualToString:@"{"] || [v isEqualToString:@"}"]) {
+				continue;
+			}
+			ioOption.type = [ioOption.type stringByAppendingString:[v lowercaseString]];
+		}
+	}
+}
+
 - (BOOL)readOptionsFromString:(NSString*)text
 {
 	NSArray* lines = [text componentsSeparatedByString:@"\n"];
@@ -67,66 +91,98 @@ typedef enum  {
 	for(__strong NSString* line in lines) {
 		++count;
 		if (count == 1) continue;
-		line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		line = [line trim];
 		
 		if (![line length]) {
 			state = ALNone;
 			continue;
 		}
 		
-		if ([line hasPrefix:@"#"]) {
-			
-			if (state != ALSectionHeader) {
-				++sectionCount;
-				state = ALSectionHeader;
-				section = [ALSection objectInContext:self.managedObjectContext];
-				section.title = @"";
-				section.parent = self.root;
-			}
-			
-			line = [[line substringFromIndex:1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-			if ([line length]) {
-				if ([section.title length]) {
-					section.title = [section.title stringByAppendingString:@" "];
+		switch (state) {
+			case ALNone:
+				if ([line hasPrefix:@"#"]) {
+					++sectionCount;
+					state = ALSectionHeader;
+					section = [ALSection objectInContext:self.managedObjectContext];
+					section.title = @"";
+					section.parent = self.root;
+					[self parseSection:section line:line];
+				} else {
+					++optionCount;
+					state = ALOptionDescription;
+					option = [ALOption objectInContext:self.managedObjectContext];
+					option.leaf = YES;
+					option.parent = section;
+					option.title = option.documentation = option.type = @"";
+					[self parseOption:option firstLine:line];
 				}
-				section.title = [section.title stringByAppendingString:line];
-			}
-			
-		} else {
-			
-			if (state != ALOptionDescription) {
-				++optionCount;
-				state = ALOptionDescription;
-				option = [ALOption objectInContext:self.managedObjectContext];
-				option.leaf = YES;
-				option.parent = section;
-				option.title = option.documentation = option.type = @"";
-				
-				NSUInteger c = 0;
-				for(NSString* v in [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]) {
-					++c;
-					if (c == 1) {
-						option.key = option.name = v;
-					} else {
-						if ([v isEqualToString:@"{"] || [v isEqualToString:@"}"]) {
-							continue;
-						}
-						option.type = [option.type stringByAppendingString:[v lowercaseString]];
-					}
-				}
-			} else {
+				break;
+
+			case ALSectionHeader:
+				if ([line hasPrefix:@"#"])
+					[self parseSection:section line:line];
+				break;
+
+			case ALOptionDescription:
+				if ([line hasPrefix:@"#"])
+					line = [line trimComment];
 				if ([option.title length] == 0)
 					option.title = line;
-				else
-					option.documentation = [option.documentation stringByAppendingString:@"\n"];
-				option.documentation = [option.documentation stringByAppendingString:line];
-			}
+				option.documentation = [option.documentation stringByAppendingString:line separatedBy:@"\n"];
+				break;
 		}
 	}
+	
+	for(int i = 8; i >= 5; --i)
+		[self cluster:i];
 	
 	[self.managedObjectContext enableUndoRegistration];
 	
 	return YES;
+}
+
+- (void)cluster:(NSUInteger)tokenLimit
+{
+	for(ALSection* section in self.root.children) {
+		NSMutableDictionary* index = [NSMutableDictionary new];
+		for(ALOption* option in section.children) {
+			if (![option isKindOfClass:[ALOption class]]) continue;
+			NSString* title = option.title;
+			NSArray* tokens = [[title lowercaseString] componentsSeparatedByString:@" "];
+			tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'a'"]];
+			tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'the'"]];
+
+			if (tokens.count < (tokenLimit+1)) continue;
+			tokens = [tokens subarrayWithRange:NSMakeRange(0, tokenLimit)];
+			
+			
+			NSString* key = [tokens componentsJoinedByString:@" "];
+			if (!index[key]) {
+				index[key] = [NSMutableArray new];
+			}
+			[index[key] addObject:option];
+		}
+
+		//		NSUInteger limit = section.children.count;
+		for(NSString* key in index) {
+			NSArray* list = index[key];
+			if (list.count < 5) continue;
+//			if (list.count < 0.15 * limit) continue;
+//			if (list.count < 0.15 * limit) continue;
+
+			ALSubsection* subsection = [ALSubsection objectInContext:self.managedObjectContext];
+			subsection.title = [key stringByAppendingString:@"…"];
+			subsection.parent = section;
+			
+			for(ALOption* option in list) {
+				NSString* title = option.title;
+				NSArray* tokens = [title componentsSeparatedByString:@" "];
+				tokens = [tokens subarrayWithRange:NSMakeRange(tokenLimit, tokens.count-tokenLimit)];
+				option.title = [tokens componentsJoinedByString:@" "];
+				option.parent = subsection;
+			}
+		}
+	}
 }
 
 - (BOOL)readValuesFromString:(NSString*)text

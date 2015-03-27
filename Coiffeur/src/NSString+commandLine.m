@@ -56,4 +56,32 @@
 	return array;
 }
 
+- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delim
+{
+	NSString* result = self;
+	if ([result length]) {
+		result = [result stringByAppendingString:delim];
+	}
+	return [result stringByAppendingString:aString];
+}
+
+static NSCharacterSet* AL_WS_SET = nil;
+
+- (NSString*)trim
+{
+	if (!AL_WS_SET) AL_WS_SET = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	return [self stringByTrimmingCharactersInSet:AL_WS_SET];
+}
+
+- (NSString*)trimComment
+{
+	NSString* result = self;
+	result = [result trim];
+	while ([result hasPrefix:@"#"]) {
+		result = [result substringFromIndex:1];
+		result = [result trim];
+	}
+	return result;
+}
+
 @end

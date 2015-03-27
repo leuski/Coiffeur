@@ -14,11 +14,13 @@
         <attribute name="value" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Root" representedClassName="ALRoot" parentEntity="Node" syncable="YES"/>
-    <entity name="Section" representedClassName="ALSection" parentEntity="Node" syncable="YES"/>
+    <entity name="Section" representedClassName="ALSection" parentEntity="Subsection" syncable="YES"/>
+    <entity name="Subsection" representedClassName="ALSubsection" parentEntity="Node" syncable="YES"/>
     <elements>
-        <element name="Option" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="Section" positionX="-54" positionY="18" width="128" height="43"/>
         <element name="Node" positionX="-18" positionY="81" width="128" height="148"/>
-        <element name="Root" positionX="18" positionY="144" width="128" height="43"/>
+        <element name="Option" positionX="-63" positionY="-18" width="128" height="73"/>
+        <element name="Root" positionX="18" positionY="144" width="128" height="45"/>
+        <element name="Section" positionX="-54" positionY="18" width="128" height="43"/>
+        <element name="Subsection" positionX="36" positionY="153" width="128" height="45"/>
     </elements>
 </model>

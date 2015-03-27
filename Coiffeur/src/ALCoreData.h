@@ -34,11 +34,17 @@
 @interface NSManagedObject (ALCoreData)
 
 + (NSString*)entityNameInContext:(NSManagedObjectContext* )managedObjectContext;
+
 + (instancetype)objectInContext:(NSManagedObjectContext* )managedObjectContext;
+
 + (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext;
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext error:(NSError**)outError;
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
+
 + (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext;
 + (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext error:(NSError**)outError;
 + (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
+
 + (void)deleteAllObjectsFromContext:(NSManagedObjectContext* )managedObjectContext;
 
 @end

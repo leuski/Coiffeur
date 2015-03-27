@@ -10,4 +10,7 @@
 
 @interface NSString (commandLine)
 - (NSArray*)commandLineComponents;
+- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delim;
+- (NSString*)trim;
+- (NSString*)trimComment;
 @end

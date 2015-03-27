@@ -36,6 +36,10 @@
 	return self.parent.predicate;
 }
 
+- (NSUInteger)depth
+{
+	return self.parent ? 1+self.parent.depth : 0;
+}
 @end
 
 @implementation ALRoot (model)

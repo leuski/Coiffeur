@@ -222,8 +222,18 @@ static NSString* const kALFalse = @"false";
 
 + (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext
 {
+	return [self allObjectsInContext:managedObjectContext withPredicate:nil error:nil];
+}
+
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext error:(NSError**)outError
+{
+	return [self allObjectsInContext:managedObjectContext withPredicate:nil error:outError];
+}
+
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext withPredicate:(NSPredicate*)predicate error:(NSError**)outError
+{
 	NSString* entityName = [self entityNameInContext:managedObjectContext];
-	return entityName ? [managedObjectContext fetch:entityName withPredicate:nil error:nil] : [NSArray array];
+	return entityName ? [managedObjectContext fetch:entityName withPredicate:predicate error:outError] : [NSArray array];
 }
 
 + (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext

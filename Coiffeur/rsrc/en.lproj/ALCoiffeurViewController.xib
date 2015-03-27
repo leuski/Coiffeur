@@ -174,7 +174,7 @@
                                                     </textField>
                                                     <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qGd-cm-8AR">
                                                         <rect key="frame" x="103" y="1" width="19" height="27"/>
-                                                        <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="kdr-AN-3VS"/>
+                                                        <stepperCell key="cell" continuous="YES" alignment="left" minValue="-200" maxValue="200" id="kdr-AN-3VS"/>
                                                         <connections>
                                                             <binding destination="e65-PG-vLV" name="value" keyPath="objectValue.value" id="p2g-Gd-fSI">
                                                                 <dictionary key="options">

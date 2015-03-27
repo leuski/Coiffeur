@@ -9,13 +9,43 @@
 #import "AppDelegate.h"
 
 @interface AppDelegate ()
+@property (weak) IBOutlet NSMenu *languagesMenu;
 
 @end
 
+static NSArray * ALLanguages = nil;
+
 @implementation AppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	// Insert code here to initialize your application
+// silence the warning
+- (void)changeLanguage:(id)sender {}
+
+- (instancetype)init
+{
+	if (self = [super init]) {
+		NSDictionary* ud = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"UserDefaults" withExtension:@"plist"]];
+		if (ud) {
+			[[NSUserDefaults standardUserDefaults] registerDefaults:ud];
+		}
+	}
+	return self;
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	
+	if (!ALLanguages) {
+		ALLanguages = [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"languages" withExtension:@"plist"]];
+		
+		for(NSDictionary* d in ALLanguages) {
+			NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:d[@"name"]
+																										action:@selector(changeLanguage:)
+																						 keyEquivalent:@""];
+			item.representedObject = d;
+			[self.languagesMenu addItem:item];
+		}
+	}
+	
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {

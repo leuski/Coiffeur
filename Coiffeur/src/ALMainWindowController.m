@@ -8,9 +8,6 @@
 
 #import "ALMainWindowController.h"
 #import <MGSFragaria/MGSFragaria.h>
-#import "Document.h"
-#import "ALCoreData.h"
-#import "ALOption.h"
 #import "ALCoiffeurViewController.h"
 
 @interface ALMainWindowController () <NSWindowDelegate>
@@ -46,31 +43,7 @@
 	// set initial text
 	[self.fragaria setString:@"// We don't need the future."];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-																					 selector:@selector(modelDidChange:)
-																							 name:NSManagedObjectContextObjectsDidChangeNotification
-																						 object:self.managedObjectContext];
-
-	
 }
-
-- (void)windowWillClose:(NSNotification *)notification
-{
-	[[NSNotificationCenter defaultCenter] removeObserver:self
-																									name:NSManagedObjectContextObjectsDidChangeNotification
-																								object:self.managedObjectContext];
-}
-
-- (void)modelDidChange:(NSNotification*)note
-{
-	[(Document*)self.document uncrustify:self];
-}
-
-- (NSManagedObjectContext*)managedObjectContext
-{
-	return [self.document managedObjectContext];
-}
-
 
 - (NSString*)exampleText
 {

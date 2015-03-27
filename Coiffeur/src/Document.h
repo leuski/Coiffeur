@@ -13,5 +13,6 @@
 @property (nonatomic, strong) ALCoiffeurModelController* model;
 
 - (IBAction)uncrustify:(id)sender;
+- (BOOL)readCodeFromURL:(NSURL*)url error:(NSError *__autoreleasing *)error;
 
 @end

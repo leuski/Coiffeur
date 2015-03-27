@@ -208,6 +208,8 @@ typedef enum  {
 			for(ALOption* option in list) {
 				NSString* title = option.title;
 				NSArray* tokens = [title componentsSeparatedByString:@" "];
+				tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'a'"]];
+				tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'the'"]];
 				tokens = [tokens subarrayWithRange:NSMakeRange(tokenLimit, tokens.count-tokenLimit)];
 				option.title = [tokens componentsJoinedByString:@" "];
 				option.parent = subsection;

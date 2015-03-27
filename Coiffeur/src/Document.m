@@ -8,20 +8,16 @@
 
 #import "Document.h"
 
+#import "AppDelegate.h"
 #import "ALCoreData.h"
 #import "ALMainWindowController.h"
-
-#import "ALRoot.h"
-#import "ALOption.h"
-#import "ALSection.h"
-#import "ALNode+model.h"
-
 #import "ALCoiffeurModelController.h"
 
 
 @interface Document () <ALCoiffeurModelControllerDelegate>
 @property (nonatomic, weak) ALMainWindowController* mainWindowController;
 @property (nonatomic, strong) NSString* language;
+@property (nonatomic, strong) NSURL* codeURL;
 @end
 
 static NSString * const ALUncrustifyFileType = @"Uncrustify";
@@ -38,25 +34,17 @@ static NSString * const ALUncrustifyFileType = @"Uncrustify";
 																																				moc:self.managedObjectContext
 																																			error:nil];
 			self.model.delegate = self;
+			
     }
     return self;
 }
-
-- (void)windowControllerDidLoadNib:(NSWindowController *)aController
-{
-	[super windowControllerDidLoadNib:aController];
-	// Add any code here that needs to be executed once the windowController has loaded the document's window.
-}
-
-//+ (BOOL)autosavesInPlace {
-//	return YES;
-//}
 
 - (void)makeWindowControllers
 {
 	ALMainWindowController* wc = [[ALMainWindowController alloc] initWithWindowNibName:@"ALMainWindowController"];
 	[self addWindowController:wc];
 	self.mainWindowController = wc;
+
 }
 
 - (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError *__autoreleasing *)error
@@ -85,6 +73,100 @@ static NSString * const ALUncrustifyFileType = @"Uncrustify";
 		return [super writeToURL:absoluteURL ofType:typeName forSaveOperation:saveOperation originalContentsURL:absoluteOriginalContentsURL error:error];
 
 	return [self.model writeValuesToURL:absoluteURL error:error];
+}
+
+- (BOOL)prepareSavePanel:(NSSavePanel *)savePanel
+{
+	savePanel.showsHiddenFiles = YES;
+	return YES;
+}
+
+- (NSString*)languageForURL:(NSURL*)url
+{
+	NSError* error;
+	NSString* uti = [[NSWorkspace sharedWorkspace] typeOfFile:[url path] error:&error];
+	if (!uti) return self.language;
+	NSString* l = [AppDelegate languageForUTI:uti];
+	return l ? l : self.language;
+}
+
+- (void)setCodeURL:(NSURL *)codeURL
+{
+	self->_codeURL = codeURL;
+	self.language = [self languageForURL:self.codeURL];
+
+	if (codeURL) {
+		[[NSUserDefaults standardUserDefaults] setObject:[codeURL absoluteString] forKey:@"ALCodeURL"];
+	}
+}
+
+- (BOOL)readCodeFromURL:(NSURL*)url error:(NSError *__autoreleasing *)error
+{
+	NSString* code = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:error];
+	if (!code) {
+		return NO;
+	}
+	
+	self.mainWindowController.exampleText = code;
+	self.codeURL = url;
+	return YES;
+}
+
+- (BOOL)writeCodeToURL:(NSURL*)url error:(NSError *__autoreleasing *)error
+{
+	BOOL result = [self.mainWindowController.exampleText writeToURL:url
+																											 atomically:YES
+																												 encoding:NSUTF8StringEncoding
+																														error:error];
+	if (result) {
+		self.codeURL = url;
+	}
+
+	return result;
+}
+
+- (IBAction)openCode:(id)sender
+{
+	NSOpenPanel* op = [NSOpenPanel openPanel];
+	
+	[op beginSheetModalForWindow:self.mainWindowController.window completionHandler:^(NSInteger result) {
+		if (result != NSFileHandlingPanelOKButton) return;
+
+		[op orderOut:nil];
+		
+		NSError* error;
+		if (![self readCodeFromURL:[op URL] error:&error]) {
+			[self presentError:error];
+		}
+	}];
+}
+
+- (IBAction)saveCode:(id)sender
+{
+	if (self.codeURL) {
+		NSError* error;
+		if (![self writeCodeToURL:self.codeURL error:&error]) {
+			[self presentError:error];
+		}
+	} else {
+		[self saveCodeAs:sender];
+	}
+}
+
+- (IBAction)saveCodeAs:(id)sender
+{
+	NSSavePanel* sp = [NSSavePanel savePanel];
+	[sp beginSheetModalForWindow:self.mainWindowController.window completionHandler:^(NSInteger result) {
+		if (result != NSFileHandlingPanelOKButton) return;
+		
+		[sp orderOut:nil];
+		
+		NSError* error;
+		if (![self writeCodeToURL:[sp URL] error:&error]) {
+			[self presentError:error];
+		}
+
+	}];
 }
 
 - (IBAction)uncrustify:(id)sender

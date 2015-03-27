@@ -10,6 +10,7 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
++ (NSString*)languageForUTI:(NSString*)uti;
 
 @end
 

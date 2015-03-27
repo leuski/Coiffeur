@@ -9,6 +9,7 @@
 #import "ALMainWindowController.h"
 #import <MGSFragaria/MGSFragaria.h>
 #import "ALCoiffeurViewController.h"
+#import "Document.h"
 
 @interface ALMainWindowController () <NSWindowDelegate>
 @property (weak) IBOutlet NSView *textEditorContainer;
@@ -41,7 +42,12 @@
 	[self.fragaria embedInView:self.textEditorContainer];
 
 	// set initial text
-	[self.fragaria setString:@"// We don't need the future."];
+	[self.fragaria setString:@"// some code here. File > Open Code... (hold down alt)."];
+	
+	NSString* lastCodeURL = [[NSUserDefaults standardUserDefaults] stringForKey:@"ALCodeURL"];
+	if (lastCodeURL) {
+		[[self document] readCodeFromURL:[NSURL URLWithString:lastCodeURL] error:nil];
+	}
 	
 }
 

@@ -1,5 +1,5 @@
 //
-//  ALCoiffeurViewController.h
+//  ALCoiffeurView.h
 //  Coiffeur
 //
 //  Created by Anton Leuski on 3/26/15.
@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class ALCoiffeurModelController;
-@interface ALCoiffeurViewController : NSViewController
+@interface ALCoiffeurView : NSViewController
 @property (nonatomic, weak) IBOutlet NSOutlineView *optionsView;
 @property (nonatomic, strong) IBOutlet NSTreeController *optionsController;
 @property (nonatomic, strong) NSArray* optionsSortDescriptors;

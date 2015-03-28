@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ALCoiffeurViewController">
+        <customObject id="-2" userLabel="File's Owner" customClass="ALCoiffeurView">
             <connections>
                 <outlet property="jumpMenu" destination="F3P-oX-V8O" id="j4e-Gd-oIE"/>
                 <outlet property="optionsController" destination="h9y-4G-n2j" id="u4r-Av-CII"/>

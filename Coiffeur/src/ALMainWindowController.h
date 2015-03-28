@@ -9,5 +9,10 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALMainWindowController : NSWindowController <NSOutlineViewDelegate>
-@property (nonatomic, strong) NSString* exampleText;
+@property (nonatomic, strong) NSMutableArray* documentViews;
+
++ (ALMainWindowController*)sharedInstance;
+- (void)addDocument:(NSDocument*)document;
+- (void)setDocument:(NSDocument*)document atIndex:(NSUInteger)index;
+
 @end

@@ -1,12 +1,12 @@
 //
-//  ALCoiffeurViewController.m
+//  ALCoiffeurView.m
 //  Coiffeur
 //
 //  Created by Anton Leuski on 3/26/15.
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import "ALCoiffeurViewController.h"
+#import "ALCoiffeurView.h"
 #import "ALCoreData.h"
 #import "ALNode+model.h"
 #import "ALSubsection.h"
@@ -47,16 +47,16 @@
 @end
 
 
-@interface ALCoiffeurViewController () <NSOutlineViewDelegate>
+@interface ALCoiffeurView () <NSOutlineViewDelegate>
 @property (weak) IBOutlet NSPopUpButton *jumpMenu;
 
 @end
 
-@implementation ALCoiffeurViewController
+@implementation ALCoiffeurView
 
 - (instancetype)initWithModel:(ALCoiffeurModelController*)model bundle:(NSBundle*)bundle;
 {
-	if (self = [super initWithNibName:@"ALCoiffeurViewController" bundle:bundle]) {
+	if (self = [super initWithNibName:@"ALCoiffeurView" bundle:bundle]) {
 		self.model = model;
 		self.optionsSortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES comparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
 			return [obj1 compare:obj2 options:NSCaseInsensitiveSearch];
@@ -247,7 +247,6 @@
 @end
 
 @interface ALOutlineView : NSOutlineView
-
 @end
 
 // to enable NSStepper in th eoutline view cells

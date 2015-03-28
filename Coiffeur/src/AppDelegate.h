@@ -14,3 +14,5 @@
 
 @end
 
+extern NSString * const ALDocumentUncrustify;
+extern NSString * const ALDocumentSource;

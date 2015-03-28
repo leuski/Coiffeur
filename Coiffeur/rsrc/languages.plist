@@ -25,6 +25,8 @@
 	<dict>
 		<key>uti</key>
 		<array>
+			<string>com.microsoft.csharp-source</string>
+			<string>com.microsoft.c-sharp</string>
 		</array>
 		<key>uncrustify</key>
 		<string>CS</string>
@@ -34,7 +36,7 @@
 	<dict>
 		<key>uti</key>
 		<array>
-			<string>public.d-source</string>
+			<string>net.leuski.d-source</string>
 		</array>
 		<key>uncrustify</key>
 		<string>D</string>
@@ -86,6 +88,7 @@
 	<dict>
 		<key>uti</key>
 		<array>
+			<string>net.leuski.pawn-source</string>
 		</array>
 		<key>uncrustify</key>
 		<string>PAWN</string>
@@ -95,6 +98,7 @@
 	<dict>
 		<key>uti</key>
 		<array>
+			<string>net.leuski.vala-source</string>
 		</array>
 		<key>uncrustify</key>
 		<string>VALA</string>

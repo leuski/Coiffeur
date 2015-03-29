@@ -11,7 +11,7 @@
 
 @interface ALUncrustifyController : ALCoiffeurController
 
-- (instancetype)initWithUncrustifyURL:(NSURL*)url moc:(NSManagedObjectContext*)moc error:(NSError**)outError;
+- (instancetype)initWithExecutableURL:(NSURL*)url moc:(NSManagedObjectContext*)moc error:(NSError**)outError;
 
 @end
 

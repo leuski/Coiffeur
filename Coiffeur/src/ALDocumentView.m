@@ -53,9 +53,9 @@
 - (NSString*)displayType
 {
 	if (!self.document) return nil;
-	return [self.fileType isEqualToString:ALDocumentStyle]
-		? @"Configuration"
-		: @"Source";
+	return [self.allowedFileTypes containsObject:ALDocumentSource]
+		? @"Source"
+		: @"Style";
 }
 
 #pragma clang diagnostic pop
@@ -80,17 +80,21 @@
 	
 	[menu removeItemAtIndex:0];
 	
-	item = [[NSMenuItem alloc] initWithTitle:@"New" action:@selector(newDocument:) keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:@"Save As…" action:@selector(saveDocumentAs:) keyEquivalent:@""];
 	[menu insertItem:item atIndex:0];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"Open…" action:@selector(openDocumentInView:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:1];
-
 	item = [[NSMenuItem alloc] initWithTitle:@"Save" action:@selector(saveDocument:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:2];
-
-	item = [[NSMenuItem alloc] initWithTitle:@"Save As…" action:@selector(saveDocumentAs:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:3];
+	[menu insertItem:item atIndex:0];
+	
+	item = [[NSMenuItem alloc] initWithTitle:@"Open…" action:@selector(openDocumentInView:) keyEquivalent:@""];
+	[menu insertItem:item atIndex:0];
+	
+	int index = 0;
+	for(NSString* type in self.allowedFileTypes) {
+		item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"New %@", type] action:@selector(newDocument:) keyEquivalent:@""];
+		item.representedObject = type;
+		[menu insertItem:item atIndex:index++];
+	}
 }
 
 - (NSUInteger)indexInController
@@ -109,8 +113,11 @@
 	NSUInteger index = [self indexInController];
 	if (index == NSNotFound) return;
 	
+	NSString* type = [sender representedObject];
+	if (!type) type = self.allowedFileTypes[0];
+	
 	NSDocument* doc = [[NSDocumentController sharedDocumentController]
-					makeUntitledDocumentOfType:self.fileType error:nil];
+					makeUntitledDocumentOfType:type error:nil];
 	[[self windowController] setDocument:doc atIndex:index];
 }
 
@@ -121,15 +128,15 @@
 
 	NSOpenPanel* op = [NSOpenPanel openPanel];
 	
+	NSMutableOrderedSet* allowedExtensions = [NSMutableOrderedSet new];
+	
 	NSArray* fileTypes = [[NSBundle mainBundle] infoDictionary][@"CFBundleDocumentTypes"];
 	for(NSDictionary* ft in fileTypes) {
-		if ([ft[@"CFBundleTypeName"] isEqualToString:self.fileType]) {
-			if ([ft[@"CFBundleTypeExtensions"] count])
-				op.allowedFileTypes = ft[@"CFBundleTypeExtensions"];
-			break;
-		}
+		if (![self.allowedFileTypes containsObject:ft[@"CFBundleTypeName"]]) continue;
+		[allowedExtensions addObjectsFromArray:ft[@"CFBundleTypeExtensions"]];
 	}
 	
+	op.allowedFileTypes = [allowedExtensions array];
 	op.allowsOtherFileTypes = NO;
 	
 	[op beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {

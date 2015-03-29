@@ -19,7 +19,7 @@ static NSString * ALDefaultValues = nil;
 
 @implementation ALUncrustifyController
 
-- (instancetype)initWithUncrustifyURL:(NSURL*)url moc:(NSManagedObjectContext*)moc error:(NSError**)outError
+- (instancetype)initWithExecutableURL:(NSURL*)url moc:(NSManagedObjectContext*)moc error:(NSError**)outError
 {
 	self = [super initWithManagedObjectContext:moc executableURL:url];
 	if (self) {

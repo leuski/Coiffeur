@@ -9,6 +9,13 @@
 #import <Cocoa/Cocoa.h>
 
 @class ALCoiffeurController;
+
 @interface Document : NSPersistentDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
+@end
+
+@interface ALUncrustifyDocument : Document
+@end
+
+@interface ALClangFormatDocument : Document
 @end

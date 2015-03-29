@@ -55,9 +55,9 @@ static NSString* cleanUpRST(NSString* rst)
 {
 	rst = [rst trim];
 	rst = [rst stringByAppendingString:@"\n"];
-	NSMutableString* mrst = [rst mutableCopy];
+	NSMutableString* mutableRST = [rst mutableCopy];
 
-//	NSLog(@"%@", mrst);
+//	NSLog(@"%@", mutableRST);
 
 	NSString* nl = @"__NL__";
 	NSString* sp = @"__SP__";
@@ -69,47 +69,80 @@ static NSString* cleanUpRST(NSString* rst)
 																																				 error:nil];
 	
 	while (YES) {
-		NSTextCheckingResult* match = [lif firstMatchInString:mrst options:0 range:NSMakeRange(0, mrst.length)];
+		NSTextCheckingResult* match = [lif firstMatchInString:mutableRST
+																									options:0
+																										range:NSMakeRange(0,
+																														mutableRST.length)];
 		if (!match) break;
-		NSString* code = [mrst substringWithRange:[match rangeAtIndex:1]];
+		NSString* code = [mutableRST substringWithRange:[match rangeAtIndex:1]];
 		code = [code stringByReplacingOccurrencesOfString:@"\n" withString:nl];
 		code = [code stringByReplacingOccurrencesOfString:@" " withString:sp];
-		NSString* end = [mrst substringWithRange:[match rangeAtIndex:2]];
+		NSString* end = [mutableRST substringWithRange:[match rangeAtIndex:2]];
 		code = [code stringByAppendingString:end];
-		[mrst replaceCharactersInRange:[match rangeAtIndex:0] withString:code];
+		[mutableRST replaceCharactersInRange:[match rangeAtIndex:0] withString:code];
 	}
 
 	// preserve double nl, breaks before * and - (list items)
-	[mrst replaceOccurrencesOfString:@"\n\n" withString:par options:0 range:NSMakeRange(0, mrst.length)];
-	[mrst replaceOccurrencesOfString:@"\n*" withString:[NSString stringWithFormat:@"%@*", nl] options:0 range:NSMakeRange(0, mrst.length)];
-	[mrst replaceOccurrencesOfString:@"\n-" withString:[NSString stringWithFormat:@"%@-", nl] options:0 range:NSMakeRange(0, mrst.length)];
+	[mutableRST replaceOccurrencesOfString:@"\n\n"
+															withString:par
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
+	[mutableRST replaceOccurrencesOfString:@"\n*"
+															withString:[NSString stringWithFormat:@"%@*", nl]
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
+	[mutableRST replaceOccurrencesOfString:@"\n-"
+															withString:[NSString stringWithFormat:@"%@-", nl]
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
 
-	// unescape escaped characters
+	// un-escape escaped characters
 	NSRegularExpression*	esc = [NSRegularExpression regularExpressionWithPattern:@"\\\\(.)"
 																																			 options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators
 																																				 error:nil];
-	[esc replaceMatchesInString:mrst options:0 range:NSMakeRange(0, mrst.length) withTemplate:@"$1"];
+	[esc replaceMatchesInString:mutableRST
+											options:0
+												range:NSMakeRange(0, mutableRST.length)
+								 withTemplate:@"$1"];
 
 	// wipe out remaining whitespaces as single space
-	[mrst replaceOccurrencesOfString:@"\n" withString:@" " options:0 range:NSMakeRange(0, mrst.length)];
+	[mutableRST replaceOccurrencesOfString:@"\n"
+															withString:@" "
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
 	NSRegularExpression*	wsp = [NSRegularExpression regularExpressionWithPattern:@"\\s\\s+"
 																																			 options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators
 																																				 error:nil];
-	[wsp replaceMatchesInString:mrst options:0 range:NSMakeRange(0, mrst.length) withTemplate:@" "];
+	[wsp replaceMatchesInString:mutableRST
+											options:0
+												range:NSMakeRange(0, mutableRST.length)
+								 withTemplate:@" "];
 
-	// resore saved spacing
-	[mrst replaceOccurrencesOfString:nl withString:@"\n" options:0 range:NSMakeRange(0, mrst.length)];
-	[mrst replaceOccurrencesOfString:sp withString:@" " options:0 range:NSMakeRange(0, mrst.length)];
-	[mrst replaceOccurrencesOfString:par withString:@"\n\n" options:0 range:NSMakeRange(0, mrst.length)];
+	// restore saved spacing
+	[mutableRST replaceOccurrencesOfString:nl
+															withString:@"\n"
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
+	[mutableRST replaceOccurrencesOfString:sp
+															withString:@" "
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
+	[mutableRST replaceOccurrencesOfString:par
+															withString:@"\n\n"
+																 options:0
+																	 range:NSMakeRange(0, mutableRST.length)];
 
 	// quote the emphasized words
 	NSRegularExpression*	quot = [NSRegularExpression regularExpressionWithPattern:@"``(.*?)``"
 																																			 options:NSRegularExpressionCaseInsensitive | NSRegularExpressionDotMatchesLineSeparators
 																																				 error:nil];
-	[quot replaceMatchesInString:mrst options:0 range:NSMakeRange(0, mrst.length) withTemplate:@"“$1”"];
+	[quot replaceMatchesInString:mutableRST
+											 options:0
+												 range:NSMakeRange(0, mutableRST.length)
+									withTemplate:@"“$1”"];
 
-//	NSLog(@"%@", mrst);
-	return mrst;
+//	NSLog(@"%@", mutableRST);
+	return mutableRST;
 }
 
 - (BOOL)AL_readOptionsFromLineArray:(NSArray*)lines

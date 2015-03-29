@@ -147,9 +147,10 @@
 
 - (void)addDocument:(NSDocument*)document
 {
-	NSUInteger index = [[document fileType] isEqualToString:ALDocumentStyle]
-										 ? 0
-										 : 1;
+	NSUInteger index = [[document fileType]
+														 isEqualToString:ALDocumentSource]
+										 ? 1
+										 : 0;
 	[self setDocument:document atIndex:index];
 
 	ALDocumentView* documentView = self.documentViews[1 - index];
@@ -230,13 +231,12 @@
 	for (NSView* v in [self.splitView.subviews copy])
 		[v removeFromSuperviewWithoutNeedingDisplay];
 
-	NSArray* types = @[
-					ALDocumentStyle
-					, ALDocumentSource];
+	NSArray* types = @[ @[ ALDocumentUncrustifyStyle, ALDocumentClangFormatStyle ]
+					, @[ ALDocumentSource ]];
 
 	for (NSUInteger i = 0; i < types.count; ++i) {
 		ALDocumentView* documentView = [ALDocumentView new];
-		documentView.fileType = types[i];
+		documentView.allowedFileTypes = types[i];
 		[self addDocumentView:documentView];
 	}
 }

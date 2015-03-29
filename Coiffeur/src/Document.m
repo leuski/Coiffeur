@@ -9,7 +9,6 @@
 #import "Document.h"
 
 #import "ALCoreData.h"
-#import "ALRoot.h"
 #import "ALMainWindowController.h"
 #import "ALClangFormatController.h"
 #import "ALUncrustifyController.h"
@@ -22,11 +21,10 @@
 
 @implementation Document
 
-- (instancetype)init {
+- (instancetype)initWithModelController:(ALCoiffeurController* )controller {
     self = [super init];
     if (self) {
-//			self.model = [self makeUncrustifyController];
-			self.model = [self makeClangFormatController];
+			self.model = controller;
     }
     return self;
 }
@@ -36,49 +34,11 @@
 	[[ALMainWindowController sharedInstance] addDocument:self];
 }
 
-- (Class)modelClass
-{
-	return self.model.class;
-}
-
-- (void)setModelClass:(Class)clazz
-{
-	if (self.model && clazz == self.modelClass)
-		return;
-	
-	NSManagedObject* tmp = self.model.root;
-	self.model.root = nil;
-	[self.managedObjectContext deleteObject:tmp];
-
-	if (clazz == [ALUncrustifyController class]) {
-		self.model = [self makeUncrustifyController];
-	} else {
-		self.model = [self makeClangFormatController];
-	}
-}
-
-- (ALUncrustifyController*)makeUncrustifyController
-{
-	return [[ALUncrustifyController alloc] initWithUncrustifyURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:@"uncrustify"]
-																													 moc:self.managedObjectContext
-																												 error:nil];
-}
-
-- (ALClangFormatController*)makeClangFormatController
-{
-	return [[ALClangFormatController alloc] initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:@"clang-format"]
-																														moc:self.managedObjectContext
-																													error:nil];
-}
-
 - (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError *__autoreleasing *)error
 {
 	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
 	if (!data) return NO;
-	
-	BOOL newClang = [data hasPrefix:@"---"] || [data rangeOfString:@"\n---"].location != NSNotFound;
-	[self setModelClass:newClang ? [ALClangFormatController class] : [ALUncrustifyController class]];
-	
+
 	return [self.model readValuesFromString:data];
 }
 
@@ -102,6 +62,27 @@
 	[self.coiffeur embedInView:container];
 	container.window.initialFirstResponder = self.coiffeur.optionsView;
 }
-
-
 @end
+
+@implementation ALUncrustifyDocument
+- (instancetype)init
+{
+	return self = [super initWithModelController:[[ALUncrustifyController alloc]
+					initWithExecutableURL:[[NSBundle mainBundle]
+									URLForAuxiliaryExecutable:@"uncrustify"]
+														moc:self.managedObjectContext
+													error:nil]];
+}
+@end
+
+@implementation ALClangFormatDocument
+- (instancetype)init
+{
+	return self = [super initWithModelController:[[ALClangFormatController alloc]
+					initWithExecutableURL:[[NSBundle mainBundle]
+									URLForAuxiliaryExecutable:@"clang-format"]
+														moc:self.managedObjectContext
+													error:nil]];
+}
+@end
+

@@ -10,17 +10,36 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string></string>
+				<string>cfg</string>
 			</array>
 			<key>CFBundleTypeMIMETypes</key>
 			<array/>
 			<key>CFBundleTypeName</key>
-			<string>Style File</string>
+			<string>Uncrustify Style File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>
 			<integer>0</integer>
 			<key>NSDocumentClass</key>
-			<string>Document</string>
+			<string>ALUncrustifyDocument</string>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>NSInMemoryStoreType</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string></string>
+			</array>
+			<key>CFBundleTypeMIMETypes</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Clang-Format Style File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSTypeIsPackage</key>
+			<integer>0</integer>
+			<key>NSDocumentClass</key>
+			<string>ALClangFormatDocument</string>
 			<key>NSPersistentStoreTypeKey</key>
 			<string>NSInMemoryStoreType</string>
 		</dict>

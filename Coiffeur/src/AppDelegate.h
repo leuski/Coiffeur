@@ -15,6 +15,6 @@
 
 @end
 
-extern NSString * const ALDocumentStyle;
-extern NSString * const ALDocumentClangFormat;
+extern NSString * const ALDocumentUncrustifyStyle;
+extern NSString * const ALDocumentClangFormatStyle;
 extern NSString * const ALDocumentSource;

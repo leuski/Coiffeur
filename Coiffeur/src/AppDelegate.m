@@ -14,7 +14,8 @@
 @interface ALDocumentController : NSDocumentController
 @end
 
-NSString * const ALDocumentStyle = @"Style File";
+NSString * const ALDocumentUncrustifyStyle = @"Uncrustify Style File";
+NSString * const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 NSString * const ALDocumentSource = @"Source File";
 
 
@@ -193,6 +194,24 @@ NSString * const ALDocumentSource = @"Source File";
 	} else {
 		[self canCloseOneOfDocuments:[self.documents copy] atIndex:0 invocation:invocation];
 	}
+}
+
+- (NSString*)typeForContentsOfURL:(NSURL*)url error:(NSError**)outError
+{
+	NSString* type = [super typeForContentsOfURL:url error:outError];
+	
+	if ([type isEqualToString:ALDocumentClangFormatStyle] || [type isEqualToString:ALDocumentUncrustifyStyle]) {
+		NSString* data = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:outError];
+		if (data) {
+			if ([data hasPrefix:@"---"] || [data rangeOfString:@"\n---"].location != NSNotFound) {
+				type = ALDocumentClangFormatStyle;
+			} else {
+				type = ALDocumentUncrustifyStyle;
+			}
+		}
+	}
+	NSLog(@"type: %@", type);
+	return type;
 }
 
 @end

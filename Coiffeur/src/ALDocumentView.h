@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALDocumentView : NSViewController
-@property (nonatomic, strong) NSString* fileType;
+@property (nonatomic, strong) NSArray* allowedFileTypes;
 @property (nonatomic, strong) NSDocument* document;
 @property (nonatomic, weak) IBOutlet NSView* containerView;
 @property (nonatomic, weak) IBOutlet NSTextField *label;

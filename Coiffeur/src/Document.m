@@ -34,24 +34,27 @@
 	[[ALMainWindowController sharedInstance] addDocument:self];
 }
 
-- (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError *__autoreleasing *)error
+- (BOOL)readFromURL:(NSURL *)absoluteURL
+						 ofType:(NSString *)typeName
+							error:(NSError**)error
 {
-	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
-	if (!data) return NO;
-
-	return [self.model readValuesFromString:data];
-}
-
-- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError**)error
-{
+	BOOL result = NO;
+	
 	[self.managedObjectContext disableUndoRegistration];
-	BOOL result	= [self readValuesFromURL:absoluteURL error:error];
+	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
+	if (data) {
+		result = [self.model readValuesFromString:data];
+	}
 	[self.managedObjectContext enableUndoRegistration];
 
 	return result;
 }
 
-- (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation originalContentsURL:(NSURL *)absoluteOriginalContentsURL error:(NSError **)error
+- (BOOL) writeToURL:(NSURL *)absoluteURL
+						 ofType:(NSString *)typeName
+	 forSaveOperation:(NSSaveOperationType)saveOperation
+originalContentsURL:(NSURL *)absoluteOriginalContentsURL
+							error:(NSError **)error
 {
 	return [self.model writeValuesToURL:absoluteURL error:error];
 }

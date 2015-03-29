@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+#pragma ide diagnostic ignored "OCUnusedMethodInspection"
+
 @interface NSManagedObjectContext (ALCoreData)
 
 - (NSArray*)fetch:(NSString*)entityName withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
@@ -54,3 +58,5 @@ NS_INLINE id ALManagedObjectAccessor(NSManagedObject* obj)
 	NSManagedObjectContext* moc = obj.managedObjectContext;
 	return moc && [moc existingObjectWithID:obj.objectID error:nil] ? obj : nil;
 }
+
+#pragma clang diagnostic pop

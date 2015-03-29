@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ALCoiffeurModelController;
+@class ALCoiffeurController;
 @interface Document : NSPersistentDocument
-@property (nonatomic, strong) ALCoiffeurModelController* model;
+@property (nonatomic, strong) ALCoiffeurController* model;
 @end

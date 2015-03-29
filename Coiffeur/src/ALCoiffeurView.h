@@ -8,14 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class ALCoiffeurModelController;
+@class ALCoiffeurController;
 @interface ALCoiffeurView : NSViewController
 @property (nonatomic, weak) IBOutlet NSOutlineView *optionsView;
 @property (nonatomic, strong) IBOutlet NSTreeController *optionsController;
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedPropertyInspection"
 @property (nonatomic, strong) NSArray* optionsSortDescriptors;
-@property (nonatomic, weak) ALCoiffeurModelController* model;
+#pragma clang diagnostic pop
+@property (nonatomic, weak) ALCoiffeurController* model;
 
-- (instancetype)initWithModel:(ALCoiffeurModelController*)model bundle:(NSBundle*)bundle;
+- (instancetype)initWithModel:(ALCoiffeurController*)model bundle:(NSBundle*)bundle;
 - (void)embedInView:(NSView*)container;
 
 @end

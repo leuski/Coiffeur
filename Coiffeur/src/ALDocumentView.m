@@ -11,8 +11,11 @@
 #import "AppDelegate.h"
 
 @interface ALDocumentView () <NSPathControlDelegate>
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedPropertyInspection"
 @property (nonatomic, strong, readonly) NSURL* displayURL;
 @property (nonatomic, strong, readonly) NSString* displayType;
+#pragma clang diagnostic pop
 @end
 
 @implementation ALDocumentView
@@ -36,6 +39,9 @@
 	return self;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMethodInspection"
+
 - (NSURL*)displayURL
 {
 	if (!self.document) return nil;
@@ -47,10 +53,12 @@
 - (NSString*)displayType
 {
 	if (!self.document) return nil;
-	return [self.fileType isEqualToString:ALDocumentUncrustify]
+	return [self.fileType isEqualToString:ALDocumentStyle]
 		? @"Configuration"
 		: @"Source";
 }
+
+#pragma clang diagnostic pop
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -75,7 +83,7 @@
 	item = [[NSMenuItem alloc] initWithTitle:@"New" action:@selector(newDocument:) keyEquivalent:@""];
 	[menu insertItem:item atIndex:0];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"Open…" action:@selector(openDocument:) keyEquivalent:@""];
+	item = [[NSMenuItem alloc] initWithTitle:@"Open…" action:@selector(openDocumentInView:) keyEquivalent:@""];
 	[menu insertItem:item atIndex:1];
 
 	item = [[NSMenuItem alloc] initWithTitle:@"Save" action:@selector(saveDocument:) keyEquivalent:@""];
@@ -106,7 +114,7 @@
 	[[self windowController] setDocument:doc atIndex:index];
 }
 
-- (IBAction)openDocument:(id)sender
+- (IBAction)openDocumentInView:(id)sender
 {
 	NSUInteger index = [self indexInController];
 	if (index == NSNotFound) return;
@@ -116,7 +124,8 @@
 	NSArray* fileTypes = [[NSBundle mainBundle] infoDictionary][@"CFBundleDocumentTypes"];
 	for(NSDictionary* ft in fileTypes) {
 		if ([ft[@"CFBundleTypeName"] isEqualToString:self.fileType]) {
-			op.allowedFileTypes = ft[@"CFBundleTypeExtensions"];
+			if ([ft[@"CFBundleTypeExtensions"] count])
+				op.allowedFileTypes = ft[@"CFBundleTypeExtensions"];
 			break;
 		}
 	}

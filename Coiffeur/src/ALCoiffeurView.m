@@ -7,10 +7,9 @@
 //
 
 #import "ALCoiffeurView.h"
-#import "ALCoreData.h"
 #import "ALNode+model.h"
 #import "ALSubsection.h"
-#import "ALCoiffeurModelController.h"
+#import "ALUncrustifyController.h"
 
 @interface NSSegmentedControl (al)
 - (void)setLabels:(NSArray*)labels;
@@ -39,8 +38,8 @@
 		[self setLabel:token forSegment:i++];
 	}
 	
-	for(NSInteger i = 0; i < self.segmentCount; ++i) {
-		[self setWidth:width+12 forSegment:i];
+	for(NSInteger j = 0; j < self.segmentCount; ++j) {
+		[self setWidth:width + 12 forSegment:j];
 	}
 }
 
@@ -49,12 +48,12 @@
 
 @interface ALCoiffeurView () <NSOutlineViewDelegate>
 @property (weak) IBOutlet NSPopUpButton *jumpMenu;
-
+@property (nonatomic, strong) NSPredicate* predicate;
 @end
 
 @implementation ALCoiffeurView
 
-- (instancetype)initWithModel:(ALCoiffeurModelController*)model bundle:(NSBundle*)bundle;
+- (instancetype)initWithModel:(ALCoiffeurController*)model bundle:(NSBundle*)bundle;
 {
 	if (self = [super initWithNibName:@"ALCoiffeurView" bundle:bundle]) {
 		self.model = model;
@@ -72,11 +71,11 @@
 	
 	childView.translatesAutoresizingMaskIntoConstraints = NO;
 	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[childView]|"
-																																		 options:0
+																																		 options:(NSLayoutFormatOptions)0
 																																		 metrics:nil
 																																			 views:NSDictionaryOfVariableBindings(childView)]];
 	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[childView]|"
-																																		 options:0
+																																		 options:(NSLayoutFormatOptions)0
 																																		 metrics:nil
 																																			 views:NSDictionaryOfVariableBindings(childView)]];
 }
@@ -101,10 +100,15 @@
 	[self.optionsView expandItem:nil expandChildren:YES];
 	
 	id node;
+	BOOL foundNode = NO;
 	for(node = [self.optionsController arrangedObjects];
 			[[node childNodes] count];
-			node = [[node childNodes] objectAtIndex:0]);
-	[self.optionsController setSelectionIndexPath:[node indexPath]];
+			node = [node childNodes][0])
+		foundNode = YES;
+	if (foundNode) {
+		NSIndexPath* indexPath = [node indexPath];
+		[self.optionsController setSelectionIndexPath:indexPath];
+	}
 	[self AL_fillMenu];
 }
 
@@ -176,6 +180,8 @@
 	[self.optionsView scrollRowToVisible:[self.optionsView rowForItem:popup.selectedItem.representedObject]];
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMethodInspection"
 - (NSManagedObjectContext*)managedObjectContext
 {
 	return [self.model managedObjectContext];
@@ -186,6 +192,17 @@
 	return [self.model root];
 }
 
+- (NSPredicate*)predicate
+{
+	return self.model.root.predicate;
+}
+
+- (void)setPredicate:(NSPredicate *)predicate
+{
+	self.model.root.predicate = predicate;
+}
+
+#pragma clang diagnostic pop
 
 #pragma mark - NSOutlineViewDelegate
 
@@ -249,7 +266,7 @@
 @interface ALOutlineView : NSOutlineView
 @end
 
-// to enable NSStepper in th eoutline view cells
+// to enable NSStepper in the outline view cells
 @implementation ALOutlineView
 - (BOOL)validateProposedFirstResponder:(NSResponder *)responder forEvent:(NSEvent *)event {
 	return YES;

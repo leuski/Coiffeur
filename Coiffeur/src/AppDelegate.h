@@ -10,9 +10,11 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
++ (NSArray*)supportedLanguages;
 + (NSString*)languageForUTI:(NSString*)uti;
 
 @end
 
-extern NSString * const ALDocumentUncrustify;
+extern NSString * const ALDocumentStyle;
+extern NSString * const ALDocumentClangFormat;
 extern NSString * const ALDocumentSource;

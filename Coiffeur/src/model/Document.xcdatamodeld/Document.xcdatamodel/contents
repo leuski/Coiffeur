@@ -6,7 +6,7 @@
         <attribute name="name" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Node" inverseName="parent" inverseEntity="Node" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Node" inverseName="parent" inverseEntity="Node" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Node" inverseName="children" inverseEntity="Node" syncable="YES"/>
     </entity>
     <entity name="Option" representedClassName="ALOption" parentEntity="Node" syncable="YES">
@@ -17,7 +17,7 @@
     <entity name="Section" representedClassName="ALSection" parentEntity="Subsection" syncable="YES"/>
     <entity name="Subsection" representedClassName="ALSubsection" parentEntity="Node" syncable="YES"/>
     <elements>
-        <element name="Node" positionX="-18" positionY="81" width="128" height="148"/>
+        <element name="Node" positionX="-18" positionY="81" width="128" height="150"/>
         <element name="Option" positionX="-63" positionY="-18" width="128" height="73"/>
         <element name="Root" positionX="18" positionY="144" width="128" height="45"/>
         <element name="Section" positionX="-54" positionY="18" width="128" height="43"/>

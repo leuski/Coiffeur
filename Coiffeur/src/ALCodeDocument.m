@@ -9,7 +9,7 @@
 #import "ALCodeDocument.h"
 #import "AppDelegate.h"
 #import <MGSFragaria/MGSFragaria.h>
-#import "ALCoiffeurModelController.h"
+#import "ALUncrustifyController.h"
 #import "ALMainWindowController.h"
 
 @interface ALCodeDocument () <NSTextViewDelegate>
@@ -52,26 +52,6 @@
 //    return YES;
 //}
 
-+ (NSArray*)supportedLanguages
-{
-	static NSArray * ALLanguages = nil;
-	if (!ALLanguages) {
-		ALLanguages = [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:@"languages" withExtension:@"plist"]];
-	}
-	return ALLanguages;
-}
-
-+ (NSString*)languageForUTI:(NSString*)uti
-{
-	for(NSDictionary* d in [self supportedLanguages]) {
-		for(NSString* u in d[@"uti"]) {
-			if ([u isEqualToString:uti])
-				return d[@"uncrustify"];
-		}
-	}
-	return nil;
-}
-
 - (void)setFileURL:(NSURL *)fileURL
 {
 	[super setFileURL:fileURL];
@@ -80,7 +60,7 @@
 	NSString* uti = [[NSWorkspace sharedWorkspace] typeOfFile:[self.fileURL path] error:nil];
 	if (!uti) return ;
 	
-	NSString* lang = [ALCodeDocument languageForUTI:uti];
+	NSString* lang = [AppDelegate languageForUTI:uti];
 	if (!lang) return;
 	
 	self.language = lang;

@@ -9,14 +9,12 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>cfg</string>
+				<string></string>
 			</array>
 			<key>CFBundleTypeMIMETypes</key>
-			<array>
-				<string>text/plain</string>
-			</array>
+			<array/>
 			<key>CFBundleTypeName</key>
-			<string>Uncrustify</string>
+			<string>Style File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>
@@ -47,9 +45,15 @@
 				<string>java</string>
 				<string>jav</string>
 				<string>js</string>
+				<string>cs</string>
+				<string>d</string>
+				<string>pwn</string>
+				<string>p</string>
+				<string>vala</string>
+				<string>vapi</string>
 			</array>
 			<key>CFBundleTypeName</key>
-			<string>Source</string>
+			<string>Source File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>

@@ -9,12 +9,13 @@
 #import "AppDelegate.h"
 #import "NSInvocation+shouldClose.h"
 #import "ALCodeDocument.h"
+#import "ALMainWindowController.h"
 
 @interface ALDocumentController : NSDocumentController
 @end
 
-NSString * const ALDocumentUncrustify = @"Uncrustify";
-NSString * const ALDocumentSource = @"Source";
+NSString * const ALDocumentStyle = @"Style File";
+NSString * const ALDocumentSource = @"Source File";
 
 
 @interface AppDelegate ()
@@ -94,7 +95,7 @@ NSString * const ALDocumentSource = @"Source";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-			[controller openDocumentWithContentsOfURL:[documents objectAtIndex:0]
+			[controller openDocumentWithContentsOfURL:documents[0]
 																				display:YES
 																					error:&error];
 #pragma clang diagnostic pop
@@ -196,6 +197,9 @@ NSString * const ALDocumentSource = @"Source";
 
 @end
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedClassInspection"
+
 @interface ALString2NumberTransformer : NSValueTransformer
 
 @end
@@ -209,7 +213,7 @@ NSString * const ALDocumentSource = @"Source";
 
 - (id)transformedValue:(NSString*)value
 {
-	return value ? @([value integerValue]) : 0;
+	return value ? @([value integerValue]) : nil;
 }
 
 - (id)reverseTransformedValue:(NSNumber*)value
@@ -218,3 +222,5 @@ NSString * const ALDocumentSource = @"Source";
 }
 
 @end
+
+#pragma clang diagnostic pop

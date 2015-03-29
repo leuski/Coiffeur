@@ -9,10 +9,10 @@
 #import "ALCoreData.h"
 
 #pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMethodInspection"
 #pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 static NSString* const kALTrue = @"true";
 static NSString* const kALFalse = @"false";
-#pragma clang diagnostic pop
 
 #define ALLogError NSLog
 
@@ -48,7 +48,7 @@ static NSString* const kALFalse = @"false";
 
 - (NSManagedObject*)fetchSingle:(NSString*)entityName withPredicate:(NSPredicate*)predicate error:(NSError**)outError {
 	NSArray * results	= [self fetch:entityName withPredicate:predicate error:outError];
-	return [results count] > 0 ? [results objectAtIndex:0] : nil;
+	return [results count] > 0 ? results[0] : nil;
 }
 
 - (void)disableUndoRegistration {
@@ -131,19 +131,19 @@ static NSString* const kALFalse = @"false";
 	switch (self.attributeType) {
 		case NSInteger16AttributeType:
 		case NSInteger32AttributeType:
-			return [NSNumber numberWithInteger:[attrValue integerValue]];
+			return @([attrValue integerValue]);
 		case NSInteger64AttributeType:
-			return [NSNumber numberWithLongLong:[attrValue longLongValue]];
+			return @([attrValue longLongValue]);
 		case NSDecimalAttributeType:
 			return [NSDecimalNumber decimalNumberWithString:attrValue];
 		case NSDoubleAttributeType:
-			return [NSNumber numberWithDouble:[attrValue doubleValue]];
+			return @([attrValue doubleValue]);
 		case NSFloatAttributeType:
-			return [NSNumber numberWithFloat:[attrValue floatValue]];
+			return @([attrValue floatValue]);
 		case NSStringAttributeType:
 			return attrValue;
 		case NSBooleanAttributeType:
-			return [NSNumber numberWithBool:[attrValue boolValue]];
+			return @([attrValue boolValue]);
 		case NSDateAttributeType:
 			return [[NSAttributeDescription AL_dateFormatter] dateFromString:attrValue];
 		case NSBinaryDataAttributeType:
@@ -253,3 +253,5 @@ static NSString* const kALFalse = @"false";
 }
 
 @end
+
+#pragma clang diagnostic pop

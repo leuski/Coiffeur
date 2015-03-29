@@ -14,5 +14,6 @@
 + (ALMainWindowController*)sharedInstance;
 - (void)addDocument:(NSDocument*)document;
 - (void)setDocument:(NSDocument*)document atIndex:(NSUInteger)index;
+- (void)removeDocument:(NSDocument*)document;
 
 @end

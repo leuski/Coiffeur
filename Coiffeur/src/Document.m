@@ -8,29 +8,25 @@
 
 #import "Document.h"
 
-#import "AppDelegate.h"
 #import "ALCoreData.h"
+#import "ALRoot.h"
 #import "ALMainWindowController.h"
-#import "ALCoiffeurModelController.h"
+#import "ALClangFormatController.h"
+#import "ALUncrustifyController.h"
 #import "ALCoiffeurView.h"
 
 
-@interface Document () <ALCoiffeurModelControllerDelegate>
+@interface Document ()
 @property (nonatomic, strong) ALCoiffeurView*	coiffeur;
 @end
-
-static NSString * const ALUncrustifyFileType = @"Uncrustify";
 
 @implementation Document
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-			self.model = [[ALCoiffeurModelController alloc] initWithUncrustifyURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:@"uncrustify"]
-																																				moc:self.managedObjectContext
-																																			error:nil];
-			self.model.delegate = self;
-			
+//			self.model = [self makeUncrustifyController];
+			self.model = [self makeClangFormatController];
     }
     return self;
 }
@@ -40,15 +36,53 @@ static NSString * const ALUncrustifyFileType = @"Uncrustify";
 	[[ALMainWindowController sharedInstance] addDocument:self];
 }
 
+- (Class)modelClass
+{
+	return self.model.class;
+}
+
+- (void)setModelClass:(Class)clazz
+{
+	if (self.model && clazz == self.modelClass)
+		return;
+	
+	NSManagedObject* tmp = self.model.root;
+	self.model.root = nil;
+	[self.managedObjectContext deleteObject:tmp];
+
+	if (clazz == [ALUncrustifyController class]) {
+		self.model = [self makeUncrustifyController];
+	} else {
+		self.model = [self makeClangFormatController];
+	}
+}
+
+- (ALUncrustifyController*)makeUncrustifyController
+{
+	return [[ALUncrustifyController alloc] initWithUncrustifyURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:@"uncrustify"]
+																													 moc:self.managedObjectContext
+																												 error:nil];
+}
+
+- (ALClangFormatController*)makeClangFormatController
+{
+	return [[ALClangFormatController alloc] initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:@"clang-format"]
+																														moc:self.managedObjectContext
+																													error:nil];
+}
+
 - (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError *__autoreleasing *)error
 {
 	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
 	if (!data) return NO;
 	
+	BOOL newClang = [data hasPrefix:@"---"] || [data rangeOfString:@"\n---"].location != NSNotFound;
+	[self setModelClass:newClang ? [ALClangFormatController class] : [ALUncrustifyController class]];
+	
 	return [self.model readValuesFromString:data];
 }
 
-- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError *__autoreleasing *)error
+- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError**)error
 {
 	[self.managedObjectContext disableUndoRegistration];
 	BOOL result	= [self readValuesFromURL:absoluteURL error:error];

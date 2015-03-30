@@ -17,19 +17,12 @@
 @end
 
 @implementation ALCodeDocument
+@synthesize string = _string;
 
 - (instancetype)init
 {
 	if (self = [super init]) {
 		self.language = [[NSUserDefaults standardUserDefaults] stringForKey:ALFormatLanguage];
-
-		self.fragaria = [[MGSFragaria alloc] init];
-		
-		// we want to be the delegate
-		[self.fragaria setObject:self forKey:MGSFODelegate];
-		
-		// Objective-C is the place to be
-		[self.fragaria setObject:@"Objective-C" forKey:MGSFOSyntaxDefinitionName];
 	}
 	return self;
 }
@@ -40,11 +33,11 @@
 }
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-	return [self.fragaria.string dataUsingEncoding:NSUTF8StringEncoding];
+	return [self.string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
-	self.fragaria.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+	self.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	return YES;
 }
 
@@ -68,7 +61,25 @@
 
 - (void)embedInView:(NSView*)container
 {
+	NSString* string;
+	if (!self.fragaria) {
+		self.fragaria = [[MGSFragaria alloc] init];
+		
+		// we want to be the delegate
+		[self.fragaria setObject:self forKey:MGSFODelegate];
+		
+		// Objective-C is the place to be
+		[self.fragaria setObject:@"Objective-C" forKey:MGSFOSyntaxDefinitionName];
+		string = self->_string;
+		self->_string = nil;
+	} else {
+		string = self.fragaria.string;
+	}
+
 	[self.fragaria embedInView:container];
+
+	self.fragaria.string = string;
+
 	NSTextView *textView = [self.fragaria objectForKey:ro_MGSFOTextView];
 	textView.delegate = self;
 }
@@ -80,14 +91,16 @@
 
 - (NSString*)string
 {
-	return self.fragaria.string;
+	return self.fragaria ? self.fragaria.string : self->_string;
 }
 
 - (void)setString:(NSString *)string
 {
-	self.fragaria.string = string;
+	if (self.fragaria)
+		self.fragaria.string = string;
+	else
+		self->_string = string;
 }
-
 
 - (IBAction)changeLanguage:(NSMenuItem *)anItem
 {

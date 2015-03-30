@@ -65,6 +65,11 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 	[self.coiffeur embedInView:container];
 	container.window.initialFirstResponder = self.coiffeur.optionsView;
 }
+
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
+{
+	return NO;
+}
 @end
 
 @implementation ALUncrustifyDocument
@@ -76,6 +81,13 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 														moc:self.managedObjectContext
 													error:nil]];
 }
+
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
+{
+	return [ALUncrustifyController contentsIsValidInString:string
+																									 error:outError];
+}
+
 @end
 
 @implementation ALClangFormatDocument
@@ -86,6 +98,12 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 									URLForAuxiliaryExecutable:@"clang-format"]
 														moc:self.managedObjectContext
 													error:nil]];
+}
+
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
+{
+	return [ALClangFormatController contentsIsValidInString:string
+																									 error:outError];
 }
 @end
 

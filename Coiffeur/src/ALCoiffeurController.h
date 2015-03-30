@@ -40,6 +40,9 @@ completionBlock:(void (^)(NSString*, NSError*)) block;
 
 - (NSError*)runExecutable:(NSArray*)args text:(NSString*)input completionBlock:(void (^)(NSString*, NSError*)) block;
 - (NSString*)runExecutable:(NSArray*)args text:(NSString*)input error:(NSError**)outError;
+
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
+
 @end
 
 extern NSString * const ALFormatLanguage;

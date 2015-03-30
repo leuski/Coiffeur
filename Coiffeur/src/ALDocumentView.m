@@ -27,7 +27,7 @@
 
 + (NSSet*)keyPathsForValuesAffectingDisplayType
 {
-	return [NSSet setWithObject:@"fileType"];
+	return [NSSet setWithObject:@"allowedFileTypes"];
 }
 
 - (instancetype)init
@@ -52,7 +52,7 @@
 
 - (NSString*)displayType
 {
-	if (!self.document) return nil;
+	if (!self.allowedFileTypes) return nil;
 	return [self.allowedFileTypes containsObject:ALDocumentSource]
 		? @"Source"
 		: @"Style";
@@ -64,7 +64,7 @@
 	[super viewDidLoad];
 	
 	
-    // Do view setup here.
+    // Do view setup here./Users/leuski/Documents/Projects/Coiffeur/Coiffeur/src/ALCoiffeurController.m
 }
 
 - (ALMainWindowController*)windowController
@@ -95,6 +95,68 @@
 		item.representedObject = type;
 		[menu insertItem:item atIndex:index++];
 	}
+}
+
+- (NSDragOperation)pathControl:(NSPathControl *)pathControl validateDrop:(id<NSDraggingInfo>)info
+{
+	__block NSUInteger count = 0;
+	[info enumerateDraggingItemsWithOptions:0
+																	forView:pathControl
+																	classes:@[ [NSURL class] ]
+														searchOptions:nil
+															 usingBlock:^(NSDraggingItem* draggingItem,
+																			 NSInteger idx, BOOL* stop) {
+
+																 NSURL* url = (NSURL*)draggingItem.item;
+																 NSError* error;
+																 NSString* type = [[NSDocumentController sharedDocumentController]
+																				 typeForContentsOfURL:url
+																												error:&error];
+																 if (type && [self.allowedFileTypes containsObject:type]) {
+																	 ++count;
+																 }
+															 }];
+	return count == 1 ? NSDragOperationEvery : NSDragOperationNone;
+}
+
+- (BOOL)pathControl:(NSPathControl *)pathControl acceptDrop:(id<NSDraggingInfo>)info
+{
+	NSUInteger index = [self indexInController];
+	if (index == NSNotFound) return NO;
+
+	__block NSURL* theURL = nil;
+	[info enumerateDraggingItemsWithOptions:0
+																	forView:pathControl
+																	classes:@[ [NSURL class] ]
+														searchOptions:nil
+															 usingBlock:^(NSDraggingItem* draggingItem,
+																						NSInteger idx, BOOL* stop) {
+																 
+																 NSURL* url = (NSURL*)draggingItem.item;
+																 NSError* error;
+																 NSString* type = [[NSDocumentController sharedDocumentController]
+																									 typeForContentsOfURL:url
+																									 error:&error];
+																 if (type && [self.allowedFileTypes containsObject:type]) {
+																	 theURL = url;
+																	 *stop = YES;
+																 }
+															 }];
+	if (!theURL) return NO;
+
+	[[NSDocumentController sharedDocumentController]
+	 openDocumentWithContentsOfURL:theURL
+	 display:NO
+	 completionHandler:^(NSDocument *document,
+											 BOOL documentWasAlreadyOpen,
+											 NSError *error) {
+		 if (document && !documentWasAlreadyOpen) {
+			 [[self windowController] setDocument:document
+																		atIndex:index];
+		 }
+	 }];
+
+	return YES;
 }
 
 - (NSUInteger)indexInController
@@ -148,7 +210,7 @@
 									completionHandler:^(NSDocument *document,
 																			BOOL documentWasAlreadyOpen,
 																			NSError *error) {
-										if (document) {
+										if (document && !documentWasAlreadyOpen) {
 											[[self windowController] setDocument:document
 																									 atIndex:index];
 										}
@@ -171,6 +233,21 @@
 	return YES;
 }
 
+@end
+
+@interface ALPathControl : NSPathControl
+
+@end
+
+@implementation ALPathControl
+
+// there is a bug in NSPathControl where clicking outside of the
+// button label results in the focus no transfering to the control. Fixing.
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	[self.window makeFirstResponder:self];
+	[super mouseDown:theEvent];
+}
 @end
 
 

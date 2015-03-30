@@ -12,6 +12,8 @@
 
 @interface Document : NSPersistentDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
+
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
 @end
 
 @interface ALUncrustifyDocument : Document

@@ -10,6 +10,7 @@
 #import "NSInvocation+shouldClose.h"
 #import "ALCodeDocument.h"
 #import "ALMainWindowController.h"
+#import "Document.h"
 
 @interface ALDocumentController : NSDocumentController
 @end
@@ -203,14 +204,17 @@ NSString * const ALDocumentSource = @"Source File";
 	if ([type isEqualToString:ALDocumentClangFormatStyle] || [type isEqualToString:ALDocumentUncrustifyStyle]) {
 		NSString* data = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:outError];
 		if (data) {
-			if ([data hasPrefix:@"---"] || [data rangeOfString:@"\n---"].location != NSNotFound) {
-				type = ALDocumentClangFormatStyle;
-			} else {
-				type = ALDocumentUncrustifyStyle;
-			}
+			if ([ALClangFormatDocument contentsIsValidInString:data
+																									 error:outError])
+				return ALDocumentClangFormatStyle;
+			if ([ALUncrustifyDocument contentsIsValidInString:data
+																									error:outError])
+				return ALDocumentUncrustifyStyle;
+
+			return nil;
 		}
 	}
-	NSLog(@"type: %@", type);
+
 	return type;
 }
 

@@ -180,10 +180,12 @@
 		6261851B1AC351CC0095CCD2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				62B0C35F1AC7ACE500A91E0C /* ALUncrustifyController.h */,
-				62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */,
+				62B0C3651AC7B66900A91E0C /* ALClangFormatController.h */,
+				62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */,
 				62B0C3591AC627C500A91E0C /* ALCodeDocument.h */,
 				62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */,
+				62B0C3621AC7AD8800A91E0C /* ALCoiffeurController.h */,
+				62B0C3631AC7AD8800A91E0C /* ALCoiffeurController.m */,
 				626185B71AC6230A0095CCD2 /* ALCoiffeurView.h */,
 				626185B81AC6230A0095CCD2 /* ALCoiffeurView.m */,
 				626185871AC4A5BD0095CCD2 /* ALCoreData.h */,
@@ -192,20 +194,18 @@
 				626185BB1AC6235E0095CCD2 /* ALDocumentView.m */,
 				626185761AC3B7D20095CCD2 /* ALMainWindowController.h */,
 				626185771AC3B7D20095CCD2 /* ALMainWindowController.m */,
+				62B0C35F1AC7ACE500A91E0C /* ALUncrustifyController.h */,
+				62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */,
 				6261851C1AC351CC0095CCD2 /* AppDelegate.h */,
 				6261851D1AC351CC0095CCD2 /* AppDelegate.m */,
 				6261851E1AC351CC0095CCD2 /* Document.h */,
 				6261851F1AC351CC0095CCD2 /* Document.m */,
 				626185201AC351CC0095CCD2 /* main.m */,
 				626185321AC35CA30095CCD2 /* model */,
-				6261857E1AC48E160095CCD2 /* NSString+commandLine.h */,
-				6261857F1AC48E160095CCD2 /* NSString+commandLine.m */,
 				62B0C35C1AC6962200A91E0C /* NSInvocation+shouldClose.h */,
 				62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */,
-				62B0C3621AC7AD8800A91E0C /* ALCoiffeurController.h */,
-				62B0C3631AC7AD8800A91E0C /* ALCoiffeurController.m */,
-				62B0C3651AC7B66900A91E0C /* ALClangFormatController.h */,
-				62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */,
+				6261857E1AC48E160095CCD2 /* NSString+commandLine.h */,
+				6261857F1AC48E160095CCD2 /* NSString+commandLine.m */,
 			);
 			path = src;
 			sourceTree = "<group>";

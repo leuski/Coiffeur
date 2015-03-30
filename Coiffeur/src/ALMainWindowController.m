@@ -265,14 +265,25 @@
 - (NSUndoManager*)windowWillReturnUndoManager:(NSWindow*)window
 {
 	if (window != self.window) return nil;
+	return self.styleDocument.undoManager;
+}
+
+- (Document*)styleDocument
+{
 	ALDocumentView* documentView = self.documentViews[0];
-	return documentView.document.undoManager;
+	return (Document*)documentView.document;
+}
+
+- (ALCodeDocument*)sourceDocument
+{
+	ALDocumentView* documentView = self.documentViews[1];
+	return (ALCodeDocument*)documentView.document;
 }
 
 - (IBAction)uncrustify:(id)sender
 {
-	Document      * formatter = self.documentViews[0];
-	ALCodeDocument* source    = self.documentViews[1];
+	Document      * formatter = self.styleDocument;
+	ALCodeDocument* source    = self.sourceDocument;
 
 	[formatter.model format:source.string
 							 attributes:@{
@@ -289,7 +300,7 @@
 - (NSString*)textToFormatByCoiffeurController:(ALCoiffeurController*)controller
 																	 attributes:(NSDictionary**)attributes
 {
-	ALCodeDocument* source = self.documentViews[1];
+	ALCodeDocument* source = self.sourceDocument;
 	if (attributes)
 		*attributes = @{
 						ALFormatLanguage   : source.language
@@ -301,7 +312,7 @@
 									 setText:(NSString*)text
 {
 	if (!text) return;
-	ALCodeDocument* source = self.documentViews[1];
+	ALCodeDocument* source = self.sourceDocument;
 	source.string = text;
 }
 

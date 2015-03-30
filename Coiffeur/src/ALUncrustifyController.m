@@ -290,5 +290,14 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	return NO;
 }
 
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
+{
+	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]"
+																																						 options:NSRegularExpressionAnchorsMatchLines
+																																							 error:nil];
+
+	return (nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
+}
+
 @end
 

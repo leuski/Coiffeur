@@ -272,5 +272,14 @@ static NSString* cleanUpRST(NSString* rst)
 	return YES;
 }
 
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
+{
+	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]"
+																																						 options:NSRegularExpressionAnchorsMatchLines
+																																							 error:nil];
+
+	return (([string hasPrefix:@"---"] || [string rangeOfString:@"\n---"].location != NSNotFound) &&
+					nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
+}
 
 @end

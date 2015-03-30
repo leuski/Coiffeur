@@ -15,6 +15,11 @@ NSString * const ALFormatFragment = @"ALFormatFragment";
 
 @implementation ALCoiffeurController
 
++ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
+{
+	return NO;
+}
+
 - (instancetype)initWithManagedObjectContext:(NSManagedObjectContext*)moc
 															 executableURL:(NSURL*)executableURL
 {

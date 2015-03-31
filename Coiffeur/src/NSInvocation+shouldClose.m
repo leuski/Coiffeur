@@ -31,3 +31,21 @@
 }
 
 @end
+
+@implementation NSDocument (shouldClose)
+
+- (void)AL_document:(NSDocument*)doc shouldClose:(BOOL)shouldClose
+ completionBlock:(void*)contextInfo
+{
+	void (^completeBlock)(BOOL) = (__bridge_transfer void (^)(BOOL))contextInfo;
+	completeBlock(shouldClose);
+}
+
+- (void)canCloseWithBlock:(void (^)(BOOL))block
+{
+	[self canCloseDocumentWithDelegate:self
+								 shouldCloseSelector:@selector(AL_document:shouldClose:completionBlock:)
+												 contextInfo:(__bridge_retained void*)[block copy]];
+}
+
+@end

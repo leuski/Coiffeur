@@ -178,9 +178,12 @@
 	NSString* type = [sender representedObject];
 	if (!type) type = self.allowedFileTypes[0];
 	
-	NSDocument* doc = [[NSDocumentController sharedDocumentController]
-					makeUntitledDocumentOfType:type error:nil];
-	[[self windowController] setDocument:doc atIndex:index];
+	NSDocumentController* controller = [NSDocumentController sharedDocumentController];
+	NSDocument* doc = [controller makeUntitledDocumentOfType:type error:nil];
+	if (doc) {
+		[controller addDocument:doc];
+		[[self windowController] setDocument:doc atIndex:index];
+	}
 }
 
 - (IBAction)openDocumentInView:(id)sender

@@ -209,7 +209,7 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item
 {
 	ALNode* node = [item representedObject];
-	return !node.leaf;
+	return node && !node.leaf;
 }
 
 - (NSView *)outlineView:(NSOutlineView *)outlineView viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item

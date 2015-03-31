@@ -6,10 +6,14 @@
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 
 @interface NSInvocation (shouldClose)
 + (NSInvocation*)invocationWithTarget:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector object:(id)object contextInfo:(void*)contextInfo;
 - (void)invokeWithShouldClose:(BOOL)shouldClose;
 
+@end
+
+@interface NSDocument (shouldClose)
+- (void)canCloseWithBlock:(void (^)(BOOL))block;
 @end

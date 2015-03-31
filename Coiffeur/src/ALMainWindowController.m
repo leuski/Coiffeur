@@ -41,13 +41,6 @@
 	return self;
 }
 
-- (void)document:(NSDocument*)doc shouldClose:(BOOL)shouldClose
- completionBlock:(void*)contextInfo
-{
-	void (^completeBlock)(BOOL) = (__bridge_transfer void (^)(BOOL))contextInfo;
-	completeBlock(shouldClose);
-}
-
 - (void)setDocument:(NSDocument*)document atIndex:(NSUInteger)index
 {
 	for (ALDocumentView* dv in self.documentViews) {
@@ -67,21 +60,21 @@
 		ALMainWindowController* _self = weakSelf;
 		if (!_self) return;
 
+		NSDocument* localDocument = documentView.document;
 		[_self removeDocumentFromDocumentView:documentView];
-		[documentView.document close];
+		[localDocument close];
 		[_self addDocument:document toDocumentView:documentView];
 	};
 
 	if (documentView.document) {
-		[documentView.document canCloseDocumentWithDelegate:self
-																		shouldCloseSelector:@selector(document:shouldClose:completionBlock:)
-																						contextInfo:(__bridge_retained void*)[completeBlock copy]];
+		[documentView.document canCloseWithBlock:completeBlock];
 	} else {
 		completeBlock(YES);
 	}
 }
 
-- (void)canCloseOneOfDocuments:(NSArray*)documentViews atIndex:(NSUInteger)index
+- (void)canCloseOneOfDocuments:(NSArray*)documentViews
+											 atIndex:(NSUInteger)index
 										invocation:(NSInvocation*)invocation
 {
 	ALDocumentView* documentView = nil;
@@ -97,7 +90,7 @@
 	}
 
 	__weak ALMainWindowController* weakSelf = self;
-	void (^completeBlock)(BOOL) = ^(BOOL success) {
+	[documentView.document canCloseWithBlock:^(BOOL success) {
 		ALMainWindowController* _self = weakSelf;
 		if (!_self) {
 			[invocation invokeWithShouldClose:YES];
@@ -108,16 +101,12 @@
 														atIndex:index + 1
 												 invocation:invocation];
 		}
-	};
-
-	[documentView.document canCloseDocumentWithDelegate:self
-																	shouldCloseSelector:@selector(document:shouldClose:completionBlock:)
-																					contextInfo:(__bridge_retained void*)[completeBlock copy]];
-
+	}];
 }
 
 - (void)windowController:(ALMainWindowController*)wc
-						 shouldClose:(BOOL)shouldClose contextInfo:(void*)contextInfo
+						 shouldClose:(BOOL)shouldClose
+						 contextInfo:(void*)contextInfo
 {
 	if (shouldClose)
 		[wc close];
@@ -157,8 +146,6 @@
 	if (documentView.document) return;
 
 	[documentView newDocument:nil];
-	[[NSDocumentController sharedDocumentController]
-					addDocument:documentView.document];
 }
 
 - (void)removeDocument:(NSDocument*)document
@@ -254,8 +241,9 @@
 	// detach the view controllers from the document first
 	//	me.currentContentViewController = nil;
 	for (ALDocumentView* ctrl in me.documentViews) {
+		NSDocument* document = ctrl.document;
 		[me removeDocumentFromDocumentView:ctrl];
-		[ctrl.document close];
+		[document close];
 	}
 	// then any content view
 	[window setContentView:nil];

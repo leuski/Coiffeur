@@ -41,7 +41,9 @@
 	BOOL result = NO;
 	
 	[self.managedObjectContext disableUndoRegistration];
-	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
+	NSString* data = [NSString stringWithContentsOfURL:absoluteURL
+																						encoding:NSUTF8StringEncoding
+																							 error:error];
 	if (data) {
 		result = [self.model readValuesFromString:data];
 	}

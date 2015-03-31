@@ -78,7 +78,7 @@
 
 	[self.fragaria embedInView:container];
 
-	self.fragaria.string = string;
+	self.fragaria.string = string ? string : @"";
 
 	NSTextView *textView = [self.fragaria objectForKey:ro_MGSFOTextView];
 	textView.delegate = self;

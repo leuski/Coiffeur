@@ -9,6 +9,4 @@
 #import "ALCoiffeurController.h"
 
 @interface ALClangFormatController : ALCoiffeurController
-- (instancetype)initWithExecutableURL:(NSURL*)url moc:(NSManagedObjectContext*)moc error:(NSError**)outError;
-
 @end

@@ -25,8 +25,7 @@
 @property (nonatomic, weak) id<ALCoiffeurControllerDelegate> delegate;
 @property (nonatomic, strong) NSURL* executableURL;
 
-- (instancetype)initWithManagedObjectContext:(NSManagedObjectContext*)moc
-															 executableURL:(NSURL*)executableURL;
+- (instancetype)initWithExecutableURL:(NSURL*)executableURL error:(NSError**)outError;
 
 - (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
 completionBlock:(void (^)(NSString*, NSError*)) block;
@@ -36,6 +35,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block;
 
 - (BOOL)readOptionsFromString:(NSString*)text;
 - (BOOL)readValuesFromString:(NSString*)text;
+- (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError **)error;
 - (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error;
 
 - (NSError*)runExecutable:(NSArray*)args text:(NSString*)input completionBlock:(void (^)(NSString*, NSError*)) block;

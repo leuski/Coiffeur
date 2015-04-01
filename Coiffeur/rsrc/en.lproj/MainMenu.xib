@@ -77,12 +77,6 @@
                                     <action selector="openDocument:" target="-1" id="bVn-NM-KNZ"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Open Code…" alternate="YES" keyEquivalent="o" id="0XV-ZL-mpM">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="openCode:" target="-1" id="qsp-E1-ZPa"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title="Open Recent" id="tXI-mr-wws">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="oas-Oc-fiZ">
@@ -102,26 +96,26 @@
                                     <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
+                            <menuItem title="Save" keyEquivalent="s" id="pxx-59-PXV">
                                 <connections>
                                     <action selector="saveDocument:" target="-1" id="teZ-XB-qJY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save Code…" alternate="YES" keyEquivalent="s" id="nXm-In-FqF">
+                            <menuItem title="Save All" alternate="YES" keyEquivalent="s" id="pqb-d7-svQ">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
-                                    <action selector="saveCode:" target="-1" id="htC-dj-PCf"/>
+                                    <action selector="saveAllDocuments:" target="-1" id="ykZ-QD-h5j"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
+                            <menuItem title="Duplicate…" keyEquivalent="S" id="eFx-As-g4w">
+                                <connections>
+                                    <action selector="duplicateDocument:" target="-1" id="qpd-yE-zrY"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save As…" alternate="YES" keyEquivalent="S" id="Bw7-FT-i3A">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>
                                     <action selector="saveDocumentAs:" target="-1" id="mDf-zr-I0C"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="Save Code As…" alternate="YES" keyEquivalent="S" id="v4u-MQ-SyY">
-                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                <connections>
-                                    <action selector="saveCodeAs:" target="-1" id="hJt-is-bmQ"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Revert to Saved" id="KaW-ft-85H">

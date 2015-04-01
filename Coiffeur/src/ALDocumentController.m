@@ -165,6 +165,17 @@ doCloseAllDocuments:(BOOL)doClose contextInfo:(void*)contextInfo
 																	 openedType:@[]];
 }
 
++ (void)restoreWindowWithIdentifier:(NSString *)identifier state:(NSCoder *)state completionHandler:(void (^)(NSWindow *, NSError *))completionHandler
+{
+	[[NSDocumentController class] restoreWindowWithIdentifier:identifier state:state completionHandler:completionHandler];
+}
+
+
+- (void)reopenDocumentForURL:(NSURL *)urlOrNil withContentsOfURL:(NSURL *)contentsURL display:(BOOL)displayDocument completionHandler:(void (^)(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error))completionHandler
+{
+	[super reopenDocumentForURL:urlOrNil withContentsOfURL:contentsURL display:displayDocument completionHandler:completionHandler];
+}
+
 //- (void)openDocumentWithContentsOfURL:(NSURL*)url display:(BOOL)displayDocument
 //										completionHandler:(void (^)(NSDocument* document,
 //														BOOL documentWasAlreadyOpen,

@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "ALDocument.h"
 
 @class ALCoiffeurController;
 
-@interface Document : NSPersistentDocument
+@interface Document : ALDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;

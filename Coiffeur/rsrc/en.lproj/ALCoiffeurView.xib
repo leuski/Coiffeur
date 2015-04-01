@@ -9,6 +9,7 @@
                 <outlet property="jumpMenu" destination="F3P-oX-V8O" id="j4e-Gd-oIE"/>
                 <outlet property="optionsController" destination="h9y-4G-n2j" id="u4r-Av-CII"/>
                 <outlet property="optionsView" destination="nl4-in-rum" id="Ii6-2t-G5b"/>
+                <outlet property="rowView" destination="rEv-CV-vhe" id="wzl-hp-rFb"/>
                 <outlet property="view" destination="c22-O7-iKe" id="BUd-9S-1et"/>
             </connections>
         </customObject>
@@ -343,5 +344,25 @@
                 <binding destination="-2" name="sortDescriptors" keyPath="self.optionsSortDescriptors" id="n7f-DB-Tj8"/>
             </connections>
         </treeController>
+        <customView identifier="view.row" id="rEv-CV-vhe" customClass="ALTableRowView">
+            <rect key="frame" x="0.0" y="0.0" width="464" height="96"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RLi-pc-ZAJ">
+                    <rect key="frame" x="10" y="72" width="451" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="uWQ-a5-JtX">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="RLi-pc-ZAJ" secondAttribute="trailing" constant="5" id="HLW-aY-zh4"/>
+                <constraint firstItem="RLi-pc-ZAJ" firstAttribute="leading" secondItem="rEv-CV-vhe" secondAttribute="leading" constant="12" id="iDl-GV-q1W"/>
+                <constraint firstItem="RLi-pc-ZAJ" firstAttribute="top" secondItem="rEv-CV-vhe" secondAttribute="top" constant="7" id="khA-2o-uXd"/>
+            </constraints>
+            <point key="canvasLocation" x="92" y="799"/>
+        </customView>
     </objects>
 </document>

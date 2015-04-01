@@ -25,40 +25,19 @@
     self = [super init];
     if (self) {
 			self.model = controller;
+			self.undoManager = controller.managedObjectContext.undoManager;
     }
     return self;
 }
 
-- (void)makeWindowControllers
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
-	[[ALMainWindowController sharedInstance] addDocument:self];
+	return [self.model readValuesFromURL:url error:outError];
 }
 
-- (BOOL)readFromURL:(NSURL *)absoluteURL
-						 ofType:(NSString *)typeName
-							error:(NSError**)error
+- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
-	BOOL result = NO;
-	
-	[self.managedObjectContext disableUndoRegistration];
-	NSString* data = [NSString stringWithContentsOfURL:absoluteURL
-																						encoding:NSUTF8StringEncoding
-																							 error:error];
-	if (data) {
-		result = [self.model readValuesFromString:data];
-	}
-	[self.managedObjectContext enableUndoRegistration];
-
-	return result;
-}
-
-- (BOOL) writeToURL:(NSURL *)absoluteURL
-						 ofType:(NSString *)typeName
-	 forSaveOperation:(NSSaveOperationType)saveOperation
-originalContentsURL:(NSURL *)absoluteOriginalContentsURL
-							error:(NSError **)error
-{
-	return [self.model writeValuesToURL:absoluteURL error:error];
+	return [self.model writeValuesToURL:url error:outError];
 }
 
 - (void)embedInView:(NSView*)container
@@ -72,6 +51,13 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 {
 	return NO;
 }
+
+- (void)canCloseDocumentWithDelegate:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector contextInfo:(void *)contextInfo
+{
+//	[[self managedObjectContext] commitEditing];
+	[super canCloseDocumentWithDelegate:delegate shouldCloseSelector:shouldCloseSelector contextInfo:contextInfo];
+}
+
 @end
 
 @implementation ALUncrustifyDocument
@@ -80,7 +66,6 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 	return self = [super initWithModelController:[[ALUncrustifyController alloc]
 					initWithExecutableURL:[[NSBundle mainBundle]
 									URLForAuxiliaryExecutable:@"uncrustify"]
-														moc:self.managedObjectContext
 													error:nil]];
 }
 
@@ -98,7 +83,6 @@ originalContentsURL:(NSURL *)absoluteOriginalContentsURL
 	return self = [super initWithModelController:[[ALClangFormatController alloc]
 					initWithExecutableURL:[[NSBundle mainBundle]
 									URLForAuxiliaryExecutable:@"clang-format"]
-														moc:self.managedObjectContext
 													error:nil]];
 }
 

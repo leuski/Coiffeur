@@ -66,12 +66,29 @@
                                     <constraint firstAttribute="width" constant="360" id="rw5-Mc-uyU"/>
                                 </constraints>
                             </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="byr-ux-Oq8">
+                                <rect key="frame" x="701" y="4" width="44" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Edited" id="2gc-3z-feq">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <binding destination="-2" name="hidden" keyPath="self.document.isDocumentEdited" id="NYF-bR-5He">
+                                        <dictionary key="options">
+                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </textField>
                         </subviews>
                     </view>
                     <constraints>
                         <constraint firstItem="ET2-Lr-rcu" firstAttribute="top" secondItem="prZ-fd-sdG" secondAttribute="top" constant="1" id="0py-wH-DT6"/>
+                        <constraint firstItem="byr-ux-Oq8" firstAttribute="top" secondItem="prZ-fd-sdG" secondAttribute="top" constant="4" id="M9A-mA-GDD"/>
                         <constraint firstAttribute="height" constant="26" id="NF5-TE-xtT"/>
                         <constraint firstAttribute="centerX" secondItem="ET2-Lr-rcu" secondAttribute="centerX" id="x8S-nZ-OcB"/>
+                        <constraint firstAttribute="trailing" secondItem="byr-ux-Oq8" secondAttribute="trailing" constant="16" id="xKn-6n-hIr"/>
                     </constraints>
                     <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

@@ -75,20 +75,19 @@ NSString* const ALDocumentSource           = @"Source File";
 	// Insert code here to tear down your application
 }
 
-- (BOOL)applicationShouldOpenUntitledFile:(NSApplication*)sender
-{
-	static BOOL applicationHasStarted = NO;
-	// On startup, when asked to open an untitled file, open the last opened
-	// file instead
-	if (applicationHasStarted) return YES;
-
-	applicationHasStarted            = YES;
-	// Get the recent documents
-	ALDocumentController* controller = [NSDocumentController sharedDocumentController];
-	[controller restoreState];
-	return NO;
-}
-
+//- (BOOL)applicationShouldOpenUntitledFile:(NSApplication*)sender
+//{
+//	static BOOL applicationHasStarted = NO;
+//	// On startup, when asked to open an untitled file, open the last opened
+//	// file instead
+//	if (applicationHasStarted) return YES;
+//
+//	applicationHasStarted            = YES;
+//	// Get the recent documents
+//	ALDocumentController* controller = [NSDocumentController sharedDocumentController];
+//	[controller restoreState];
+//	return NO;
+//}
 
 @end
 

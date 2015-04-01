@@ -13,6 +13,10 @@
 NSString * const ALFormatLanguage = @"ALFormatLanguage";
 NSString * const ALFormatFragment = @"ALFormatFragment";
 
+@interface ALCoiffeurController ()
+@property (nonatomic, strong) NSManagedObjectModel* managedObjectModel;
+@end
+
 @implementation ALCoiffeurController
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
@@ -20,13 +24,26 @@ NSString * const ALFormatFragment = @"ALFormatFragment";
 	return NO;
 }
 
-- (instancetype)initWithManagedObjectContext:(NSManagedObjectContext*)moc
-															 executableURL:(NSURL*)executableURL
+- (instancetype)initWithExecutableURL:(NSURL*)executableURL error:(NSError**)outError
 {
 	if (self = [super init]) {
-		self.managedObjectContext = moc;
 		self.executableURL = executableURL;
 
+		self.managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+		self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+		NSError* error;
+		[self.managedObjectContext.persistentStoreCoordinator
+		 addPersistentStoreWithType:NSInMemoryStoreType
+		 configuration:nil
+		 URL:nil
+		 options:nil
+		 error:&error];
+		if (error) {
+			NSLog(@"error: %@", error);
+		}
+		self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self
 																						 selector:@selector(modelDidChange:)
 																								 name:NSManagedObjectContextObjectsDidChangeNotification
@@ -103,6 +120,13 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	[self.managedObjectContext enableUndoRegistration];
 
 	return result;
+}
+
+- (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError **)error
+{
+	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
+	if (!data) return NO;
+	return [self readValuesFromString:data];
 }
 
 - (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error

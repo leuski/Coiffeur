@@ -20,10 +20,9 @@ static NSString* ALcfDefaultValues        = nil;
 @implementation ALClangFormatController
 
 - (instancetype)initWithExecutableURL:(NSURL*)url
-																	moc:(NSManagedObjectContext*)moc
 																error:(NSError**)outError
 {
-	if (self = [super initWithManagedObjectContext:moc executableURL:url]) {
+	if (self = [super initWithExecutableURL:url error:outError]) {
 
 		NSError* error;
 		
@@ -270,6 +269,22 @@ static NSString* cleanUpRST(NSString* rst)
 	}
 
 	return YES;
+}
+
+- (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error
+{
+	NSMutableString*	data = [NSMutableString new];
+
+	[data appendString:@"---\n"];
+	for(ALOption* option in [[ALOption allObjectsInContext:self.managedObjectContext] sortedArrayUsingComparator:^NSComparisonResult(ALOption* obj1, ALOption* obj2) {
+		return [obj1.key compare:obj2.key];
+	}]) {
+		if (!option.value) continue;
+		[data appendFormat:@"%@: %@\n", option.key, option.value];
+	};
+	[data appendString:@"...\n"];
+	
+	return [data writeToURL:absoluteURL atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		625934B81ACB9D7100E2CC03 /* ALDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 625934B71ACB9D7100E2CC03 /* ALDocument.m */; };
 		626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* ALMainWindowController.xib */; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
@@ -41,7 +42,6 @@
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		62B0C3711AC7E0E100A91E0C /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B0C3701AC7E0E100A91E0C /* WebKit.framework */; };
 		62B0C3741ACA6A0800A91E0C /* ALDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C3731ACA6A0800A91E0C /* ALDocumentController.m */; };
 		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
 /* End PBXBuildFile section */
@@ -81,6 +81,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		625934B61ACB9D7100E2CC03 /* ALDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALDocument.h; sourceTree = "<group>"; };
+		625934B71ACB9D7100E2CC03 /* ALDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALDocument.m; sourceTree = "<group>"; };
 		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALMainWindowController.xib; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -132,7 +134,6 @@
 		62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALClangFormatController.m; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
 		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
-		62B0C3701AC7E0E100A91E0C /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		62B0C3721ACA6A0800A91E0C /* ALDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALDocumentController.h; sourceTree = "<group>"; };
 		62B0C3731ACA6A0800A91E0C /* ALDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALDocumentController.m; sourceTree = "<group>"; };
 		62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coiffeur.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,7 +147,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62B0C3711AC7E0E100A91E0C /* WebKit.framework in Frameworks */,
 				626185731AC3B7040095CCD2 /* MGSFragaria.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -161,6 +161,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		625934B91ACBB89900E2CC03 /* coiffeur */ = {
+			isa = PBXGroup;
+			children = (
+				62B0C3651AC7B66900A91E0C /* ALClangFormatController.h */,
+				62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */,
+				62B0C3621AC7AD8800A91E0C /* ALCoiffeurController.h */,
+				62B0C3631AC7AD8800A91E0C /* ALCoiffeurController.m */,
+				62B0C35F1AC7ACE500A91E0C /* ALUncrustifyController.h */,
+				62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */,
+			);
+			name = coiffeur;
+			sourceTree = "<group>";
+		};
+		625934BA1ACBB8BB00E2CC03 /* document */ = {
+			isa = PBXGroup;
+			children = (
+				62B0C3591AC627C500A91E0C /* ALCodeDocument.h */,
+				62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */,
+				625934B61ACB9D7100E2CC03 /* ALDocument.h */,
+				625934B71ACB9D7100E2CC03 /* ALDocument.m */,
+				6261851E1AC351CC0095CCD2 /* Document.h */,
+				6261851F1AC351CC0095CCD2 /* Document.m */,
+			);
+			name = document;
+			sourceTree = "<group>";
+		};
+		625934BB1ACBB8F000E2CC03 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				626185871AC4A5BD0095CCD2 /* ALCoreData.h */,
+				626185881AC4A5BD0095CCD2 /* ALCoreData.m */,
+				62B0C35C1AC6962200A91E0C /* NSInvocation+shouldClose.h */,
+				62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */,
+				6261857E1AC48E160095CCD2 /* NSString+commandLine.h */,
+				6261857F1AC48E160095CCD2 /* NSString+commandLine.m */,
+			);
+			name = utils;
+			sourceTree = "<group>";
+		};
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
@@ -183,34 +222,21 @@
 		6261851B1AC351CC0095CCD2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				62B0C3651AC7B66900A91E0C /* ALClangFormatController.h */,
-				62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */,
-				62B0C3591AC627C500A91E0C /* ALCodeDocument.h */,
-				62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */,
-				62B0C3621AC7AD8800A91E0C /* ALCoiffeurController.h */,
-				62B0C3631AC7AD8800A91E0C /* ALCoiffeurController.m */,
+				625934BB1ACBB8F000E2CC03 /* utils */,
+				625934BA1ACBB8BB00E2CC03 /* document */,
+				625934B91ACBB89900E2CC03 /* coiffeur */,
 				626185B71AC6230A0095CCD2 /* ALCoiffeurView.h */,
 				626185B81AC6230A0095CCD2 /* ALCoiffeurView.m */,
-				626185871AC4A5BD0095CCD2 /* ALCoreData.h */,
-				626185881AC4A5BD0095CCD2 /* ALCoreData.m */,
 				62B0C3721ACA6A0800A91E0C /* ALDocumentController.h */,
 				62B0C3731ACA6A0800A91E0C /* ALDocumentController.m */,
 				626185BA1AC6235E0095CCD2 /* ALDocumentView.h */,
 				626185BB1AC6235E0095CCD2 /* ALDocumentView.m */,
 				626185761AC3B7D20095CCD2 /* ALMainWindowController.h */,
 				626185771AC3B7D20095CCD2 /* ALMainWindowController.m */,
-				62B0C35F1AC7ACE500A91E0C /* ALUncrustifyController.h */,
-				62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */,
 				6261851C1AC351CC0095CCD2 /* AppDelegate.h */,
 				6261851D1AC351CC0095CCD2 /* AppDelegate.m */,
-				6261851E1AC351CC0095CCD2 /* Document.h */,
-				6261851F1AC351CC0095CCD2 /* Document.m */,
 				626185201AC351CC0095CCD2 /* main.m */,
 				626185321AC35CA30095CCD2 /* model */,
-				62B0C35C1AC6962200A91E0C /* NSInvocation+shouldClose.h */,
-				62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */,
-				6261857E1AC48E160095CCD2 /* NSString+commandLine.h */,
-				6261857F1AC48E160095CCD2 /* NSString+commandLine.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -246,7 +272,6 @@
 		62D1C2D41AC34C7500B7F996 = {
 			isa = PBXGroup;
 			children = (
-				62B0C3701AC7E0E100A91E0C /* WebKit.framework */,
 				626185721AC3B7040095CCD2 /* MGSFragaria.framework */,
 				62D1C2DF1AC34C7500B7F996 /* Coiffeur */,
 				62D1C2FC1AC34C7500B7F996 /* CoiffeurTests */,
@@ -406,6 +431,7 @@
 				626185BD1AC6235E0095CCD2 /* ALDocumentView.m in Sources */,
 				626185891AC4A5BD0095CCD2 /* ALCoreData.m in Sources */,
 				62B0C35B1AC627C500A91E0C /* ALCodeDocument.m in Sources */,
+				625934B81ACB9D7100E2CC03 /* ALDocument.m in Sources */,
 				626185631AC3975F0095CCD2 /* ALNode+model.m in Sources */,
 				62B0C35E1AC6962200A91E0C /* NSInvocation+shouldClose.m in Sources */,
 				62B0C3641AC7AD8800A91E0C /* ALCoiffeurController.m in Sources */,

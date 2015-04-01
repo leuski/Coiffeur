@@ -27,23 +27,16 @@
 	return self;
 }
 
-- (void)makeWindowControllers
+- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError
 {
-	[[ALMainWindowController sharedInstance] addDocument:self];
-}
-
-- (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
 	return [self.string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
+- (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError
+{
 	self.string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	return YES;
 }
-
-//+ (BOOL)autosavesInPlace {
-//    return YES;
-//}
 
 - (void)setFileURL:(NSURL *)fileURL
 {
@@ -131,7 +124,7 @@
 		}
 	}
 
-	for(NSDictionary* d in [[self class] supportedLanguages]) {
+	for(NSDictionary* d in [AppDelegate supportedLanguages]) {
 		if (![self.language isEqualToString:d[@"uncrustify"]]) continue;
 		NSArray* utis = d[@"uti"];
 		if (utis.count == 0) break;

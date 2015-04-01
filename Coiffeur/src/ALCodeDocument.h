@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "ALDocument.h"
 
-@interface ALCodeDocument : NSDocument
+@interface ALCodeDocument : ALDocument
 @property (nonatomic, strong) NSString* string;
 @property (nonatomic, strong) NSString* language;
 

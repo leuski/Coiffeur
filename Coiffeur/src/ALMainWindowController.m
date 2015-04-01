@@ -47,6 +47,8 @@
 		if (document == dv.document)
 			return;
 	}
+	
+	NSLog(@"setting document %@ at index %lu", document, index);
 
 	ALDocumentView               * documentView = self.documentViews[index];
 	__weak ALMainWindowController* weakSelf     = self;
@@ -142,10 +144,10 @@
 										 : 0;
 	[self setDocument:document atIndex:index];
 
-	ALDocumentView* documentView = self.documentViews[1 - index];
-	if (documentView.document) return;
-
-	[documentView newDocument:nil];
+//	ALDocumentView* documentView = self.documentViews[1 - index];
+//	if (documentView.document) return;
+//
+//	[documentView newDocument:nil];
 }
 
 - (void)removeDocument:(NSDocument*)document
@@ -162,16 +164,16 @@
 //	NSLog(@"Will not set document to: %@",document);
 }
 
-- (NSDocument*)document
-{
-	if (self.window != [NSApp keyWindow]) return nil;
-
-	NSResponder* responder = self.window.firstResponder;
-	while (responder && ![responder isKindOfClass:[ALDocumentView class]])
-		responder = responder.nextResponder;
-
-	return [(id)responder document];
-}
+//- (NSDocument*)document
+//{
+//	if (self.window != [NSApp keyWindow]) return nil;
+//
+//	NSResponder* responder = self.window.firstResponder;
+//	while (responder && ![responder isKindOfClass:[ALDocumentView class]])
+//		responder = responder.nextResponder;
+//
+//	return [(id)responder document];
+//}
 
 - (void)addDocument:(NSDocument*)document
 		 toDocumentView:(ALDocumentView*)documentView

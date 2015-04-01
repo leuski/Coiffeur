@@ -74,11 +74,35 @@
 	(ALMainWindowController*)wc : nil;
 }
 
+- (NSUInteger)indexInController
+{
+	ALMainWindowController* controller = self.windowController;
+	NSUInteger index = 0;
+	for(ALDocumentView* dv in controller.documentViews) {
+		if (dv == self) return index;
+		++index;
+	}
+	return NSNotFound;
+}
+
+- (id)supplementalTargetForAction:(SEL)action sender:(id)sender
+{
+	if ([self.document respondsToSelector:action])
+		return self.document;
+	
+	return [super supplementalTargetForAction:action sender:sender];
+}
+
+#pragma mark - NSPathControlDelegate
+
 - (void)pathControl:(NSPathControl *)pathControl willPopUpMenu:(NSMenu *)menu
 {
 	NSMenuItem* item;
 	
 	[menu removeItemAtIndex:0];
+
+	item = [[NSMenuItem alloc] initWithTitle:@"Browse Document Versions…" action:@selector(browseDocumentVersions:) keyEquivalent:@""];
+	[menu insertItem:item atIndex:0];
 	
 	item = [[NSMenuItem alloc] initWithTitle:@"Save As…" action:@selector(saveDocumentAs:) keyEquivalent:@""];
 	[menu insertItem:item atIndex:0];
@@ -159,16 +183,7 @@
 	return YES;
 }
 
-- (NSUInteger)indexInController
-{
-	ALMainWindowController* controller = self.windowController;
-	NSUInteger index = 0;
-	for(ALDocumentView* dv in controller.documentViews) {
-		if (dv == self) return index;
-		++index;
-	}
-	return NSNotFound;
-}
+#pragma mark - actions
 
 - (IBAction)newDocument:(id)sender
 {
@@ -221,15 +236,15 @@
 	}];
 }
 
-- (IBAction)saveDocument:(id)sender
-{
-	[self.document saveDocument:sender];
-}
-
-- (IBAction)saveDocumentAs:(id)sender
-{
-	[self.document saveDocumentAs:sender];
-}
+//- (IBAction)saveDocument:(id)sender
+//{
+//	[self.document saveDocument:sender];
+//}
+//
+//- (IBAction)saveDocumentAs:(id)sender
+//{
+//	[self.document saveDocumentAs:sender];
+//}
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
@@ -237,6 +252,8 @@
 }
 
 @end
+
+#pragma mark - ALPathControl
 
 @interface ALPathControl : NSPathControl
 

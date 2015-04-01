@@ -14,6 +14,3 @@
 
 @end
 
-@interface NSDocument (shouldClose)
-- (void)canCloseWithBlock:(void (^)(BOOL))block;
-@end

@@ -40,6 +40,16 @@
 	[self didChangeValueForKey:@"isDocumentEdited"];
 }
 
+- (void)close
+{
+	for (NSWindowController* windowCtrl in [self.windowControllers copy]) {
+		if ([windowCtrl respondsToSelector:@selector(removeDocument:)]) {
+			[(id)windowCtrl removeDocument:self];
+		}
+	}
+	[super close];
+}
+
 @end
 
 @implementation NSDocument (shouldClose)

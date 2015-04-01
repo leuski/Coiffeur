@@ -8,12 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class ALDocumentView;
 @interface ALMainWindowController : NSWindowController <NSOutlineViewDelegate>
 @property (nonatomic, strong) NSMutableArray* documentViews;
 
 + (ALMainWindowController*)sharedInstance;
 - (void)addDocument:(NSDocument*)document;
-- (void)setDocument:(NSDocument*)document atIndex:(NSUInteger)index;
+- (void)displayDocument:(NSDocument*)document inView:(ALDocumentView*)documentView;
 - (void)removeDocument:(NSDocument*)document;
 
 @end

@@ -18,61 +18,32 @@
 
 @interface ALMainWindowController ()<NSWindowDelegate, ALCoiffeurControllerDelegate>
 
-@property (weak) IBOutlet NSSplitView* splitView;
+@property (nonatomic, weak) IBOutlet NSSplitView* splitView;
+@property (nonatomic, strong) NSMutableArray* documentsToDisplay;
 @end
 
 @implementation ALMainWindowController
 
+static ALMainWindowController* sharedALMainWindowController = nil;
+
 + (ALMainWindowController*)sharedInstance
 {
-	static ALMainWindowController* shared = nil;
-	if (!shared) {
-		shared = [ALMainWindowController new];
-		[shared window]; // load it
-	}
-	return shared;
+	static dispatch_once_t pred;
+
+	dispatch_once(&pred, ^{
+		sharedALMainWindowController = [[ALMainWindowController alloc] init];
+		[sharedALMainWindowController window]; // load it
+	});
+	return sharedALMainWindowController;
 }
 
 - (instancetype)init
 {
 	if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
+		self.documentsToDisplay = [NSMutableArray new];
 		self.documentViews = [NSMutableArray new];
 	}
 	return self;
-}
-
-- (void)setDocument:(NSDocument*)document atIndex:(NSUInteger)index
-{
-	for (ALDocumentView* dv in self.documentViews) {
-		if (document == dv.document)
-			return;
-	}
-	
-	NSLog(@"setting document %@ at index %lu", document, index);
-
-	ALDocumentView               * documentView = self.documentViews[index];
-	__weak ALMainWindowController* weakSelf     = self;
-
-	void (^completeBlock)(BOOL) = ^(BOOL success) {
-		if (!success) {
-			[document close];
-			return;
-		}
-
-		ALMainWindowController* _self = weakSelf;
-		if (!_self) return;
-
-		NSDocument* localDocument = documentView.document;
-		[_self removeDocumentFromDocumentView:documentView];
-		[localDocument close];
-		[_self addDocument:document toDocumentView:documentView];
-	};
-
-	if (documentView.document) {
-		[documentView.document canCloseWithBlock:completeBlock];
-	} else {
-		completeBlock(YES);
-	}
 }
 
 - (void)canCloseOneOfDocuments:(NSArray*)documentViews
@@ -136,18 +107,92 @@
 	return NO;
 }
 
+- (BOOL)AL_getDocument:(NSDocument**)outDocument targetView:(ALDocumentView**)outDocumentView
+{
+	while (self.documentsToDisplay.count > 0) {
+		NSDocument* document = self.documentsToDisplay[0];
+		[self.documentsToDisplay removeObjectAtIndex:0];
+		
+		NSString*		type = document.fileType;
+		
+		for(ALDocumentView* dv in self.documentViews) {
+			if (document == dv.document) break;
+			if ([dv.allowedFileTypes containsObject:type]) {
+				*outDocument = document;
+				*outDocumentView = dv;
+				return YES;
+			}
+		}
+	}
+	return NO;
+}
+
+- (void)AL_showDocument
+{
+	NSDocument* document;
+	ALDocumentView* documentView;
+	if (![self AL_getDocument:&document targetView:&documentView]) {
+		
+		NSDocumentController* controller = [NSDocumentController sharedDocumentController];
+		for(ALDocumentView* dv in self.documentViews) {
+			if (dv.document) continue;
+			NSError* error;
+			NSDocument* doc = [controller makeUntitledDocumentOfType:dv.allowedFileTypes[0] error:&error];
+			if (doc) {
+				[controller addDocument:doc];
+				[self addDocument:doc toDocumentView:dv];
+			} else {
+				[NSApp presentError:error];
+			}
+		}
+		
+		[self.window makeKeyAndOrderFront:nil];
+
+		return;
+	}
+	
+	__weak ALMainWindowController* weakSelf     = self;
+	void (^completeBlock)(BOOL) = ^(BOOL success) {
+		ALMainWindowController* _self = weakSelf;
+		if (!_self) return;
+
+		[_self AL_do:success swapDocumentInView:documentView forDocument:document];
+		[_self AL_showDocument];
+	};
+	
+	[documentView canCloseDocumentWithBlock:completeBlock];
+}
+
+- (void)AL_do:(BOOL)success swapDocumentInView:(ALDocumentView*)documentView forDocument:(NSDocument*)document
+{
+	if (!success) {
+		[document close];
+	} else {
+		[documentView.document close];
+		[self addDocument:document toDocumentView:documentView];
+	}
+}
+
+- (void)displayDocument:(NSDocument*)document inView:(ALDocumentView*)documentView
+{
+	__weak ALMainWindowController* weakSelf     = self;
+	void (^completeBlock)(BOOL) = ^(BOOL success) {
+		ALMainWindowController* _self = weakSelf;
+		if (!_self) return;
+		
+		[_self AL_do:success swapDocumentInView:documentView forDocument:document];
+	};
+	
+	[documentView canCloseDocumentWithBlock:completeBlock];
+}
+
 - (void)addDocument:(NSDocument*)document
 {
-	NSUInteger index = [[document fileType]
-														 isEqualToString:ALDocumentSource]
-										 ? 1
-										 : 0;
-	[self setDocument:document atIndex:index];
-
-//	ALDocumentView* documentView = self.documentViews[1 - index];
-//	if (documentView.document) return;
-//
-//	[documentView newDocument:nil];
+	[self.documentsToDisplay addObject:document];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSLog(@"%@", self.documentsToDisplay);
+		[self AL_showDocument];
+	});
 }
 
 - (void)removeDocument:(NSDocument*)document
@@ -164,16 +209,10 @@
 //	NSLog(@"Will not set document to: %@",document);
 }
 
-//- (NSDocument*)document
-//{
-//	if (self.window != [NSApp keyWindow]) return nil;
-//
-//	NSResponder* responder = self.window.firstResponder;
-//	while (responder && ![responder isKindOfClass:[ALDocumentView class]])
-//		responder = responder.nextResponder;
-//
-//	return [(id)responder document];
-//}
+- (NSDocument*)document
+{
+	return nil;
+}
 
 - (void)addDocument:(NSDocument*)document
 		 toDocumentView:(ALDocumentView*)documentView
@@ -215,8 +254,6 @@
 {
 	[super windowDidLoad];
 
-	self.shouldCloseDocument = YES;
-
 	for (NSView* v in [self.splitView.subviews copy])
 		[v removeFromSuperviewWithoutNeedingDisplay];
 
@@ -240,16 +277,12 @@
 	// let's keep a reference to ourselves and not have us thrown away while we clear out references.
 	ALMainWindowController* me = self;
 
-	// detach the view controllers from the document first
-	//	me.currentContentViewController = nil;
+	// detach the view controllers from the documents
 	for (ALDocumentView* ctrl in me.documentViews) {
-		NSDocument* document = ctrl.document;
-		[me removeDocumentFromDocumentView:ctrl];
-		[document close];
+		[ctrl.document close];
 	}
-	// then any content view
-	[window setContentView:nil];
-	[me.documentViews removeAllObjects];
+	
+	[NSApp terminate:nil];
 }
 
 - (NSUndoManager*)windowWillReturnUndoManager:(NSWindow*)window

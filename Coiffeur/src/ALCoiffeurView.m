@@ -261,34 +261,35 @@
 	return ![self outlineView:outlineView isGroupItem:item];
 }
 
-//- (NSTableRowView*)outlineView:(NSOutlineView *)outlineView rowViewForItem:(id)item
-//{
-//	ALNode* node = [item representedObject];
-//	if (!node.leaf) return nil;
-//	
-//	int offset = (1+[outlineView levelForItem:item]) * [outlineView indentationPerLevel] + 3;
-//	
-//	ALTableRowView* container = [ALTableRowView new];
-//	NSTextField* childView = [NSTextField new];
-//	childView.editable = NO;
-//	childView.bordered = NO;
-//	childView.drawsBackground = NO;
-//	childView.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]];
-//	[container addSubview:childView];
-//
-//	childView.translatesAutoresizingMaskIntoConstraints = NO;
-//	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-%d-[childView]|", offset]
-//																																		options:(NSLayoutFormatOptions)0
-//																																		metrics:nil
-//																																			views:NSDictionaryOfVariableBindings(childView)]];
-//	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-2-[childView]"
-//																																		options:(NSLayoutFormatOptions)0
-//																																		metrics:nil
-//																																			views:NSDictionaryOfVariableBindings(childView)]];
-//
-//	childView.stringValue = node.title;
-//	return container;
-//}
+- (NSTableRowView*)outlineView:(NSOutlineView *)outlineView rowViewForItem:(id)item
+{
+	ALNode* node = [item representedObject];
+	if (!node.leaf) return nil;
+	
+	int offset = (1+[outlineView levelForItem:item]) * [outlineView indentationPerLevel] + 3;
+	
+	ALTableRowView* container = [ALTableRowView new];
+	NSTextField* childView = [NSTextField new];
+	childView.editable = NO;
+	childView.selectable = NO;
+	childView.bordered = NO;
+	childView.drawsBackground = NO;
+	childView.font = [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]];
+	[container addSubview:childView];
+
+	childView.translatesAutoresizingMaskIntoConstraints = NO;
+	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-%d-[childView]|", offset]
+																																		options:(NSLayoutFormatOptions)0
+																																		metrics:nil
+																																			views:NSDictionaryOfVariableBindings(childView)]];
+	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-2-[childView]"
+																																		options:(NSLayoutFormatOptions)0
+																																		metrics:nil
+																																			views:NSDictionaryOfVariableBindings(childView)]];
+
+	childView.stringValue = node.title;
+	return container;
+}
 
 //- (BOOL)outlineView:(NSOutlineView *)outlineView shouldShowOutlineCellForItem:(id)item
 //{

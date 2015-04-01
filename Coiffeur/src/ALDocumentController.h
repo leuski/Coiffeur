@@ -9,6 +9,4 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALDocumentController : NSDocumentController
-- (void)restoreState;
-
 @end

@@ -15,6 +15,7 @@
 @property (nonatomic, weak) IBOutlet NSTextField *label;
 
 - (IBAction)newDocument:(id)sender;
+- (void)canCloseDocumentWithBlock:(void(^)(BOOL))block;
 
 @end
 

@@ -9,6 +9,7 @@
 #import "ALDocumentView.h"
 #import "ALMainWindowController.h"
 #import "AppDelegate.h"
+#import "ALDocument.h"
 
 @interface ALDocumentView () <NSPathControlDelegate>
 #pragma clang diagnostic push
@@ -62,9 +63,6 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	
-    // Do view setup here./Users/leuski/Documents/Projects/Coiffeur/Coiffeur/src/ALCoiffeurController.m
 }
 
 - (ALMainWindowController*)windowController
@@ -72,17 +70,6 @@
 	id wc = self.view.window.delegate;
 	return wc && [wc isKindOfClass:[ALMainWindowController class]] ?
 	(ALMainWindowController*)wc : nil;
-}
-
-- (NSUInteger)indexInController
-{
-	ALMainWindowController* controller = self.windowController;
-	NSUInteger index = 0;
-	for(ALDocumentView* dv in controller.documentViews) {
-		if (dv == self) return index;
-		++index;
-	}
-	return NSNotFound;
 }
 
 - (id)supplementalTargetForAction:(SEL)action sender:(id)sender
@@ -143,11 +130,22 @@
 	return count == 1 ? NSDragOperationEvery : NSDragOperationNone;
 }
 
+- (void)AL_openDocumentWithURL:(NSURL*)url
+{
+	[[NSDocumentController sharedDocumentController]
+	 openDocumentWithContentsOfURL:url
+	 display:NO
+	 completionHandler:^(NSDocument *document,
+											 BOOL documentWasAlreadyOpen,
+											 NSError *error) {
+		 if (document && !documentWasAlreadyOpen) {
+			 [[self windowController] displayDocument:document inView:self];
+		 }
+	 }];
+}
+
 - (BOOL)pathControl:(NSPathControl *)pathControl acceptDrop:(id<NSDraggingInfo>)info
 {
-	NSUInteger index = [self indexInController];
-	if (index == NSNotFound) return NO;
-
 	__block NSURL* theURL = nil;
 	[info enumerateDraggingItemsWithOptions:0
 																	forView:pathControl
@@ -168,44 +166,37 @@
 															 }];
 	if (!theURL) return NO;
 
-	[[NSDocumentController sharedDocumentController]
-	 openDocumentWithContentsOfURL:theURL
-	 display:NO
-	 completionHandler:^(NSDocument *document,
-											 BOOL documentWasAlreadyOpen,
-											 NSError *error) {
-		 if (document && !documentWasAlreadyOpen) {
-			 [[self windowController] setDocument:document
-																		atIndex:index];
-		 }
-	 }];
+	[self AL_openDocumentWithURL:theURL];
 
 	return YES;
+}
+
+- (void)canCloseDocumentWithBlock:(void(^)(BOOL))block
+{
+	if (self.document) {
+		[self.document canCloseWithBlock:block];
+	} else {
+		block(YES);
+	}
 }
 
 #pragma mark - actions
 
 - (IBAction)newDocument:(id)sender
 {
-	NSUInteger index = [self indexInController];
-	if (index == NSNotFound) return;
-	
 	NSString* type = [sender representedObject];
 	if (!type) type = self.allowedFileTypes[0];
 	
 	NSDocumentController* controller = [NSDocumentController sharedDocumentController];
-	NSDocument* doc = [controller makeUntitledDocumentOfType:type error:nil];
-	if (doc) {
-		[controller addDocument:doc];
-		[[self windowController] setDocument:doc atIndex:index];
+	NSDocument* document = [controller makeUntitledDocumentOfType:type error:nil];
+	if (document) {
+		[controller addDocument:document];
+		[[self windowController] displayDocument:document inView:self];
 	}
 }
 
 - (IBAction)openDocumentInView:(id)sender
 {
-	NSUInteger index = [self indexInController];
-	if (index == NSNotFound) return;
-
 	NSOpenPanel* op = [NSOpenPanel openPanel];
 	
 	NSMutableOrderedSet* allowedExtensions = [NSMutableOrderedSet new];
@@ -221,18 +212,7 @@
 	
 	[op beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
 		if (result != NSFileHandlingPanelOKButton) return;
-		
-		[[NSDocumentController sharedDocumentController]
-			openDocumentWithContentsOfURL:[op URL]
-														display:NO
-									completionHandler:^(NSDocument *document,
-																			BOOL documentWasAlreadyOpen,
-																			NSError *error) {
-										if (document && !documentWasAlreadyOpen) {
-											[[self windowController] setDocument:document
-																									 atIndex:index];
-										}
-									}];
+		[self AL_openDocumentWithURL:[op URL]];
 	}];
 }
 

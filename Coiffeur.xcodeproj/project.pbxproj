@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		625934B81ACB9D7100E2CC03 /* ALDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 625934B71ACB9D7100E2CC03 /* ALDocument.m */; };
+		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
 		626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* ALMainWindowController.xib */; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
@@ -34,8 +34,6 @@
 		626185B91AC6230A0095CCD2 /* ALCoiffeurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185B81AC6230A0095CCD2 /* ALCoiffeurView.m */; };
 		626185BD1AC6235E0095CCD2 /* ALDocumentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185BB1AC6235E0095CCD2 /* ALDocumentView.m */; };
 		626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185C31AC6237E0095CCD2 /* ALDocumentView.xib */; };
-		62B0C35B1AC627C500A91E0C /* ALCodeDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */; };
-		62B0C35E1AC6962200A91E0C /* NSInvocation+shouldClose.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */; };
 		62B0C3611AC7ACE500A91E0C /* ALUncrustifyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */; };
 		62B0C3641AC7AD8800A91E0C /* ALCoiffeurController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C3631AC7AD8800A91E0C /* ALCoiffeurController.m */; };
 		62B0C3671AC7B66900A91E0C /* ALClangFormatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C3661AC7B66900A91E0C /* ALClangFormatController.m */; };
@@ -81,8 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		625934B61ACB9D7100E2CC03 /* ALDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALDocument.h; sourceTree = "<group>"; };
-		625934B71ACB9D7100E2CC03 /* ALDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALDocument.m; sourceTree = "<group>"; };
+		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALMainWindowController.xib; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -123,9 +120,6 @@
 		626185BB1AC6235E0095CCD2 /* ALDocumentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ALDocumentView.m; path = Coiffeur/src/ALDocumentView.m; sourceTree = SOURCE_ROOT; };
 		626185C21AC6237E0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALDocumentView.xib; sourceTree = "<group>"; };
 		62B0C3591AC627C500A91E0C /* ALCodeDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALCodeDocument.h; sourceTree = "<group>"; };
-		62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALCodeDocument.m; sourceTree = "<group>"; };
-		62B0C35C1AC6962200A91E0C /* NSInvocation+shouldClose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSInvocation+shouldClose.h"; sourceTree = "<group>"; };
-		62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSInvocation+shouldClose.m"; sourceTree = "<group>"; };
 		62B0C35F1AC7ACE500A91E0C /* ALUncrustifyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALUncrustifyController.h; sourceTree = "<group>"; };
 		62B0C3601AC7ACE500A91E0C /* ALUncrustifyController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALUncrustifyController.m; sourceTree = "<group>"; };
 		62B0C3621AC7AD8800A91E0C /* ALCoiffeurController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALCoiffeurController.h; sourceTree = "<group>"; };
@@ -178,9 +172,6 @@
 			isa = PBXGroup;
 			children = (
 				62B0C3591AC627C500A91E0C /* ALCodeDocument.h */,
-				62B0C35A1AC627C500A91E0C /* ALCodeDocument.m */,
-				625934B61ACB9D7100E2CC03 /* ALDocument.h */,
-				625934B71ACB9D7100E2CC03 /* ALDocument.m */,
 				6261851E1AC351CC0095CCD2 /* Document.h */,
 				6261851F1AC351CC0095CCD2 /* Document.m */,
 			);
@@ -192,8 +183,6 @@
 			children = (
 				626185871AC4A5BD0095CCD2 /* ALCoreData.h */,
 				626185881AC4A5BD0095CCD2 /* ALCoreData.m */,
-				62B0C35C1AC6962200A91E0C /* NSInvocation+shouldClose.h */,
-				62B0C35D1AC6962200A91E0C /* NSInvocation+shouldClose.m */,
 				6261857E1AC48E160095CCD2 /* NSString+commandLine.h */,
 				6261857F1AC48E160095CCD2 /* NSString+commandLine.m */,
 			);
@@ -203,6 +192,7 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
 				6261852B1AC3524B0095CCD2 /* uncrustify */,
 				626185291AC352450095CCD2 /* cfg */,
@@ -401,6 +391,7 @@
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
 				626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
+				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
 				6261852A1AC352450095CCD2 /* cfg in Resources */,
@@ -430,10 +421,7 @@
 				62B0C3671AC7B66900A91E0C /* ALClangFormatController.m in Sources */,
 				626185BD1AC6235E0095CCD2 /* ALDocumentView.m in Sources */,
 				626185891AC4A5BD0095CCD2 /* ALCoreData.m in Sources */,
-				62B0C35B1AC627C500A91E0C /* ALCodeDocument.m in Sources */,
-				625934B81ACB9D7100E2CC03 /* ALDocument.m in Sources */,
 				626185631AC3975F0095CCD2 /* ALNode+model.m in Sources */,
-				62B0C35E1AC6962200A91E0C /* NSInvocation+shouldClose.m in Sources */,
 				62B0C3641AC7AD8800A91E0C /* ALCoiffeurController.m in Sources */,
 				626185261AC351CC0095CCD2 /* AppDelegate.m in Sources */,
 				62B0C3741ACA6A0800A91E0C /* ALDocumentController.m in Sources */,

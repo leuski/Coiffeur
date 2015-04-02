@@ -9,55 +9,11 @@
 #import "ALDocumentView.h"
 #import "ALMainWindowController.h"
 #import "AppDelegate.h"
-#import "ALDocument.h"
 
 @interface ALDocumentView () <NSPathControlDelegate>
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedPropertyInspection"
-@property (nonatomic, strong, readonly) NSURL* displayURL;
-@property (nonatomic, strong, readonly) NSString* displayType;
-#pragma clang diagnostic pop
 @end
 
 @implementation ALDocumentView
-
-+ (NSSet*)keyPathsForValuesAffectingDisplayURL
-{
-	return [NSSet setWithArray:@[ @"document.fileURL", @"document.displayName" ] ];
-}
-
-+ (NSSet*)keyPathsForValuesAffectingDisplayType
-{
-	return [NSSet setWithObject:@"allowedFileTypes"];
-}
-
-- (instancetype)init
-{
-	if (self = [super initWithNibName:@"ALDocumentView"
-														 bundle:[NSBundle bundleForClass:[self class]]]) {
-		
-	}
-	return self;
-}
-
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedMethodInspection"
-
-- (NSURL*)displayURL
-{
-	if (!self.document) return nil;
-	return self.document.fileURL
-		? self.document.fileURL
-		: [NSURL fileURLWithPath:self.document.displayName];
-}
-
-- (NSString*)displayType
-{
-	if (!self.allowedFileTypes) return nil;
-	return [self.allowedFileTypes containsObject:ALDocumentSource]
-		? @"Source"
-		: @"Style";
-}
 
 #pragma clang diagnostic pop
 
@@ -72,14 +28,6 @@
 	(ALMainWindowController*)wc : nil;
 }
 
-- (id)supplementalTargetForAction:(SEL)action sender:(id)sender
-{
-	if ([self.document respondsToSelector:action])
-		return self.document;
-	
-	return [super supplementalTargetForAction:action sender:sender];
-}
-
 #pragma mark - NSPathControlDelegate
 
 - (void)pathControl:(NSPathControl *)pathControl willPopUpMenu:(NSMenu *)menu
@@ -88,24 +36,14 @@
 	
 	[menu removeItemAtIndex:0];
 
-	item = [[NSMenuItem alloc] initWithTitle:@"Browse Document Versions…" action:@selector(browseDocumentVersions:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:0];
-	
-	item = [[NSMenuItem alloc] initWithTitle:@"Save As…" action:@selector(saveDocumentAs:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:0];
-
-	item = [[NSMenuItem alloc] initWithTitle:@"Save" action:@selector(saveDocument:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:0];
-	
-	item = [[NSMenuItem alloc] initWithTitle:@"Open…" action:@selector(openDocumentInView:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:0];
-	
-	int index = 0;
-	for(NSString* type in self.allowedFileTypes) {
-		item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"New %@", type] action:@selector(newDocument:) keyEquivalent:@""];
-		item.representedObject = type;
+	NSInteger index = 0;
+	for(NSURL* url in self.knownSampleURLs) {
+		item = [[NSMenuItem alloc] initWithTitle:url.path.lastPathComponent action:@selector(openDocumentInView:) keyEquivalent:@""];
 		[menu insertItem:item atIndex:index++];
+		item.representedObject = url;
 	}
+	item = [[NSMenuItem alloc] initWithTitle:@"Choose…" action:@selector(openDocumentInView:) keyEquivalent:@""];
+	[menu insertItem:item atIndex:index++];
 }
 
 - (NSDragOperation)pathControl:(NSPathControl *)pathControl validateDrop:(id<NSDraggingInfo>)info
@@ -118,12 +56,8 @@
 															 usingBlock:^(NSDraggingItem* draggingItem,
 																			 NSInteger idx, BOOL* stop) {
 
-																 NSURL* url = (NSURL*)draggingItem.item;
-																 NSError* error;
-																 NSString* type = [[NSDocumentController sharedDocumentController]
-																				 typeForContentsOfURL:url
-																												error:&error];
-																 if (type && [self.allowedFileTypes containsObject:type]) {
+																 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
+																 if (url) {
 																	 ++count;
 																 }
 															 }];
@@ -132,16 +66,19 @@
 
 - (void)AL_openDocumentWithURL:(NSURL*)url
 {
-	[[NSDocumentController sharedDocumentController]
-	 openDocumentWithContentsOfURL:url
-	 display:NO
-	 completionHandler:^(NSDocument *document,
-											 BOOL documentWasAlreadyOpen,
-											 NSError *error) {
-		 if (document && !documentWasAlreadyOpen) {
-			 [[self windowController] displayDocument:document inView:self];
-		 }
-	 }];
+	[self.windowController loadSourceFormURL:url error:nil];
+}
+
+- (NSURL*)AL_allowedURLForDraggingItem:(NSDraggingItem*)draggingItem
+{
+	NSURL* url = (NSURL*)draggingItem.item;
+	NSError* error;
+	NSString* type = [[NSDocumentController sharedDocumentController]
+										typeForContentsOfURL:url
+										error:&error];
+	if (type && [self.allowedFileTypes containsObject:type]) return url;
+
+	return nil;
 }
 
 - (BOOL)pathControl:(NSPathControl *)pathControl acceptDrop:(id<NSDraggingInfo>)info
@@ -154,12 +91,8 @@
 															 usingBlock:^(NSDraggingItem* draggingItem,
 																						NSInteger idx, BOOL* stop) {
 																 
-																 NSURL* url = (NSURL*)draggingItem.item;
-																 NSError* error;
-																 NSString* type = [[NSDocumentController sharedDocumentController]
-																									 typeForContentsOfURL:url
-																									 error:&error];
-																 if (type && [self.allowedFileTypes containsObject:type]) {
+																 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
+																 if (url) {
 																	 theURL = url;
 																	 *stop = YES;
 																 }
@@ -171,43 +104,21 @@
 	return YES;
 }
 
-- (void)canCloseDocumentWithBlock:(void(^)(BOOL))block
-{
-	if (self.document) {
-		[self.document canCloseWithBlock:block];
-	} else {
-		block(YES);
-	}
-}
-
 #pragma mark - actions
-
-- (IBAction)newDocument:(id)sender
-{
-	NSString* type = [sender representedObject];
-	if (!type) type = self.allowedFileTypes[0];
-	
-	NSDocumentController* controller = [NSDocumentController sharedDocumentController];
-	NSDocument* document = [controller makeUntitledDocumentOfType:type error:nil];
-	if (document) {
-		[controller addDocument:document];
-		[[self windowController] displayDocument:document inView:self];
-	}
-}
 
 - (IBAction)openDocumentInView:(id)sender
 {
-	NSOpenPanel* op = [NSOpenPanel openPanel];
+	NSURL* url = [sender representedObject];
 	
-	NSMutableOrderedSet* allowedExtensions = [NSMutableOrderedSet new];
-	
-	NSArray* fileTypes = [[NSBundle mainBundle] infoDictionary][@"CFBundleDocumentTypes"];
-	for(NSDictionary* ft in fileTypes) {
-		if (![self.allowedFileTypes containsObject:ft[@"CFBundleTypeName"]]) continue;
-		[allowedExtensions addObjectsFromArray:ft[@"CFBundleTypeExtensions"]];
+	if (url) {
+		[self AL_openDocumentWithURL:url];
+		return;
 	}
 	
-	op.allowedFileTypes = [allowedExtensions array];
+	NSOpenPanel* op = [NSOpenPanel openPanel];
+	
+	if (self.allowedFileTypes.count)
+		op.allowedFileTypes = self.allowedFileTypes;
 	op.allowsOtherFileTypes = NO;
 	
 	[op beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
@@ -215,16 +126,6 @@
 		[self AL_openDocumentWithURL:[op URL]];
 	}];
 }
-
-//- (IBAction)saveDocument:(id)sender
-//{
-//	[self.document saveDocument:sender];
-//}
-//
-//- (IBAction)saveDocumentAs:(id)sender
-//{
-//	[self.document saveDocumentAs:sender];
-//}
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
@@ -242,7 +143,7 @@
 @implementation ALPathControl
 
 // there is a bug in NSPathControl where clicking outside of the
-// button label results in the focus no transfering to the control. Fixing.
+// button label results in the focus not transferring to the control. Fixing.
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	[self.window makeFirstResponder:self];

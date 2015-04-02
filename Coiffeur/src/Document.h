@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import "ALDocument.h"
+@import Cocoa;
 
 @class ALCoiffeurController;
 
-@interface Document : ALDocument
+@interface Document : NSDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
+- (void)embedInView:(NSView*)container;
+
 @end
 
 @interface ALUncrustifyDocument : Document

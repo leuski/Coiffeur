@@ -11,6 +11,8 @@
 		<string>C</string>
 		<key>name</key>
 		<string>C</string>
+		<key>fragaria</key>
+		<string>C</string>
 	</dict>
 	<dict>
 		<key>uti</key>
@@ -20,6 +22,8 @@
 		<key>uncrustify</key>
 		<string>CPP</string>
 		<key>name</key>
+		<string>C++</string>
+		<key>fragaria</key>
 		<string>C++</string>
 	</dict>
 	<dict>
@@ -32,6 +36,8 @@
 		<string>CS</string>
 		<key>name</key>
 		<string>C#</string>
+		<key>fragaria</key>
+		<string>C#</string>
 	</dict>
 	<dict>
 		<key>uti</key>
@@ -41,6 +47,8 @@
 		<key>uncrustify</key>
 		<string>D</string>
 		<key>name</key>
+		<string>D</string>
+		<key>fragaria</key>
 		<string>D</string>
 	</dict>
 	<dict>
@@ -52,6 +60,8 @@
 		<string>ECMA</string>
 		<key>name</key>
 		<string>ECMA Script</string>
+		<key>fragaria</key>
+		<string>JavaScript</string>
 	</dict>
 	<dict>
 		<key>uti</key>
@@ -61,6 +71,8 @@
 		<key>uncrustify</key>
 		<string>JAVA</string>
 		<key>name</key>
+		<string>Java</string>
+		<key>fragaria</key>
 		<string>Java</string>
 	</dict>
 	<dict>
@@ -73,6 +85,8 @@
 		<string>OC</string>
 		<key>name</key>
 		<string>Objective-C</string>
+		<key>fragaria</key>
+		<string>Objective-C</string>
 	</dict>
 	<dict>
 		<key>uti</key>
@@ -84,6 +98,8 @@
 		<string>OC+</string>
 		<key>name</key>
 		<string>Objective-C++</string>
+		<key>fragaria</key>
+		<string>Objective-C</string>
 	</dict>
 	<dict>
 		<key>uti</key>

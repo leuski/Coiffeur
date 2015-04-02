@@ -7,7 +7,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ALDocumentView">
             <connections>
                 <outlet property="containerView" destination="ada-sK-Zxq" id="E8J-sG-kdD"/>
-                <outlet property="label" destination="IjH-D9-E4O" id="jXg-S3-2Cs"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -18,36 +17,33 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="line" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="prZ-fd-sdG">
-                    <rect key="frame" x="-1" y="551" width="760" height="26"/>
+                    <rect key="frame" x="-1" y="557" width="760" height="20"/>
                     <view key="contentView">
-                        <rect key="frame" x="1" y="1" width="758" height="24"/>
+                        <rect key="frame" x="1" y="1" width="758" height="18"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="ET2-Lr-rcu">
-                                <rect key="frame" x="199" y="4" width="360" height="20"/>
+                                <rect key="frame" x="199" y="1" width="360" height="17"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IjH-D9-E4O">
-                                        <rect key="frame" x="-2" y="0.0" width="136" height="17"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Label" id="IVf-rN-Xmy">
-                                            <font key="font" metaFont="system"/>
+                                        <rect key="frame" x="-2" y="0.0" width="136" height="14"/>
+                                        <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Source" id="IVf-rN-Xmy">
+                                            <font key="font" metaFont="smallSystem"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
-                                        <connections>
-                                            <binding destination="-2" name="value" keyPath="self.displayType" id="JWP-yc-LMz"/>
-                                        </connections>
                                     </textField>
-                                    <pathControl focusRingType="exterior" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdE-Vm-nsM" customClass="ALPathControl">
-                                        <rect key="frame" x="133" y="-4" width="226" height="26"/>
+                                    <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdE-Vm-nsM" customClass="ALPathControl">
+                                        <rect key="frame" x="133" y="-4" width="226" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="220" id="NyW-sj-rCw"/>
                                         </constraints>
-                                        <pathCell key="cell" selectable="YES" editable="YES" focusRingType="exterior" alignment="left" pathStyle="popUp" id="3Qp-gq-7EB">
-                                            <font key="font" metaFont="system"/>
+                                        <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" focusRingType="none" alignment="left" pathStyle="popUp" id="3Qp-gq-7EB">
+                                            <font key="font" metaFont="smallSystem"/>
                                             <url key="url" string="file://localhost/Applications/"/>
                                         </pathCell>
                                         <connections>
-                                            <binding destination="-2" name="value" keyPath="self.displayURL" id="M7V-Tw-cfA">
+                                            <binding destination="-2" name="value" keyPath="self.representedObject.fileURL" id="Y76-BI-u0t">
                                                 <dictionary key="options">
                                                     <string key="NSNullPlaceholder">untitled</string>
                                                 </dictionary>
@@ -60,41 +56,24 @@
                                     <constraint firstItem="WdE-Vm-nsM" firstAttribute="leading" secondItem="IjH-D9-E4O" secondAttribute="trailing" constant="4" id="3CJ-yc-4kX"/>
                                     <constraint firstItem="WdE-Vm-nsM" firstAttribute="top" secondItem="ET2-Lr-rcu" secondAttribute="top" id="Me3-eO-HPk"/>
                                     <constraint firstItem="IjH-D9-E4O" firstAttribute="leading" secondItem="ET2-Lr-rcu" secondAttribute="leading" id="dXd-zF-uD6"/>
-                                    <constraint firstItem="IjH-D9-E4O" firstAttribute="baseline" secondItem="WdE-Vm-nsM" secondAttribute="baseline" constant="1" id="gI8-n5-6Rd"/>
+                                    <constraint firstItem="IjH-D9-E4O" firstAttribute="baseline" secondItem="WdE-Vm-nsM" secondAttribute="baseline" id="gI8-n5-6Rd"/>
                                     <constraint firstAttribute="trailing" secondItem="WdE-Vm-nsM" secondAttribute="trailing" constant="4" id="geD-El-vwO"/>
                                     <constraint firstAttribute="bottom" secondItem="WdE-Vm-nsM" secondAttribute="bottom" id="rhs-gP-tHM"/>
                                     <constraint firstAttribute="width" constant="360" id="rw5-Mc-uyU"/>
                                 </constraints>
                             </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="byr-ux-Oq8">
-                                <rect key="frame" x="701" y="4" width="44" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Edited" id="2gc-3z-feq">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                                <connections>
-                                    <binding destination="-2" name="hidden" keyPath="self.document.isDocumentEdited" id="NYF-bR-5He">
-                                        <dictionary key="options">
-                                            <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                        </dictionary>
-                                    </binding>
-                                </connections>
-                            </textField>
                         </subviews>
                     </view>
                     <constraints>
                         <constraint firstItem="ET2-Lr-rcu" firstAttribute="top" secondItem="prZ-fd-sdG" secondAttribute="top" constant="1" id="0py-wH-DT6"/>
-                        <constraint firstItem="byr-ux-Oq8" firstAttribute="top" secondItem="prZ-fd-sdG" secondAttribute="top" constant="4" id="M9A-mA-GDD"/>
-                        <constraint firstAttribute="height" constant="26" id="NF5-TE-xtT"/>
+                        <constraint firstAttribute="height" constant="20" id="NF5-TE-xtT"/>
                         <constraint firstAttribute="centerX" secondItem="ET2-Lr-rcu" secondAttribute="centerX" id="x8S-nZ-OcB"/>
-                        <constraint firstAttribute="trailing" secondItem="byr-ux-Oq8" secondAttribute="trailing" constant="16" id="xKn-6n-hIr"/>
                     </constraints>
                     <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                     <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </box>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ada-sK-Zxq">
-                    <rect key="frame" x="0.0" y="0.0" width="758" height="551"/>
+                    <rect key="frame" x="0.0" y="0.0" width="758" height="557"/>
                 </customView>
             </subviews>
             <constraints>

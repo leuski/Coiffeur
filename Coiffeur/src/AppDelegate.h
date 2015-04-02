@@ -12,9 +12,9 @@
 
 + (NSArray*)supportedLanguages;
 + (NSString*)languageForUTI:(NSString*)uti;
++ (NSString*)fragariaNameForLanguage:(NSString*)language;
 
 @end
 
 extern NSString * const ALDocumentUncrustifyStyle;
 extern NSString * const ALDocumentClangFormatStyle;
-extern NSString * const ALDocumentSource;

@@ -52,7 +52,6 @@
 @interface ALCoiffeurView () <NSOutlineViewDelegate>
 @property (weak) IBOutlet NSPopUpButton *jumpMenu;
 @property (nonatomic, strong) NSPredicate* predicate;
-@property (nonatomic, strong) IBOutlet ALTableRowView* rowView;
 @end
 
 @implementation ALCoiffeurView
@@ -82,6 +81,7 @@
 																																		 options:(NSLayoutFormatOptions)0
 																																		 metrics:nil
 																																			 views:NSDictionaryOfVariableBindings(childView)]];
+	container.window.initialFirstResponder = self.optionsView;
 }
 
 - (void)viewDidLoad

@@ -7,13 +7,11 @@
 //
 
 #import "AppDelegate.h"
-#import "ALCodeDocument.h"
 #import "ALMainWindowController.h"
 #import "ALDocumentController.h"
 
 NSString* const ALDocumentUncrustifyStyle  = @"Uncrustify Style File";
 NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
-NSString* const ALDocumentSource           = @"Source File";
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSMenu* languagesMenu;
@@ -43,14 +41,24 @@ NSString* const ALDocumentSource           = @"Source File";
 	return nil;
 }
 
++ (NSString*)fragariaNameForLanguage:(NSString*)language
+{
+	for (NSDictionary* d in [self supportedLanguages]) {
+		if ([language isEqualToString:d[@"uncrustify"]]) {
+			return d[@"fragaria"];
+		}
+	}
+	return nil;
+}
+
+
 - (instancetype)init
 {
 	if (self = [super init]) {
 
 		[ALDocumentController new];
 
-		NSDictionary* ud
-												= [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
+		NSDictionary* ud = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
 										URLForResource:@"UserDefaults" withExtension:@"plist"]];
 		if (ud) {
 			[[NSUserDefaults standardUserDefaults] registerDefaults:ud];
@@ -74,20 +82,6 @@ NSString* const ALDocumentSource           = @"Source File";
 {
 	// Insert code here to tear down your application
 }
-
-//- (BOOL)applicationShouldOpenUntitledFile:(NSApplication*)sender
-//{
-//	static BOOL applicationHasStarted = NO;
-//	// On startup, when asked to open an untitled file, open the last opened
-//	// file instead
-//	if (applicationHasStarted) return YES;
-//
-//	applicationHasStarted            = YES;
-//	// Get the recent documents
-//	ALDocumentController* controller = [NSDocumentController sharedDocumentController];
-//	[controller restoreState];
-//	return NO;
-//}
 
 @end
 

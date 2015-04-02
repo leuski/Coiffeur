@@ -6,15 +6,10 @@
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+@import Cocoa;
 
-@class ALDocumentView;
 @interface ALMainWindowController : NSWindowController <NSOutlineViewDelegate>
-@property (nonatomic, strong) NSMutableArray* documentViews;
-
-+ (ALMainWindowController*)sharedInstance;
-- (void)addDocument:(NSDocument*)document;
-- (void)displayDocument:(NSDocument*)document inView:(ALDocumentView*)documentView;
-- (void)removeDocument:(NSDocument*)document;
+- (BOOL)loadSourceFormURL:(NSURL*)url error:(NSError**)outError;
+- (IBAction)changeLanguage:(NSMenuItem *)anItem;
 
 @end

@@ -43,43 +43,6 @@
 			<key>NSPersistentStoreTypeKey</key>
 			<string>NSInMemoryStoreType</string>
 		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>m</string>
-				<string>h</string>
-				<string>hh</string>
-				<string>hp</string>
-				<string>hpp</string>
-				<string>hxx</string>
-				<string>h++</string>
-				<string>c</string>
-				<string>mm</string>
-				<string>M</string>
-				<string>cc</string>
-				<string>cp</string>
-				<string>cpp</string>
-				<string>cxx</string>
-				<string>c++</string>
-				<string>java</string>
-				<string>jav</string>
-				<string>js</string>
-				<string>cs</string>
-				<string>d</string>
-				<string>pwn</string>
-				<string>p</string>
-				<string>vala</string>
-				<string>vapi</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Source File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<integer>0</integer>
-			<key>NSDocumentClass</key>
-			<string>ALCodeDocument</string>
-		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>

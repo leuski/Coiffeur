@@ -7,336 +7,283 @@
 //
 
 #import "ALMainWindowController.h"
-#import "ALCoiffeurView.h"
+
+#import <MGSFragaria/MGSFragaria.h>
+
+#import "NSString+commandLine.h"
 #import "ALDocumentView.h"
-#import "NSInvocation+shouldClose.h"
 #import "AppDelegate.h"
 
 #import "Document.h"
 #import "ALCodeDocument.h"
 #import "ALUncrustifyController.h"
 
-@interface ALMainWindowController ()<NSWindowDelegate, ALCoiffeurControllerDelegate>
+@interface ALMainWindowController () <NSWindowDelegate, ALCoiffeurControllerDelegate, ALCodeDocument, NSSplitViewDelegate>
 
 @property (nonatomic, weak) IBOutlet NSSplitView* splitView;
-@property (nonatomic, strong) NSMutableArray* documentsToDisplay;
+@property (nonatomic, strong) ALDocumentView* documentView;
+@property (nonatomic, strong) MGSFragaria* fragaria;
+@property (nonatomic, strong) NSString* codeString;
 @end
 
+static NSString * const ALLastSourceURL = @"ALLastSourceURL";
+
 @implementation ALMainWindowController
-
-static ALMainWindowController* sharedALMainWindowController = nil;
-
-+ (ALMainWindowController*)sharedInstance
-{
-	static dispatch_once_t pred;
-
-	dispatch_once(&pred, ^{
-		sharedALMainWindowController = [[ALMainWindowController alloc] init];
-		[sharedALMainWindowController window]; // load it
-	});
-	return sharedALMainWindowController;
-}
+@synthesize string=_string, fileURL = _fileURL, language = _language;
 
 - (instancetype)init
 {
-	if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
-		self.documentsToDisplay = [NSMutableArray new];
-		self.documentViews = [NSMutableArray new];
-	}
-	return self;
+  if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
+		self.fragaria = [MGSFragaria new];
+		self.language = [[NSUserDefaults standardUserDefaults] stringForKey:ALFormatLanguage];
+		[self AL_restoreSource];
+		[self window];
+  }
+  return self;
 }
 
-- (void)canCloseOneOfDocuments:(NSArray*)documentViews
-											 atIndex:(NSUInteger)index
-										invocation:(NSInvocation*)invocation
+- (void)AL_restoreSource
 {
-	ALDocumentView* documentView = nil;
-	while (index < documentViews.count) {
-		documentView = documentViews[index];
-		if (documentView.document) break;
-		++index;
-	}
-
-	if (index >= documentViews.count) {
-		[invocation invokeWithShouldClose:YES];
-		return;
-	}
-
-	__weak ALMainWindowController* weakSelf = self;
-	[documentView.document canCloseWithBlock:^(BOOL success) {
-		ALMainWindowController* _self = weakSelf;
-		if (!_self) {
-			[invocation invokeWithShouldClose:YES];
-		} else if (!success) {
-			[invocation invokeWithShouldClose:NO];
-		} else {
-			[_self canCloseOneOfDocuments:documentViews
-														atIndex:index + 1
-												 invocation:invocation];
-		}
-	}];
-}
-
-- (void)windowController:(ALMainWindowController*)wc
-						 shouldClose:(BOOL)shouldClose
-						 contextInfo:(void*)contextInfo
-{
-	if (shouldClose)
-		[wc close];
-}
-
-- (BOOL)windowShouldClose:(id)sender
-{
-	BOOL canClose = YES;
-	for (ALDocumentView* documentView in self.documentViews) {
-		if (documentView.document) {
-			canClose = NO;
-			break;
+	NSString* lastURLString = [[NSUserDefaults standardUserDefaults] stringForKey:ALLastSourceURL];
+	NSURL* url;
+	if (lastURLString) {
+		url = [NSURL URLWithString:lastURLString];
+		if ([self loadSourceFormURL:url error:nil]) {
+			return;
 		}
 	}
-
-	if (canClose) return YES;
-
-	[self canCloseOneOfDocuments:[self.documentViews copy]
-											 atIndex:0
-										invocation:[NSInvocation invocationWithTarget:self
-																							shouldCloseSelector:@selector(windowController:shouldClose:contextInfo:)
-																													 object:self
-																											contextInfo:nil]];
-
-	return NO;
-}
-
-- (BOOL)AL_getDocument:(NSDocument**)outDocument targetView:(ALDocumentView**)outDocumentView
-{
-	while (self.documentsToDisplay.count > 0) {
-		NSDocument* document = self.documentsToDisplay[0];
-		[self.documentsToDisplay removeObjectAtIndex:0];
-		
-		NSString*		type = document.fileType;
-		
-		for(ALDocumentView* dv in self.documentViews) {
-			if (document == dv.document) break;
-			if ([dv.allowedFileTypes containsObject:type]) {
-				*outDocument = document;
-				*outDocumentView = dv;
-				return YES;
-			}
-		}
-	}
-	return NO;
-}
-
-- (void)AL_showDocument
-{
-	NSDocument* document;
-	ALDocumentView* documentView;
-	if (![self AL_getDocument:&document targetView:&documentView]) {
-		
-		NSDocumentController* controller = [NSDocumentController sharedDocumentController];
-		for(ALDocumentView* dv in self.documentViews) {
-			if (dv.document) continue;
-			NSError* error;
-			NSDocument* doc = [controller makeUntitledDocumentOfType:dv.allowedFileTypes[0] error:&error];
-			if (doc) {
-				[controller addDocument:doc];
-				[self addDocument:doc toDocumentView:dv];
-			} else {
-				[NSApp presentError:error];
-			}
-		}
-		
-		[self.window makeKeyAndOrderFront:nil];
-
-		return;
-	}
-	
-	__weak ALMainWindowController* weakSelf     = self;
-	void (^completeBlock)(BOOL) = ^(BOOL success) {
-		ALMainWindowController* _self = weakSelf;
-		if (!_self) return;
-
-		[_self AL_do:success swapDocumentInView:documentView forDocument:document];
-		[_self AL_showDocument];
-	};
-	
-	[documentView canCloseDocumentWithBlock:completeBlock];
-}
-
-- (void)AL_do:(BOOL)success swapDocumentInView:(ALDocumentView*)documentView forDocument:(NSDocument*)document
-{
-	if (!success) {
-		[document close];
-	} else {
-		[documentView.document close];
-		[self addDocument:document toDocumentView:documentView];
+	url = [[NSBundle mainBundle] URLForResource:@"sample" withExtension:@"mm" subdirectory:@"samples"];
+	NSError* error;
+	if (![self loadSourceFormURL:url error:&error]) {
+		NSException* exception = [NSException exceptionWithName:@"No Source" reason:@"Failed to load the sample source file" userInfo:nil];
+		[exception raise];
 	}
 }
 
-- (void)displayDocument:(NSDocument*)document inView:(ALDocumentView*)documentView
+- (BOOL)loadSourceFormURL:(NSURL*)url error:(NSError**)outError
 {
-	__weak ALMainWindowController* weakSelf     = self;
-	void (^completeBlock)(BOOL) = ^(BOOL success) {
-		ALMainWindowController* _self = weakSelf;
-		if (!_self) return;
-		
-		[_self AL_do:success swapDocumentInView:documentView forDocument:document];
-	};
-	
-	[documentView canCloseDocumentWithBlock:completeBlock];
-}
+  NSString* source = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:outError];
+  if (!source) return NO;
 
-- (void)addDocument:(NSDocument*)document
-{
-	[self.documentsToDisplay addObject:document];
-	dispatch_async(dispatch_get_main_queue(), ^{
-		NSLog(@"%@", self.documentsToDisplay);
-		[self AL_showDocument];
-	});
-}
+  self.codeString = source;
+	self.fileURL = url;
 
-- (void)removeDocument:(NSDocument*)document
-{
-	for(ALDocumentView* dv in self.documentViews) {
-		if (dv.document == document) {
-			[self removeDocumentFromDocumentView:dv];
-		}
-	}
-}
+	[self uncrustify:nil];
 
-- (void)setDocument:(NSDocument*)document
-{
-//	NSLog(@"Will not set document to: %@",document);
-}
-
-- (NSDocument*)document
-{
-	return nil;
-}
-
-- (void)addDocument:(NSDocument*)document
-		 toDocumentView:(ALDocumentView*)documentView
-{
-	documentView.document = document;
-	if ([document respondsToSelector:@selector(embedInView:)]) {
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCDFAInspection"
-		[(id)document embedInView:documentView.containerView];
-#pragma clang diagnostic pop
-	}
-	[document addWindowController:self];
-	if ([document isKindOfClass:[Document class]]) {
-		Document* d = (Document*)document;
-		d.model.delegate = self;
-	}
-}
-
-- (void)removeDocumentFromDocumentView:(ALDocumentView*)documentView
-{
-	NSDocument* existingDocument = documentView.document;
-	if (!existingDocument) return;
-
-	documentView.document = nil;
-	for (NSView* v in [documentView.containerView.subviews copy]) {
-		[v removeFromSuperviewWithoutNeedingDisplay];
-	}
-
-	[existingDocument removeWindowController:self];
-}
-
-- (void)addDocumentView:(ALDocumentView*)documentView
-{
-	[self.documentViews addObject:documentView];
-	[self.splitView addSubview:documentView.view];
+  return YES;
 }
 
 - (void)windowDidLoad
 {
-	[super windowDidLoad];
+  [super windowDidLoad];
 
-	for (NSView* v in [self.splitView.subviews copy])
-		[v removeFromSuperviewWithoutNeedingDisplay];
-
-	NSArray* types = @[ @[ ALDocumentUncrustifyStyle, ALDocumentClangFormatStyle ]
-					, @[ ALDocumentSource ]];
-
-	for (NSUInteger i = 0; i < types.count; ++i) {
-		ALDocumentView* documentView = [ALDocumentView new];
-		documentView.allowedFileTypes = types[i];
-		[self addDocumentView:documentView];
-	}
-}
-
-- (void)windowWillClose:(NSNotification*)notification
-{
-	NSWindow* window = self.window;
-	if (notification.object != window) {
-		return;
-	}
-
-	// let's keep a reference to ourselves and not have us thrown away while we clear out references.
-	ALMainWindowController* me = self;
-
-	// detach the view controllers from the documents
-	for (ALDocumentView* ctrl in me.documentViews) {
-		[ctrl.document close];
+  self.documentView = [ALDocumentView new];
+	
+	NSMutableSet* types = [NSMutableSet new];
+	for(NSDictionary* d in [AppDelegate supportedLanguages]) {
+		[types addObjectsFromArray:d[@"uti"]];
 	}
 	
-	[NSApp terminate:nil];
+	self.documentView.allowedFileTypes = [types allObjects];
+	self.documentView.representedObject = [self sourceDocument];
+	
+	NSURL* baseURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"samples"];
+	self.documentView.knownSampleURLs = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:baseURL
+																																		includingPropertiesForKeys:nil
+																																											 options:NSDirectoryEnumerationSkipsHiddenFiles
+																																												 error:nil];
+	
+  [self.splitView replaceSubview:self.splitView.subviews[1] with:self.documentView.view];
+
+
+  // we want to be the delegate
+  [self.fragaria setObject:self forKey:MGSFODelegate];
+	[self.fragaria embedInView:self.documentView.containerView];
+
+  NSTextView* textView = [self.fragaria objectForKey:ro_MGSFOTextView];
+  textView.editable = NO;
+	textView.textContainer.widthTracksTextView = NO;
+	textView.textContainer.containerSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
 }
 
-- (NSUndoManager*)windowWillReturnUndoManager:(NSWindow*)window
+- (void)windowWillClose:(NSNotification *)notification
 {
-	if (window != self.window) return nil;
-	return self.styleDocument.undoManager;
+	self.documentView.representedObject = nil;
+}
+
+#pragma mark - accessors
+
+- (void)setDocument:(NSDocument*)document
+{
+  NSDocument* oldDocument = self.document;
+  [super setDocument:document];
+  NSDocument* newDocument = self.document;
+  if (oldDocument == newDocument) return;
+
+  NSView* containerView = self.splitView.subviews[0];
+  if (oldDocument) {
+    for (NSView* v in [containerView.subviews copy]) {
+      [v removeFromSuperviewWithoutNeedingDisplay];
+    }
+  }
+
+  Document* d = self.styleDocument;
+  [d embedInView:containerView];
+  d.model.delegate = self;
+	
+	[self uncrustify:nil];
 }
 
 - (Document*)styleDocument
 {
-	ALDocumentView* documentView = self.documentViews[0];
-	return (Document*)documentView.document;
+  NSDocument* document = self.document;
+  return [document isKindOfClass:[Document class]] ? (Document*) document : nil;
 }
 
-- (ALCodeDocument*)sourceDocument
+- (id <ALCodeDocument>)sourceDocument
 {
-	ALDocumentView* documentView = self.documentViews[1];
-	return (ALCodeDocument*)documentView.document;
+  return self;
 }
+
+- (void)setFileURL:(NSURL *)fileURL
+{
+  self->_fileURL = fileURL;
+  if (!fileURL) return;
+	
+	[[NSUserDefaults standardUserDefaults] setObject:[[fileURL filePathURL] absoluteString] forKey:ALLastSourceURL];
+
+  NSString* uti = [[NSWorkspace sharedWorkspace] typeOfFile:[self.fileURL path] error:nil];
+  if (!uti) return ;
+
+  NSString* lang = [AppDelegate languageForUTI:uti];
+  if (!lang) return;
+
+  self.language = lang;
+	
+}
+
+- (void)setLanguage:(NSString *)language
+{
+	self->_language = language;
+
+	NSString* fragariaName = [AppDelegate fragariaNameForLanguage:self.language];
+	if (fragariaName && self.fragaria)
+		[self.fragaria setObject:fragariaName forKey:MGSFOSyntaxDefinitionName];
+
+	[self uncrustify:nil];
+}
+
+- (NSString*)string
+{
+	return self.codeString;
+}
+
+
+- (void)setString:(NSString *)string
+{
+	if (!self.fragaria) return;
+	
+	// we will try and preserve visible frame position in the document
+	// across changes.
+
+	NSTextView* textView = [self.fragaria objectForKey:ro_MGSFOTextView];
+	NSTextStorage* textStorage = textView.textStorage;
+	NSLayoutManager* layoutManager = textView.layoutManager;
+
+	// first we need the document height.
+	// textview lays text out lazyliy, so we cannot just use the textview frame
+	// to get the height. It's not computed yet.
+
+	// Here we are taking advantage of two assumptions:
+	// 1. the text is not wrapping, so we only count hard line breaks
+	NSRange oldDocumentLineRange = [textStorage.string lineRangeForCharacterRange:NSMakeRange(0, textStorage.string.length)];
+	
+	// 2. the text is layed out in one font size, so the line height is constant
+	CGFloat lineHeight = [layoutManager defaultLineHeightForFont:textView.font];
+	
+	CGFloat frameHeight = oldDocumentLineRange.length * lineHeight;
+	NSRect visRect = textView.visibleRect;
+	CGFloat maxScrollLocation = frameHeight - visRect.size.height;
+	CGFloat relativeScrollLocation = (maxScrollLocation > 0) ? visRect.origin.y / maxScrollLocation : 0;
+	
+//	NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
+//				visRect.origin.y, maxScrollLocation, relativeScrollLocation, string.length);
+	
+	self.fragaria.string = string;
+
+	NSRange newDocumentLineRange = [textStorage.string lineRangeForCharacterRange:NSMakeRange(0, textStorage.string.length)];
+
+	frameHeight = newDocumentLineRange.length * lineHeight;
+	visRect = textView.visibleRect;
+	maxScrollLocation = frameHeight - visRect.size.height;
+	
+	//	NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
+	//				visRect.origin.y, maxScrollLocation, relativeScrollLocation, string.length);
+
+	visRect.origin.y = relativeScrollLocation * maxScrollLocation;
+	visRect.origin.x = 0;
+	[textView scrollRectToVisible:visRect];
+}
+
+- (IBAction)changeLanguage:(NSMenuItem *)anItem
+{
+  NSDictionary* props = [anItem representedObject];
+  self.language = props[@"uncrustify"];
+  [[NSUserDefaults standardUserDefaults] setObject:self.language forKey:ALFormatLanguage];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)anItem
+{
+  if (anItem.action == @selector(changeLanguage:)) {
+    NSDictionary* props = [anItem representedObject];
+    anItem.state = [self.language isEqualToString:props[@"uncrustify"]]
+        ? NSOnState : NSOffState;
+  }
+  return YES;
+}
+
+#pragma mark - NSSplitViewDelegate
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex
+{
+	return self.splitView.frame.size.width - 370;
+}
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex
+{
+	return 200;
+}
+
+#pragma mark - coiffeur
 
 - (IBAction)uncrustify:(id)sender
 {
-	Document      * formatter = self.styleDocument;
-	ALCodeDocument* source    = self.sourceDocument;
+  Document* formatter = self.styleDocument;
+  id <ALCodeDocument> source = self.sourceDocument;
+	
+	if (!formatter || !source) return;
 
-	[formatter.model format:source.string
-							 attributes:@{
-											 ALFormatLanguage   : source.language
-											 , ALFormatFragment : @(NO)}
-					completionBlock:^(NSString* text, NSError* error) {
-						if (text)
-							source.string = text;
-						if (error)
-							NSLog(@"%@", error);
-					}];
+  [formatter.model format:source.string attributes:@{ALFormatLanguage : source.language, ALFormatFragment : @(NO)} completionBlock:^(NSString* text, NSError* error) {
+      if (text)
+        source.string = text;
+      if (error)
+        NSLog(@"%@", error);
+  }];
 }
 
-- (NSString*)textToFormatByCoiffeurController:(ALCoiffeurController*)controller
-																	 attributes:(NSDictionary**)attributes
+- (NSString*)textToFormatByCoiffeurController:(ALCoiffeurController*)controller attributes:(NSDictionary**)attributes
 {
-	ALCodeDocument* source = self.sourceDocument;
-	if (attributes)
-		*attributes = @{
-						ALFormatLanguage   : source.language
-						, ALFormatFragment : @(NO)};
-	return source.string;
+  id<ALCodeDocument> source = self.sourceDocument;
+  if (attributes)
+    *attributes = @{ALFormatLanguage : source.language, ALFormatFragment : @(NO)};
+  return source.string;
 }
 
-- (void)coiffeurController:(ALCoiffeurController*)controller
-									 setText:(NSString*)text
+- (void)coiffeurController:(ALCoiffeurController*)controller setText:(NSString*)text
 {
-	if (!text) return;
-	ALCodeDocument* source = self.sourceDocument;
-	source.string = text;
+  if (!text) return;
+  id<ALCodeDocument> source = self.sourceDocument;
+  source.string = text;
 }
 
 @end

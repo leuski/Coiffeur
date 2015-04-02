@@ -10,12 +10,8 @@
 
 @interface ALDocumentView : NSViewController
 @property (nonatomic, strong) NSArray* allowedFileTypes;
-@property (nonatomic, strong) NSDocument* document;
+@property (nonatomic, strong) NSArray* knownSampleURLs;
 @property (nonatomic, weak) IBOutlet NSView* containerView;
-@property (nonatomic, weak) IBOutlet NSTextField *label;
-
-- (IBAction)newDocument:(id)sender;
-- (void)canCloseDocumentWithBlock:(void(^)(BOOL))block;
 
 @end
 

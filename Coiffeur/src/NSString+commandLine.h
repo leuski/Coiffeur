@@ -13,4 +13,6 @@
 - (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delim;
 - (NSString*)trim;
 - (NSString*)trimComment;
+- (NSRange)lineRangeForCharacterRange:(NSRange)range;
+
 @end

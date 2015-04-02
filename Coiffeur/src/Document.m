@@ -40,11 +40,21 @@
 	return [self.model writeValuesToURL:url error:outError];
 }
 
++ (BOOL)autosavesInPlace
+{
+	return YES;
+}
+
+- (void)makeWindowControllers
+{
+	ALMainWindowController* controller = [ALMainWindowController new];
+	[self addWindowController:controller];
+}
+
 - (void)embedInView:(NSView*)container
 {
 	self.coiffeur = [[ALCoiffeurView alloc] initWithModel:self.model bundle:nil];
 	[self.coiffeur embedInView:container];
-	container.window.initialFirstResponder = self.coiffeur.optionsView;
 }
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
@@ -54,7 +64,7 @@
 
 - (void)canCloseDocumentWithDelegate:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector contextInfo:(void *)contextInfo
 {
-//	[[self managedObjectContext] commitEditing];
+	[self.model.managedObjectContext commitEditing];
 	[super canCloseDocumentWithDelegate:delegate shouldCloseSelector:shouldCloseSelector contextInfo:contextInfo];
 }
 

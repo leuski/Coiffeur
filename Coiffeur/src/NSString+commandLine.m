@@ -84,4 +84,24 @@ static NSCharacterSet* AL_WS_SET = nil;
 	return result;
 }
 
+- (NSRange)lineRangeForCharacterRange:(NSRange)range
+{
+	NSUInteger numberOfLines, index, stringLength = [self length], lastCharacter = range.location+range.length-1;
+	NSRange result = NSMakeRange(NSNotFound, 0);
+	
+	for (index = 0, numberOfLines = 0; index < stringLength; numberOfLines++) {
+		NSUInteger nextIndex = NSMaxRange([self lineRangeForRange:NSMakeRange(index, 0)]);
+		if (index <= range.location && range.location < nextIndex) {
+			result.location = numberOfLines;
+			result.length = 1;
+		}
+		if (index <= lastCharacter && lastCharacter < nextIndex) {
+			result.length = numberOfLines - result.location + 1;
+			break;
+		}
+		index = nextIndex;
+	}
+	return result;
+}
+
 @end

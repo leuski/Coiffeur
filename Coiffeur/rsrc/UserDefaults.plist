@@ -4,5 +4,11 @@
 <dict>
 	<key>ALFormatLanguage</key>
 	<string>CPP</string>
+	<key>FragariaLineWrapNewDocuments</key>
+	<false/>
+	<key>FragariaIndentNewLinesAutomatically</key>
+	<false/>
+	<key>FragariaShowPageGuide</key>
+	<true/>
 </dict>
 </plist>

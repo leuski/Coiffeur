@@ -43,4 +43,35 @@
 	return type;
 }
 
+- (id)openUntitledDocumentOfType:(NSString*)type display:(BOOL)displayDocument error:(NSError **)outError
+{
+	NSDocument* document = [self makeUntitledDocumentOfType:type error:outError];
+	if (document) {
+		[self addDocument:document];
+		if (displayDocument) {
+			[document makeWindowControllers];
+			[document showWindows];
+		}
+	}
+	return document;
+}
+
+- (void)AL_openUntitledDocumentOfType:(NSString*)type
+{
+	NSError* error;
+	if (![self openUntitledDocumentOfType:type display:YES error:&error]) {
+		[NSApp presentError:error];
+	}
+}
+
+- (IBAction)newUncrustifyStyleDocument:(id)sender
+{
+	[self AL_openUntitledDocumentOfType:ALDocumentUncrustifyStyle];
+}
+
+- (IBAction)newClangFormatStyleDocument:(id)sender
+{
+	[self AL_openUntitledDocumentOfType:ALDocumentClangFormatStyle];
+}
+
 @end

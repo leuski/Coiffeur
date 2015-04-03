@@ -9,6 +9,7 @@
 #import "ALMainWindowController.h"
 
 #import <MGSFragaria/MGSFragaria.h>
+#import <DiffMatchPatch/DiffMatchPatch.h>
 
 #import "NSString+commandLine.h"
 #import "ALDocumentView.h"
@@ -17,6 +18,9 @@
 #import "Document.h"
 #import "ALCodeDocument.h"
 #import "ALUncrustifyController.h"
+#import "ALOverviewScroller.h"
+
+typedef CGFloat ALScrollLocation;
 
 @interface ALMainWindowController () <NSWindowDelegate, ALCoiffeurControllerDelegate, ALCodeDocument, NSSplitViewDelegate>
 
@@ -24,6 +28,10 @@
 @property (nonatomic, strong) ALDocumentView* documentView;
 @property (nonatomic, strong) MGSFragaria* fragaria;
 @property (nonatomic, strong) NSString* codeString;
+@property (nonatomic, assign) BOOL newString;
+@property (nonatomic, assign) ALScrollLocation sourceTextViewScrollLocation;
+@property (nonatomic, strong) DiffMatchPatch* diffMatchPatch;
+@property (nonatomic, weak) ALOverviewScroller* overviewScroller;
 @end
 
 static NSString * const ALLastSourceURL = @"ALLastSourceURL";
@@ -34,6 +42,7 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 - (instancetype)init
 {
   if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
+		self.diffMatchPatch = [DiffMatchPatch new];
 		self.fragaria = [MGSFragaria new];
 		self.language = [[NSUserDefaults standardUserDefaults] stringForKey:ALFormatLanguage];
 		[self AL_restoreSource];
@@ -65,6 +74,7 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
   NSString* source = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:outError];
   if (!source) return NO;
 
+	self.newString = YES;
   self.codeString = source;
 	self.fileURL = url;
 
@@ -100,10 +110,16 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
   [self.fragaria setObject:self forKey:MGSFODelegate];
 	[self.fragaria embedInView:self.documentView.containerView];
 
-  NSTextView* textView = [self.fragaria objectForKey:ro_MGSFOTextView];
+  NSTextView* textView = self.fragaria.textView;
   textView.editable = NO;
 	textView.textContainer.widthTracksTextView = NO;
 	textView.textContainer.containerSize = NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX);
+	
+	NSScrollView* scrollView = textView.enclosingScrollView;
+	ALOverviewScroller* overviewScroller = [ALOverviewScroller new];
+	self.overviewScroller = overviewScroller;
+	scrollView.verticalScroller = overviewScroller;
+	scrollView.verticalScroller.scrollerStyle = NSScrollerStyleLegacy;
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -178,22 +194,19 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	return self.codeString;
 }
 
-
-- (void)setString:(NSString *)string
+- (ALScrollLocation)sourceTextViewScrollLocation
 {
-	if (!self.fragaria) return;
-	
 	// we will try and preserve visible frame position in the document
 	// across changes.
-
-	NSTextView* textView = [self.fragaria objectForKey:ro_MGSFOTextView];
+	
+	NSTextView* textView = self.fragaria.textView;
 	NSTextStorage* textStorage = textView.textStorage;
 	NSLayoutManager* layoutManager = textView.layoutManager;
-
+	
 	// first we need the document height.
 	// textview lays text out lazyliy, so we cannot just use the textview frame
 	// to get the height. It's not computed yet.
-
+	
 	// Here we are taking advantage of two assumptions:
 	// 1. the text is not wrapping, so we only count hard line breaks
 	NSRange oldDocumentLineRange = [textStorage.string lineRangeForCharacterRange:NSMakeRange(0, textStorage.string.length)];
@@ -206,23 +219,116 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	CGFloat maxScrollLocation = frameHeight - visRect.size.height;
 	CGFloat relativeScrollLocation = (maxScrollLocation > 0) ? visRect.origin.y / maxScrollLocation : 0;
 	
-//	NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
-//				visRect.origin.y, maxScrollLocation, relativeScrollLocation, string.length);
+//		NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
+//					visRect.origin.y, maxScrollLocation, relativeScrollLocation, textStorage.string.length);
+
+	return relativeScrollLocation;
+}
+
+- (void)setSourceTextViewScrollLocation:(CGFloat)relativeScrollLocation
+{
+	NSTextView* textView = self.fragaria.textView;
+	NSTextStorage* textStorage = textView.textStorage;
+	NSLayoutManager* layoutManager = textView.layoutManager;
 	
-	self.fragaria.string = string;
+	[layoutManager ensureLayoutForTextContainer:textView.textContainer];
+	
+	CGFloat lineHeight = [layoutManager defaultLineHeightForFont:textView.font];
 
 	NSRange newDocumentLineRange = [textStorage.string lineRangeForCharacterRange:NSMakeRange(0, textStorage.string.length)];
-
-	frameHeight = newDocumentLineRange.length * lineHeight;
-	visRect = textView.visibleRect;
-	maxScrollLocation = frameHeight - visRect.size.height;
 	
-	//	NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
-	//				visRect.origin.y, maxScrollLocation, relativeScrollLocation, string.length);
-
-	visRect.origin.y = relativeScrollLocation * maxScrollLocation;
+	CGFloat	frameHeight = newDocumentLineRange.length * lineHeight;
+	NSRect	visRect = textView.visibleRect;
+	CGFloat	maxScrollLocation = frameHeight - visRect.size.height;
+	
+//		NSLog(@"%f %f %f %f %f %ld", frameHeight, visRect.size.height,
+//					visRect.origin.y, maxScrollLocation, relativeScrollLocation, textStorage.string.length);
+	
+	visRect.origin.y = round(relativeScrollLocation * maxScrollLocation);
 	visRect.origin.x = 0;
 	[textView scrollRectToVisible:visRect];
+
+}
+
+- (NSArray*)AL_showDiffs:(NSArray*)diffs intensity:(CGFloat)intensity
+{
+	NSTextView* textView = self.fragaria.textView;
+	NSTextStorage* textStorage = textView.textStorage;
+	if (intensity == 0) {
+		[textStorage removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0, textStorage.length)];
+		return @[];
+	}
+
+	NSMutableArray* lineRanges = [NSMutableArray new];
+	CGFloat saturation = 0.5;
+	NSColor* insertColor = [NSColor colorWithCalibratedHue:1./3. saturation:saturation brightness:1 alpha:intensity];
+	NSColor* deleteColor = [NSColor colorWithCalibratedHue:0./3. saturation:saturation brightness:1 alpha:intensity];
+	
+	NSColor* insertColor1 = [NSColor colorWithCalibratedHue:1./3. saturation:saturation brightness:0.75 alpha:intensity];
+	NSColor* deleteColor1 = [NSColor colorWithCalibratedHue:0./3. saturation:saturation brightness:0.75 alpha:intensity];
+
+	NSUInteger offset = 0, lineCount = 0;
+	ALOverviewRegion* region;
+	for(Diff* diff in diffs) {
+		NSUInteger length = diff.text.length, lineSpan;
+		if (length == 0) continue;
+		
+		switch (diff.operation) {
+			case DIFF_EQUAL:
+				lineSpan = [textStorage.string lineCountForCharacterRange:NSMakeRange(offset, length)];
+				lineCount += lineSpan;
+				offset += length;
+				break;
+			case DIFF_INSERT:
+//				NSLog(@"inserted |%@|", diff.text);
+				lineSpan = [textStorage.string lineCountForCharacterRange:NSMakeRange(offset, length)];
+				[lineRanges addObject:[ALOverviewRegion overviewRegionWithLineRange:NSMakeRange(lineCount, lineSpan) color:insertColor1]];
+				lineCount += lineSpan;
+				[textStorage addAttribute:NSBackgroundColorAttributeName
+														value:insertColor
+														range:NSMakeRange(offset, length)];
+				offset += length;
+			break;
+			case DIFF_DELETE:
+//				NSLog(@"deleted |%@|", diff.text);
+				[lineRanges addObject:[ALOverviewRegion overviewRegionWithLineRange:NSMakeRange(lineCount, 0) color:deleteColor1]];
+				[textStorage addAttribute:NSBackgroundColorAttributeName
+														value:deleteColor
+														range:NSMakeRange(offset, 1)];
+				break;
+		}
+	}
+
+	region = [ALOverviewRegion new];
+	region.lineRange = NSMakeRange(lineCount, 0);
+	region.color = nil;
+	[lineRanges addObject:region];
+
+//	NSLog(@"%@", lineRanges);
+	
+	return lineRanges;
+}
+
+- (void)setString:(NSString *)string
+{
+	if (!self.fragaria) return;
+
+	NSString* oldString = [self.fragaria.string copy];
+	ALScrollLocation scrollLocation = self.sourceTextViewScrollLocation;
+	
+	self.fragaria.string = string;
+	
+	if (self.newString) {
+		self.sourceTextViewScrollLocation = 0;
+		self.overviewScroller.regions = @[];
+	} else {
+		self.sourceTextViewScrollLocation = scrollLocation;
+
+		NSMutableArray* diffs = [self.diffMatchPatch diff_mainOfOldString:oldString andNewString:string];
+		self.overviewScroller.regions = [self AL_showDiffs:diffs intensity:1];
+	}
+	
+	self.newString = NO;
 }
 
 - (IBAction)changeLanguage:(NSMenuItem *)anItem
@@ -263,12 +369,7 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	
 	if (!formatter || !source) return;
 
-  [formatter.model format:source.string attributes:@{ALFormatLanguage : source.language, ALFormatFragment : @(NO)} completionBlock:^(NSString* text, NSError* error) {
-      if (text)
-        source.string = text;
-      if (error)
-        NSLog(@"%@", error);
-  }];
+  [formatter.model format];
 }
 
 - (NSString*)textToFormatByCoiffeurController:(ALCoiffeurController*)controller attributes:(NSDictionary**)attributes
@@ -283,7 +384,11 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 {
   if (!text) return;
   id<ALCodeDocument> source = self.sourceDocument;
-  source.string = text;
+	
+	[[NSUserDefaults standardUserDefaults] setObject:@(controller.pageGuideColumn)
+																						forKey:MGSFragariaPrefsShowPageGuideAtColumn];
+
+	source.string = text;
 }
 
 @end

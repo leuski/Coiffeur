@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
+		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
+		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		625934C51ACE34FC00E2CC03 /* ALOverviewScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 625934C41ACE34FC00E2CC03 /* ALOverviewScroller.m */; };
 		626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* ALMainWindowController.xib */; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
@@ -61,6 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */,
 				626185751AC3B7410095CCD2 /* MGSFragaria.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,6 +84,9 @@
 
 /* Begin PBXFileReference section */
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
+		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
+		625934C31ACE34FC00E2CC03 /* ALOverviewScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALOverviewScroller.h; sourceTree = "<group>"; };
+		625934C41ACE34FC00E2CC03 /* ALOverviewScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALOverviewScroller.m; sourceTree = "<group>"; };
 		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALMainWindowController.xib; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -141,6 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */,
 				626185731AC3B7040095CCD2 /* MGSFragaria.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -212,9 +220,6 @@
 		6261851B1AC351CC0095CCD2 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				625934BB1ACBB8F000E2CC03 /* utils */,
-				625934BA1ACBB8BB00E2CC03 /* document */,
-				625934B91ACBB89900E2CC03 /* coiffeur */,
 				626185B71AC6230A0095CCD2 /* ALCoiffeurView.h */,
 				626185B81AC6230A0095CCD2 /* ALCoiffeurView.m */,
 				62B0C3721ACA6A0800A91E0C /* ALDocumentController.h */,
@@ -223,10 +228,15 @@
 				626185BB1AC6235E0095CCD2 /* ALDocumentView.m */,
 				626185761AC3B7D20095CCD2 /* ALMainWindowController.h */,
 				626185771AC3B7D20095CCD2 /* ALMainWindowController.m */,
+				625934C31ACE34FC00E2CC03 /* ALOverviewScroller.h */,
+				625934C41ACE34FC00E2CC03 /* ALOverviewScroller.m */,
 				6261851C1AC351CC0095CCD2 /* AppDelegate.h */,
 				6261851D1AC351CC0095CCD2 /* AppDelegate.m */,
+				625934B91ACBB89900E2CC03 /* coiffeur */,
+				625934BA1ACBB8BB00E2CC03 /* document */,
 				626185201AC351CC0095CCD2 /* main.m */,
 				626185321AC35CA30095CCD2 /* model */,
+				625934BB1ACBB8F000E2CC03 /* utils */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -262,6 +272,7 @@
 		62D1C2D41AC34C7500B7F996 = {
 			isa = PBXGroup;
 			children = (
+				625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */,
 				626185721AC3B7040095CCD2 /* MGSFragaria.framework */,
 				62D1C2DF1AC34C7500B7F996 /* Coiffeur */,
 				62D1C2FC1AC34C7500B7F996 /* CoiffeurTests */,
@@ -420,6 +431,7 @@
 				626185911AC4D2B60095CCD2 /* ALSubsection.m in Sources */,
 				62B0C3671AC7B66900A91E0C /* ALClangFormatController.m in Sources */,
 				626185BD1AC6235E0095CCD2 /* ALDocumentView.m in Sources */,
+				625934C51ACE34FC00E2CC03 /* ALOverviewScroller.m in Sources */,
 				626185891AC4A5BD0095CCD2 /* ALCoreData.m in Sources */,
 				626185631AC3975F0095CCD2 /* ALNode+model.m in Sources */,
 				62B0C3641AC7AD8800A91E0C /* ALCoiffeurController.m in Sources */,
@@ -575,6 +587,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/3rd_party/Fragaria-master/build/Release",
+					"$(PROJECT_DIR)/3rd_party/google-diff-match-patch-Objective-C-master/build/Release",
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -590,6 +603,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/3rd_party/Fragaria-master/build/Release",
+					"$(PROJECT_DIR)/3rd_party/google-diff-match-patch-Objective-C-master/build/Release",
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

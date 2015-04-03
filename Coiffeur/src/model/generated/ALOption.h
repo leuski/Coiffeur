@@ -13,7 +13,7 @@
 
 @interface ALOption : ALNode
 
-@property (nonatomic, retain) NSString * key;
+@property (nonatomic, retain) NSString * indexKey;
 @property (nonatomic, retain) NSString * value;
 
 @end

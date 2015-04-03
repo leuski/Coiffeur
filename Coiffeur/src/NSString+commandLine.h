@@ -14,5 +14,6 @@
 - (NSString*)trim;
 - (NSString*)trimComment;
 - (NSRange)lineRangeForCharacterRange:(NSRange)range;
+- (NSUInteger)lineCountForCharacterRange:(NSRange)range;
 
 @end

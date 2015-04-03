@@ -86,7 +86,8 @@ static NSCharacterSet* AL_WS_SET = nil;
 
 - (NSRange)lineRangeForCharacterRange:(NSRange)range
 {
-	NSUInteger numberOfLines, index, stringLength = [self length], lastCharacter = range.location+range.length-1;
+	NSUInteger numberOfLines, index, stringLength = [self length];
+	NSInteger lastCharacter = range.location+range.length-1;
 	NSRange result = NSMakeRange(NSNotFound, 0);
 	
 	for (index = 0, numberOfLines = 0; index < stringLength; numberOfLines++) {
@@ -94,6 +95,7 @@ static NSCharacterSet* AL_WS_SET = nil;
 		if (index <= range.location && range.location < nextIndex) {
 			result.location = numberOfLines;
 			result.length = 1;
+			if (lastCharacter <= 0) break;
 		}
 		if (index <= lastCharacter && lastCharacter < nextIndex) {
 			result.length = numberOfLines - result.location + 1;
@@ -102,6 +104,22 @@ static NSCharacterSet* AL_WS_SET = nil;
 		index = nextIndex;
 	}
 	return result;
+}
+
+- (NSUInteger)lineCountForCharacterRange:(NSRange)range
+{
+	NSUInteger stringLength = [self length];
+	NSInteger lastCharacter = range.location+range.length-1;
+	if (lastCharacter < 0) return 0;
+
+	for (NSUInteger index = range.location, numberOfLines = 0; index < stringLength; numberOfLines++) {
+		NSUInteger nextIndex = NSMaxRange([self lineRangeForRange:NSMakeRange(index, 0)]);
+		if (index <= lastCharacter && lastCharacter < nextIndex) {
+			return numberOfLines;
+		}
+		index = nextIndex;
+	}
+	return 0;
 }
 
 @end

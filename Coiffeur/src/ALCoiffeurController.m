@@ -59,21 +59,27 @@ NSString * const ALFormatFragment = @"ALFormatFragment";
 
 - (void)modelDidChange:(NSNotification*)note
 {
+	[self format];
+}
+
+- (BOOL)format
+{
 	id<ALCoiffeurControllerDelegate> del = self.delegate;
-	if (del &&
-					[del respondsToSelector:@selector(textToFormatByCoiffeurController:attributes:)]
-			&& [del respondsToSelector:@selector(coiffeurController:setText:)]) {
-		NSDictionary* attributes;
-		NSString* input = [del textToFormatByCoiffeurController:self
-																								 attributes:&attributes];
-		if (!input) return;
-		[self format:input
-			attributes:attributes
- completionBlock:^(NSString* output, NSError* error) {
-	 if (output)
-		 [del coiffeurController:self setText:output];
- }];
-	}
+	if (!del ||
+			![del respondsToSelector:@selector(textToFormatByCoiffeurController:attributes:)]
+			|| ![del respondsToSelector:@selector(coiffeurController:setText:)]) return NO;
+	
+	NSDictionary* attributes;
+	NSString* input = [del textToFormatByCoiffeurController:self
+																							 attributes:&attributes];
+	if (!input) return NO;
+	
+	return [self format:input
+					 attributes:attributes
+			completionBlock:^(NSString* output, NSError* error) {
+				if (output)
+					[del coiffeurController:self setText:output];
+			}];
 }
 
 - (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
@@ -132,6 +138,11 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 - (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error
 {
 	return NO;
+}
+
+- (NSUInteger)pageGuideColumn
+{
+	return 0;
 }
 
 - (NSTask*)startUncrustify:(NSArray*)args text:(NSString*)input error:(NSError**)outError

@@ -10,7 +10,7 @@
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Node" inverseName="children" inverseEntity="Node" syncable="YES"/>
     </entity>
     <entity name="Option" representedClassName="ALOption" parentEntity="Node" syncable="YES">
-        <attribute name="key" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="indexKey" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="value" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Root" representedClassName="ALRoot" parentEntity="Node" syncable="YES"/>
@@ -18,7 +18,7 @@
     <entity name="Subsection" representedClassName="ALSubsection" parentEntity="Node" syncable="YES"/>
     <elements>
         <element name="Node" positionX="-18" positionY="81" width="128" height="150"/>
-        <element name="Option" positionX="-63" positionY="-18" width="128" height="73"/>
+        <element name="Option" positionX="-63" positionY="-18" width="128" height="75"/>
         <element name="Root" positionX="18" positionY="144" width="128" height="45"/>
         <element name="Section" positionX="-54" positionY="18" width="128" height="43"/>
         <element name="Subsection" positionX="36" positionY="153" width="128" height="45"/>

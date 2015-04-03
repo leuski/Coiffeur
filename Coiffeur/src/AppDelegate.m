@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ALMainWindowController.h"
 #import "ALDocumentController.h"
+#import <MGSFragaria/MGSFragaria.h>
 
 NSString* const ALDocumentUncrustifyStyle  = @"Uncrustify Style File";
 NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
@@ -58,6 +59,8 @@ NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 
 		[ALDocumentController new];
 
+		[MGSFragaria initializeFramework];
+		
 		NSDictionary* ud = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
 										URLForResource:@"UserDefaults" withExtension:@"plist"]];
 		if (ud) {

@@ -69,7 +69,7 @@ typedef enum  {
 	for(NSString* v in [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]) {
 		++c;
 		if (c == 1) {
-			ioOption.key = ioOption.name = v;
+			ioOption.indexKey = ioOption.name = v;
 		} else {
 			if ([v isEqualToString:@"{"] || [v isEqualToString:@"}"]) {
 				continue;
@@ -225,7 +225,7 @@ typedef enum  {
 			
 		} else {
 			ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																					withPredicate:[NSPredicate predicateWithFormat:@"key = %@", head]
+																					withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", head]
 																									error:nil];
 			if (option) {
 				option.value = tokens[1];
@@ -241,13 +241,13 @@ typedef enum  {
 {
 	NSMutableString*	data = [NSMutableString new];
 	for(ALOption* option in [[ALOption allObjectsInContext:self.managedObjectContext] sortedArrayUsingComparator:^NSComparisonResult(ALOption* obj1, ALOption* obj2) {
-		return [obj1.key compare:obj2.key];
+		return [obj1.indexKey compare:obj2.indexKey];
 	}]) {
 		if (!option.value) continue;
 		if ([option.type isEqualToString:@"string"]) {
-			[data appendFormat:@"%@ = \"%@\"\n", option.key, option.value];
+			[data appendFormat:@"%@ = \"%@\"\n", option.indexKey, option.value];
 		} else {
-			[data appendFormat:@"%@ = %@\n", option.key, option.value];
+			[data appendFormat:@"%@ = %@\n", option.indexKey, option.value];
 		}
 	};
 	
@@ -297,6 +297,16 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 																																							 error:nil];
 
 	return (nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
+}
+
+- (NSUInteger)pageGuideColumn
+{
+	ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
+																			withPredicate:[NSPredicate predicateWithFormat:@"indexKey = \"code_width\""]
+																							error:nil];
+	if (option)
+		return [option.value integerValue];
+	return [super pageGuideColumn];
 }
 
 @end

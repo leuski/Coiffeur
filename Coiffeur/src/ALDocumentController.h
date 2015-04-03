@@ -9,4 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALDocumentController : NSDocumentController
+- (IBAction)newUncrustifyStyleDocument:(id)sender;
+- (IBAction)newClangFormatStyleDocument:(id)sender;
+
 @end

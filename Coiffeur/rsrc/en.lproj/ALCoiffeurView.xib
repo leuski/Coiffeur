@@ -22,7 +22,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="EUb-vU-Pgt"/>
                     </constraints>
-                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" focusRingType="none" drawsBackground="YES" usesSingleLineMode="YES" id="XT5-Py-g4I">
+                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" borderStyle="bezel" focusRingType="none" drawsBackground="YES" usesSingleLineMode="YES" maximumRecents="16" recentsAutosaveName="RecentSearches" id="XT5-Py-g4I">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -34,6 +34,7 @@
                                 <string key="NSPredicateFormat">documentation contains[cd] $value OR name contains[cd] $value</string>
                             </dictionary>
                         </binding>
+                        <outlet property="menu" destination="jzn-yH-Cli" id="kPS-Hj-J33"/>
                         <outlet property="nextKeyView" destination="nl4-in-rum" id="gRJ-ER-6DE"/>
                     </connections>
                 </searchField>
@@ -283,5 +284,21 @@
                 <binding destination="-2" name="sortDescriptors" keyPath="self.optionsSortDescriptors" id="n7f-DB-Tj8"/>
             </connections>
         </treeController>
+        <menu id="jzn-yH-Cli">
+            <items>
+                <menuItem title="Item 1" tag="1000" id="JJ7-jT-Wdk">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 2" tag="1001" id="POi-5K-umo">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 3" tag="1002" id="qze-df-htN">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item" tag="1003" id="XBn-vO-SGA">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+        </menu>
     </objects>
 </document>

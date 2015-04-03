@@ -193,7 +193,7 @@ static NSString* cleanUpRST(NSString* rst)
 			option = [ALOption objectInContext:self.managedObjectContext];
 			option.parent = section;
 			option.leaf = YES;
-			option.name = option.key = [line substringWithRange:[match rangeAtIndex:1]];
+			option.name = option.indexKey = [line substringWithRange:[match rangeAtIndex:1]];
 			option.title = option.documentation = @"";
 			in_title = YES;
 			NSString* type = [line substringWithRange:[match rangeAtIndex:2]];
@@ -257,7 +257,7 @@ static NSString* cleanUpRST(NSString* rst)
 			NSString* key = [line substringWithRange:[match rangeAtIndex:1]];
 			NSString* value = [line substringWithRange:[match rangeAtIndex:2]];
 			ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																					withPredicate:[NSPredicate predicateWithFormat:@"key = %@", key]
+																					withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", key]
 																									error:nil];
 			if (option) {
 				option.value = value;
@@ -277,10 +277,10 @@ static NSString* cleanUpRST(NSString* rst)
 
 	[data appendString:@"---\n"];
 	for(ALOption* option in [[ALOption allObjectsInContext:self.managedObjectContext] sortedArrayUsingComparator:^NSComparisonResult(ALOption* obj1, ALOption* obj2) {
-		return [obj1.key compare:obj2.key];
+		return [obj1.indexKey compare:obj2.indexKey];
 	}]) {
 		if (!option.value) continue;
-		[data appendFormat:@"%@: %@\n", option.key, option.value];
+		[data appendFormat:@"%@: %@\n", option.indexKey, option.value];
 	};
 	[data appendString:@"...\n"];
 	
@@ -296,5 +296,16 @@ static NSString* cleanUpRST(NSString* rst)
 	return (([string hasPrefix:@"---"] || [string rangeOfString:@"\n---"].location != NSNotFound) &&
 					nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
 }
+
+- (NSUInteger)pageGuideColumn
+{
+	ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
+																			withPredicate:[NSPredicate predicateWithFormat:@"indexKey = \"ColumnLimit\""]
+																							error:nil];
+	if (option)
+		return [option.value integerValue];
+	return [super pageGuideColumn];
+}
+
 
 @end

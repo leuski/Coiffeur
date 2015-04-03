@@ -11,7 +11,7 @@
 
 @implementation ALOption
 
-@dynamic key;
+@dynamic indexKey;
 @dynamic value;
 
 @end

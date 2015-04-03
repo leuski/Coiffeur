@@ -24,11 +24,13 @@
 @property (nonatomic, strong) ALRoot* root;
 @property (nonatomic, weak) id<ALCoiffeurControllerDelegate> delegate;
 @property (nonatomic, strong) NSURL* executableURL;
+@property (nonatomic, assign, readonly) NSUInteger pageGuideColumn;
 
 - (instancetype)initWithExecutableURL:(NSURL*)executableURL error:(NSError**)outError;
 
 - (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
 completionBlock:(void (^)(NSString*, NSError*)) block;
+- (BOOL)format; // use the delegate
 
 - (BOOL)AL_readOptionsFromLineArray:(NSArray*)lines;
 - (BOOL)AL_readValuesFromLineArray:(NSArray*)lines;

@@ -30,6 +30,11 @@
     return self;
 }
 
+- (NSUInteger)pageGuideColumn
+{
+	return self.model.pageGuideColumn;
+}
+
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
 {
 	return [self.model readValuesFromURL:url error:outError];

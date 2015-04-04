@@ -45,6 +45,9 @@
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		62B0C3741ACA6A0800A91E0C /* ALDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 62B0C3731ACA6A0800A91E0C /* ALDocumentController.m */; };
 		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
+		62F9F1A21ACF6610002B7F1B /* ALLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1A11ACF6610002B7F1B /* ALLanguage.m */; };
+		62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */; };
+		62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +144,10 @@
 		62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoiffeurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D1C2FE1AC34C7500B7F996 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoiffeurTests.m; sourceTree = "<group>"; };
+		62F9F1A01ACF6610002B7F1B /* ALLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALLanguage.h; sourceTree = "<group>"; };
+		62F9F1A11ACF6610002B7F1B /* ALLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALLanguage.m; sourceTree = "<group>"; };
+		62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinitions.plist; sourceTree = "<group>"; };
+		62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Syntax Definitions"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +207,7 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
 				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
 				6261852B1AC3524B0095CCD2 /* uncrustify */,
@@ -213,6 +221,7 @@
 				626185B41AC623000095CCD2 /* ALCoiffeurView.xib */,
 				626185C31AC6237E0095CCD2 /* ALDocumentView.xib */,
 				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
+				62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -248,6 +257,8 @@
 				626185351AC35CA30095CCD2 /* generated */,
 				626185611AC3975F0095CCD2 /* ALNode+model.h */,
 				626185621AC3975F0095CCD2 /* ALNode+model.m */,
+				62F9F1A01ACF6610002B7F1B /* ALLanguage.h */,
+				62F9F1A11ACF6610002B7F1B /* ALLanguage.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -406,6 +417,8 @@
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
 				6261852A1AC352450095CCD2 /* cfg in Resources */,
+				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
+				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
@@ -436,6 +449,7 @@
 				626185631AC3975F0095CCD2 /* ALNode+model.m in Sources */,
 				62B0C3641AC7AD8800A91E0C /* ALCoiffeurController.m in Sources */,
 				626185261AC351CC0095CCD2 /* AppDelegate.m in Sources */,
+				62F9F1A21ACF6610002B7F1B /* ALLanguage.m in Sources */,
 				62B0C3741ACA6A0800A91E0C /* ALDocumentController.m in Sources */,
 				6261856F1AC39E910095CCD2 /* ALOption.m in Sources */,
 				626185271AC351CC0095CCD2 /* Document.m in Sources */,

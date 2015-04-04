@@ -122,4 +122,11 @@ static NSCharacterSet* AL_WS_SET = nil;
 	return 0;
 }
 
+- (NSUInteger)unsignedIntegerValue
+{
+  long long value = [self longLongValue];
+  if (value >= 0) return (NSUInteger)value;
+  return 0;
+}
+
 @end

@@ -9,7 +9,7 @@
 #import "ALClangFormatController.h"
 #import "NSString+commandLine.h"
 #import "ALCoreData.h"
-
+#import "ALLanguage.h"
 #import "ALRoot.h"
 #import "ALOption.h"
 #import "ALSection.h"
@@ -37,9 +37,7 @@ static NSString* ALcfDefaultValues        = nil;
 		if ([self readOptionsFromString:ALcfOptionsDocumentation]) {
 
 			if (!ALcfDefaultValues) {
-				ALcfDefaultValues = [self runExecutable:@[@"-dump-config"]
-																				 text:nil
-																				error:&error];
+				ALcfDefaultValues = [self runExecutableWithArguments:@[@"-dump-config"] workingDirectory:nil input:nil error:&error];
 			}
 
 			[self readValuesFromString:ALcfDefaultValues];
@@ -256,9 +254,7 @@ static NSString* cleanUpRST(NSString* rst)
 		if (match) {
 			NSString* key = [line substringWithRange:[match rangeAtIndex:1]];
 			NSString* value = [line substringWithRange:[match rangeAtIndex:2]];
-			ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																					withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", key]
-																									error:nil];
+			ALOption* option = [self optionWithKey:key];
 			if (option) {
 				option.value = value;
 			} else {
@@ -287,6 +283,37 @@ static NSString* cleanUpRST(NSString* rst)
 	return [data writeToURL:absoluteURL atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
 
+- (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
+completionBlock:(void (^)(NSString*, NSError*)) block
+{
+  NSString* workingDirectory = NSTemporaryDirectory();
+  NSString* configPath = [workingDirectory stringByAppendingPathComponent:@".clang-format"];
+
+  NSError* error;
+  if (![self writeValuesToURL:[NSURL fileURLWithPath:configPath] error:&error]) {
+    block(nil, error);
+    return NO;
+  }
+
+  NSMutableArray* args = [NSMutableArray arrayWithArray: @[ @"-style=file" ]];
+  if (attributes[ALFormatLanguage]) {
+		ALLanguage* language = attributes[ALFormatLanguage];
+		if (language.clangFormatID)
+			[args addObject:[NSString stringWithFormat:@"-assume-filename=sample.%@", language.defaultExtension]];
+  }
+
+  error = [self runExecutableWithArguments:args workingDirectory:workingDirectory input:input completionBlock:^(NSString* text, NSError* in_error) {
+      [[NSFileManager defaultManager] removeItemAtPath:configPath error:nil];
+      block(text, in_error);
+  }];
+
+  if (!error) return YES;
+
+  [[NSFileManager defaultManager] removeItemAtPath:configPath error:nil];
+  block(nil, error);
+  return NO;
+}
+
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
 {
 	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]"
@@ -299,11 +326,9 @@ static NSString* cleanUpRST(NSString* rst)
 
 - (NSUInteger)pageGuideColumn
 {
-	ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																			withPredicate:[NSPredicate predicateWithFormat:@"indexKey = \"ColumnLimit\""]
-																							error:nil];
+	ALOption* option = [self optionWithKey:@"ColumnLimit"];
 	if (option)
-		return [option.value integerValue];
+		return [option.value unsignedIntegerValue];
 	return [super pageGuideColumn];
 }
 

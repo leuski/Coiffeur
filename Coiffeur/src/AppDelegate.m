@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ALMainWindowController.h"
 #import "ALDocumentController.h"
+#import "ALLanguage.h"
 #import <MGSFragaria/MGSFragaria.h>
 
 NSString* const ALDocumentUncrustifyStyle  = @"Uncrustify Style File";
@@ -20,37 +21,37 @@ NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 
 @implementation AppDelegate
 
-+ (NSArray*)supportedLanguages
-{
-	static NSArray* ALLanguages = nil;
-	if (!ALLanguages) {
-		ALLanguages
-						= [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
-						URLForResource:@"languages" withExtension:@"plist"]];
-	}
-	return ALLanguages;
-}
-
-+ (NSString*)languageForUTI:(NSString*)uti
-{
-	for (NSDictionary* d in [self supportedLanguages]) {
-		for (NSString* u in d[@"uti"]) {
-			if ([u isEqualToString:uti])
-				return d[@"uncrustify"];
-		}
-	}
-	return nil;
-}
-
-+ (NSString*)fragariaNameForLanguage:(NSString*)language
-{
-	for (NSDictionary* d in [self supportedLanguages]) {
-		if ([language isEqualToString:d[@"uncrustify"]]) {
-			return d[@"fragaria"];
-		}
-	}
-	return nil;
-}
+//+ (NSArray*)supportedLanguages
+//{
+//	static NSArray* ALLanguages = nil;
+//	if (!ALLanguages) {
+//		ALLanguages
+//						= [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
+//						URLForResource:@"languages" withExtension:@"plist"]];
+//	}
+//	return ALLanguages;
+//}
+//
+//+ (NSString*)languageForUTI:(NSString*)uti
+//{
+//	for (NSDictionary* d in [self supportedLanguages]) {
+//		for (NSString* u in d[@"uti"]) {
+//			if ([u isEqualToString:uti])
+//				return d[@"uncrustify"];
+//		}
+//	}
+//	return nil;
+//}
+//
+//+ (NSString*)fragariaNameForLanguage:(NSString*)language
+//{
+//	for (NSDictionary* d in [self supportedLanguages]) {
+//		if ([language isEqualToString:d[@"uncrustify"]]) {
+//			return d[@"fragaria"];
+//		}
+//	}
+//	return nil;
+//}
 
 
 - (instancetype)init
@@ -72,11 +73,11 @@ NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-	for (NSDictionary* d in [AppDelegate supportedLanguages]) {
-		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:d[@"name"]
+	for (ALLanguage* l in [ALLanguage supportedLanguages]) {
+		NSMenuItem* item = [[NSMenuItem alloc] initWithTitle:l.displayName
 																									action:@selector(changeLanguage:)
 																					 keyEquivalent:@""];
-		item.representedObject = d;
+		item.representedObject = l;
 		[self.languagesMenu addItem:item];
 	}
 }

@@ -3,122 +3,134 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>public.c-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>C</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>C</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
 		<string>C</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>public.c-plus-plus-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>CPP</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>C++</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
 		<string>C++</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>com.microsoft.csharp-source</string>
 			<string>com.microsoft.c-sharp</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>CS</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>C#</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
 		<string>C#</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>net.leuski.d-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>D</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>D</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
 		<string>D</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>com.netscape.javascript-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>ECMA</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>ECMA Script</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
+		<string>JavaScript</string>
+		<key>clangFormatID</key>
 		<string>JavaScript</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>com.sun.java-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>JAVA</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>Java</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
+		<string>Java</string>
+		<key>clangFormatID</key>
 		<string>Java</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>public.objective-c-source</string>
 			<string>public.c-header</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>OC</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>Objective-C</string>
-		<key>fragaria</key>
+		<key>fragariaID</key>
 		<string>Objective-C</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>public.objective-c-plus-plus-source</string>
 			<string>public.c-plus-plus-header</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>OC+</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>Objective-C++</string>
-		<key>fragaria</key>
-		<string>Objective-C</string>
+		<key>fragariaID</key>
+		<string>Objective-C++</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>net.leuski.pawn-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>PAWN</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>Pawn</string>
 	</dict>
 	<dict>
-		<key>uti</key>
+		<key>UTIs</key>
 		<array>
 			<string>net.leuski.vala-source</string>
 		</array>
-		<key>uncrustify</key>
+		<key>uncrustifyID</key>
 		<string>VALA</string>
-		<key>name</key>
+		<key>displayName</key>
 		<string>Vala</string>
 	</dict>
 	

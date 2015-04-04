@@ -9,6 +9,7 @@
 #import "ALUncrustifyController.h"
 #import "NSString+commandLine.h"
 #import "ALCoreData.h"
+#import "ALLanguage.h"
 
 #import "ALRoot.h"
 #import "ALOption.h"
@@ -27,17 +28,13 @@ static NSString * ALDefaultValues = nil;
 		if (outError) *outError = nil;
 		
 		if (!ALOptionsDocumentation) {
-			ALOptionsDocumentation = [self runExecutable:@[@"--show-config"]
-																							text:nil
-																						 error:outError];
+			ALOptionsDocumentation = [self runExecutableWithArguments:@[@"--show-config"] workingDirectory:nil input:nil error:outError];
 		}
 		
 		if ([self readOptionsFromString:ALOptionsDocumentation]) {
 		
 			if (!ALDefaultValues) {
-				ALDefaultValues = [self runExecutable:@[@"--update-config"]
-																				 text:nil
-																				error:outError];
+				ALDefaultValues = [self runExecutableWithArguments:@[@"--update-config"] workingDirectory:nil input:nil error:outError];
 			}
 
 			[self readValuesFromString:ALDefaultValues];
@@ -224,9 +221,7 @@ typedef enum  {
 		} else if ([head isEqualToString:@"file_ext"]) {
 			
 		} else {
-			ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																					withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", head]
-																									error:nil];
+			ALOption* option = [self optionWithKey:head];
 			if (option) {
 				option.value = tokens[1];
 			} else {
@@ -257,7 +252,8 @@ typedef enum  {
 - (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
 completionBlock:(void (^)(NSString*, NSError*)) block
 {
-	NSString* configPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+  NSString* workingDirectory = NSTemporaryDirectory();
+	NSString* configPath = [workingDirectory stringByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
 	
 	NSError* error;
 	if (![self writeValuesToURL:[NSURL fileURLWithPath:configPath] error:&error]) {
@@ -267,21 +263,21 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	
 	NSMutableArray* args = [NSMutableArray arrayWithArray: @[ @"-q", @"-c", configPath ]];
 	if (attributes[ALFormatLanguage]) {
-		[args addObject:@"-l"];
-		[args addObject:attributes[ALFormatLanguage]];
+		ALLanguage* language = attributes[ALFormatLanguage];
+		if (language.uncrustifyID) {
+			[args addObject:@"-l"];
+			[args addObject:language.uncrustifyID];
+		}
 	}
 	
 	if ([attributes[ALFormatFragment] boolValue]) {
 		[args addObject:@"--frag"];
 	}
 	
-	error = [self runExecutable:args
-												 text:input
-							completionBlock:^(NSString* text, NSError* lerror) {
-								[[NSFileManager defaultManager]
-												removeItemAtPath:configPath error:nil];
-								block(text, lerror);
-							}];
+	error = [self runExecutableWithArguments:args workingDirectory:workingDirectory input:input completionBlock:^(NSString* text, NSError* in_error) {
+      [[NSFileManager defaultManager] removeItemAtPath:configPath error:nil];
+      block(text, in_error);
+  }];
 	
 	if (!error) return YES;
 	
@@ -301,11 +297,9 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 - (NSUInteger)pageGuideColumn
 {
-	ALOption* option = [ALOption firstObjectInContext:self.managedObjectContext
-																			withPredicate:[NSPredicate predicateWithFormat:@"indexKey = \"code_width\""]
-																							error:nil];
+	ALOption* option = [self optionWithKey:@"code_width"];
 	if (option)
-		return [option.value integerValue];
+		return [option.value unsignedIntegerValue];
 	return [super pageGuideColumn];
 }
 

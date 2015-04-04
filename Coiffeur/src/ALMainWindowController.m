@@ -19,6 +19,7 @@
 #import "ALCodeDocument.h"
 #import "ALUncrustifyController.h"
 #import "ALOverviewScroller.h"
+#import "ALLanguage.h"
 
 typedef CGFloat ALScrollLocation;
 
@@ -44,7 +45,7 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
   if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
 		self.diffMatchPatch = [DiffMatchPatch new];
 		self.fragaria = [MGSFragaria new];
-		self.language = [[NSUserDefaults standardUserDefaults] stringForKey:ALFormatLanguage];
+		self.language = [ALLanguage languageFromUserDefaults];
 		[self AL_restoreSource];
 		[self window];
   }
@@ -90,8 +91,8 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
   self.documentView = [ALDocumentView new];
 	
 	NSMutableSet* types = [NSMutableSet new];
-	for(NSDictionary* d in [AppDelegate supportedLanguages]) {
-		[types addObjectsFromArray:d[@"uti"]];
+	for(ALLanguage* l in [ALLanguage supportedLanguages]) {
+		[types addObjectsFromArray:l.UTIs];
 	}
 	
 	self.documentView.allowedFileTypes = [types allObjects];
@@ -171,18 +172,18 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
   NSString* uti = [[NSWorkspace sharedWorkspace] typeOfFile:[self.fileURL path] error:nil];
   if (!uti) return ;
 
-  NSString* lang = [AppDelegate languageForUTI:uti];
+  ALLanguage* lang = [ALLanguage languageWithUTI:uti];
   if (!lang) return;
 
   self.language = lang;
 	
 }
 
-- (void)setLanguage:(NSString *)language
+- (void)setLanguage:(ALLanguage *)language
 {
 	self->_language = language;
 
-	NSString* fragariaName = [AppDelegate fragariaNameForLanguage:self.language];
+	NSString* fragariaName = language.fragariaID;
 	if (fragariaName && self.fragaria)
 		[self.fragaria setObject:fragariaName forKey:MGSFOSyntaxDefinitionName];
 
@@ -333,16 +334,16 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 
 - (IBAction)changeLanguage:(NSMenuItem *)anItem
 {
-  NSDictionary* props = [anItem representedObject];
-  self.language = props[@"uncrustify"];
-  [[NSUserDefaults standardUserDefaults] setObject:self.language forKey:ALFormatLanguage];
+  ALLanguage* language = [anItem representedObject];
+  self.language = language;
+	[language saveToUserDefaults];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)anItem
 {
   if (anItem.action == @selector(changeLanguage:)) {
-    NSDictionary* props = [anItem representedObject];
-    anItem.state = [self.language isEqualToString:props[@"uncrustify"]]
+    ALLanguage* language = [anItem representedObject];
+    anItem.state = (self.language == language)
         ? NSOnState : NSOffState;
   }
   return YES;

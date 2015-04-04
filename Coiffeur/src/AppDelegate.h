@@ -10,9 +10,9 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 
-+ (NSArray*)supportedLanguages;
-+ (NSString*)languageForUTI:(NSString*)uti;
-+ (NSString*)fragariaNameForLanguage:(NSString*)language;
+//+ (NSArray*)supportedLanguages;
+//+ (NSString*)languageForUTI:(NSString*)uti;
+//+ (NSString*)fragariaNameForLanguage:(NSString*)language;
 
 @end
 

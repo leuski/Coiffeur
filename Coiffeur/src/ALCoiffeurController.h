@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 
 @class ALRoot;
+@class ALOption;
 @class ALCoiffeurController;
 
 @protocol ALCoiffeurControllerDelegate<NSObject>
@@ -40,8 +41,11 @@ completionBlock:(void (^)(NSString*, NSError*)) block;
 - (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError **)error;
 - (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error;
 
-- (NSError*)runExecutable:(NSArray*)args text:(NSString*)input completionBlock:(void (^)(NSString*, NSError*)) block;
-- (NSString*)runExecutable:(NSArray*)args text:(NSString*)input error:(NSError**)outError;
+- (NSError*)runExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input completionBlock:(void (^)(NSString*, NSError*))block;
+
+- (NSString*)runExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input error:(NSError**)outError;
+
+- (ALOption*)optionWithKey:(NSString*)key;
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
 

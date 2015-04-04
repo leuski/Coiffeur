@@ -9,6 +9,7 @@
 #import "ALCoiffeurController.h"
 #import "ALCoreData.h"
 #import "ALRoot.h"
+#import "ALOption.h"
 
 NSString * const ALFormatLanguage = @"ALFormatLanguage";
 NSString * const ALFormatFragment = @"ALFormatFragment";
@@ -145,7 +146,14 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	return 0;
 }
 
-- (NSTask*)startUncrustify:(NSArray*)args text:(NSString*)input error:(NSError**)outError
+- (ALOption*)optionWithKey:(NSString*)key
+{
+	return [ALOption firstObjectInContext:self.managedObjectContext
+													withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", key]
+																	error:nil];
+}
+
+- (NSTask*)startExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input error:(NSError**)outError
 {
 	NSURL* executableURL = self.executableURL;
 
@@ -164,6 +172,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 		[theTask setLaunchPath:executableURL.path];
 		[theTask setArguments:args];
+    [theTask setCurrentDirectoryPath:workingDirectory];
 		[theTask launch];
 
 		if (writeHandle) {
@@ -212,26 +221,30 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	return nil;
 }
 
-- (NSError*)runExecutable:(NSArray*)args text:(NSString*)input completionBlock:(void (^)(NSString*, NSError*)) block
+- (NSError*)runExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input completionBlock:(void (^)(NSString*, NSError*))block
 {
-	NSError*	error;
-	NSTask* theTask = [self startUncrustify:args text:input error:&error];
-	if (!theTask) return error;
+  NSError* error;
+  NSTask* theTask = [self startExecutableWithArguments:args workingDirectory:workingDirectory input:input error:&error];
+  if (!theTask) return error;
 
-	dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{ @autoreleasepool {
-		NSError* localError;
-		NSString* text = [self runTask:theTask error:&localError];
-		dispatch_async(dispatch_get_main_queue(), ^{ @autoreleasepool {
-			block(text, localError);
-		}});
-	}});
+  dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      @autoreleasepool {
+        NSError* localError;
+        NSString* text = [self runTask:theTask error:&localError];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+              block(text, localError);
+            }
+        });
+      }
+  });
 
-	return nil;
+  return nil;
 }
 
-- (NSString*)runExecutable:(NSArray*)args text:(NSString*)input error:(NSError**)outError
+- (NSString*)runExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input error:(NSError**)outError
 {
-	NSTask* theTask = [self startUncrustify:args text:input error:outError];
+	NSTask* theTask = [self startExecutableWithArguments:args workingDirectory:workingDirectory input:input error:outError];
 	if (!theTask) return nil;
 
 	return [self runTask:theTask error:outError];

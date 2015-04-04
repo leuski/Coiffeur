@@ -15,6 +15,19 @@
 #import "ALOption.h"
 #import "ALSection.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_UncrustifyShowDocumentationArgument = @"--show-config";
+static NSString* const AL_UncrustifyShowDefaultConfigArgument = @"--update-config";
+static NSString* const AL_UncrustifyQuietFlag = @"-q";
+static NSString* const AL_UncrustifyConfigPathFlag = @"-c";
+static NSString* const AL_UncrustifyLanguageFlag = @"-l";
+static NSString* const AL_UncrustifyFragmentFlag = @"--frag";
+static NSString* const AL_UncrustifyPageGuideKey = @"code_width";
+static NSString* const AL_UncrustifyComment = @"#";
+static NSString* const AL_UncrustifyNumberOptionType = @"number";
+#pragma clang diagnostic pop
+
 static NSString * ALOptionsDocumentation = nil;
 static NSString * ALDefaultValues = nil;
 
@@ -28,13 +41,13 @@ static NSString * ALDefaultValues = nil;
 		if (outError) *outError = nil;
 		
 		if (!ALOptionsDocumentation) {
-			ALOptionsDocumentation = [self runExecutableWithArguments:@[@"--show-config"] workingDirectory:nil input:nil error:outError];
+			ALOptionsDocumentation = [self runExecutableWithArguments:@[AL_UncrustifyShowDocumentationArgument] workingDirectory:nil input:nil error:outError];
 		}
 		
 		if ([self readOptionsFromString:ALOptionsDocumentation]) {
 		
 			if (!ALDefaultValues) {
-				ALDefaultValues = [self runExecutableWithArguments:@[@"--update-config"] workingDirectory:nil input:nil error:outError];
+				ALDefaultValues = [self runExecutableWithArguments:@[AL_UncrustifyShowDefaultConfigArgument] workingDirectory:nil input:nil error:outError];
 			}
 
 			[self readValuesFromString:ALDefaultValues];
@@ -54,9 +67,9 @@ typedef enum  {
 
 - (void)parseSection:(ALSection*)ioSection line:(NSString*)line
 {
-	line = [line trimComment];
+	line = [line stringByTrimmingPrefix:AL_UncrustifyComment];
 	if ([line length]) {
-		ioSection.title = [ioSection.title stringByAppendingString:line separatedBy:@" "];
+		ioSection.title = [ioSection.title stringByAppendingString:line separatedBy:ALSpace];
 	}
 }
 
@@ -68,12 +81,19 @@ typedef enum  {
 		if (c == 1) {
 			ioOption.indexKey = ioOption.name = v;
 		} else {
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 			if ([v isEqualToString:@"{"] || [v isEqualToString:@"}"]) {
 				continue;
 			}
+#pragma clang diagnostic pop
+
 			ioOption.type = [ioOption.type stringByAppendingString:[v lowercaseString]];
 		}
 	}
+  if ([ioOption.type isEqualToString:AL_UncrustifyNumberOptionType])
+    ioOption.type = ALSignedOptionType;
 }
 
 - (BOOL)AL_readOptionsFromLineArray:(NSArray*)lines
@@ -95,7 +115,7 @@ typedef enum  {
 		
 		switch (state) {
 			case ALNone:
-				if ([line hasPrefix:@"#"]) {
+				if ([line hasPrefix:AL_UncrustifyComment]) {
 					++sectionCount;
 					state = ALSectionHeader;
 					section = [ALSection objectInContext:self.managedObjectContext];
@@ -114,16 +134,16 @@ typedef enum  {
 				break;
 
 			case ALSectionHeader:
-				if ([line hasPrefix:@"#"])
+				if ([line hasPrefix:AL_UncrustifyComment])
 					[self parseSection:section line:line];
 				break;
 
 			case ALOptionDescription:
-				if ([line hasPrefix:@"#"])
-					line = [line trimComment];
+				if ([line hasPrefix:AL_UncrustifyComment])
+					line = [line stringByTrimmingPrefix:AL_UncrustifyComment];
 				if ([option.title length] == 0)
 					option.title = line;
-				option.documentation = [option.documentation stringByAppendingString:line separatedBy:@"\n"];
+				option.documentation = [option.documentation stringByAppendingString:line separatedBy:ALNewLine];
 				break;
 		}
 	}
@@ -141,7 +161,7 @@ typedef enum  {
 		for(ALOption* option in section.children) {
 			if (![option isKindOfClass:[ALOption class]]) continue;
 			NSString* title = option.title;
-			NSArray* tokens = [[title lowercaseString] componentsSeparatedByString:@" "];
+			NSArray* tokens = [[title lowercaseString] componentsSeparatedByString:ALSpace];
 			tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'a'"]];
 			tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'the'"]];
 
@@ -149,7 +169,7 @@ typedef enum  {
 			tokens = [tokens subarrayWithRange:NSMakeRange(0, tokenLimit)];
 			
 			
-			NSString* key = [tokens componentsJoinedByString:@" "];
+			NSString* key = [tokens componentsJoinedByString:ALSpace];
 			if (!index[key]) {
 				index[key] = [NSMutableArray new];
 			}
@@ -169,11 +189,11 @@ typedef enum  {
 			
 			for(ALOption* option in list) {
 				NSString* title = option.title;
-				NSArray* tokens = [title componentsSeparatedByString:@" "];
+				NSArray* tokens = [title componentsSeparatedByString:ALSpace];
 				tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'a'"]];
 				tokens = [tokens filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != 'the'"]];
 				tokens = [tokens subarrayWithRange:NSMakeRange(tokenLimit, tokens.count-tokenLimit)];
-				option.title = [tokens componentsJoinedByString:@" "];
+				option.title = [tokens componentsJoinedByString:ALSpace];
 				option.parent = subsection;
 			}
 		}
@@ -185,16 +205,18 @@ typedef enum  {
 	for(__strong NSString* line in lines) {
 		line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		if (![line length]) continue;
-		if ([line hasPrefix:@"#"]) continue;
-		NSRange comment = [line rangeOfString:@"#"];
+		if ([line hasPrefix:AL_UncrustifyComment]) continue;
+		NSRange comment = [line rangeOfString:AL_UncrustifyComment];
 		if (comment.location != NSNotFound) {
 			line = [line substringToIndex:comment.location];
 		}
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+
 		NSRange equal = [line rangeOfString:@"="];
 		if (equal.location != NSNotFound) {
-			line = [NSString stringWithFormat:@"%@ %@",
-							[line substringToIndex:equal.location],
-							[line substringFromIndex:equal.location+1]];
+			line = [@[[line substringToIndex:equal.location], [line substringFromIndex:equal.location + 1]] componentsJoinedByString:@" "];
 		}
 		NSArray* tokens = [line commandLineComponents];
 		if (tokens.count == 0) continue;
@@ -228,6 +250,7 @@ typedef enum  {
 				NSLog(@"Warning: unknown token %@ on line %@", head, line);
 			}
 		}
+#pragma clang diagnostic pop
 	}
 	return YES;
 }
@@ -239,11 +262,17 @@ typedef enum  {
 		return [obj1.indexKey compare:obj2.indexKey];
 	}]) {
 		if (!option.value) continue;
-		if ([option.type isEqualToString:@"string"]) {
-			[data appendFormat:@"%@ = \"%@\"\n", option.indexKey, option.value];
-		} else {
-			[data appendFormat:@"%@ = %@\n", option.indexKey, option.value];
+    NSString* value = option.value;
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+		if ([option.type isEqualToString:ALStringOptionType]) {
+      value = [NSString stringWithFormat:@"\"%@\"", value];
 		}
+    [data appendFormat:@"%@ = %@", option.indexKey, value];
+#pragma clang diagnostic pop
+
+    [data appendString:ALNewLine];
 	};
 	
 	return [data writeToURL:absoluteURL atomically:YES encoding:NSUTF8StringEncoding error:error];
@@ -261,17 +290,17 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 		return NO;
 	}
 	
-	NSMutableArray* args = [NSMutableArray arrayWithArray: @[ @"-q", @"-c", configPath ]];
+	NSMutableArray* args = [NSMutableArray arrayWithArray: @[AL_UncrustifyQuietFlag, AL_UncrustifyConfigPathFlag, configPath ]];
 	if (attributes[ALFormatLanguage]) {
 		ALLanguage* language = attributes[ALFormatLanguage];
 		if (language.uncrustifyID) {
-			[args addObject:@"-l"];
+      [args addObject:AL_UncrustifyLanguageFlag];
 			[args addObject:language.uncrustifyID];
 		}
 	}
 	
 	if ([attributes[ALFormatFragment] boolValue]) {
-		[args addObject:@"--frag"];
+    [args addObject:AL_UncrustifyFragmentFlag];
 	}
 	
 	error = [self runExecutableWithArguments:args workingDirectory:workingDirectory input:input completionBlock:^(NSString* text, NSError* in_error) {
@@ -288,16 +317,19 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
 {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]"
 																																						 options:NSRegularExpressionAnchorsMatchLines
 																																							 error:nil];
+#pragma clang diagnostic pop
 
 	return (nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
 }
 
 - (NSUInteger)pageGuideColumn
 {
-	ALOption* option = [self optionWithKey:@"code_width"];
+	ALOption* option = [self optionWithKey:AL_UncrustifyPageGuideKey];
 	if (option)
 		return [option.value unsignedIntegerValue];
 	return [super pageGuideColumn];

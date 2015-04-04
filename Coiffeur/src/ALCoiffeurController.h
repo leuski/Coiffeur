@@ -53,3 +53,10 @@ completionBlock:(void (^)(NSString*, NSError*)) block;
 
 extern NSString * const ALFormatLanguage;
 extern NSString * const ALFormatFragment;
+
+extern NSString* const ALSignedOptionType;
+extern NSString* const ALUnsignedOptionType;
+extern NSString* const ALStringOptionType;
+
+extern NSString* const ALNewLine;
+extern NSString* const ALSpace;

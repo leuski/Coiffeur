@@ -10,9 +10,10 @@
 
 @interface NSString (commandLine)
 - (NSArray*)commandLineComponents;
-- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delim;
+- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delimiter;
 - (NSString*)trim;
-- (NSString*)trimComment;
+
+- (NSString*)stringByTrimmingPrefix:(NSString*)prefix;
 - (NSRange)lineRangeForCharacterRange:(NSRange)range;
 - (NSUInteger)lineCountForCharacterRange:(NSRange)range;
 - (NSUInteger)unsignedIntegerValue;

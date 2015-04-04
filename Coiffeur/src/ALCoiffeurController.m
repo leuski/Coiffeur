@@ -11,8 +11,19 @@
 #import "ALRoot.h"
 #import "ALOption.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 NSString * const ALFormatLanguage = @"ALFormatLanguage";
 NSString * const ALFormatFragment = @"ALFormatFragment";
+
+NSString* const ALSignedOptionType = @"signed";
+NSString* const ALUnsignedOptionType = @"unsigned";
+NSString* const ALStringOptionType = @"string";
+
+NSString* const ALNewLine = @"\n";
+NSString* const ALSpace = @" ";
+
+#pragma clang diagnostic pop
 
 @interface ALCoiffeurController ()
 @property (nonatomic, strong) NSManagedObjectModel* managedObjectModel;
@@ -33,16 +44,10 @@ NSString * const ALFormatFragment = @"ALFormatFragment";
 		self.managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
 		self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
 		self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
-		NSError* error;
-		[self.managedObjectContext.persistentStoreCoordinator
-		 addPersistentStoreWithType:NSInMemoryStoreType
-		 configuration:nil
-		 URL:nil
-		 options:nil
-		 error:&error];
-		if (error) {
-			NSLog(@"error: %@", error);
-		}
+
+    if (nil == [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:outError])
+      return self = nil;
+
 		self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self
@@ -65,22 +70,26 @@ NSString * const ALFormatFragment = @"ALFormatFragment";
 
 - (BOOL)format
 {
+  BOOL result = NO;
+
 	id<ALCoiffeurControllerDelegate> del = self.delegate;
 	if (!del ||
 			![del respondsToSelector:@selector(textToFormatByCoiffeurController:attributes:)]
-			|| ![del respondsToSelector:@selector(coiffeurController:setText:)]) return NO;
+			|| ![del respondsToSelector:@selector(coiffeurController:setText:)]) return result;
 	
 	NSDictionary* attributes;
 	NSString* input = [del textToFormatByCoiffeurController:self
 																							 attributes:&attributes];
-	if (!input) return NO;
-	
-	return [self format:input
-					 attributes:attributes
-			completionBlock:^(NSString* output, NSError* error) {
-				if (output)
-					[del coiffeurController:self setText:output];
-			}];
+	if (input) {
+    result = [self format:input
+               attributes:attributes
+          completionBlock:^(NSString* output, NSError* error) {
+              if (output)
+                [del coiffeurController:self setText:output];
+          }];
+  }
+
+  return result;
 }
 
 - (BOOL) format:(NSString*)input attributes:(NSDictionary*)attributes
@@ -101,7 +110,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 - (BOOL)readOptionsFromString:(NSString*)text
 {
-	NSArray* lines = [text componentsSeparatedByString:@"\n"];
+	NSArray* lines = [text componentsSeparatedByString:ALNewLine];
 	if (!lines) return NO;
 
 	[self.managedObjectContext disableUndoRegistration];
@@ -117,7 +126,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 - (BOOL)readValuesFromString:(NSString*)text
 {
-	NSArray* lines = [text componentsSeparatedByString:@"\n"];
+	NSArray* lines = [text componentsSeparatedByString:ALNewLine];
 	if (!lines) return NO;
 
 	[self.managedObjectContext disableUndoRegistration];
@@ -132,8 +141,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 - (BOOL)readValuesFromURL:(NSURL *)absoluteURL error:(NSError **)error
 {
 	NSString* data = [NSString stringWithContentsOfURL:absoluteURL encoding:NSUTF8StringEncoding error:error];
-	if (!data) return NO;
-	return [self readValuesFromString:data];
+  return data != nil && [self readValuesFromString:data];
 }
 
 - (BOOL)writeValuesToURL:(NSURL *)absoluteURL error:(NSError **)error
@@ -148,9 +156,12 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 - (ALOption*)optionWithKey:(NSString*)key
 {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	return [ALOption firstObjectInContext:self.managedObjectContext
 													withPredicate:[NSPredicate predicateWithFormat:@"indexKey = %@", key]
 																	error:nil];
+#pragma clang diagnostic pop
 }
 
 - (NSTask*)startExecutableWithArguments:(NSArray*)args workingDirectory:(NSString*)workingDirectory input:(NSString*)input error:(NSError**)outError
@@ -171,8 +182,13 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 		[theTask setStandardError:errPipe];
 
 		[theTask setLaunchPath:executableURL.path];
-		[theTask setArguments:args];
-    [theTask setCurrentDirectoryPath:workingDirectory];
+
+		if (args)
+			[theTask setArguments:args];
+
+		if (workingDirectory)
+			[theTask setCurrentDirectoryPath:workingDirectory];
+		
 		[theTask launch];
 
 		if (writeHandle) {
@@ -212,7 +228,7 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 	if (outError) {
 		NSString* errText = [[NSString alloc] initWithData:errData encoding:NSUTF8StringEncoding];
 		if (!errText)
-			errText = [NSString stringWithFormat:@"Format Executable error code %d", status];
+			errText = [NSString stringWithFormat:NSLocalizedString(@"Format executable error code %d", @"Format executable error code %d"), status];
 		*outError = [NSError errorWithDomain:NSPOSIXErrorDomain
 																		code:status
 																userInfo:@{ NSLocalizedDescriptionKey : errText}];

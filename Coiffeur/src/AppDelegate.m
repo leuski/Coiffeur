@@ -12,47 +12,21 @@
 #import "ALLanguage.h"
 #import <MGSFragaria/MGSFragaria.h>
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 NSString* const ALDocumentUncrustifyStyle  = @"Uncrustify Style File";
 NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
+static NSString* const AL_AboutFileName = @"about";
+static NSString* const AL_AboutFileNameExtension = @"html";
+static NSString* const AL_UserDefaultsFileNameExtension = @"plist";
+static NSString* const AL_UserDefaultsFileName = @"UserDefaults";
+#pragma clang diagnostic pop
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSMenu* languagesMenu;
 @end
 
 @implementation AppDelegate
-
-//+ (NSArray*)supportedLanguages
-//{
-//	static NSArray* ALLanguages = nil;
-//	if (!ALLanguages) {
-//		ALLanguages
-//						= [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
-//						URLForResource:@"languages" withExtension:@"plist"]];
-//	}
-//	return ALLanguages;
-//}
-//
-//+ (NSString*)languageForUTI:(NSString*)uti
-//{
-//	for (NSDictionary* d in [self supportedLanguages]) {
-//		for (NSString* u in d[@"uti"]) {
-//			if ([u isEqualToString:uti])
-//				return d[@"uncrustify"];
-//		}
-//	}
-//	return nil;
-//}
-//
-//+ (NSString*)fragariaNameForLanguage:(NSString*)language
-//{
-//	for (NSDictionary* d in [self supportedLanguages]) {
-//		if ([language isEqualToString:d[@"uncrustify"]]) {
-//			return d[@"fragaria"];
-//		}
-//	}
-//	return nil;
-//}
-
 
 - (instancetype)init
 {
@@ -62,8 +36,7 @@ NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 
 		[MGSFragaria initializeFramework];
 		
-		NSDictionary* ud = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
-										URLForResource:@"UserDefaults" withExtension:@"plist"]];
+		NSDictionary* ud = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:AL_UserDefaultsFileName withExtension:AL_UserDefaultsFileNameExtension]];
 		if (ud) {
 			[[NSUserDefaults standardUserDefaults] registerDefaults:ud];
 		}
@@ -87,11 +60,36 @@ NSString* const ALDocumentClangFormatStyle = @"Clang-Format Style File";
 	// Insert code here to tear down your application
 }
 
+- (NSBundle*)bundle
+{
+	return [NSBundle mainBundle];
+}
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedMethodInspection"
+- (NSURL*)aboutURL
+{
+	return [self.bundle URLForResource:AL_AboutFileName withExtension:AL_AboutFileNameExtension];
+}
+#pragma clang diagnostic pop
+
 @end
 
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedClassInspection"
+
+@interface ALBorderlessTextView : NSTextView
+@end
+
+@implementation ALBorderlessTextView
+
+- (void)awakeFromNib {
+	[self setTextContainerInset:NSMakeSize(0,0)];
+	[self.textContainer setLineFragmentPadding:0];
+}
+
+@end
 
 @interface ALString2NumberTransformer : NSValueTransformer
 

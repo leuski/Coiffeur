@@ -13,7 +13,6 @@
 
 #import "NSString+commandLine.h"
 #import "ALDocumentView.h"
-#import "AppDelegate.h"
 
 #import "Document.h"
 #import "ALCodeDocument.h"
@@ -35,14 +34,20 @@ typedef CGFloat ALScrollLocation;
 @property (nonatomic, weak) ALOverviewScroller* overviewScroller;
 @end
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 static NSString * const ALLastSourceURL = @"ALLastSourceURL";
+static NSString* const AL_SamplesFolderName = @"samples";
+static NSString* const AL_SampleFileName = @"sample";
+static NSString* const AL_ObjectiveCPPExtension = @"mm";
+#pragma clang diagnostic pop
 
 @implementation ALMainWindowController
 @synthesize string=_string, fileURL = _fileURL, language = _language;
 
 - (instancetype)init
 {
-  if (self = [super initWithWindowNibName:@"ALMainWindowController"]) {
+  if (self = [super initWithWindowNibName:NSStringFromClass([ALMainWindowController class])]) {
 		self.diffMatchPatch = [DiffMatchPatch new];
 		self.fragaria = [MGSFragaria new];
 		self.language = [ALLanguage languageFromUserDefaults];
@@ -62,10 +67,13 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 			return;
 		}
 	}
-	url = [[NSBundle mainBundle] URLForResource:@"sample" withExtension:@"mm" subdirectory:@"samples"];
+	url = [[NSBundle mainBundle] URLForResource:AL_SampleFileName withExtension:AL_ObjectiveCPPExtension subdirectory:AL_SamplesFolderName];
 	NSError* error;
 	if (![self loadSourceFormURL:url error:&error]) {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 		NSException* exception = [NSException exceptionWithName:@"No Source" reason:@"Failed to load the sample source file" userInfo:nil];
+#pragma clang diagnostic pop
 		[exception raise];
 	}
 }
@@ -98,7 +106,7 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	self.documentView.allowedFileTypes = [types allObjects];
 	self.documentView.representedObject = [self sourceDocument];
 	
-	NSURL* baseURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"samples"];
+	NSURL* baseURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:AL_SamplesFolderName];
 	self.documentView.knownSampleURLs = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:baseURL
 																																		includingPropertiesForKeys:nil
 																																											 options:NSDirectoryEnumerationSkipsHiddenFiles
@@ -205,14 +213,14 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	NSLayoutManager* layoutManager = textView.layoutManager;
 	
 	// first we need the document height.
-	// textview lays text out lazyliy, so we cannot just use the textview frame
+	// textView lays text out lazily, so we cannot just use the textView frame
 	// to get the height. It's not computed yet.
 	
 	// Here we are taking advantage of two assumptions:
 	// 1. the text is not wrapping, so we only count hard line breaks
 	NSRange oldDocumentLineRange = [textStorage.string lineRangeForCharacterRange:NSMakeRange(0, textStorage.string.length)];
 	
-	// 2. the text is layed out in one font size, so the line height is constant
+	// 2. the text is laid out in one font size, so the line height is constant
 	CGFloat lineHeight = [layoutManager defaultLineHeightForFont:textView.font];
 	
 	CGFloat frameHeight = oldDocumentLineRange.length * lineHeight;
@@ -388,6 +396,9 @@ static NSString * const ALLastSourceURL = @"ALLastSourceURL";
 	
 	[[NSUserDefaults standardUserDefaults] setObject:@(controller.pageGuideColumn)
 																						forKey:MGSFragariaPrefsShowPageGuideAtColumn];
+
+	[[NSUserDefaults standardUserDefaults] setObject:@(controller.pageGuideColumn != 0)
+																						forKey:MGSFragariaPrefsShowPageGuide];
 
 	source.string = text;
 }

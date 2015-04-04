@@ -12,7 +12,6 @@
 
 @interface Document : NSDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
-@property (nonatomic, assign, readonly) NSUInteger pageGuideColumn;
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
 - (void)embedInView:(NSView*)container;

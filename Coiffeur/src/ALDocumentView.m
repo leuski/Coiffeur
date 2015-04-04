@@ -8,14 +8,11 @@
 
 #import "ALDocumentView.h"
 #import "ALMainWindowController.h"
-#import "AppDelegate.h"
 
 @interface ALDocumentView () <NSPathControlDelegate>
 @end
 
 @implementation ALDocumentView
-
-#pragma clang diagnostic pop
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -42,8 +39,8 @@
 		[menu insertItem:item atIndex:index++];
 		item.representedObject = url;
 	}
-	item = [[NSMenuItem alloc] initWithTitle:@"Choose…" action:@selector(openDocumentInView:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:index++];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Choose…", @"Choose…") action:@selector(openDocumentInView:) keyEquivalent:@""];
+	[menu insertItem:item atIndex:index];
 }
 
 - (NSDragOperation)pathControl:(NSPathControl *)pathControl validateDrop:(id<NSDraggingInfo>)info

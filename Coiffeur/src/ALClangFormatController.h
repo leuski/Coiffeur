@@ -8,5 +8,6 @@
 
 #import "ALCoiffeurController.h"
 
+
 @interface ALClangFormatController : ALCoiffeurController
 @end

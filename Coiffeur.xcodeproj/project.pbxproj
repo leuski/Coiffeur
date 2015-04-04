@@ -48,6 +48,9 @@
 		62F9F1A21ACF6610002B7F1B /* ALLanguage.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1A11ACF6610002B7F1B /* ALLanguage.m */; };
 		62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */; };
 		62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */; };
+		62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A71ACF7E08002B7F1B /* scissors-512.png */; };
+		62F9F1AA1ACF808D002B7F1B /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A91ACF808D002B7F1B /* about.html */; };
+		62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +151,9 @@
 		62F9F1A11ACF6610002B7F1B /* ALLanguage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALLanguage.m; sourceTree = "<group>"; };
 		62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinitions.plist; sourceTree = "<group>"; };
 		62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Syntax Definitions"; sourceTree = "<group>"; };
+		62F9F1A71ACF7E08002B7F1B /* scissors-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scissors-512.png"; sourceTree = "<group>"; };
+		62F9F1A91ACF808D002B7F1B /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
+		62F9F1AE1ACF92D5002B7F1B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +213,8 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
+				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
 				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
 				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
@@ -222,6 +230,7 @@
 				626185C31AC6237E0095CCD2 /* ALDocumentView.xib */,
 				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
 				62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */,
+				62F9F1A91ACF808D002B7F1B /* about.html */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -412,14 +421,17 @@
 				626185B61AC623000095CCD2 /* ALCoiffeurView.xib in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
 				626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */,
+				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
 				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
+				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
 				6261852A1AC352450095CCD2 /* cfg in Resources */,
 				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */,
+				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
 			);
@@ -512,6 +524,14 @@
 				626185C21AC6237E0095CCD2 /* en */,
 			);
 			name = ALDocumentView.xib;
+			sourceTree = "<group>";
+		};
+		62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62F9F1AE1ACF92D5002B7F1B /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

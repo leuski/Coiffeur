@@ -7,7 +7,6 @@
 //
 
 #import "ALNode.h"
-#import "ALNode.h"
 
 
 @implementation ALNode

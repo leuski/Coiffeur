@@ -13,9 +13,25 @@
 #import "ALRoot.h"
 #import "ALOption.h"
 #import "ALSection.h"
+#import "ALNode+model.h"
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_ClangFormatDocumentationFileName = @"ClangFormatStyleOptions";
+static NSString* const AL_ClangFormatDocumentationFileExtension = @"rst";
+static NSString* const AL_ClangFormatShowDefaultConfigArgument = @"-dump-config";
+static NSString* const AL_ClangFormatStyleFlag = @"-style=file";
+static NSString* const AL_ClangFormatSourceFileNameFormat = @"-assume-filename=sample.%@";
+static NSString* const AL_ClangFormatStyleFileName = @".clang-format";
+static NSString* const AL_ClangFormatPageGuideKey = @"ColumnLimit";
+static NSString* const AL_ClangFormatSectionBegin = @"---";
+static NSString* const AL_ClangFormatSectionEnd = @"...";
+static NSString* const AL_ClangFormatComment = @"#";
+#pragma clang diagnostic pop
 
 static NSString* ALcfOptionsDocumentation = nil;
 static NSString* ALcfDefaultValues        = nil;
+
 
 @implementation ALClangFormatController
 
@@ -28,8 +44,7 @@ static NSString* ALcfDefaultValues        = nil;
 		
 		if (!ALcfOptionsDocumentation) {
 			ALcfOptionsDocumentation
-							= [NSString stringWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
-							URLForResource:@"ClangFormatStyleOptions" withExtension:@"rst"]
+							= [NSString stringWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:AL_ClangFormatDocumentationFileName withExtension:AL_ClangFormatDocumentationFileExtension]
 																				 encoding:NSUTF8StringEncoding
 																						error:&error];
 		}
@@ -37,7 +52,7 @@ static NSString* ALcfDefaultValues        = nil;
 		if ([self readOptionsFromString:ALcfOptionsDocumentation]) {
 
 			if (!ALcfDefaultValues) {
-				ALcfDefaultValues = [self runExecutableWithArguments:@[@"-dump-config"] workingDirectory:nil input:nil error:&error];
+				ALcfDefaultValues = [self runExecutableWithArguments:@[AL_ClangFormatShowDefaultConfigArgument] workingDirectory:nil input:nil error:&error];
 			}
 
 			[self readValuesFromString:ALcfDefaultValues];
@@ -48,6 +63,8 @@ static NSString* ALcfDefaultValues        = nil;
 	return self;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 static NSString* cleanUpRST(NSString* rst)
 {
 	rst = [rst trim];
@@ -56,9 +73,9 @@ static NSString* cleanUpRST(NSString* rst)
 
 //	NSLog(@"%@", mutableRST);
 
-	NSString* nl = @"__NL__";
-	NSString* sp = @"__SP__";
-	NSString* par = @"__PAR__";
+	NSString* const nl = @"__NL__";
+	NSString* const sp = @"__SP__";
+	NSString* const par = @"__PAR__";
 
 	// preserve all spacing inside \code ... \endcode
 	NSRegularExpression*	lif = [NSRegularExpression regularExpressionWithPattern:@"\\\\code(.*?)\\\\endcode(\\s)"
@@ -141,6 +158,7 @@ static NSString* cleanUpRST(NSString* rst)
 //	NSLog(@"%@", mutableRST);
 	return mutableRST;
 }
+#pragma clang diagnostic pop
 
 - (BOOL)AL_readOptionsFromLineArray:(NSArray*)lines
 {
@@ -195,19 +213,24 @@ static NSString* cleanUpRST(NSString* rst)
 			option.title = option.documentation = @"";
 			in_title = YES;
 			NSString* type = [line substringWithRange:[match rangeAtIndex:2]];
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 			if ([type isEqualToString:@"bool"]) {
 				option.type = @"false,true";
 			} else if ([type isEqualToString:@"unsigned"]) {
-				option.type = @"number";
+				option.type = ALUnsignedOptionType;
 			} else if ([type isEqualToString:@"int"]) {
-				option.type = @"number";
+				option.type = ALSignedOptionType;
 			} else if ([type isEqualToString:@"std::string"]) {
-				option.type = @"string";
+				option.type = ALStringOptionType;
 			} else if ([type isEqualToString:@"std::vector<std::string>"]) {
-				option.type = @"string";
+				option.type = ALStringOptionType;
 			} else {
 				option.type = @"";
 			}
+#pragma clang diagnostic pop
+
 			continue;
 		}
 		
@@ -215,8 +238,9 @@ static NSString* cleanUpRST(NSString* rst)
 		if (match) {
 			NSString* token = [line substringWithRange:[match rangeAtIndex:2]];
 			if ([token length] && option)
-				option.type = [option.type stringByAppendingString:token separatedBy:@","];
-			option.documentation = [option.documentation stringByAppendingFormat:@"%@``%@``\n", [line substringWithRange:[match rangeAtIndex:1]], token];
+				option.type = [option.type stringByAppendingString:token separatedBy:ALNodeTypeSeparator];
+			option.documentation = [option.documentation stringByAppendingFormat:@"%@``%@``", [line substringWithRange:[match rangeAtIndex:1]], token];
+      option.documentation = [option.documentation stringByAppendingString:ALNewLine];
 			continue;
 		}
 		
@@ -225,10 +249,11 @@ static NSString* cleanUpRST(NSString* rst)
 		}
 		
 		if (in_title) {
-			option.title = [option.title stringByAppendingString:line separatedBy:@" "];
+			option.title = [option.title stringByAppendingString:line separatedBy:ALSpace];
 		}
 		
-		option.documentation = [option.documentation stringByAppendingFormat:@"%@\n", line];
+		option.documentation = [option.documentation stringByAppendingString:line];
+    option.documentation = [option.documentation stringByAppendingString:ALNewLine];
 	}
 
 	if (option) {
@@ -241,15 +266,18 @@ static NSString* cleanUpRST(NSString* rst)
 
 - (BOOL)AL_readValuesFromLineArray:(NSArray*)lines
 {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*(.*?):\\s*(\\S.*)"
 																																				options:NSRegularExpressionCaseInsensitive
 																																					error:nil];
+#pragma clang diagnostic pop
 
 	NSTextCheckingResult* match;
 
 	for (__strong NSString* line in lines) {
 		line = [line trim];
-		if ([line hasPrefix:@"#"]) continue;
+		if ([line hasPrefix:AL_ClangFormatComment]) continue;
 		match = [keyValue firstMatchInString:line options:0 range:NSMakeRange(0, [line length])];
 		if (match) {
 			NSString* key = [line substringWithRange:[match rangeAtIndex:1]];
@@ -258,7 +286,12 @@ static NSString* cleanUpRST(NSString* rst)
 			if (option) {
 				option.value = value;
 			} else {
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 				NSLog(@"Warning: unknown token %@ on line %@", key, line);
+#pragma clang diagnostic pop
+
 			}
 			
 		}
@@ -271,14 +304,22 @@ static NSString* cleanUpRST(NSString* rst)
 {
 	NSMutableString*	data = [NSMutableString new];
 
-	[data appendString:@"---\n"];
+  [data appendString:AL_ClangFormatSectionBegin];
+  [data appendString:ALNewLine];
+
 	for(ALOption* option in [[ALOption allObjectsInContext:self.managedObjectContext] sortedArrayUsingComparator:^NSComparisonResult(ALOption* obj1, ALOption* obj2) {
 		return [obj1.indexKey compare:obj2.indexKey];
 	}]) {
 		if (!option.value) continue;
-		[data appendFormat:@"%@: %@\n", option.indexKey, option.value];
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+		[data appendFormat:@"%@: %@", option.indexKey, option.value];
+#pragma clang diagnostic pop
+    [data appendString:ALNewLine];
 	};
-	[data appendString:@"...\n"];
+
+  [data appendString:AL_ClangFormatSectionEnd];
+  [data appendString:ALNewLine];
 	
 	return [data writeToURL:absoluteURL atomically:YES encoding:NSUTF8StringEncoding error:error];
 }
@@ -287,7 +328,7 @@ static NSString* cleanUpRST(NSString* rst)
 completionBlock:(void (^)(NSString*, NSError*)) block
 {
   NSString* workingDirectory = NSTemporaryDirectory();
-  NSString* configPath = [workingDirectory stringByAppendingPathComponent:@".clang-format"];
+  NSString* configPath = [workingDirectory stringByAppendingPathComponent:AL_ClangFormatStyleFileName];
 
   NSError* error;
   if (![self writeValuesToURL:[NSURL fileURLWithPath:configPath] error:&error]) {
@@ -295,11 +336,11 @@ completionBlock:(void (^)(NSString*, NSError*)) block
     return NO;
   }
 
-  NSMutableArray* args = [NSMutableArray arrayWithArray: @[ @"-style=file" ]];
+  NSMutableArray* args = [NSMutableArray arrayWithArray: @[AL_ClangFormatStyleFlag]];
   if (attributes[ALFormatLanguage]) {
 		ALLanguage* language = attributes[ALFormatLanguage];
 		if (language.clangFormatID)
-			[args addObject:[NSString stringWithFormat:@"-assume-filename=sample.%@", language.defaultExtension]];
+			[args addObject:[NSString stringWithFormat:AL_ClangFormatSourceFileNameFormat, language.defaultExtension]];
   }
 
   error = [self runExecutableWithArguments:args workingDirectory:workingDirectory input:input completionBlock:^(NSString* text, NSError* in_error) {
@@ -316,17 +357,25 @@ completionBlock:(void (^)(NSString*, NSError*)) block
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
 {
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	NSRegularExpression*	keyValue = [NSRegularExpression regularExpressionWithPattern:@"^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]"
 																																						 options:NSRegularExpressionAnchorsMatchLines
 																																							 error:nil];
 
-	return (([string hasPrefix:@"---"] || [string rangeOfString:@"\n---"].location != NSNotFound) &&
+  NSRegularExpression*	section = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"^%@", AL_ClangFormatSectionBegin]
+                                                                             options:NSRegularExpressionAnchorsMatchLines
+                                                                               error:nil];
+#pragma clang diagnostic pop
+
+  return (nil != [section firstMatchInString:string options:0 range:NSMakeRange(0, [string length])] &&
 					nil != [keyValue firstMatchInString:string options:0 range:NSMakeRange(0, [string length])]);
 }
 
 - (NSUInteger)pageGuideColumn
 {
-	ALOption* option = [self optionWithKey:@"ColumnLimit"];
+	ALOption* option = [self optionWithKey:AL_ClangFormatPageGuideKey];
 	if (option)
 		return [option.value unsignedIntegerValue];
 	return [super pageGuideColumn];

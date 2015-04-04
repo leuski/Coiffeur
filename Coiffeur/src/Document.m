@@ -8,12 +8,16 @@
 
 #import "Document.h"
 
-#import "ALCoreData.h"
 #import "ALMainWindowController.h"
 #import "ALClangFormatController.h"
 #import "ALUncrustifyController.h"
 #import "ALCoiffeurView.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_ClangFormatExecutableName = @"clang-format";
+static NSString* const AL_UncrustifyExecutableName = @"uncrustify";
+#pragma clang diagnostic pop
 
 @interface Document ()
 @property (nonatomic, strong) ALCoiffeurView*	coiffeur;
@@ -22,25 +26,23 @@
 @implementation Document
 
 - (instancetype)initWithModelController:(ALCoiffeurController* )controller {
-    self = [super init];
-    if (self) {
-			self.model = controller;
-			self.undoManager = controller.managedObjectContext.undoManager;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    if (!controller)
+      return self = nil;
+
+    self.model = controller;
+    self.undoManager = controller.managedObjectContext.undoManager;
+  }
+  return self;
 }
 
-- (NSUInteger)pageGuideColumn
-{
-	return self.model.pageGuideColumn;
-}
-
-- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
 {
 	return [self.model readValuesFromURL:url error:outError];
 }
 
-- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError
+- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
 {
 	return [self.model writeValuesToURL:url error:outError];
 }
@@ -78,10 +80,11 @@
 @implementation ALUncrustifyDocument
 - (instancetype)init
 {
-	return self = [super initWithModelController:[[ALUncrustifyController alloc]
-					initWithExecutableURL:[[NSBundle mainBundle]
-									URLForAuxiliaryExecutable:@"uncrustify"]
-													error:nil]];
+  NSError* error; //TODO
+  self = [super initWithModelController:[[ALUncrustifyController alloc]
+					initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:AL_UncrustifyExecutableName]
+													error:&error]];
+  return self;
 }
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
@@ -95,10 +98,12 @@
 @implementation ALClangFormatDocument
 - (instancetype)init
 {
-	return self = [super initWithModelController:[[ALClangFormatController alloc]
-					initWithExecutableURL:[[NSBundle mainBundle]
-									URLForAuxiliaryExecutable:@"clang-format"]
-													error:nil]];
+  NSError* error; //TODO
+	self = [super initWithModelController:[[ALClangFormatController alloc]
+					initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:AL_ClangFormatExecutableName]
+													error:&error]];
+
+  return self;
 }
 
 + (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;

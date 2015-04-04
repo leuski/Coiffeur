@@ -22,7 +22,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="1021" height="823"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <splitView identifier="splitView.main" autosaveName="MainWindowSplitView" dividerStyle="paneSplitter" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HmO-H6-Zji">
+                    <splitView identifier="splitView.main" autosaveName="MainWindowSplitView" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HmO-H6-Zji">
                         <rect key="frame" x="0.0" y="0.0" width="1021" height="823"/>
                         <subviews>
                             <customView fixedFrame="YES" id="KqU-qs-bGh">
@@ -30,7 +30,7 @@
                                 <autoresizingMask key="autoresizingMask"/>
                             </customView>
                             <customView fixedFrame="YES" id="9kA-aZ-1gf">
-                                <rect key="frame" x="424" y="0.0" width="597" height="823"/>
+                                <rect key="frame" x="423" y="0.0" width="598" height="823"/>
                                 <autoresizingMask key="autoresizingMask"/>
                             </customView>
                         </subviews>

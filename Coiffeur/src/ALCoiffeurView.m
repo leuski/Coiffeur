@@ -9,7 +9,12 @@
 #import "ALCoiffeurView.h"
 #import "ALNode+model.h"
 #import "ALSubsection.h"
-#import "ALUncrustifyController.h"
+#import "ALCoiffeurController.h"
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_SufficientlyLongWord = @"remove";
+#pragma clang diagnostic pop
 
 @interface NSSegmentedControl (al)
 - (void)setLabels:(NSArray*)labels;
@@ -27,7 +32,7 @@
 															 NSFontSizeAttribute: @(font.xHeight)
 															 };
 	
-	NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:@"remove" attributes:attributes];
+	NSAttributedString* attributedString = [[NSAttributedString alloc] initWithString:AL_SufficientlyLongWord attributes:attributes];
 	NSSize size = attributedString.size;
 	CGFloat	width = size.width;
 	NSInteger i = 0;
@@ -46,23 +51,26 @@
 @end
 
 @interface ALTableRowView : NSTableRowView
-@property (nonatomic, strong) IBOutlet NSTextField* label;
 @end
 
 @interface ALCoiffeurView () <NSOutlineViewDelegate>
 @property (weak) IBOutlet NSPopUpButton *jumpMenu;
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedPropertyInspection"
+// used by bindings
 @property (nonatomic, strong) NSPredicate* predicate;
+#pragma clang diagnostic pop
 @end
 
 @implementation ALCoiffeurView
 
 - (instancetype)initWithModel:(ALCoiffeurController*)model bundle:(NSBundle*)bundle;
 {
-	if (self = [super initWithNibName:@"ALCoiffeurView" bundle:bundle]) {
+	if (self = [super initWithNibName:NSStringFromClass([ALCoiffeurView class]) bundle:bundle]) {
 		self.model = model;
-		self.optionsSortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"title" ascending:YES comparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
-			return [obj1 compare:obj2 options:NSCaseInsensitiveSearch];
-		}] ];
+		self.optionsSortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:ALNodeTitleKey ascending:YES comparator:^NSComparisonResult(NSString* obj1, NSString* obj2) {
+        return [obj1 compare:obj2 options:NSCaseInsensitiveSearch];
+    }] ];
 	}
 	return self;
 }
@@ -73,6 +81,9 @@
 	[container addSubview:childView];
 	
 	childView.translatesAutoresizingMaskIntoConstraints = NO;
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[childView]|"
 																																		 options:(NSLayoutFormatOptions)0
 																																		 metrics:nil
@@ -81,6 +92,8 @@
 																																		 options:(NSLayoutFormatOptions)0
 																																		 metrics:nil
 																																			 views:NSDictionaryOfVariableBindings(childView)]];
+#pragma clang diagnostic pop
+
 	container.window.initialFirstResponder = self.optionsView;
 }
 
@@ -216,6 +229,8 @@
 	return node && !node.leaf;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 - (NSView *)outlineView:(NSOutlineView *)outlineView viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	ALNode* node = [item representedObject];
@@ -228,7 +243,9 @@
 	
 	if (tokens.count == 0)
 		view = [outlineView makeViewWithIdentifier:@"view.section" owner:self];
-	else if (tokens.count == 1 && [tokens[0] isEqualToString:@"number"])
+	else if (tokens.count == 1 && [tokens[0] isEqualToString:ALSignedOptionType])
+		view = [outlineView makeViewWithIdentifier:@"view.number" owner:self];
+	else if (tokens.count == 1 && [tokens[0] isEqualToString:ALUnsignedOptionType])
 		view = [outlineView makeViewWithIdentifier:@"view.number" owner:self];
 	else if (tokens.count == 1)
 		view = [outlineView makeViewWithIdentifier:@"view.string" owner:self];
@@ -245,11 +262,9 @@
 		
 		[segmented setLabels:tokens];
 	}
-	
-
-	
 	return view;
 }
+#pragma clang diagnostic pop
 
 - (CGFloat)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
@@ -266,7 +281,7 @@
 	ALNode* node = [item representedObject];
 	if (!node.leaf) return nil;
 	
-	int offset = (1+[outlineView levelForItem:item]) * [outlineView indentationPerLevel] + 3;
+	int offset = (int) ((1+[outlineView levelForItem:item]) * [outlineView indentationPerLevel] + 3);
 	
 	ALTableRowView* container = [ALTableRowView new];
 	NSTextField* childView = [NSTextField new];
@@ -278,6 +293,9 @@
 	[container addSubview:childView];
 
 	childView.translatesAutoresizingMaskIntoConstraints = NO;
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
 	[container addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-%d-[childView]|", offset]
 																																		options:(NSLayoutFormatOptions)0
 																																		metrics:nil
@@ -286,6 +304,7 @@
 																																		options:(NSLayoutFormatOptions)0
 																																		metrics:nil
 																																			views:NSDictionaryOfVariableBindings(childView)]];
+#pragma clang diagnostic pop
 
 	childView.stringValue = node.title;
 	return container;

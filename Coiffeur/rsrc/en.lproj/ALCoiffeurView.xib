@@ -39,7 +39,7 @@
                     </connections>
                 </searchField>
                 <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="F3P-oX-V8O">
-                    <rect key="frame" x="0.0" y="773" width="480" height="18"/>
+                    <rect key="frame" x="200.5" y="773" width="79" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="CdG-Zb-xdj"/>
                     </constraints>
@@ -266,10 +266,9 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="eEA-X1-PdY" secondAttribute="bottom" id="9nI-ad-ieT"/>
-                <constraint firstAttribute="trailing" secondItem="F3P-oX-V8O" secondAttribute="trailing" id="AAN-OG-142"/>
                 <constraint firstItem="eEA-X1-PdY" firstAttribute="top" secondItem="3Zc-Ww-ckx" secondAttribute="bottom" id="Efr-gD-b8h"/>
                 <constraint firstItem="F3P-oX-V8O" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="Whv-sc-1u1"/>
-                <constraint firstItem="F3P-oX-V8O" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="X2K-JS-Rmt"/>
+                <constraint firstAttribute="centerX" secondItem="F3P-oX-V8O" secondAttribute="centerX" id="YFh-ru-aUa"/>
                 <constraint firstAttribute="trailing" secondItem="3Zc-Ww-ckx" secondAttribute="trailing" constant="-1" id="ZrP-NM-yBh"/>
                 <constraint firstItem="3Zc-Ww-ckx" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="-1" id="neq-XJ-uh9"/>
                 <constraint firstItem="3Zc-Ww-ckx" firstAttribute="top" secondItem="F3P-oX-V8O" secondAttribute="bottom" id="qWA-e2-BeY"/>

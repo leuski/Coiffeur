@@ -14,7 +14,7 @@
 @property (nonatomic, strong, readonly) NSArray* tokens;
 @property (nonatomic, strong, readonly) NSSet* filteredChildren;
 @property (nonatomic, assign, readonly) NSUInteger depth;
-@property (nonatomic, strong, readonly) NSAttributedString* attributedTitle;
-@property (nonatomic, strong, readonly) NSAttributedString* attributedDocumentation;
 @end
 
+extern NSString* const ALNodeTitleKey;
+extern NSString* const ALNodeTypeSeparator;

@@ -8,11 +8,16 @@
 
 #import "ALOverviewScroller.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_OverviewRegionFormat = @"[%@ %@]";
+#pragma clang diagnostic pop
+
 @implementation ALOverviewRegion
 
 + (instancetype)overviewRegionWithLineRange:(NSRange)range color:(NSColor*)color
 {
-	ALOverviewRegion* region = [[self class] new];
+	ALOverviewRegion* region = [ALOverviewRegion new];
 	region.lineRange = range;
 	region.color = color;
 	return region;
@@ -20,7 +25,7 @@
 
 - (NSString*)description
 {
-	return [NSString stringWithFormat:@"[%@ %@]", NSStringFromRange(self.lineRange), self.color];
+	return [NSString stringWithFormat:AL_OverviewRegionFormat, NSStringFromRange(self.lineRange), self.color];
 }
 @end
 
@@ -37,10 +42,8 @@
 	[super drawKnobSlotInRect:slotRect highlight:flag];
 	if (self.regions.count == 0) return;
 	
-	ALOverviewRegion* region;
-	
-	region = self.regions.lastObject;
-	NSUInteger lineCount = region.lineRange.location;
+	ALOverviewRegion* lastRegion = self.regions.lastObject;
+	NSUInteger lineCount = lastRegion.lineRange.location;
 	if (lineCount == 0) return;
 
 	CGFloat height = self.frame.size.height;

@@ -9,31 +9,41 @@
 #import <Cocoa/Cocoa.h>
 #import "ALNode+model.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+NSString* const ALNodeTitleKey = @"title";
+NSString* const ALNodeTypeSeparator = @",";
+static NSString* const ALNodeDocumentationKey = @"documentation";
+static NSString* const ALNodeChildrenKey = @"children";
+static NSString* const ALNodePredicateKey = @"predicate";
+static NSString* const AL_ParentPredicateKey = @"parent.predicate";
+#pragma clang diagnostic pop
+
 @implementation ALNode (model)
 
 + (NSSet*)keyPathsForValuesAffectingFilteredChildren
 {
-	return [NSSet setWithArray:@[ @"predicate", @"children" ] ];
+	return [NSSet setWithArray:@[ALNodePredicateKey, ALNodeChildrenKey]];
 }
 
 + (NSSet*)keyPathsForValuesAffectingPredicate
 {
-	return [NSSet setWithObject:@"parent.predicate"];
+	return [NSSet setWithObject:AL_ParentPredicateKey];
 }
 
 + (NSSet*)keyPathsForValuesAffectingAttributedDocumentation
 {
-	return [NSSet setWithObject:@"documentation"];
+	return [NSSet setWithObject:ALNodeDocumentationKey];
 }
 
 + (NSSet*)keyPathsForValuesAffectingAttributedTitle
 {
-	return [NSSet setWithObject:@"title"];
+	return [NSSet setWithObject:ALNodeTitleKey];
 }
 
 - (NSArray*)tokens
 {
-	return [self.type componentsSeparatedByString:@","];
+	return [self.type componentsSeparatedByString:ALNodeTypeSeparator];
 }
 
 - (NSSet*)filteredChildren
@@ -50,44 +60,6 @@
 - (NSUInteger)depth
 {
 	return self.parent ? 1+self.parent.depth : 0;
-}
-
-static NSAttributedString* as4s(NSString* s)
-{
-	if (!s) return nil;
-	
-	NSDictionary* attributes = @{
-															 NSLeftMarginDocumentAttribute: @(0),
-															 NSRightMarginDocumentAttribute : @(0),
-															 NSTopMarginDocumentAttribute : @(0),
-															 NSBottomMarginDocumentAttribute : @(0)
-															 };
-	//			 "font: 11px \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, sans-serif;\n"
-
-	s = [@"<head><style>\n"
-			 "* {\n"
-			 "margin:0;\n"
-			 "padding:0;\n"
-			 "}\n"
-			 "body {\n"
-			 "font: 11px HelveticaNeue;\n"
-			 "}\n"
-			 "p {\n"
-			 "margin-bottom:5px;\n"
-			 "}</style></head><body>" stringByAppendingString:s];
-	
-	return [[NSAttributedString alloc] initWithHTML:[s dataUsingEncoding:NSUTF8StringEncoding]
-															 documentAttributes:&attributes];
-}
-
-- (NSAttributedString*)attributedTitle
-{
-	return as4s(self.title);
-}
-
-- (NSAttributedString*)attributedDocumentation
-{
-	return as4s(self.documentation);
 }
 
 @end

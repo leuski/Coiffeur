@@ -8,6 +8,13 @@
 
 #import "ALLanguage.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_LanguagesFileName = @"languages";
+static NSString* const AL_LanguagesFileNameExtension = @"plist";
+static NSString* const AL_LanguageUserDefaultsKey = @"ALLanguage";
+#pragma clang diagnostic pop
+
 @implementation ALLanguage
 
 + (NSArray*)supportedLanguages
@@ -15,8 +22,7 @@
   static dispatch_once_t onceToken;
 	static NSArray* languages;
 	dispatch_once(&onceToken, ^{
-		NSArray* dictionaries = [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]]
-																			 URLForResource:@"languages" withExtension:@"plist"]];
+		NSArray* dictionaries = [NSArray arrayWithContentsOfURL:[[NSBundle bundleForClass:[self class]] URLForResource:AL_LanguagesFileName withExtension:AL_LanguagesFileNameExtension]];
 		NSMutableArray* array = [NSMutableArray new];
 		for(NSDictionary* d in dictionaries)
 			[array addObject:[ALLanguage languageWithDictionary:d]];
@@ -27,9 +33,9 @@
 
 + (ALLanguage*)languageFromUserDefaults
 {
-  NSString* uti = [[NSUserDefaults standardUserDefaults] objectForKey:@"ALLanguage"];
+  NSString* uti = [[NSUserDefaults standardUserDefaults] objectForKey:AL_LanguageUserDefaultsKey];
   ALLanguage* language = [self languageWithUTI:uti];
-  return language ? language : [self languageWithUTI:@"public.objective-c-plus-plus-source"];
+  return language ? language : [self languageWithUTI:(__bridge NSString*)kUTTypeObjectiveCPlusPlusSource];
 }
 
 + (instancetype)languageWithUTI:(NSString*)uti
@@ -50,7 +56,7 @@
 
 - (void)saveToUserDefaults
 {
-  [[NSUserDefaults standardUserDefaults] setObject:self.UTIs[0] forKey:@"ALLanguage"];
+  [[NSUserDefaults standardUserDefaults] setObject:self.UTIs[0] forKey:AL_LanguageUserDefaultsKey];
 }
 
 - (NSString*)defaultExtension

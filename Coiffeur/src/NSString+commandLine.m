@@ -8,6 +8,11 @@
 
 #import "NSString+commandLine.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
+static NSString* const AL_UnicharFormat = @"%C";
+#pragma clang diagnostic pop
+
 @implementation NSString (commandLine)
 
 - (NSArray*)commandLineComponents
@@ -37,7 +42,7 @@
 		
 		if (in_backslash) {
 			in_backslash = NO;
-			[target appendFormat:@"%C", ch];
+      [target appendFormat:AL_UnicharFormat, ch];
 		} else if (ch == '\\') {
 			in_backslash = YES;
 		} else if (ch == cur_quote) {
@@ -45,22 +50,22 @@
 		} else if ((ch == '\'') || (ch == '"') || (ch == '`')) {
 			cur_quote = ch;
 		} else if (cur_quote != 0) {
-			[target appendFormat:@"%C", ch];
+      [target appendFormat:AL_UnicharFormat, ch];
 		} else if (is_space) {
 			in_arg = NO;
 		} else {
-			[target appendFormat:@"%C", ch];
+      [target appendFormat:AL_UnicharFormat, ch];
 		}
 	}
 	
 	return array;
 }
 
-- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delim
+- (NSString*)stringByAppendingString:(NSString *)aString separatedBy:(NSString*)delimiter
 {
 	NSString* result = self;
 	if ([result length]) {
-		result = [result stringByAppendingString:delim];
+		result = [result stringByAppendingString:delimiter];
 	}
 	return [result stringByAppendingString:aString];
 }
@@ -73,12 +78,14 @@ static NSCharacterSet* AL_WS_SET = nil;
 	return [self stringByTrimmingCharactersInSet:AL_WS_SET];
 }
 
-- (NSString*)trimComment
+- (NSString*)stringByTrimmingPrefix:(NSString*)prefix
 {
 	NSString* result = self;
 	result = [result trim];
-	while ([result hasPrefix:@"#"]) {
-		result = [result substringFromIndex:1];
+  if (prefix.length == 0)
+    return result;
+	while ([result hasPrefix:prefix]) {
+		result = [result substringFromIndex:prefix.length];
 		result = [result trim];
 	}
 	return result;

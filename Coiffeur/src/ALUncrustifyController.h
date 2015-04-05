@@ -8,7 +8,6 @@
 
 #import "ALCoiffeurController.h"
 
-
 @interface ALUncrustifyController : ALCoiffeurController
 @end
 

@@ -9,8 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALDocumentView : NSViewController
-@property (nonatomic, strong) NSArray* allowedFileTypes;
-@property (nonatomic, strong) NSArray* knownSampleURLs;
+@property (nonatomic, strong) NSArray*       allowedFileTypes;
+@property (nonatomic, strong) NSArray*       knownSampleURLs;
 @property (nonatomic, weak) IBOutlet NSView* containerView;
 
 @end

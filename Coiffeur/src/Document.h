@@ -13,13 +13,7 @@
 @interface Document : NSDocument
 @property (nonatomic, strong) ALCoiffeurController* model;
 
-+ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
 - (void)embedInView:(NSView*)container;
 
 @end
 
-@interface ALUncrustifyDocument : Document
-@end
-
-@interface ALClangFormatDocument : Document
-@end

@@ -8,70 +8,65 @@
 
 #import "ALDocumentController.h"
 #import "AppDelegate.h"
-#import "Document.h"
+#import "ALCoiffeurController.h"
 
 @implementation ALDocumentController
 
 - (void)beginOpenPanel:(NSOpenPanel*)openPanel forTypes:(NSArray*)inTypes
-		 completionHandler:(void (^)(NSInteger result))completionHandler
+     completionHandler:(void (^)(NSInteger result))completionHandler
 {
-	openPanel.showsHiddenFiles = YES;
-	[super beginOpenPanel:openPanel
-							 forTypes:inTypes
-			completionHandler:completionHandler];
+  openPanel.showsHiddenFiles = YES;
+  [super beginOpenPanel:openPanel
+               forTypes:inTypes
+      completionHandler:completionHandler];
 }
 
 - (NSString*)typeForContentsOfURL:(NSURL*)url error:(NSError**)outError
 {
-	NSString* type = [super typeForContentsOfURL:url error:outError];
-	
-	if ([type isEqualToString:ALDocumentClangFormatStyle] ||
-			[type isEqualToString:ALDocumentUncrustifyStyle]) {
-		NSString* data = [NSString stringWithContentsOfURL:url
-																							encoding:NSUTF8StringEncoding
-																								 error:outError];
-		if (data) {
-			if ([ALClangFormatDocument contentsIsValidInString:data error:outError])
-				return ALDocumentClangFormatStyle;
-			if ([ALUncrustifyDocument contentsIsValidInString:data error:outError])
-				return ALDocumentUncrustifyStyle;
-			
-			return nil;
-		}
-	}
-	
-	return type;
+  NSString* type = [super typeForContentsOfURL:url error:outError];
+
+  for (Class aClass in[ALCoiffeurController availableTypes]) {
+    if (![type isEqualToString:[aClass documentType]]) {
+      continue;
+    }
+
+    NSString* data = [NSString stringWithContentsOfURL:url
+                                              encoding:NSUTF8StringEncoding
+                                                 error:outError];
+
+    if (!data) {
+      break;
+    }
+
+    for (Class c in[ALCoiffeurController availableTypes]) {
+      if ([c contentsIsValidInString:data error:outError]) {
+        return [c documentType];
+      }
+    }
+
+    return nil;
+  }
+
+  return type;
 }
 
-- (id)openUntitledDocumentOfType:(NSString*)type display:(BOOL)displayDocument error:(NSError **)outError
+- (id)openUntitledDocumentOfType:(NSString*)type
+                         display:(BOOL)displayDocument
+                           error:(NSError**)outError
 {
-	NSDocument* document = [self makeUntitledDocumentOfType:type error:outError];
-	if (document) {
-		[self addDocument:document];
-		if (displayDocument) {
-			[document makeWindowControllers];
-			[document showWindows];
-		}
-	}
-	return document;
-}
+  NSDocument* document = [self makeUntitledDocumentOfType:type error:outError];
 
-- (void)AL_openUntitledDocumentOfType:(NSString*)type
-{
-	NSError* error;
-	if (![self openUntitledDocumentOfType:type display:YES error:&error]) {
-		[NSApp presentError:error];
-	}
-}
+  if (document) {
+    [self addDocument:document];
 
-- (IBAction)newUncrustifyStyleDocument:(id)sender
-{
-	[self AL_openUntitledDocumentOfType:ALDocumentUncrustifyStyle];
-}
+    if (displayDocument) {
+      [document makeWindowControllers];
+      [document showWindows];
+    }
+  }
 
-- (IBAction)newClangFormatStyleDocument:(id)sender
-{
-	[self AL_openUntitledDocumentOfType:ALDocumentClangFormatStyle];
+  return document;
 }
 
 @end
+

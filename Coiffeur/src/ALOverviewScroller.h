@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ALOverviewRegion : NSObject
-@property (nonatomic, assign) NSRange	lineRange;
+@property (nonatomic, assign) NSRange  lineRange;
 @property (nonatomic, strong) NSColor* color;
 + (instancetype)overviewRegionWithLineRange:(NSRange)range color:(NSColor*)color;
 @end
@@ -17,3 +17,4 @@
 @interface ALOverviewScroller : NSScroller
 @property (nonatomic, strong) NSArray* regions;
 @end
+

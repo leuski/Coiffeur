@@ -9,107 +9,140 @@
 #import "Document.h"
 
 #import "ALMainWindowController.h"
-#import "ALClangFormatController.h"
-#import "ALUncrustifyController.h"
+#import "ALCoiffeurController.h"
 #import "ALCoiffeurView.h"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCNotLocalizedStringInspection"
-static NSString* const AL_ClangFormatExecutableName = @"clang-format";
-static NSString* const AL_UncrustifyExecutableName = @"uncrustify";
+static NSString* const ALCoiffeurErrorDomain = @"Coiffeur";
 #pragma clang diagnostic pop
 
 @interface Document ()
-@property (nonatomic, strong) ALCoiffeurView*	coiffeur;
+@property (nonatomic, strong) ALCoiffeurView* coiffeur;
 @end
 
 @implementation Document
 
-- (instancetype)initWithModelController:(ALCoiffeurController* )controller {
-  self = [super init];
-  if (self) {
-    if (!controller)
-      return self = nil;
+- (instancetype)initWithType:(NSString*)typeName error:(NSError**)outError
+{
+  if (self = [super initWithType:typeName error:outError]) {
+    self.model = [self AL_modelControllerOfType:typeName error:outError];
 
-    self.model = controller;
-    self.undoManager = controller.managedObjectContext.undoManager;
+    if (!self.model) {
+      self = nil;
+    }
   }
+
   return self;
 }
 
-- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
+- (NSUndoManager*)undoManager
 {
-	return [self.model readValuesFromURL:url error:outError];
+  return self.model ? self.model.managedObjectContext.undoManager : [super undoManager];
 }
 
-- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
+- (ALCoiffeurController*)AL_modelControllerOfType:(NSString*)type error:(NSError**)outError
 {
-	return [self.model writeValuesToURL:url error:outError];
+  for (Class c in[ALCoiffeurController availableTypes]) {
+    if ([type isEqualToString:[c documentType]]) {
+      return [[c alloc] initWithError:outError];
+    }
+  }
+
+  if (outError) {
+    NSString* description
+      = [NSString stringWithFormat:NSLocalizedString(@"Unknown document type “%@”", NULL), type];
+    *outError = [NSError errorWithDomain:ALCoiffeurErrorDomain
+                                    code:0
+                                userInfo:@{NSLocalizedDescriptionKey: description}];
+  }
+
+  return nil;
+}
+
+- (BOOL)AL_ensureWeHaveModelOfType:(NSString*)typeName
+                    errorFormatKey:(NSString*)errorFormatKey
+                             error:(NSError**)outError
+{
+  if (self.model) {
+    if (![typeName isEqualToString:self.model.documentType]) {
+      if (outError) {
+        NSString* description = [NSString stringWithFormat:NSLocalizedString(errorFormatKey, NULL)
+                                 , typeName, self.model.documentType];
+        *outError = [NSError errorWithDomain:ALCoiffeurErrorDomain
+                                        code:0
+                                    userInfo:@{NSLocalizedDescriptionKey: description}];
+      }
+
+      return NO;
+    }
+  } else {
+    self.model = [self AL_modelControllerOfType:typeName error:outError];
+
+    if (!self.model) {
+      return NO;
+    }
+  }
+
+  return YES;
+}
+
+- (BOOL)readFromURL:(NSURL*)url ofType:(NSString*)typeName error:(NSError**)outError
+{
+  if (![self AL_ensureWeHaveModelOfType:typeName
+                         errorFormatKey:@"Cannot read content of document “%@” into document “%@”"
+                                  error:outError])
+  {
+    return NO;
+  }
+
+  return [self.model readValuesFromURL:url error:outError];
+}
+
+- (BOOL)writeToURL:(NSURL*)url ofType:(NSString*)typeName error:(NSError**)outError
+{
+  if (![self AL_ensureWeHaveModelOfType:typeName
+                         errorFormatKey:@"Cannot write content of document “%2$@” as “%1$@”"
+                                  error:outError])
+  {
+    return NO;
+  }
+
+  return [self.model writeValuesToURL:url error:outError];
 }
 
 + (BOOL)autosavesInPlace
 {
-	return YES;
+  return YES;
 }
 
 - (void)makeWindowControllers
 {
-	ALMainWindowController* controller = [ALMainWindowController new];
-	[self addWindowController:controller];
+  ALMainWindowController* controller = [ALMainWindowController new];
+
+  [self addWindowController:controller];
 }
 
 - (void)embedInView:(NSView*)container
 {
-	self.coiffeur = [[ALCoiffeurView alloc] initWithModel:self.model bundle:nil];
-	[self.coiffeur embedInView:container];
+  self.coiffeur = [[ALCoiffeurView alloc] initWithModel:self.model bundle:nil];
+  [self.coiffeur embedInView:container];
 }
 
-+ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError
+- (void)canCloseDocumentWithDelegate:(id)delegate
+                 shouldCloseSelector:(SEL)shouldCloseSelector
+                         contextInfo:(void*)contextInfo
 {
-	return NO;
+  [self.model.managedObjectContext commitEditing];
+  [super canCloseDocumentWithDelegate:delegate
+                  shouldCloseSelector:shouldCloseSelector
+                          contextInfo:contextInfo];
 }
 
-- (void)canCloseDocumentWithDelegate:(id)delegate shouldCloseSelector:(SEL)shouldCloseSelector contextInfo:(void *)contextInfo
+- (NSArray*)writableTypesForSaveOperation:(NSSaveOperationType)saveOperation
 {
-	[self.model.managedObjectContext commitEditing];
-	[super canCloseDocumentWithDelegate:delegate shouldCloseSelector:shouldCloseSelector contextInfo:contextInfo];
+  return @[self.model.documentType];
 }
 
-@end
-
-@implementation ALUncrustifyDocument
-- (instancetype)init
-{
-  NSError* error; //TODO
-  self = [super initWithModelController:[[ALUncrustifyController alloc]
-					initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:AL_UncrustifyExecutableName]
-													error:&error]];
-  return self;
-}
-
-+ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
-{
-	return [ALUncrustifyController contentsIsValidInString:string
-																									 error:outError];
-}
-
-@end
-
-@implementation ALClangFormatDocument
-- (instancetype)init
-{
-  NSError* error; //TODO
-	self = [super initWithModelController:[[ALClangFormatController alloc]
-					initWithExecutableURL:[[NSBundle mainBundle] URLForAuxiliaryExecutable:AL_ClangFormatExecutableName]
-													error:&error]];
-
-  return self;
-}
-
-+ (BOOL)contentsIsValidInString:(NSString*)string error:(NSError**)outError;
-{
-	return [ALClangFormatController contentsIsValidInString:string
-																									 error:outError];
-}
 @end
 

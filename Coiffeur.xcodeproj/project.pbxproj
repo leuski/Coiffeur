@@ -17,7 +17,6 @@
 		626185261AC351CC0095CCD2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6261851D1AC351CC0095CCD2 /* AppDelegate.m */; };
 		626185271AC351CC0095CCD2 /* Document.m in Sources */ = {isa = PBXBuildFile; fileRef = 6261851F1AC351CC0095CCD2 /* Document.m */; };
 		626185281AC351CC0095CCD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185201AC351CC0095CCD2 /* main.m */; };
-		6261852A1AC352450095CCD2 /* cfg in Resources */ = {isa = PBXBuildFile; fileRef = 626185291AC352450095CCD2 /* cfg */; };
 		626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 626185331AC35CA30095CCD2 /* Document.xcdatamodeld */; };
 		626185631AC3975F0095CCD2 /* ALNode+model.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185621AC3975F0095CCD2 /* ALNode+model.m */; };
 		626185661AC39E900095CCD2 /* ALSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185651AC39E900095CCD2 /* ALSection.m */; };
@@ -102,7 +101,6 @@
 		6261851E1AC351CC0095CCD2 /* Document.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
 		6261851F1AC351CC0095CCD2 /* Document.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Document.m; sourceTree = "<group>"; };
 		626185201AC351CC0095CCD2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		626185291AC352450095CCD2 /* cfg */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cfg; sourceTree = "<group>"; };
 		6261852B1AC3524B0095CCD2 /* uncrustify */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = uncrustify; sourceTree = "<group>"; };
 		626185341AC35CA30095CCD2 /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
 		626185611AC3975F0095CCD2 /* ALNode+model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALNode+model.h"; sourceTree = "<group>"; };
@@ -213,24 +211,23 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
-				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
-				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
-				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
+				625934BC1ACCE4ED00E2CC03 /* samples */,
+				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
 				6261852B1AC3524B0095CCD2 /* uncrustify */,
-				626185291AC352450095CCD2 /* cfg */,
-				626185151AC351CC0095CCD2 /* ALMainWindowController.xib */,
-				626185171AC351CC0095CCD2 /* MainMenu.xib */,
-				626185191AC351CC0095CCD2 /* Images.xcassets */,
+				62F9F1A91ACF808D002B7F1B /* about.html */,
 				6261851A1AC351CC0095CCD2 /* Info.plist */,
 				626185921AC51C780095CCD2 /* languages.plist */,
+				62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */,
 				626185941AC52CA20095CCD2 /* UserDefaults.plist */,
+				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
+				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
+				626185191AC351CC0095CCD2 /* Images.xcassets */,
 				626185B41AC623000095CCD2 /* ALCoiffeurView.xib */,
 				626185C31AC6237E0095CCD2 /* ALDocumentView.xib */,
-				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
-				62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */,
-				62F9F1A91ACF808D002B7F1B /* about.html */,
+				626185151AC351CC0095CCD2 /* ALMainWindowController.xib */,
+				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
+				626185171AC351CC0095CCD2 /* MainMenu.xib */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -427,7 +424,6 @@
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
 				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
-				6261852A1AC352450095CCD2 /* cfg in Resources */,
 				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */,

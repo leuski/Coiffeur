@@ -13,12 +13,13 @@
 @property (nonatomic, strong) NSString* displayName;
 @property (nonatomic, strong) NSString* fragariaID;
 @property (nonatomic, strong) NSString* clangFormatID;
-@property (nonatomic, strong) NSArray* UTIs;
+@property (nonatomic, strong) NSArray*  UTIs;
 @property (nonatomic, strong, readonly) NSString* defaultExtension;
 
-+ (NSArray*)supportedLanguages;
-+ (ALLanguage*)languageFromUserDefaults;
++ (NSArray*)    supportedLanguages;
++ (ALLanguage*) languageFromUserDefaults;
 + (instancetype)languageWithUTI:(NSString*)uti;
 
-- (void)saveToUserDefaults;
+- (void)        saveToUserDefaults;
 @end
+

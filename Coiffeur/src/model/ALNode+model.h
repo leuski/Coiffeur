@@ -11,10 +11,11 @@
 
 @interface ALNode (model)
 @property (nonatomic, strong, readonly) NSPredicate* predicate;
-@property (nonatomic, strong, readonly) NSArray* tokens;
-@property (nonatomic, strong, readonly) NSSet* filteredChildren;
-@property (nonatomic, assign, readonly) NSUInteger depth;
+@property (nonatomic, strong, readonly) NSArray*     tokens;
+@property (nonatomic, strong, readonly) NSSet*       filteredChildren;
+@property (nonatomic, assign, readonly) NSUInteger   depth;
 @end
 
 extern NSString* const ALNodeTitleKey;
 extern NSString* const ALNodeTypeSeparator;
+

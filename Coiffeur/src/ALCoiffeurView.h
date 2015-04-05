@@ -10,8 +10,8 @@
 
 @class ALCoiffeurController;
 @interface ALCoiffeurView : NSViewController
-@property (nonatomic, weak) IBOutlet NSOutlineView *optionsView;
-@property (nonatomic, strong) IBOutlet NSTreeController *optionsController;
+@property (nonatomic, weak) IBOutlet NSOutlineView*      optionsView;
+@property (nonatomic, strong) IBOutlet NSTreeController* optionsController;
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedPropertyInspection"
 @property (nonatomic, strong) NSArray* optionsSortDescriptors;
@@ -22,3 +22,4 @@
 - (void)embedInView:(NSView*)container;
 
 @end
+

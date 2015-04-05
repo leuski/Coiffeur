@@ -9,11 +9,9 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string></string>
 				<string>cfg</string>
+				<string></string>
 			</array>
-			<key>CFBundleTypeMIMETypes</key>
-			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Uncrustify Style File</string>
 			<key>CFBundleTypeRole</key>
@@ -21,7 +19,7 @@
 			<key>LSTypeIsPackage</key>
 			<integer>0</integer>
 			<key>NSDocumentClass</key>
-			<string>ALUncrustifyDocument</string>
+			<string>Document</string>
 			<key>NSPersistentStoreTypeKey</key>
 			<string>NSInMemoryStoreType</string>
 		</dict>
@@ -30,8 +28,6 @@
 			<array>
 				<string></string>
 			</array>
-			<key>CFBundleTypeMIMETypes</key>
-			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Clang-Format Style File</string>
 			<key>CFBundleTypeRole</key>
@@ -39,7 +35,7 @@
 			<key>LSTypeIsPackage</key>
 			<integer>0</integer>
 			<key>NSDocumentClass</key>
-			<string>ALClangFormatDocument</string>
+			<string>Document</string>
 			<key>NSPersistentStoreTypeKey</key>
 			<string>NSInMemoryStoreType</string>
 		</dict>

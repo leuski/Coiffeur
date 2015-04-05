@@ -14,6 +14,7 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
                 <outlet property="languagesMenu" destination="8JL-uo-Ise" id="lFm-B3-q5a"/>
+                <outlet property="makeNewDocumentMenu" destination="JpZ-Ep-Gsn" id="FmJ-7b-QtJ"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -69,21 +70,7 @@
                         <items>
                             <menuItem title="New" id="H6i-kv-ARt">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="New" id="JpZ-Ep-Gsn">
-                                    <items>
-                                        <menuItem title="Uncrustify Style File" keyEquivalent="n" id="ebR-ud-p8k">
-                                            <connections>
-                                                <action selector="newUncrustifyStyleDocument:" target="-1" id="8NL-l9-iM5"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Clang-Format Style File" keyEquivalent="n" id="Wpc-0y-ufh">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="newClangFormatStyleDocument:" target="-1" id="sZq-VS-ftc"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
+                                <menu key="submenu" title="New" id="JpZ-Ep-Gsn"/>
                             </menuItem>
                             <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
                                 <connections>

@@ -8,9 +8,10 @@
 
 @import Cocoa;
 
-@class ALLanguage;
-@protocol ALCodeDocument <NSObject>
-@property (nonatomic, strong) NSString* string;
+@class  ALLanguage;
+@protocol ALCodeDocument<NSObject>
+@property (nonatomic, strong) NSString*   string;
 @property (nonatomic, strong) ALLanguage* language;
-@property (nonatomic, strong) NSURL* fileURL;
+@property (nonatomic, strong) NSURL*      fileURL;
 @end
+

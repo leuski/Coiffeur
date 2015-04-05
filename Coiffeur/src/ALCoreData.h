@@ -15,17 +15,26 @@
 
 @interface NSManagedObjectContext (ALCoreData)
 
-- (NSArray*)fetch:(NSString*)entityName withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
-- (NSManagedObject*)fetchSingle:(NSString*)entityName withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
+- (NSArray*)fetch:(NSString*)entityName
+    withPredicate:(NSPredicate*)predicate
+            error:(NSError**)outError;
+
+- (NSManagedObject*)fetchSingle:(NSString*)entityName
+                  withPredicate:(NSPredicate*)predicate
+                          error:(NSError**)outError;
 
 - (void)disableUndoRegistration;
 - (void)enableUndoRegistration;
 
 - (void)beginActionWithName:(NSString*)name;
-- (void)endAction;
+- (void)                   endAction;
 
-+ (NSManagedObjectContext*)managedObjectContextWithModelWithName:(NSString*)fileName concurrencyType:(NSManagedObjectContextConcurrencyType)ct;
-+ (NSManagedObjectContext*)managedObjectContextWithModelWithName:(NSString*)fileName inBundle:(NSBundle*)bundle concurrencyType:(NSManagedObjectContextConcurrencyType)ct;
++ (NSManagedObjectContext*)managedObjectContextWithModelName:(NSString*)fileName
+                                             concurrencyType:(NSManagedObjectContextConcurrencyType)ct;
+
++ (NSManagedObjectContext*)managedObjectContextWithModelName:(NSString*)fileName
+                                                    inBundle:(NSBundle*)bundle
+                                             concurrencyType:(NSManagedObjectContextConcurrencyType)ct;
 @end
 
 @interface NSAttributeDescription (ALCoreData)
@@ -37,26 +46,35 @@
 
 @interface NSManagedObject (ALCoreData)
 
-+ (NSString*)entityNameInContext:(NSManagedObjectContext* )managedObjectContext;
++ (NSString*)entityNameInContext:(NSManagedObjectContext*)managedObjectContext;
 
-+ (instancetype)objectInContext:(NSManagedObjectContext* )managedObjectContext;
++ (instancetype)objectInContext:(NSManagedObjectContext*)managedObjectContext;
 
-+ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext;
-+ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext error:(NSError**)outError;
-+ (NSArray*)allObjectsInContext:(NSManagedObjectContext* )managedObjectContext withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext*)managedObjectContext;
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext*)managedObjectContext
+                          error:(NSError**)outError;
++ (NSArray*)allObjectsInContext:(NSManagedObjectContext*)managedObjectContext
+                  withPredicate:(NSPredicate*)predicate
+                          error:(NSError**)outError;
 
-+ (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext;
-+ (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext error:(NSError**)outError;
-+ (instancetype)firstObjectInContext:(NSManagedObjectContext* )managedObjectContext withPredicate:(NSPredicate*)predicate error:(NSError**)outError;
++ (instancetype)firstObjectInContext:(NSManagedObjectContext*)managedObjectContext;
++ (instancetype)firstObjectInContext:(NSManagedObjectContext*)managedObjectContext
+                               error:(NSError**)outError;
++ (instancetype)firstObjectInContext:(NSManagedObjectContext*)managedObjectContext
+                       withPredicate:(NSPredicate*)predicate
+                               error:(NSError**)outError;
 
-+ (void)deleteAllObjectsFromContext:(NSManagedObjectContext* )managedObjectContext;
++ (void)deleteAllObjectsFromContext:(NSManagedObjectContext*)managedObjectContext;
 
 @end
 
-NS_INLINE id ALManagedObjectAccessor(NSManagedObject* obj)
+NS_INLINE id
+ALManagedObjectAccessor(NSManagedObject* obj)
 {
-	NSManagedObjectContext* moc = obj.managedObjectContext;
-	return moc && [moc existingObjectWithID:obj.objectID error:nil] ? obj : nil;
+  NSManagedObjectContext* moc = obj.managedObjectContext;
+
+  return moc && [moc existingObjectWithID:obj.objectID error:nil] ? obj : nil;
 }
 
 #pragma clang diagnostic pop
+

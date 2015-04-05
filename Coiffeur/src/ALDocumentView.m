@@ -9,124 +9,146 @@
 #import "ALDocumentView.h"
 #import "ALMainWindowController.h"
 
-@interface ALDocumentView () <NSPathControlDelegate>
+@interface ALDocumentView ()<NSPathControlDelegate>
 @end
 
 @implementation ALDocumentView
 
-- (void)viewDidLoad {
-	[super viewDidLoad];
+- (void)viewDidLoad
+{
+  [super viewDidLoad];
 }
 
 - (ALMainWindowController*)windowController
 {
-	id wc = self.view.window.delegate;
-	return wc && [wc isKindOfClass:[ALMainWindowController class]] ?
-	(ALMainWindowController*)wc : nil;
+  id wc = self.view.window.delegate;
+
+  return wc && [wc isKindOfClass:[ALMainWindowController class]]
+         ? (ALMainWindowController*)wc : nil;
 }
 
 #pragma mark - NSPathControlDelegate
 
-- (void)pathControl:(NSPathControl *)pathControl willPopUpMenu:(NSMenu *)menu
+- (void)pathControl:(NSPathControl*)pathControl willPopUpMenu:(NSMenu*)menu
 {
-	NSMenuItem* item;
-	
-	[menu removeItemAtIndex:0];
+  NSMenuItem* item;
 
-	NSInteger index = 0;
-	for(NSURL* url in self.knownSampleURLs) {
-		item = [[NSMenuItem alloc] initWithTitle:url.path.lastPathComponent action:@selector(openDocumentInView:) keyEquivalent:@""];
-		[menu insertItem:item atIndex:index++];
-		item.representedObject = url;
-	}
-	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Choose…", @"Choose…") action:@selector(openDocumentInView:) keyEquivalent:@""];
-	[menu insertItem:item atIndex:index];
+  [menu removeItemAtIndex:0];
+
+  NSInteger index = 0;
+
+  for (NSURL* url in self.knownSampleURLs) {
+    item = [[NSMenuItem alloc] initWithTitle:url.path.lastPathComponent
+                                      action:@selector(openDocumentInView:)
+                               keyEquivalent:@""];
+    [menu insertItem:item atIndex:index++];
+    item.representedObject = url;
+  }
+
+  item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Choose…", @"Choose…")
+                                    action:@selector(openDocumentInView:)
+                             keyEquivalent:@""];
+  [menu insertItem:item atIndex:index];
 }
 
-- (NSDragOperation)pathControl:(NSPathControl *)pathControl validateDrop:(id<NSDraggingInfo>)info
+- (NSDragOperation)pathControl:(NSPathControl*)pathControl validateDrop:(id<NSDraggingInfo> )info
 {
-	__block NSUInteger count = 0;
-	[info enumerateDraggingItemsWithOptions:0
-																	forView:pathControl
-																	classes:@[ [NSURL class] ]
-														searchOptions:nil
-															 usingBlock:^(NSDraggingItem* draggingItem,
-																			 NSInteger idx, BOOL* stop) {
+  __block NSUInteger count = 0;
 
-																 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
-																 if (url) {
-																	 ++count;
-																 }
-															 }];
-	return count == 1 ? NSDragOperationEvery : NSDragOperationNone;
+  [info enumerateDraggingItemsWithOptions:0
+                                  forView:pathControl
+                                  classes:@[[NSURL class]]
+                            searchOptions:nil
+                               usingBlock:^(NSDraggingItem* draggingItem,
+                                            NSInteger idx, BOOL* stop) {
+                                 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
+
+                                 if (url) {
+                                   ++count;
+                                 }
+                               }];
+  return count == 1 ? NSDragOperationEvery : NSDragOperationNone;
 }
 
 - (void)AL_openDocumentWithURL:(NSURL*)url
 {
-	[self.windowController loadSourceFormURL:url error:nil];
+  [self.windowController loadSourceFormURL:url error:nil];
 }
 
 - (NSURL*)AL_allowedURLForDraggingItem:(NSDraggingItem*)draggingItem
 {
-	NSURL* url = (NSURL*)draggingItem.item;
-	NSError* error;
-	NSString* type = [[NSDocumentController sharedDocumentController]
-										typeForContentsOfURL:url
-										error:&error];
-	if (type && [self.allowedFileTypes containsObject:type]) return url;
+  NSURL*    url  = (NSURL*)draggingItem.item;
+  NSError*  error;
+  NSString* type = [[NSDocumentController sharedDocumentController]
+                    typeForContentsOfURL:url
+                                   error:&error];
 
-	return nil;
+  if (type && [self.allowedFileTypes containsObject:type]) {
+    return url;
+  }
+
+  return nil;
 }
 
-- (BOOL)pathControl:(NSPathControl *)pathControl acceptDrop:(id<NSDraggingInfo>)info
+- (BOOL)pathControl:(NSPathControl*)pathControl acceptDrop:(id<NSDraggingInfo> )info
 {
-	__block NSURL* theURL = nil;
-	[info enumerateDraggingItemsWithOptions:0
-																	forView:pathControl
-																	classes:@[ [NSURL class] ]
-														searchOptions:nil
-															 usingBlock:^(NSDraggingItem* draggingItem,
-																						NSInteger idx, BOOL* stop) {
-																 
-																 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
-																 if (url) {
-																	 theURL = url;
-																	 *stop = YES;
-																 }
-															 }];
-	if (!theURL) return NO;
+  __block NSURL* theURL = nil;
 
-	[self AL_openDocumentWithURL:theURL];
+  [info enumerateDraggingItemsWithOptions:0
+                                  forView:pathControl
+                                  classes:@[[NSURL class]]
+                            searchOptions:nil
+                               usingBlock:^(NSDraggingItem* draggingItem,
+                                            NSInteger idx, BOOL* stop) {
+                                 NSURL* url = [self AL_allowedURLForDraggingItem:draggingItem];
 
-	return YES;
+                                 if (url) {
+                                   theURL = url;
+                                   *stop = YES;
+                                 }
+                               }];
+
+  if (!theURL) {
+    return NO;
+  }
+
+  [self AL_openDocumentWithURL:theURL];
+
+  return YES;
 }
 
 #pragma mark - actions
 
 - (IBAction)openDocumentInView:(id)sender
 {
-	NSURL* url = [sender representedObject];
-	
-	if (url) {
-		[self AL_openDocumentWithURL:url];
-		return;
-	}
-	
-	NSOpenPanel* op = [NSOpenPanel openPanel];
-	
-	if (self.allowedFileTypes.count)
-		op.allowedFileTypes = self.allowedFileTypes;
-	op.allowsOtherFileTypes = NO;
-	
-	[op beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
-		if (result != NSFileHandlingPanelOKButton) return;
-		[self AL_openDocumentWithURL:[op URL]];
-	}];
+  NSURL* url = [sender representedObject];
+
+  if (url) {
+    [self AL_openDocumentWithURL:url];
+    return;
+  }
+
+  NSOpenPanel* op = [NSOpenPanel openPanel];
+
+  if (self.allowedFileTypes.count) {
+    op.allowedFileTypes = self.allowedFileTypes;
+  }
+
+  op.allowsOtherFileTypes = NO;
+
+  [op beginSheetModalForWindow:self.view.window
+             completionHandler:^(NSInteger result) {
+               if (result != NSFileHandlingPanelOKButton) {
+                 return;
+               }
+
+               [self AL_openDocumentWithURL:[op URL]];
+             }];
 }
 
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem*)menuItem
 {
-	return YES;
+  return YES;
 }
 
 @end
@@ -141,11 +163,11 @@
 
 // there is a bug in NSPathControl where clicking outside of the
 // button label results in the focus not transferring to the control. Fixing.
-- (void)mouseDown:(NSEvent *)theEvent
+- (void)mouseDown:(NSEvent*)theEvent
 {
-	[self.window makeFirstResponder:self];
-	[super mouseDown:theEvent];
+  [self.window makeFirstResponder:self];
+  [super mouseDown:theEvent];
 }
-@end
 
+@end
 

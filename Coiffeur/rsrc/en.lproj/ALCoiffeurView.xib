@@ -28,7 +28,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                     <connections>
-                        <binding destination="-2" name="predicate" keyPath="self.root.predicate" id="3Ox-HH-g4U">
+                        <binding destination="-2" name="predicate" keyPath="self.predicate" id="KUb-gE-3xu">
                             <dictionary key="options">
                                 <string key="NSDisplayName">predicate</string>
                                 <string key="NSPredicateFormat">documentation contains[cd] $value OR name contains[cd] $value</string>
@@ -39,7 +39,7 @@
                     </connections>
                 </searchField>
                 <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="F3P-oX-V8O">
-                    <rect key="frame" x="200.5" y="773" width="79" height="18"/>
+                    <rect key="frame" x="200" y="773" width="79" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="CdG-Zb-xdj"/>
                     </constraints>
@@ -277,7 +277,7 @@
             </constraints>
             <point key="canvasLocation" x="313" y="332.5"/>
         </customView>
-        <treeController mode="entity" entityName="Section" automaticallyPreparesContent="YES" childrenKeyPath="filteredChildren" leafKeyPath="leaf" id="h9y-4G-n2j" userLabel="options" customClass="ALTreeController">
+        <treeController mode="entity" entityName="ConfigSection" automaticallyPreparesContent="YES" childrenKeyPath="filteredChildren" leafKeyPath="leaf" id="h9y-4G-n2j" userLabel="options">
             <connections>
                 <binding destination="-2" name="managedObjectContext" keyPath="self.managedObjectContext" id="sep-jQ-3ID"/>
                 <binding destination="-2" name="sortDescriptors" keyPath="self.optionsSortDescriptors" id="n7f-DB-Tj8"/>

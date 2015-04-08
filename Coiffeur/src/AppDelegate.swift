@@ -16,8 +16,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   let UserDefaultsFileNameExtension = "plist"
   let UserDefaultsFileName   = "UserDefaults"
   
-  @IBOutlet weak var languagesMenu : NSMenu?
-  @IBOutlet weak var makeNewDocumentMenu : NSMenu?
+  @IBOutlet weak var languagesMenu : NSMenu!
+  @IBOutlet weak var makeNewDocumentMenu : NSMenu!
   
   override init()
   {
@@ -39,12 +39,12 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     for l in ALLanguage.supportedLanguages {
       var item = NSMenuItem(title: l.displayName, action: Selector("changeLanguage:"), keyEquivalent: "")
       item.representedObject = l;
-      self.languagesMenu?.addItem(item)
+      self.languagesMenu.addItem(item)
     }
     
     var count = 0
     
-    for aClass in ALCoiffeurController.availableTypes {
+    for aClass in CoiffeurController.availableTypes {
       var item = NSMenuItem(title: aClass.documentType, action: Selector("AL_openUntitledDocumentOfType:"), keyEquivalent: "")
       item.representedObject = aClass.documentType
       
@@ -59,7 +59,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
         item.keyEquivalentModifierMask = Int(mask.rawValue)
       }
       
-      self.makeNewDocumentMenu?.addItem(item)
+      self.makeNewDocumentMenu.addItem(item)
       ++count;
     }
   }

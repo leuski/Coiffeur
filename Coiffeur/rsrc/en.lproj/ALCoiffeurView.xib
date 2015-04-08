@@ -6,6 +6,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ALCoiffeurView">
             <connections>
+                <outlet property="foo" destination="h9y-4G-n2j" id="vyf-1f-ztG"/>
                 <outlet property="jumpMenu" destination="F3P-oX-V8O" id="j4e-Gd-oIE"/>
                 <outlet property="optionsController" destination="h9y-4G-n2j" id="u4r-Av-CII"/>
                 <outlet property="optionsView" destination="nl4-in-rum" id="Ii6-2t-G5b"/>

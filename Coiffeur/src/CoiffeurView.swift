@@ -11,33 +11,33 @@ import Cocoa
 @objc(ALCoiffeurView)
 class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
   
-  @IBOutlet weak var optionsView : NSOutlineView?
-  @IBOutlet var optionsController : NSTreeController?
-  var optionsSortDescriptors : [NSSortDescriptor]?
-  weak var model : ALCoiffeurController?
-  
-  @IBOutlet weak var jumpMenu : NSPopUpButton?
+  @IBOutlet weak var optionsView : NSOutlineView!
+  @IBOutlet weak var jumpMenu : NSPopUpButton!
+  @IBOutlet var optionsController : NSTreeController!
+
+  var optionsSortDescriptors : [NSSortDescriptor]!
+  private weak var model : CoiffeurController!
   
   var managedObjectContext : NSManagedObjectContext? {
-    return self.model?.managedObjectContext
+    return self.model.managedObjectContext
   }
   
   var root : ConfigRoot? {
-    return self.model?.root
+    return self.model.root
   }
   
   var predicate : NSPredicate? {
     get {
-      return self.model?.root?.predicate
+      return self.model.root?.predicate
     }
     set (newPredicate) {
-      self.model?.root?.predicate = newPredicate
+      self.model.root?.predicate = newPredicate
     }
   }
   
   private var myContext : UnsafeMutablePointer<Void> { return unsafeBitCast(self, UnsafeMutablePointer<Void>.self) }
   
-  init?(model:ALCoiffeurController?, bundle:NSBundle?)
+  init?(model:CoiffeurController, bundle:NSBundle?)
   {
     super.init(nibName: "ALCoiffeurView", bundle: bundle)
     self.model = model
@@ -69,7 +69,7 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    self.optionsController?.addObserver(self, forKeyPath:"content", options:NSKeyValueObservingOptions.New, context:self.myContext)
+    self.optionsController.addObserver(self, forKeyPath:"content", options:NSKeyValueObservingOptions.New, context:self.myContext)
   }
   
   override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>)
@@ -78,13 +78,13 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
       return
     }
     
-    self.optionsController?.removeObserver(self, forKeyPath:"content")
-    self.optionsView?.expandItem(nil, expandChildren:true)
+    self.optionsController.removeObserver(self, forKeyPath:"content")
+    self.optionsView.expandItem(nil, expandChildren:true)
     
     var foundNode = false
     var node : NSTreeNode?
     
-    for node = self.optionsController?.arrangedObjects as? NSTreeNode;
+    for node = self.optionsController.arrangedObjects as? NSTreeNode;
       node?.childNodes?.count != nil && node!.childNodes!.count > 0;
       node = node!.childNodes![0] as? NSTreeNode
     {
@@ -92,7 +92,7 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     }
     
     if foundNode && node != nil {
-      self.optionsController?.setSelectionIndexPath(node!.indexPath)
+      self.optionsController.setSelectionIndexPath(node!.indexPath)
     }
     
     self._fillMenu()
@@ -102,7 +102,7 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
   {
     var array = [AnyObject]()
     
-    self._fillNodeArray(&array, atNode:self.optionsController!.arrangedObjects)
+    self._fillNodeArray(&array, atNode:self.optionsController.arrangedObjects)
     return array
   }
   
@@ -156,8 +156,8 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
       return obj1.title.compare(obj2.title, options:NSStringCompareOptions.CaseInsensitiveSearch) == NSComparisonResult.OrderedAscending
     }
     
-    for var i = self.jumpMenu!.numberOfItems - 1; i >= 1; --i {
-      self.jumpMenu!.removeItemAtIndex(i)
+    for var i = self.jumpMenu.numberOfItems - 1; i >= 1; --i {
+      self.jumpMenu.removeItemAtIndex(i)
     }
     
     for node in sections {
@@ -166,16 +166,16 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
       item.title = section.title;
       item.indentationLevel  = section.depth - 1;
       item.representedObject = node;
-      self.jumpMenu!.menu?.addItem(item)
+      self.jumpMenu.menu!.addItem(item)
     }
     
-    self.jumpMenu!.preferredEdge = NSMaxYEdge;
+    self.jumpMenu.preferredEdge = NSMaxYEdge;
   }
   
   @IBAction func jumpToSection(sender:AnyObject)
   {
     if let popup = sender as? NSPopUpButton {
-      self.optionsView!.scrollRowToVisible(self.optionsView!.rowForItem(popup.selectedItem?.representedObject))
+      self.optionsView.scrollRowToVisible(self.optionsView.rowForItem(popup.selectedItem?.representedObject))
     }
   }
   
@@ -196,9 +196,9 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
         return outlineView.makeViewWithIdentifier("view.root", owner:self) as NSView?
       } else if (tokens.count == 0) {
         return outlineView.makeViewWithIdentifier("view.section", owner:self) as NSView?
-      } else if (tokens.count == 1 && tokens[0] == ALCoiffeurController.OptionType.Signed.rawValue) {
+      } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
         return outlineView.makeViewWithIdentifier("view.number", owner:self) as NSView?
-      } else if (tokens.count == 1 && tokens[0] == ALCoiffeurController.OptionType.Unsigned.rawValue) {
+      } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
         return outlineView.makeViewWithIdentifier("view.number", owner:self) as NSView?
       } else if (tokens.count == 1) {
         return outlineView.makeViewWithIdentifier("view.string", owner:self) as NSView?
@@ -256,11 +256,13 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     
     
     let views   = ["childView":childView]
-    let   hFormat = String(format:"H:|-%d-[childView]|", offset)
+    let   hFormat = "H:|-\(offset)-[childView]|"
     
-    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat(hFormat, options:NSLayoutFormatOptions(), metrics:nil, views:views))
+    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(offset)-[childView]|",
+      options:NSLayoutFormatOptions(), metrics:nil, views:views))
     
-    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-2-[childView]", options:NSLayoutFormatOptions(), metrics:nil, views:views))
+    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-2-[childView]",
+      options:NSLayoutFormatOptions(), metrics:nil, views:views))
     
     return container
   }

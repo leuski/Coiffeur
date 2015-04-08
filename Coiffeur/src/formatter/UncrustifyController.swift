@@ -8,26 +8,26 @@
 
 import Foundation
 
-class ALUncrustifyController : ALCoiffeurController {
-  
-  private class var ShowDocumentationArgument : String { return "--show-config" }
-  private class var ShowDefaultConfigArgument : String { return "--update-config" }
-  private class var QuietFlag : String { return "-q" }
-  private class var ConfigPathFlag : String { return "-c" }
-  private class var LanguageFlag : String { return "-l" }
-  private class var FragmentFlag : String { return "--frag" }
-  private class var PageGuideKey : String { return "code_width" }
-  private class var Comment : String { return "#" }
-  private class var NumberOptionType : String { return "number" }
-  private class var DocumentType : String { return "Uncrustify Style File" }
-  private class var ExecutableName : String { return "uncrustify" }
+class UncrustifyController : CoiffeurController {
   
   private struct Private {
+    static var ShowDocumentationArgument = "--show-config"
+    static var ShowDefaultConfigArgument = "--update-config"
+    static var QuietFlag = "-q"
+    static var ConfigPathFlag = "-c"
+    static var LanguageFlag = "-l"
+    static var FragmentFlag = "--frag"
+    static var PageGuideKey = "code_width"
+    static var Comment = "#"
+    static var NumberOptionType = "number"
+    static var DocumentType = "Uncrustify Style File"
+    static var ExecutableName = "uncrustify"
+    
     static var OptionsDocumentation : String? = nil
     static var DefaultValues : String? = nil
   }
   
-  override class var documentType : String { return ALUncrustifyController.DocumentType }
+  override class var documentType : String { return Private.DocumentType }
   
   override init?(_ executableURL:NSURL?, error:NSErrorPointer)
   {
@@ -37,16 +37,17 @@ class ALUncrustifyController : ALCoiffeurController {
       error.memory = nil
     }
     
-    
     if Private.OptionsDocumentation == nil {
-      let (text, err) = self.runExecutable([ALUncrustifyController.ShowDocumentationArgument], workingDirectory:nil, input:nil)
-      if err != nil {
+      let result = self.runExecutable([Private.ShowDocumentationArgument])
+      switch (result) {
+      case .Failure(let err):
         if error != nil {
           error.memory = err
         }
         return nil
+      case .Success(let text):
+        Private.OptionsDocumentation = text()
       }
-      Private.OptionsDocumentation = text
     }
     
     if !self.readOptionsFromString(Private.OptionsDocumentation!) {
@@ -54,15 +55,16 @@ class ALUncrustifyController : ALCoiffeurController {
     }
     
     if Private.DefaultValues == nil {
-      let (text, err) = self.runExecutable([
-        ALUncrustifyController.ShowDefaultConfigArgument], workingDirectory: nil, input: nil)
-      if err != nil {
+      let result = self.runExecutable([Private.ShowDefaultConfigArgument])
+      switch (result) {
+      case .Failure(let err):
         if error != nil {
           error.memory = err
         }
         return nil
+      case .Success(let text):
+        Private.DefaultValues = text()
       }
-      Private.DefaultValues = text
     }
     
     if !self.readValuesFromString(Private.DefaultValues!) {
@@ -73,8 +75,8 @@ class ALUncrustifyController : ALCoiffeurController {
   
   convenience required init?(error:NSErrorPointer)
   {
-    let bundle = NSBundle(forClass: ALUncrustifyController.self)
-    self.init(bundle.URLForAuxiliaryExecutable(ALUncrustifyController.ExecutableName), error:error)
+    let bundle = NSBundle(forClass: UncrustifyController.self)
+    self.init(bundle.URLForAuxiliaryExecutable(Private.ExecutableName), error:error)
   }
   
   private enum State {
@@ -85,35 +87,28 @@ class ALUncrustifyController : ALCoiffeurController {
   
   private func _parseSection(inout section:ConfigSection, line aline:String)
   {
-    var  line = aline.stringByTrimmingPrefix(ALUncrustifyController.Comment)
+    var  line = aline.stringByTrimmingPrefix(Private.Comment)
     
     if !line.isEmpty {
-      section.title = section.title.stringByAppendingString(line, separatedBy:ALUncrustifyController.Space)
+      section.title = section.title.stringByAppendingString(line, separatedBy:" ")
     }
   }
   
   private func _parseOption(inout option:ConfigOption, firstLine line:String)
   {
     var c = 0
-    
-    for v in line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) {
-      ++c
-      
-      if (c == 1) {
+    var tokens = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    tokens = tokens.filter { !$0.isEmpty }
+
+    for v in tokens {
+      if (++c == 1) {
         option.indexKey = v
-        option.name = v
-      } else {
-        
-        if v == "{" || v == "}" {
-          continue
-        }
-        
-        
-        option.type = option.type?.stringByAppendingString(v.lowercaseString)
+      } else if v != "{" && v != "}" {
+        option.type = option.type.stringByAppendingString(v.lowercaseString)
       }
     }
     
-    if (option.type == ALUncrustifyController.NumberOptionType) {
+    if (option.type == Private.NumberOptionType) {
       option.type = OptionType.Signed.rawValue
     }
   }
@@ -142,7 +137,7 @@ class ALUncrustifyController : ALCoiffeurController {
       switch (state) {
       case .None:
         
-        if line.hasPrefix(ALUncrustifyController.Comment) {
+        if line.hasPrefix(Private.Comment) {
           ++sectionCount
           state = State.ConfigSectionHeader
           var section = ConfigSection.objectInContext(self.managedObjectContext)
@@ -163,7 +158,7 @@ class ALUncrustifyController : ALCoiffeurController {
       case .ConfigSectionHeader:
         
         if var section = currentSection {
-          if line.hasPrefix(ALUncrustifyController.Comment) {
+          if line.hasPrefix(Private.Comment) {
             self._parseSection(&section, line:line)
           }
         }
@@ -173,16 +168,16 @@ class ALUncrustifyController : ALCoiffeurController {
       case .OptionDescription:
         
         if var option = currentOption {
-          if line.hasPrefix(ALUncrustifyController.Comment) {
-            line = line.stringByTrimmingPrefix(ALUncrustifyController.Comment)
+          if line.hasPrefix(Private.Comment) {
+            line = line.stringByTrimmingPrefix(Private.Comment)
           }
           
           if option.title.isEmpty {
             option.title = line
           }
           
-          option.documentation = option.documentation?.stringByAppendingString(line,
-            separatedBy:ALUncrustifyController.NewLine)
+          option.documentation = option.documentation.stringByAppendingString(line,
+            separatedBy:CoiffeurController.NewLine)
         }
         break
       }
@@ -212,14 +207,14 @@ class ALUncrustifyController : ALCoiffeurController {
         let option : ConfigOption = node as ConfigOption
         
         let title  = option.title
-        var tokens = title.lowercaseString.componentsSeparatedByString(ALUncrustifyController.Space)
-        tokens = tokens.filter { $0 != "a" && $0 != "the" }
+        var tokens = title.lowercaseString.componentsSeparatedByString(CoiffeurController.Space)
+        tokens = tokens.filter { !$0.isEmpty && $0 != "a" && $0 != "the" }
         
         if tokens.count < (tokenLimit + 1) {
           continue
         }
         
-        let key = tokens[0..<tokenLimit].reduce("") { $0.isEmpty ? $1 : ($0 + ALUncrustifyController.Space + $1) }
+        let key = tokens[0..<tokenLimit].reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
         
         if index[key] == nil {
           index[key] = [ConfigOption]()
@@ -244,9 +239,9 @@ class ALUncrustifyController : ALCoiffeurController {
         
         for option in list {
           let title  = option.title
-          var  tokens = title.componentsSeparatedByString(ALUncrustifyController.Space)
-          tokens = tokens.filter { $0 != "a" && $0 != "the" }
-          option.title  = tokens[tokenLimit..<tokens.count].reduce("") { $0.isEmpty ? $1 : ($0 + ALUncrustifyController.Space + $1) }
+          var  tokens = title.componentsSeparatedByString(CoiffeurController.Space)
+          tokens = tokens.filter { !$0.isEmpty && $0 != "a" && $0 != "the" }
+          option.title  = tokens[tokenLimit..<tokens.count].reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
           option.parent = subsection
         }
       }
@@ -262,11 +257,11 @@ class ALUncrustifyController : ALCoiffeurController {
         continue
       }
       
-      if line.hasPrefix(ALUncrustifyController.Comment) {
+      if line.hasPrefix(Private.Comment) {
         continue
       }
       
-      if let range = line.rangeOfString(ALUncrustifyController.Comment) {
+      if let range = line.rangeOfString(Private.Comment) {
         line = line.substringFromIndex(range.startIndex)
       }
       
@@ -315,7 +310,7 @@ class ALUncrustifyController : ALCoiffeurController {
   {
     var data=""
     var allOptions = self.managedObjectContext.fetch(ConfigOption.self)
-    allOptions.sort(ALClangFormatController.KeyComparator)
+    allOptions.sort(CoiffeurController.KeyComparator)
     
     for option in allOptions {
       if var value = option.value {
@@ -324,7 +319,7 @@ class ALUncrustifyController : ALCoiffeurController {
           value = "\"\(value)\""
         }
         
-        data += "\(option.indexKey) = \(value)" + ALClangFormatController.NewLine
+        data += "\(option.indexKey) = \(value)" + CoiffeurController.NewLine
         
       }
     }
@@ -332,7 +327,7 @@ class ALUncrustifyController : ALCoiffeurController {
     return data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:error)
   }
   
-  override func format(text: String, attributes: NSDictionary, completion: (output: String?, error: NSError?) -> Void) -> Bool
+  override func format(text: String, attributes: NSDictionary, completion: (_:Result<String>) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configPath = workingDirectory.stringByAppendingPathComponent(NSUUID().UUIDString)
@@ -340,40 +335,43 @@ class ALUncrustifyController : ALCoiffeurController {
     var localError : NSError?
     
     if !self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!, error:&localError) {
-      completion(output: nil, error: localError)
+      if localError == nil {
+        localError = Error("Unknown error")
+      }
+      completion(Result<String>.Failure(localError!))
       return false
     }
     
-    var args = [ALUncrustifyController.QuietFlag, ALUncrustifyController.ConfigPathFlag, configPath]
+    var args = [Private.QuietFlag, Private.ConfigPathFlag, configPath]
     
-    if let language = attributes[ALUncrustifyController.FormatLanguage] as? ALLanguage {
+    if let language = attributes[CoiffeurController.FormatLanguage] as? ALLanguage {
       
-      args.append(ALUncrustifyController.LanguageFlag)
+      args.append(Private.LanguageFlag)
       args.append(language.uncrustifyID)
     }
     
-    if let fragmentFlag  = attributes[ALUncrustifyController.FormatFragment] as? NSNumber {
+    if let fragmentFlag  = attributes[CoiffeurController.FormatFragment] as? NSNumber {
       if fragmentFlag.boolValue {
-        args.append(ALUncrustifyController.FragmentFlag)
+        args.append(Private.FragmentFlag)
       }
     }
     
-    let complete = { (text:String?, error:NSError?) -> Void  in
+    let complete = { (result:Result<String>) -> Void  in
       NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
-      completion(output: text, error: error)
+      completion(result)
     }
     
     localError = self.runExecutable(args, workingDirectory:workingDirectory, input:text, block:complete)
     
-    if localError == nil {
-      return true
+    if let err = localError {
+      completion(Result<String>.Failure(err))
+      return false
     }
     
-    completion(output: nil, error: localError)
-    return false
+    return true
   }
   
-  override class func contentsIsValidInString(string:String, error:NSErrorPointer) -> Bool
+  override class func contentsIsValidInString(string:String) -> Bool
   {
     let keyValue = NSRegularExpression.aml_regularExpressionWithPattern("^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
     
@@ -382,7 +380,7 @@ class ALUncrustifyController : ALCoiffeurController {
   
   override var pageGuideColumn : Int
     {
-      if let value = self.optionWithKey(ALUncrustifyController.PageGuideKey)?.value {
+      if let value = self.optionWithKey(Private.PageGuideKey)?.value {
         return value.unsignedIntegerValue
       }
       

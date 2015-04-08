@@ -10,8 +10,8 @@ import Cocoa
 
 @objc(Document)
 class Document : NSDocument {
-  var model : ALCoiffeurController?
-  var coiffeur : ALCoiffeurView?
+
+  var model : CoiffeurController?
   
   override init()
   {
@@ -41,9 +41,9 @@ class Document : NSDocument {
     }
   }
   
-  private func _modelControllerOfType(type :String, error outError:NSErrorPointer) -> ALCoiffeurController?
+  private func _modelControllerOfType(type :String, error outError:NSErrorPointer) -> CoiffeurController?
   {
-    for c in ALCoiffeurController.availableTypes  {
+    for c in CoiffeurController.availableTypes  {
       if type == c.documentType {
         return c.self(error:outError)
       }
@@ -105,8 +105,7 @@ class Document : NSDocument {
   
   func embedInView(container:NSView)
   {
-    if let v = ALCoiffeurView(model:self.model, bundle:nil) {
-      self.coiffeur = v
+    if let v = ALCoiffeurView(model:self.model!, bundle:nil) {
       v.embedInView(container)
     }
   }

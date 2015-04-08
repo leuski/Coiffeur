@@ -20,13 +20,13 @@ class ALDocumentController : NSDocumentController {
   {
     let result = super.typeForContentsOfURL(url, error:outError)
     if let type = result {
-      for aClass in ALCoiffeurController.availableTypes {
+      for aClass in CoiffeurController.availableTypes {
         if type != aClass.documentType {
           continue
         }
         if let data = String(contentsOfURL:url, encoding:NSUTF8StringEncoding, error:outError) {
-          for c in ALCoiffeurController.availableTypes {
-            if c.contentsIsValidInString(data, error:outError) {
+          for c in CoiffeurController.availableTypes {
+            if c.contentsIsValidInString(data) {
               return c.documentType
             }
           }

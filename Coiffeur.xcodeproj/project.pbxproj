@@ -34,6 +34,7 @@
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
 		62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 62EC8A231AD354F00068E9AD /* ALExceptions.m */; };
+		62F263281AD4DD30000B5DFE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F263271AD4DD30000B5DFE /* Error.swift */; };
 		62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */; };
 		62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */; };
 		62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A71ACF7E08002B7F1B /* scissors-512.png */; };
@@ -126,6 +127,7 @@
 		62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoiffeurTests.m; sourceTree = "<group>"; };
 		62EC8A221AD354F00068E9AD /* ALExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALExceptions.h; sourceTree = "<group>"; };
 		62EC8A231AD354F00068E9AD /* ALExceptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALExceptions.m; sourceTree = "<group>"; };
+		62F263271AD4DD30000B5DFE /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinitions.plist; sourceTree = "<group>"; };
 		62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Syntax Definitions"; sourceTree = "<group>"; };
 		62F9F1A71ACF7E08002B7F1B /* scissors-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scissors-512.png"; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				62EC8A231AD354F00068E9AD /* ALExceptions.m */,
 				6275AEBB1AD48FC600671D12 /* DiffMatchPatch+enum.h */,
 				6275AEBC1AD48FC600671D12 /* DiffMatchPatch+enum.m */,
+				62F263271AD4DD30000B5DFE /* Error.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				62F9F1C31AD1CB92002B7F1B /* Language.swift in Sources */,
 				62F9F1D71AD23C4A002B7F1B /* Transformers.swift in Sources */,
 				62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */,
+				62F263281AD4DD30000B5DFE /* Error.swift in Sources */,
 				62F9F1C91AD22835002B7F1B /* NSString+ALParsing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

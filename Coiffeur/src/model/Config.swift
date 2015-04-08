@@ -25,13 +25,13 @@ extension ConfigNode {
   }
   
   var leaf : Bool { return false }
+  var documentation : String { return "" }
+  var type : String { return "" }
+  var name : String { return "" }
   
   var tokens : [String] {
-    if let t = self.type {
-      return t.componentsSeparatedByString(ConfigNode.TypeSeparator)
-    } else {
-      return []
-    }
+    let t = self.type
+    return t.componentsSeparatedByString(ConfigNode.TypeSeparator).filter { !$0.isEmpty }
   }
 
   var predicate : NSPredicate? { return self.parent?.predicate }
@@ -63,17 +63,46 @@ extension ConfigNode {
   {
     return _insert(managedObjectContext:managedObjectContext)
   }
+  
 }
 
 extension ConfigOption {
   override var leaf : Bool { return true }
   
+  override var documentation : String {
+    get { return self.storedDetails }
+    set (value) { self.storedDetails = value }
+  }
+
+  override var type : String {
+    get { return self.storedType }
+    set (value) { self.storedType = value }
+  }
+
+  override var name : String {
+    get { return self.indexKey }
+  }
+
+  class func keyPathsForValuesAffectingDocumentation() -> NSSet
+  {
+    return NSSet(object:"storedDetails")
+  }
+
+  class func keyPathsForValuesAffectingName() -> NSSet
+  {
+    return NSSet(object:"indexKey")
+  }
+
+  class func keyPathsForValuesAffectingType() -> NSSet
+  {
+    return NSSet(object:"storedType")
+  }
+
   override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> ConfigOption
   {
     var option = super.objectInContext(managedObjectContext) as ConfigOption
     option.title = ""
     option.documentation = ""
-    option.name = ""
     option.type = ""
     option.indexKey = ""
     return option

@@ -9,14 +9,14 @@
 import Foundation
 import CoreData
 
-protocol ALCoiffeurControllerDelegate : class {
-  func formatArgumentsForCoiffeurController(controller:ALCoiffeurController) -> (text:String, attributes: NSDictionary)
-  func coiffeurController(coiffeurController:ALCoiffeurController, setText text:String)
+protocol CoiffeurControllerDelegate : class {
+  func formatArgumentsForCoiffeurController(controller:CoiffeurController) -> (text:String, attributes: NSDictionary)
+  func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
 }
 
-class ALCoiffeurController : NSObject {
+class CoiffeurController : NSObject {
 
-  class var availableTypes : [ALCoiffeurController.Type] { return [ ALClangFormatController.self, ALUncrustifyController.self ] }
+  class var availableTypes : [CoiffeurController.Type] { return [ ClangFormatController.self, UncrustifyController.self ] }
   
   class var NewLine : String { return "\n" }
   class var Space : String { return " " }
@@ -36,7 +36,7 @@ class ALCoiffeurController : NSObject {
   var executableURL : NSURL { return storedExecutableURL! }
   var root : ConfigRoot?
   var pageGuideColumn : Int { return 0 }
-  weak var delegate : ALCoiffeurControllerDelegate?
+  weak var delegate : CoiffeurControllerDelegate?
   
   private var storedManagedObjectModel : NSManagedObjectModel?
   private var storedManagedObjectContext : NSManagedObjectContext?
@@ -92,7 +92,7 @@ class ALCoiffeurController : NSObject {
     var newEntities : [NSEntityDescription] = []
     
     for e in mom.entities {
-      newEntities.append(ALCoiffeurController._makeCopyOfEntity(e as NSEntityDescription, cache:&entityCache))
+      newEntities.append(CoiffeurController._makeCopyOfEntity(e as NSEntityDescription, cache:&entityCache))
     }
     
     momCopy.entities = newEntities
@@ -108,12 +108,12 @@ class ALCoiffeurController : NSObject {
       return nil
     }
     
-    let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: ALCoiffeurController.self)])
+    let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: CoiffeurController.self)])
  
     if originalModel == nil {
       return nil
     }
-    var mom = ALCoiffeurController._fixMOM(originalModel!)
+    var mom = CoiffeurController._fixMOM(originalModel!)
     
     var moc = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
 
@@ -148,16 +148,19 @@ class ALCoiffeurController : NSObject {
     if let del = self.delegate {
       let (text, attributes) = del.formatArgumentsForCoiffeurController(self)
       
-      result = self.format(text, attributes:attributes, {( output:String?, error:NSError?) -> Void in
-            if let text = output {
-              del.coiffeurController(self, setText:text)
-            }
-          })
+      result = self.format(text, attributes:attributes, {(result:Result<String>) in
+        switch (result) {
+        case .Failure(let err):
+          NSLog("%@", err)
+        case .Success(let text):
+          del.coiffeurController(self, setText:text())
+        }
+      })
     }
     return result;
   }
   
-  func format(text:String, attributes:NSDictionary, completion:( output:String?, error:NSError?) -> Void) -> Bool
+  func format(text:String, attributes:NSDictionary, completion:(_:Result<String>) -> Void) -> Bool
   {
     return false
   }
@@ -174,7 +177,7 @@ class ALCoiffeurController : NSObject {
   
   func readOptionsFromString(text:String) -> Bool
   {
-    let lines = text.componentsSeparatedByString(ALCoiffeurController.NewLine)
+    let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
     self.managedObjectContext.disableUndoRegistration()
   
     self.root = ConfigRoot.objectInContext(self.managedObjectContext);
@@ -188,7 +191,7 @@ class ALCoiffeurController : NSObject {
   
   func readValuesFromString(text:String) -> Bool
   {
-    let lines = text.componentsSeparatedByString(ALCoiffeurController.NewLine)
+    let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
     self.managedObjectContext.disableUndoRegistration()
         
     let result = self.readValuesFromLineArray(lines)
@@ -215,15 +218,14 @@ class ALCoiffeurController : NSObject {
     return ConfigOption.firstObjectInContext(self.managedObjectContext, withPredicate:NSPredicate(format: "indexKey = %@", key), error:nil)
   }
   
-  class func contentsIsValidInString(string:String, error:NSErrorPointer) -> Bool
+  class func contentsIsValidInString(string:String) -> Bool
   {
     return false
   }
   
-  func startExecutable(arguments:[String], workingDirectory:String?, input:String?) -> (task:NSTask?, error:NSError?)
+  func startExecutable(arguments:[String], workingDirectory:String?, input:String?) -> Result<NSTask>
   {
-    var myTask : NSTask? = nil
-    var myError : NSError? = nil
+    var result : Result<NSTask>?
     
     ALExceptions.try({
       var task = NSTask()
@@ -247,20 +249,20 @@ class ALCoiffeurController : NSObject {
         writeHandle.closeFile()
       }
       
-      myTask = task
+      result = Result<NSTask>.Success(task)
       
       }, catch: { (ex:NSException?) in
         
         let reason = (ex?.reason != nil) ? ex!.reason! : ""
         let info = [ NSLocalizedDescriptionKey: reason]
-        myError = NSError(domain: NSPOSIXErrorDomain, code: 0, userInfo: info)
+        result = Result<NSTask>.Failure(NSError(domain: NSPOSIXErrorDomain, code: 0, userInfo: info))
         
       }, finally: {})
     
-    return (task:myTask, error:myError);
+    return result!
   }
   
-  func runTask(task:NSTask) -> (output:String?, error:NSError?)
+  func runTask(task:NSTask) -> Result<String>
   {
     let outHandle = task.standardOutput.fileHandleForReading
     let outData = outHandle.readDataToEndOfFile()
@@ -273,42 +275,44 @@ class ALCoiffeurController : NSObject {
     let status = task.terminationStatus
     
     if status == 0 {
-      return (output:NSString(data: outData, encoding: NSUTF8StringEncoding), error:nil)
+      return Result<String>.Success(NSString(data: outData, encoding: NSUTF8StringEncoding) as String)
     } else {
       var errText = NSString(data: errData, encoding: NSUTF8StringEncoding)
       if errText == nil {
         errText = String(format:NSLocalizedString("Format excutable error code %d", comment:""), status)
       }
-      return (output: nil, error:NSError(domain: NSPOSIXErrorDomain, code: Int(status), userInfo: [NSLocalizedDescriptionKey : errText!]))
+      return Result<String>.Failure(NSError(domain: NSPOSIXErrorDomain, code: Int(status), userInfo: [NSLocalizedDescriptionKey : errText!]))
     }
   }
   
-  func runExecutable(arguments:[String], workingDirectory:String?, input:String?, block:(output:String?, error:NSError?)->Void) -> NSError?
+  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil, block:(_:Result<String>)->Void) -> NSError?
   {
-    let (task, error) = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
+    let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
     
-    if task == nil {
-      return error
-    }
-    
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
-      let (output, error) = self.runTask(task!)
-      dispatch_async(dispatch_get_main_queue(), {
-        block(output: output, error: error);
+    switch (result) {
+    case .Failure(let err):
+      return err
+    case .Success(let task):
+      dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
+        let result = self.runTask(task())
+        dispatch_async(dispatch_get_main_queue(), {
+          block(result)
+        });
       });
-    });
+      
+      return nil;
+    }
     
-    return nil;
   }
   
-  func runExecutable(arguments:[String], workingDirectory:String?, input:String?) -> (output:String?, error:NSError?)
+  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil) -> Result<String>
   {
-    let (task, error) = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
-    
-    if let theTask = task {
-      return self.runTask(theTask)
-    } else {
-      return (output:nil, error:error)
+    let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
+    switch (result) {
+    case .Failure(let err):
+      return Result<String>.Failure(err)
+    case .Success(let task):
+      return self.runTask(task())
     }
   }
 

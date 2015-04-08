@@ -10,13 +10,12 @@ import Cocoa
 
 @objc(ALMainWindowController)
 class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
-  NSWindowDelegate, ALCoiffeurControllerDelegate,
-NSSplitViewDelegate {
+  NSWindowDelegate, CoiffeurControllerDelegate, NSSplitViewDelegate {
   
   typealias ALScrollLocation = CGFloat
   
-  @IBOutlet weak var splitView : NSSplitView?
-  var documentView : ALDocumentView?
+  @IBOutlet weak var splitView : NSSplitView!
+  var documentView : ALDocumentView!
   var fragaria : MGSFragaria
   var codeString : NSString = ""
   var newString : Bool = false
@@ -26,8 +25,8 @@ NSSplitViewDelegate {
       // we will try and preserve visible frame position in the document
       // across changes.
       
-      let      textView :NSTextView     = self.fragaria.textView()
-      let  textStorage   = textView.textStorage!
+      let textView : NSTextView     = self.fragaria.textView()
+      let textStorage   = textView.textStorage!
       let layoutManager = textView.layoutManager!
       
       // first we need the document height.
@@ -81,7 +80,7 @@ NSSplitViewDelegate {
     }
   }
   var diffMatchPatch : DiffMatchPatch
-  weak var overviewScroller : ALOverviewScroller?
+  weak var overviewScroller : OverviewScroller!
   
   var language : ALLanguage {
     didSet {
@@ -104,14 +103,9 @@ NSSplitViewDelegate {
     }
   }
   
-  private let ALLastSourceURL       = "LastSourceURL"
-  private let SamplesFolderName     = "samples"
-  private let SampleFileName        = "sample"
-  private let ObjectiveCPPExtension = "mm"
-  
   override var document: AnyObject? {
     didSet (oldDocument) {
-      let containerView = self.splitView!.subviews[0] as NSView
+      let containerView = self.splitView.subviews[0] as NSView
       
       if oldDocument != nil {
         // lets see if die here. need a copy of the subview list
@@ -128,6 +122,43 @@ NSSplitViewDelegate {
       self.uncrustify(nil)
     }
   }
+  
+  var styleDocument : Document? {
+    return self.document as? Document
+  }
+  
+  var sourceDocument : ALMainWindowController? {
+    return self
+  }
+  
+  var string:String {
+    get {
+      return self.codeString
+    }
+    set (string){
+      let oldString : String = self.fragaria.string()
+      let scrollLocation = self.sourceTextViewScrollLocation
+      
+      self.fragaria.setString(string)
+      
+      if self.newString {
+        self.sourceTextViewScrollLocation = 0
+        self.overviewScroller.regions     = []
+      } else {
+        self.sourceTextViewScrollLocation = scrollLocation
+        
+        let diffs = self.diffMatchPatch.diff_mainOfOldString(oldString, andNewString:string)
+        self.overviewScroller.regions = self._showDiffs(diffs, intensity:1)
+      }
+      
+      self.newString = false
+    }
+  }
+
+  private let ALLastSourceURL       = "LastSourceURL"
+  private let SamplesFolderName     = "samples"
+  private let SampleFileName        = "sample"
+  private let ObjectiveCPPExtension = "mm"
   
   override init(window:NSWindow?)
   {
@@ -160,17 +191,17 @@ NSSplitViewDelegate {
     }
   }
   
-  func formatArgumentsForCoiffeurController(controller:ALCoiffeurController) -> (text:String, attributes: NSDictionary)
+  func formatArgumentsForCoiffeurController(controller:CoiffeurController) -> (text:String, attributes: NSDictionary)
   {
     if let source = self.sourceDocument {
-      return (text:source.string, attributes:[ALCoiffeurController.FormatLanguage:source.language,
-        ALCoiffeurController.FormatFragment:NSNumber(bool:false)])
+      return (text:source.string, attributes:[CoiffeurController.FormatLanguage:source.language,
+        CoiffeurController.FormatFragment:NSNumber(bool:false)])
     } else {
       return (text:"", attributes: [:])
     }
   }
   
-  func coiffeurController(coiffeurController:ALCoiffeurController, setText text:String)
+  func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
   {
     if var source = self.sourceDocument {
       NSUserDefaults.standardUserDefaults().setInteger(coiffeurController.pageGuideColumn, forKey: MGSFragariaPrefsShowPageGuideAtColumn)
@@ -219,8 +250,8 @@ NSSplitViewDelegate {
       types.addObjectsFromArray(l.UTIs)
     }
     
-    self.documentView!.allowedFileTypes  = types.allObjects as [String]
-    self.documentView!.representedObject = self
+    self.documentView.allowedFileTypes  = types.allObjects as [String]
+    self.documentView.representedObject = self
     
     let resourcesURL = NSBundle.mainBundle().resourceURL!
     let baseURL      = resourcesURL.URLByAppendingPathComponent(SamplesFolderName)
@@ -228,14 +259,14 @@ NSSplitViewDelegate {
     
     if let urls = fm.contentsOfDirectoryAtURL(baseURL, includingPropertiesForKeys:nil,
       options:NSDirectoryEnumerationOptions.SkipsHiddenFiles, error:nil) {
-        self.documentView!.knownSampleURLs = urls as [NSURL]
+        self.documentView.knownSampleURLs = urls as [NSURL]
     }
     
-    self.splitView!.replaceSubview(self.splitView!.subviews[1] as NSView, with:self.documentView!.view)
+    self.splitView.replaceSubview(self.splitView.subviews[1] as NSView, with:self.documentView.view)
     
     // we want to be the delegate
     self.fragaria.setObject(self, forKey:MGSFODelegate)
-    self.fragaria.embedInView(self.documentView!.containerView)
+    self.fragaria.embedInView(self.documentView.containerView)
     
     let textView : NSTextView = self.fragaria.textView()
     textView.editable = false
@@ -243,7 +274,7 @@ NSSplitViewDelegate {
     textView.textContainer!.containerSize       = NSMakeSize(CGFloat.max, CGFloat.max)
     
     let       scrollView       = textView.enclosingScrollView!
-    let overviewScroller = ALOverviewScroller(frame:NSMakeRect(0,0,0,0))
+    let overviewScroller = OverviewScroller(frame:NSMakeRect(0,0,0,0))
     self.overviewScroller       = overviewScroller
     scrollView.verticalScroller = overviewScroller
     scrollView.verticalScroller!.scrollerStyle = NSScrollerStyle.Legacy
@@ -251,43 +282,10 @@ NSSplitViewDelegate {
   
   func windowWillClose(notification:NSNotification)
   {
-    self.documentView?.representedObject = nil
+    self.documentView.representedObject = nil
   }
   
-  var styleDocument : Document? {
-    return self.document as? Document
-  }
-  
-  var sourceDocument : ALMainWindowController? {
-    return self
-  }
-  
-  var string:String {
-    get {
-      return self.codeString
-    }
-    set (string){
-      // TODO need a copy
-      let oldString : String = self.fragaria.string()
-      let scrollLocation = self.sourceTextViewScrollLocation
-      
-      self.fragaria.setString(string)
-      
-      if self.newString {
-        self.sourceTextViewScrollLocation = 0
-        self.overviewScroller?.regions     = []
-      } else {
-        self.sourceTextViewScrollLocation = scrollLocation
-        
-        let diffs = self.diffMatchPatch.diff_mainOfOldString(oldString, andNewString:string)
-        self.overviewScroller?.regions = self._showDiffs(diffs, intensity:1)
-      }
-      
-      self.newString = false
-    }
-  }
-  
-  private func _showDiffs(diffs:[AnyObject], intensity:CGFloat) -> [ALOverviewRegion]
+  private func _showDiffs(diffs:[AnyObject], intensity:CGFloat) -> [OverviewRegion]
   {
     let    textView    = self.fragaria.textView()
     let textStorage = textView.textStorage!
@@ -297,7 +295,7 @@ NSSplitViewDelegate {
       return []
     }
     
-    var lineRanges = [ALOverviewRegion]();
+    var lineRanges = [OverviewRegion]();
     let saturation : CGFloat  = 0.5
     
     let insertColor = NSColor(calibratedHue:(1.0/3.0), saturation:saturation, brightness:1.0, alpha:intensity)
@@ -329,7 +327,7 @@ NSSplitViewDelegate {
           
         case .Insert:
           lineSpan   = textStorage.string.lineCountForCharacterRange(index..<nextIndex)
-          lineRanges.append(ALOverviewRegion(lineRange: NSMakeRange(lineCount, lineSpan), color: insertColor1))
+          lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, lineSpan), color: insertColor1))
           lineCount += lineSpan
           textStorage.addAttribute(NSBackgroundColorAttributeName, value:insertColor, range:NSMakeRange(offset, length))
           index = nextIndex
@@ -337,7 +335,7 @@ NSSplitViewDelegate {
           break;
           
         case .Delete:
-          lineRanges.append(ALOverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: deleteColor1))
+          lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: deleteColor1))
           if offset < textStorage.length {
             textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset, 1))
           } else if offset > 0 {
@@ -347,7 +345,7 @@ NSSplitViewDelegate {
       }
     }
     
-    lineRanges.append(ALOverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: nil))
+    lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: nil))
     return lineRanges
   }
   
@@ -372,7 +370,7 @@ NSSplitViewDelegate {
   
   func splitView(splitView: NSSplitView, constrainMaxCoordinate proposedMax: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat
   {
-    return self.splitView!.frame.size.width - 370
+    return self.splitView.frame.size.width - 370
   }
   
   func splitView(splitView: NSSplitView, constrainMinCoordinate proposedMin: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat

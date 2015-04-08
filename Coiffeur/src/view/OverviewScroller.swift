@@ -8,8 +8,7 @@
 
 import Cocoa
 
-@objc(ALOverviewRegion)
-class ALOverviewRegion : NSObject {
+class OverviewRegion : NSObject {
   private(set) var lineRange : NSRange
   private(set) var color : NSColor?
 
@@ -20,10 +19,7 @@ class ALOverviewRegion : NSObject {
   }
 }
 
-typealias OverviewRegion = ALOverviewRegion
-
-@objc(ALOverviewScroller)
-class ALOverviewScroller : NSScroller {
+class OverviewScroller : NSScroller {
   
   var regions : [OverviewRegion] = [] {
     didSet {

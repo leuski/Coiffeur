@@ -13,7 +13,7 @@ class ALDocumentView : NSViewController, NSPathControlDelegate {
   
   var allowedFileTypes = [String]()
   var knownSampleURLs = [NSURL]()
-  @IBOutlet weak var containerView: NSView?
+  @IBOutlet weak var containerView: NSView!
   
   private var windowController : ALMainWindowController? {
     return self.view.window?.delegate as? ALMainWindowController

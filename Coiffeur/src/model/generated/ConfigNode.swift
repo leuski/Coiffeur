@@ -11,10 +11,7 @@ import CoreData
 
 class ConfigNode: NSManagedObject {
 
-    @NSManaged var documentation: String?
-    @NSManaged var name: String?
     @NSManaged var title: String
-    @NSManaged var type: String?
     @NSManaged var children: NSSet
     @NSManaged var parent: ConfigNode?
 

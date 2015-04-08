@@ -11,6 +11,8 @@ import CoreData
 
 class ConfigOption: ConfigNode {
 
+    @NSManaged var storedDetails: String
+    @NSManaged var storedType: String
     @NSManaged var indexKey: String
     @NSManaged var value: String?
 

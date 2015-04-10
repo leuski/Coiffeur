@@ -274,7 +274,6 @@ class ClangFormatController : CoiffeurController {
       if let value = option.stringValue {
         data += "\(option.indexKey): \(value)" + CoiffeurController.NewLine
       }
-      
     }
     
     data += Private.SectionEnd + CoiffeurController.NewLine

@@ -234,7 +234,8 @@ class CoiffeurController : NSObject {
  
   func optionWithKey(key:String) -> ConfigOption?
   {
-    return ConfigOption.firstObjectInContext(self.managedObjectContext, withPredicate:NSPredicate(format: "indexKey = %@", key), error:nil)
+    return ConfigOption.firstObjectInContext(self.managedObjectContext,
+      withPredicate:NSPredicate(format: "indexKey = %@", key), error:nil)
   }
   
   class func contentsIsValidInString(string:String) -> Bool

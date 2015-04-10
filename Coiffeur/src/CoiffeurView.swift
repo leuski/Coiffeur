@@ -152,7 +152,8 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
         --d2;
       }
       
-      return obj1.title.compare(obj2.title, options:NSStringCompareOptions.CaseInsensitiveSearch) == NSComparisonResult.OrderedAscending
+      return obj1.title.compare(obj2.title, options:NSStringCompareOptions.CaseInsensitiveSearch)
+        == NSComparisonResult.OrderedAscending
     }
     
     for var i = self.jumpMenu.numberOfItems - 1; i >= 1; --i {
@@ -253,9 +254,7 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     childView.stringValue = node.title
     container.addSubview(childView)
     
-    
     let views   = ["childView":childView]
-    let   hFormat = "H:|-\(offset)-[childView]|"
     
     container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(offset)-[childView]|",
       options:NSLayoutFormatOptions(), metrics:nil, views:views))

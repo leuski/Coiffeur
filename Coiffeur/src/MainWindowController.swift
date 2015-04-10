@@ -35,8 +35,7 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
       
       // Here we are taking advantage of two assumptions:
       // 1. the text is not wrapping, so we only count hard line breaks
-      let oldDocumentLineCount
-      = textStorage.string.lineCountForCharacterRange(textStorage.string.startIndex..<textStorage.string.endIndex)
+      let oldDocumentLineCount = textStorage.string.lineCount()
       
       // 2. the text is laid out in one font size, so the line height is constant
       let lineHeight        = layoutManager.defaultLineHeightForFont(textView.font!)
@@ -44,8 +43,7 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
       let frameHeight       = CGFloat(oldDocumentLineCount) * lineHeight
       let  visRect           = textView.visibleRect
       let maxScrollLocation = frameHeight - visRect.size.height
-      let relativeScrollLocation
-      = (maxScrollLocation > 0) ? visRect.origin.y / maxScrollLocation : 0
+      let relativeScrollLocation = (maxScrollLocation > 0) ? visRect.origin.y / maxScrollLocation : 0
       
       //              NSLog("%f %f %f %f %f %ld", frameHeight, visRect.size.height,
       //                                      visRect.origin.y, maxScrollLocation,
@@ -62,8 +60,7 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
       
       let lineHeight        = layoutManager.defaultLineHeightForFont(textView.font!)
       
-      let newDocumentLineCount
-      = textStorage.string.lineCountForCharacterRange(textStorage.string.startIndex..<textStorage.string.endIndex)
+      let newDocumentLineCount = textStorage.string.lineCount()
       
       let frameHeight       = CGFloat(newDocumentLineCount) * lineHeight
       var  visRect           = textView.visibleRect
@@ -94,10 +91,8 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
     didSet {
       if let url = self.fileURL {
         NSUserDefaults.standardUserDefaults().setURL(url, forKey: LastSourceURLUDKey)
-        if let uti = NSWorkspace.sharedWorkspace().typeOfFile(url.path!, error:nil) {
-          if let lang = Language.languageWithUTI(uti) {
-            self.language = lang
-          }
+        if let uti = NSWorkspace.sharedWorkspace().typeOfFile(url.path!, error:nil), let lang = Language.languageWithUTI(uti) {
+          self.language = lang
         }
       }
     }
@@ -114,12 +109,10 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
         }
       }
       
-      if var d = self.styleDocument {
-        if let v = CoiffeurView(model:d.model!, bundle:nil) {
+      if var d = self.styleDocument, let v = CoiffeurView(model:d.model!, bundle:nil) {
           self.styleView = v
           v.embedInView(containerView)
           d.model!.delegate = self
-        }
       }
       
       self.uncrustify(nil)
@@ -217,8 +210,8 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
       }
     }
     
-    let url
-    = NSBundle.mainBundle().URLForResource(SampleFileName, withExtension:ObjectiveCPPExtension, subdirectory:SamplesFolderName)!
+    let url = NSBundle.mainBundle().URLForResource(SampleFileName,
+      withExtension:ObjectiveCPPExtension, subdirectory:SamplesFolderName)!
     var error : NSError?
     
     if !self.loadSourceFormURL(url, error:&error) {

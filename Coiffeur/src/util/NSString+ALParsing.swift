@@ -137,9 +137,13 @@ extension String {
     }
     
     return 0;
-   
   }
-    
+  
+  func lineCount() -> Int
+  {
+    return lineCountForCharacterRange(self.startIndex..<self.endIndex)
+  }
+  
   var nsRange : NSRange {
     return NSMakeRange(0, (self as NSString).length)
   }

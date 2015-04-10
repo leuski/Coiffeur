@@ -10,7 +10,6 @@ import Cocoa
 
 // actually, this code is not being used currently. I keep it here for reference...
 
-@objc(ALTableCellView)
 class TableCellView : NSTableCellView {
 
   override var backgroundStyle: NSBackgroundStyle {

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class ALDocumentController : NSDocumentController {
+class DocumentController : NSDocumentController {
   
   override func beginOpenPanel(openPanel: NSOpenPanel, forTypes inTypes: [AnyObject], completionHandler: (Int) -> Void)
   {

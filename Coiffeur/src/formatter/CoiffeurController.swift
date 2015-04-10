@@ -14,6 +14,11 @@ protocol CoiffeurControllerDelegate : class {
   func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
 }
 
+enum CoiffeurControllerResult {
+  case Success(CoiffeurController)
+  case Failure(NSError)
+}
+
 class CoiffeurController : NSObject {
 
   class var availableTypes : [CoiffeurController.Type] { return [ ClangFormatController.self, UncrustifyController.self ] }
@@ -32,15 +37,13 @@ class CoiffeurController : NSObject {
   class var documentType : String { return "" }
 //  var documentType : String { return self.dynamicType.documentType }
   
-  var managedObjectContext : NSManagedObjectContext { return storedManagedObjectContext! }
-  var executableURL : NSURL { return storedExecutableURL! }
+  let managedObjectContext : NSManagedObjectContext
+  let managedObjectModel : NSManagedObjectModel
+  let executableURL : NSURL
+
   var root : ConfigRoot?
   var pageGuideColumn : Int { return 0 }
   weak var delegate : CoiffeurControllerDelegate?
-  
-  private var storedManagedObjectModel : NSManagedObjectModel?
-  private var storedManagedObjectContext : NSManagedObjectContext?
-  private var storedExecutableURL : NSURL?
   
   class var KeyComparator : (ConfigOption,ConfigOption)->Bool
   {
@@ -57,11 +60,6 @@ class CoiffeurController : NSObject {
     }
   }
   
-  convenience required init?(error:NSErrorPointer)
-  {
-    self.init(nil, error:error)
-  }
-
   private class func _makeCopyOfEntity(entity:NSEntityDescription!, inout cache entities: Dictionary<String, NSEntityDescription>) -> NSEntityDescription
   {
     let entityName = entity.name!
@@ -69,15 +67,17 @@ class CoiffeurController : NSObject {
       return existingEntity
     }
     
-    var newEntity = (entity.copy() as NSEntityDescription)
+    var newEntity = (entity.copy() as! NSEntityDescription)
     entities[entityName] = newEntity
     
     newEntity.managedObjectClassName = "Coiffeur.\(entity.managedObjectClassName)"
     var newSubEntities : [NSEntityDescription] = []
 
-    for e in newEntity.subentities {
-      if let se = e as? NSEntityDescription {
-        newSubEntities.append(_makeCopyOfEntity(se, cache:&entities))
+    if let oldSubentities = newEntity.subentities {
+      for e in oldSubentities {
+        if let se = e as? NSEntityDescription {
+          newSubEntities.append(_makeCopyOfEntity(se, cache:&entities))
+        }
       }
     }
     
@@ -92,43 +92,60 @@ class CoiffeurController : NSObject {
     var newEntities : [NSEntityDescription] = []
     
     for e in mom.entities {
-      newEntities.append(CoiffeurController._makeCopyOfEntity(e as NSEntityDescription, cache:&entityCache))
+      newEntities.append(CoiffeurController._makeCopyOfEntity(e as! NSEntityDescription, cache:&entityCache))
     }
     
     momCopy.entities = newEntities
     return momCopy
   }
 
-  
-  init?(_ executableURL:NSURL?, error:NSErrorPointer)
+  class func findExecutableURL(name:String, udKey:String) -> URLResult
   {
+    let bundle = NSBundle(forClass:self)
+    if let url = bundle.URLForAuxiliaryExecutable(name) {
+      return URLResult.Success(url)
+    } else {
+      return URLResult.Failure(Error(format:"Cannot find executable with name “%@”", name))
+    }
+  }
+
+  class func findExecutableURL() -> URLResult
+  {
+    return URLResult.Failure(Error(format:"Format executable URL is not specified"))
+  }
+  
+  class func createCoiffeur() -> CoiffeurControllerResult
+  {
+    switch self.findExecutableURL() {
+    case .Failure(let error):
+      return CoiffeurControllerResult.Failure(error)
+    case .Success(let url):
+      if let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: CoiffeurController.self)]) {
+        let mom = CoiffeurController._fixMOM(originalModel)
+        var moc = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
+        moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: mom)
+        if let psc = moc.persistentStoreCoordinator {
+          var error: NSError?
+          if nil == psc.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: &error) {
+            return CoiffeurControllerResult.Failure(error ?? Error(format:"Failed to initialize coiffeur persistent store"))
+          }
+        } else {
+          return CoiffeurControllerResult.Failure(Error(format:"Failed to initialize coiffeur persistent store coordinator"))
+        }
+        moc.undoManager = NSUndoManager()
+        return CoiffeurControllerResult.Success(self(executableURL:url, managedObjectModel:mom, managedObjectContext:moc))
+      } else {
+        return CoiffeurControllerResult.Failure(Error(format:"Failed to initialize coiffeur managed object model"))
+      }
+    }
+  }
+
+  required init(executableURL:NSURL, managedObjectModel:NSManagedObjectModel, managedObjectContext:NSManagedObjectContext)
+  {
+    self.executableURL = executableURL
+    self.managedObjectModel = managedObjectModel
+    self.managedObjectContext = managedObjectContext
     super.init()
-
-    if executableURL == nil {
-      return nil
-    }
-    
-    let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: CoiffeurController.self)])
- 
-    if originalModel == nil {
-      return nil
-    }
-    var mom = CoiffeurController._fixMOM(originalModel!)
-    
-    var moc = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType)
-
-    moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: mom)
-    
-    if nil == moc.persistentStoreCoordinator?.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: error) {
-      return nil
-    }
-    
-    moc.undoManager = NSUndoManager()
-    
-    self.storedExecutableURL = executableURL
-    self.storedManagedObjectModel   = mom;
-    self.storedManagedObjectContext = moc;
-    
     NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("modelDidChange:"), name: NSManagedObjectContextObjectsDidChangeNotification, object: self.managedObjectContext)
   }
   
@@ -148,34 +165,34 @@ class CoiffeurController : NSObject {
     if let del = self.delegate {
       let (text, attributes) = del.formatArgumentsForCoiffeurController(self)
       
-      result = self.format(text, attributes:attributes, {(result:Result<String>) in
+      result = self.format(text, attributes:attributes, completion: {(result:StringResult) in
         switch (result) {
         case .Failure(let err):
           NSLog("%@", err)
         case .Success(let text):
-          del.coiffeurController(self, setText:text())
+          del.coiffeurController(self, setText:text)
         }
       })
     }
     return result;
   }
   
-  func format(text:String, attributes:NSDictionary, completion:(_:Result<String>) -> Void) -> Bool
+  func format(text:String, attributes:NSDictionary, completion:(_:StringResult) -> Void) -> Bool
   {
     return false
   }
   
-  func readOptionsFromLineArray(lines:[String]) -> Bool
+  func readOptionsFromLineArray(lines:[String]) -> NSError?
   {
-    return false
+    return nil
   }
 
-  func readValuesFromLineArray(lines:[String]) -> Bool
+  func readValuesFromLineArray(lines:[String]) -> NSError?
   {
-    return false
+    return nil
   }
   
-  func readOptionsFromString(text:String) -> Bool
+  func readOptionsFromString(text:String) -> NSError?
   {
     let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
     self.managedObjectContext.disableUndoRegistration()
@@ -184,33 +201,35 @@ class CoiffeurController : NSObject {
   
     let result = self.readOptionsFromLineArray(lines)
   
-    self.managedObjectContext.enableUndoRegistration();
+    self.managedObjectContext.enableUndoRegistration()
   
-    return result;
+    return result
   }
   
-  func readValuesFromString(text:String) -> Bool
+  func readValuesFromString(text:String) -> NSError?
   {
     let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
     self.managedObjectContext.disableUndoRegistration()
         
     let result = self.readValuesFromLineArray(lines)
     
-    self.managedObjectContext.enableUndoRegistration();
+    self.managedObjectContext.enableUndoRegistration()
     
-    return result;
+    return result
   }
 
-  func readValuesFromURL(absoluteURL:NSURL, error:NSErrorPointer) -> Bool
+  func readValuesFromURL(absoluteURL:NSURL) -> NSError?
   {
-    let data = String(contentsOfURL:absoluteURL, encoding:NSUTF8StringEncoding, error:error)
-    
-    return data != nil && self.readValuesFromString(data!)
+    var error:NSError?
+    if let data = String(contentsOfURL:absoluteURL, encoding:NSUTF8StringEncoding, error:&error) {
+      return self.readValuesFromString(data)
+    }
+    return error ?? Error(format:"Unknown error while trying to read style from %@", absoluteURL)
   }
   
-  func writeValuesToURL(absoluteURL:NSURL, error:NSErrorPointer) -> Bool
+  func writeValuesToURL(absoluteURL:NSURL) -> NSError?
   {
-    return false
+    return Error(format:"Unknown error while trying to write style to %@", absoluteURL)
   }
  
   func optionWithKey(key:String) -> ConfigOption?
@@ -223,9 +242,9 @@ class CoiffeurController : NSObject {
     return false
   }
   
-  func startExecutable(arguments:[String], workingDirectory:String?, input:String?) -> Result<NSTask>
+  func startExecutable(arguments:[String], workingDirectory:String?, input:String?) -> TaskResult
   {
-    var result : Result<NSTask>?
+    var result : TaskResult?
     
     ALExceptions.try({
       var task = NSTask()
@@ -249,20 +268,19 @@ class CoiffeurController : NSObject {
         writeHandle.closeFile()
       }
       
-      result = Result<NSTask>.Success(task)
+      result = TaskResult.Success(task)
       
-      }, catch: { (ex:NSException?) in
-        
-        let reason = (ex?.reason != nil) ? ex!.reason! : ""
-        let info = [ NSLocalizedDescriptionKey: reason]
-        result = Result<NSTask>.Failure(NSError(domain: NSPOSIXErrorDomain, code: 0, userInfo: info))
-        
-      }, finally: {})
+    }, catch: { (ex:NSException?) in
+      
+      result = TaskResult.Failure(Error(format:"An error while running format executable: %@",
+        ex?.reason ?? "unknown error"))
+      
+    }, finally: {})
     
     return result!
   }
   
-  func runTask(task:NSTask) -> Result<String>
+  func runTask(task:NSTask) -> StringResult
   {
     let outHandle = task.standardOutput.fileHandleForReading
     let outData = outHandle.readDataToEndOfFile()
@@ -275,26 +293,30 @@ class CoiffeurController : NSObject {
     let status = task.terminationStatus
     
     if status == 0 {
-      return Result<String>.Success(NSString(data: outData, encoding: NSUTF8StringEncoding) as String)
-    } else {
-      var errText = NSString(data: errData, encoding: NSUTF8StringEncoding)
-      if errText == nil {
-        errText = String(format:NSLocalizedString("Format excutable error code %d", comment:""), status)
+      if let string = String(data:outData, encoding: NSUTF8StringEncoding) {
+        return StringResult.Success(string)
+      } else {
+        return StringResult.Failure(Error(format:"Failed to interpret the output of the format executable"))
       }
-      return Result<String>.Failure(NSError(domain: NSPOSIXErrorDomain, code: Int(status), userInfo: [NSLocalizedDescriptionKey : errText!]))
+    } else {
+      if let errText = String(data: errData, encoding: NSUTF8StringEncoding) {
+        return StringResult.Failure(Error(format:"Format excutable error code %d: %@", status, errText))
+      } else {
+        return StringResult.Failure(Error(format:"Format excutable error code %d", status))
+      }
     }
   }
   
-  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil, block:(_:Result<String>)->Void) -> NSError?
+  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil, block:(_:StringResult)->Void) -> NSError?
   {
     let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
     
-    switch (result) {
+    switch result {
     case .Failure(let err):
       return err
     case .Success(let task):
       dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
-        let result = self.runTask(task())
+        let result = self.runTask(task)
         dispatch_async(dispatch_get_main_queue(), {
           block(result)
         });
@@ -305,14 +327,14 @@ class CoiffeurController : NSObject {
     
   }
   
-  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil) -> Result<String>
+  func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil) -> StringResult
   {
     let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
-    switch (result) {
+    switch result {
     case .Failure(let err):
-      return Result<String>.Failure(err)
+      return StringResult.Failure(err)
     case .Success(let task):
-      return self.runTask(task())
+      return self.runTask(task)
     }
   }
 

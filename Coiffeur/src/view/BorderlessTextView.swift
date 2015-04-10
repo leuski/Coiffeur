@@ -8,7 +8,6 @@
 
 import Cocoa
 
-@objc(ALBorderlessTextView)
 class BorderlessTextView : NSTextView {
 
   override func awakeFromNib()

@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ALMainWindowController">
+        <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="Coiffeur" customModuleProvider="target">
             <connections>
                 <outlet property="splitView" destination="HmO-H6-Zji" id="qfj-gB-14Z"/>
                 <outlet property="window" destination="xOd-HO-29H" id="JIz-fz-R2o"/>

@@ -6,7 +6,33 @@
     <option name="CUSTOM_SCOPE_NAME" value="src" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="92d66bd5-8158-4f12-9eba-9d6a73a718e8" name="Default" comment="" />
+    <list default="true" readonly="true" id="92d66bd5-8158-4f12-9eba-9d6a73a718e8" name="Default" comment="">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/ALCoiffeurView.xib" afterPath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/CoiffeurView.xib" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/ALDocumentView.xib" afterPath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/SourceView.xib" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/ALMainWindowController.xib" afterPath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/MainWindowController.xib" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Coiffeur/src/DocumentView.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/SourceView.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/AppDelegate.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/AppDelegate.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/view/BorderlessTextView.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/view/BorderlessTextView.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/formatter/ClangFormatController.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/formatter/ClangFormatController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur.xcodeproj/project.xcworkspace/xcshareddata/Coiffeur.xccheckout" afterPath="$PROJECT_DIR$/Coiffeur.xcodeproj/project.xcworkspace/xcshareddata/Coiffeur.xccheckout" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/formatter/CoiffeurController.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/formatter/CoiffeurController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/CoiffeurView.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/CoiffeurView.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/util/DiffMatchPatch+enum.h" afterPath="$PROJECT_DIR$/Coiffeur/src/util/DiffMatchPatch+enum.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/util/DiffMatchPatch+enum.m" afterPath="$PROJECT_DIR$/Coiffeur/src/util/DiffMatchPatch+enum.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/Document.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/Document.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/DocumentController.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/DocumentController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/util/Error.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/util/Error.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/model/Language.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/model/Language.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/MainMenu.xib" afterPath="$PROJECT_DIR$/Coiffeur/rsrc/en.lproj/MainMenu.xib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/view/OutlineView.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/view/OutlineView.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/view/PathControl.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/view/PathControl.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/view/TableCellView.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/view/TableCellView.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/util/Transformers.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/util/Transformers.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift" afterPath="$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Coiffeur.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/Coiffeur.xcodeproj/project.pbxproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="Coiffeur.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,7 +58,7 @@
       <file leaf-file-name="ConfigNode.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Coiffeur/src/model/generated/ConfigNode.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="351">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="312">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -42,7 +68,7 @@
       <file leaf-file-name="Document.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Coiffeur/src/Document.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1755">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1963">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -52,7 +78,7 @@
       <file leaf-file-name="ClangFormatController.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/ClangFormatController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4849">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4628">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -62,18 +88,28 @@
       <file leaf-file-name="CoiffeurController.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/CoiffeurController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4446">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4706">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UncrustifyController.swift" pinned="false" current-in-tab="true">
+      <file leaf-file-name="UncrustifyController.swift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3127148" vertical-offset="0" max-vertical-offset="5174">
-              <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="26" max-vertical-offset="5109">
+              <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainWindowController.swift" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="5577">
+              <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -112,6 +148,9 @@
         <option value="$PROJECT_DIR$/Coiffeur/src/ALUncrustifyController.m" />
         <option value="$PROJECT_DIR$/Coiffeur/src/ALCoiffeurController.m" />
         <option value="$PROJECT_DIR$/Coiffeur/src/ALCoreData.h" />
+        <option value="$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift" />
+        <option value="$PROJECT_DIR$/Coiffeur/src/DocumentView.swift" />
+        <option value="$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift" />
       </list>
     </option>
   </component>
@@ -150,6 +189,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Cidr.FilesView" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -270,7 +310,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Cidr.FilesView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -354,28 +393,28 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="979" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32967034" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24940476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24940476" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32967034" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32922825" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -399,6 +438,54 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/model/generated/ConfigNode.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="100">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/Document.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1742">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/ClangFormatController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4615">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/CoiffeurController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4498">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="26" max-vertical-offset="5148">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="100">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/System/Library/Frameworks/AppKit.framework/Headers/NSDocumentController.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="884" max-vertical-offset="3822">
@@ -424,7 +511,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="182" max-vertical-offset="1352">
           <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -432,10 +518,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="559" max-vertical-offset="1885">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding>
-            <marker date="1428111325000" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1428111325000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -443,7 +525,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5941">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -481,8 +562,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Coiffeur/src/formatter/UncrustifyController.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3127148" vertical-offset="0" max-vertical-offset="5174">
-          <caret line="14" column="20" selection-start-line="14" selection-start-column="20" selection-end-line="14" selection-end-column="20" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5148">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Coiffeur/src/MainWindowController.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="221" max-vertical-offset="5577">
+          <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
           <folding />
         </state>
       </provider>

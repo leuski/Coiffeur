@@ -10,7 +10,7 @@
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
 		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* ALMainWindowController.xib */; };
+		626185221AC351CC0095CCD2 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* MainWindowController.xib */; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
 		626185281AC351CC0095CCD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185201AC351CC0095CCD2 /* main.m */; };
@@ -20,14 +20,14 @@
 		6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6261852B1AC3524B0095CCD2 /* uncrustify */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		626185931AC51C780095CCD2 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185921AC51C780095CCD2 /* languages.plist */; };
 		626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185941AC52CA20095CCD2 /* UserDefaults.plist */; };
-		626185B61AC623000095CCD2 /* ALCoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185B41AC623000095CCD2 /* ALCoiffeurView.xib */; };
-		626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185C31AC6237E0095CCD2 /* ALDocumentView.xib */; };
+		626185B61AC623000095CCD2 /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185B41AC623000095CCD2 /* CoiffeurView.xib */; };
+		626185C11AC6237E0095CCD2 /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185C31AC6237E0095CCD2 /* SourceView.xib */; };
 		6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEAF1AD44BE400671D12 /* AppDelegate.swift */; };
 		6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB11AD451A600671D12 /* DocumentController.swift */; };
 		6275AEB41AD4557900671D12 /* CoiffeurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB31AD4557900671D12 /* CoiffeurView.swift */; };
 		6275AEB61AD4733900671D12 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB51AD4733900671D12 /* MainWindowController.swift */; };
 		6275AEB81AD4734600671D12 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB71AD4734600671D12 /* Document.swift */; };
-		6275AEBA1AD4735700671D12 /* DocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB91AD4735700671D12 /* DocumentView.swift */; };
+		6275AEBA1AD4735700671D12 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB91AD4735700671D12 /* SourceView.swift */; };
 		6275AEBD1AD48FC600671D12 /* DiffMatchPatch+enum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEBC1AD48FC600671D12 /* DiffMatchPatch+enum.m */; };
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
@@ -99,7 +99,7 @@
 /* Begin PBXFileReference section */
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
-		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALMainWindowController.xib; sourceTree = "<group>"; };
+		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindowController.xib; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6261851A1AC351CC0095CCD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -109,14 +109,14 @@
 		626185721AC3B7040095CCD2 /* MGSFragaria.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGSFragaria.framework; path = "3rd_party/Fragaria-master/build/Release/MGSFragaria.framework"; sourceTree = "<group>"; };
 		626185921AC51C780095CCD2 /* languages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = languages.plist; sourceTree = "<group>"; };
 		626185941AC52CA20095CCD2 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
-		626185B51AC623000095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALCoiffeurView.xib; sourceTree = "<group>"; };
-		626185C21AC6237E0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ALDocumentView.xib; sourceTree = "<group>"; };
+		626185B51AC623000095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurView.xib; sourceTree = "<group>"; };
+		626185C21AC6237E0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SourceView.xib; sourceTree = "<group>"; };
 		6275AEAF1AD44BE400671D12 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6275AEB11AD451A600671D12 /* DocumentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
 		6275AEB31AD4557900671D12 /* CoiffeurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurView.swift; sourceTree = "<group>"; };
 		6275AEB51AD4733900671D12 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		6275AEB71AD4734600671D12 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		6275AEB91AD4735700671D12 /* DocumentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentView.swift; sourceTree = "<group>"; };
+		6275AEB91AD4735700671D12 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 		6275AEBB1AD48FC600671D12 /* DiffMatchPatch+enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiffMatchPatch+enum.h"; sourceTree = "<group>"; };
 		6275AEBC1AD48FC600671D12 /* DiffMatchPatch+enum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DiffMatchPatch+enum.m"; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
@@ -190,9 +190,9 @@
 				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
 				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
 				626185191AC351CC0095CCD2 /* Images.xcassets */,
-				626185B41AC623000095CCD2 /* ALCoiffeurView.xib */,
-				626185C31AC6237E0095CCD2 /* ALDocumentView.xib */,
-				626185151AC351CC0095CCD2 /* ALMainWindowController.xib */,
+				626185B41AC623000095CCD2 /* CoiffeurView.xib */,
+				626185C31AC6237E0095CCD2 /* SourceView.xib */,
+				626185151AC351CC0095CCD2 /* MainWindowController.xib */,
 				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
 				626185171AC351CC0095CCD2 /* MainMenu.xib */,
 			);
@@ -207,10 +207,10 @@
 				6275AEB31AD4557900671D12 /* CoiffeurView.swift */,
 				6275AEB71AD4734600671D12 /* Document.swift */,
 				6275AEB11AD451A600671D12 /* DocumentController.swift */,
-				6275AEB91AD4735700671D12 /* DocumentView.swift */,
+				6275AEB51AD4733900671D12 /* MainWindowController.swift */,
+				6275AEB91AD4735700671D12 /* SourceView.swift */,
 				62F9F1DC1AD24272002B7F1B /* formatter */,
 				626185201AC351CC0095CCD2 /* main.m */,
-				6275AEB51AD4733900671D12 /* MainWindowController.swift */,
 				626185321AC35CA30095CCD2 /* model */,
 				62F9F1C71AD22835002B7F1B /* util */,
 				62F9F1C61AD22806002B7F1B /* view */,
@@ -408,9 +408,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				626185B61AC623000095CCD2 /* ALCoiffeurView.xib in Resources */,
+				626185B61AC623000095CCD2 /* CoiffeurView.xib in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
-				626185221AC351CC0095CCD2 /* ALMainWindowController.xib in Resources */,
+				626185221AC351CC0095CCD2 /* MainWindowController.xib in Resources */,
 				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
 				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
@@ -419,7 +419,7 @@
 				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
 				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
-				626185C11AC6237E0095CCD2 /* ALDocumentView.xib in Resources */,
+				626185C11AC6237E0095CCD2 /* SourceView.xib in Resources */,
 				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
@@ -444,7 +444,7 @@
 				62F9F1BB1AD1A7A7002B7F1B /* ConfigRoot.swift in Sources */,
 				62F9F1DB1AD23F80002B7F1B /* PathControl.swift in Sources */,
 				62F9F1E01AD242B5002B7F1B /* ClangFormatController.swift in Sources */,
-				6275AEBA1AD4735700671D12 /* DocumentView.swift in Sources */,
+				6275AEBA1AD4735700671D12 /* SourceView.swift in Sources */,
 				6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */,
 				62F9F1B71AD1A7A7002B7F1B /* ConfigSection.swift in Sources */,
 				62F9F1DE1AD2429B002B7F1B /* CoiffeurController.swift in Sources */,
@@ -492,12 +492,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		626185151AC351CC0095CCD2 /* ALMainWindowController.xib */ = {
+		626185151AC351CC0095CCD2 /* MainWindowController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				626185161AC351CC0095CCD2 /* en */,
 			);
-			name = ALMainWindowController.xib;
+			name = MainWindowController.xib;
 			sourceTree = "<group>";
 		};
 		626185171AC351CC0095CCD2 /* MainMenu.xib */ = {
@@ -508,20 +508,20 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
-		626185B41AC623000095CCD2 /* ALCoiffeurView.xib */ = {
+		626185B41AC623000095CCD2 /* CoiffeurView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				626185B51AC623000095CCD2 /* en */,
 			);
-			name = ALCoiffeurView.xib;
+			name = CoiffeurView.xib;
 			sourceTree = "<group>";
 		};
-		626185C31AC6237E0095CCD2 /* ALDocumentView.xib */ = {
+		626185C31AC6237E0095CCD2 /* SourceView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				626185C21AC6237E0095CCD2 /* en */,
 			);
-			name = ALDocumentView.xib;
+			name = SourceView.xib;
 			sourceTree = "<group>";
 		};
 		62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */ = {

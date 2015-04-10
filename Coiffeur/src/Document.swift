@@ -22,9 +22,14 @@ class Document : NSDocument {
   {
     self.init()
     self.fileType = typeName
-    self.model = self._modelControllerOfType(typeName, error:outError)
-    if self.model == nil {
+
+    let result = self._modelControllerOfType(typeName)
+    switch result {
+    case .Failure(let error):
+      error.assignTo(outError)
       return nil
+    case .Success(let controller):
+      self.model = controller
     }
   }
   
@@ -41,56 +46,65 @@ class Document : NSDocument {
     }
   }
   
-  private func _modelControllerOfType(type :String, error outError:NSErrorPointer) -> CoiffeurController?
+  private func _modelControllerOfType(type :String) -> CoiffeurControllerResult
   {
-    for c in CoiffeurController.availableTypes  {
-      if type == c.documentType {
-        return c.self(error:outError)
+    for coiffeurClass in CoiffeurController.availableTypes  {
+      if type == coiffeurClass.documentType {
+        return coiffeurClass.createCoiffeur()
       }
     }
     
-    if outError != nil {
-      outError.memory = Error(String(format:NSLocalizedString("Unknown document type “%@”", comment:"unknown type error"), type))
-    }
-    
-    return nil
+    return CoiffeurControllerResult.Failure(Error(format:"Unknown document type “%@”", type))
   }
   
-  private func _ensureWeHaveModelOfType(typeName:String, errorFormatKey:String, error outError:NSErrorPointer) -> Bool
+  private func _ensureWeHaveModelOfType(typeName:String, errorFormatKey:String) -> NSError?
   {
     if let model = self.model {
       let documentType = model.dynamicType.documentType
       if typeName == documentType {
-        return true
+        return nil
       }
-      if outError != nil {
-        outError.memory = Error(String(format:NSLocalizedString(errorFormatKey, comment:errorFormatKey), typeName, documentType))
-      }
-      return false
+      return Error(format:errorFormatKey, typeName, documentType)
     } else {
-      self.model = self._modelControllerOfType(typeName, error:outError)
-      return self.model != nil
+      let result = self._modelControllerOfType(typeName)
+      switch result {
+      case .Failure(let error):
+        return error
+      case .Success(let controller):
+        self.model = controller
+        return nil
+      }
     }
   }
   
   override func readFromURL(absoluteURL: NSURL, ofType typeName: String, error outError: NSErrorPointer) -> Bool
   {
-    if !self._ensureWeHaveModelOfType(typeName,
-      errorFormatKey:"Cannot read content of document “%@” into document “%@”", error:outError) {
-        return false
+    if let error = self._ensureWeHaveModelOfType(typeName, errorFormatKey:"Cannot read content of document “%@” into document “%@”") {
+      error.assignTo(outError)
+      return false
     }
     
-    return self.model!.readValuesFromURL(absoluteURL, error:outError)
+    if let error = self.model!.readValuesFromURL(absoluteURL) {
+      error.assignTo(outError)
+      return false
+    }
+    
+    return true
   }
   
   override func writeToURL(absoluteURL: NSURL, ofType typeName: String, error outError: NSErrorPointer) -> Bool
   {
-    if !self._ensureWeHaveModelOfType(typeName,
-      errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”", error:outError) {
-        return false
+    if let error = self._ensureWeHaveModelOfType(typeName, errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”") {
+      error.assignTo(outError)
+      return false
     }
     
-    return self.model!.writeValuesToURL(absoluteURL, error:outError)
+    if let error = self.model!.writeValuesToURL(absoluteURL) {
+      error.assignTo(outError)
+      return false
+    }
+    
+    return true
   }
   
   override class func autosavesInPlace() -> Bool
@@ -100,14 +114,7 @@ class Document : NSDocument {
   
   override func makeWindowControllers()
   {
-    self.addWindowController(ALMainWindowController())
-  }
-  
-  func embedInView(container:NSView)
-  {
-    if let v = ALCoiffeurView(model:self.model!, bundle:nil) {
-      v.embedInView(container)
-    }
+    self.addWindowController(MainWindowController())
   }
   
   override func canCloseDocumentWithDelegate(delegate: AnyObject, shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)

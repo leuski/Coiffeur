@@ -10,7 +10,7 @@ import CoreData
 
 extension NSManagedObjectContext {
   
-  func fetchEntity(entity:NSEntityDescription?, withPredicate predicate: NSPredicate? = nil, error: NSErrorPointer = nil) -> [AnyObject]
+  func fetchEntity(entity:NSEntityDescription?, withPredicate predicate: NSPredicate? = nil, error outError: NSErrorPointer = nil) -> [AnyObject]
   {
     if let theEntity = entity {
       
@@ -22,10 +22,8 @@ extension NSManagedObjectContext {
       var fetchError : NSError?
       let result = self.executeFetchRequest(fetchRequest, error: &fetchError)
       
-      if let err = fetchError {
-        if error != nil {
-          error.memory = err
-        }
+      if let error = fetchError {
+        error.assignTo(outError)
         return []
       }
       
@@ -47,13 +45,13 @@ extension NSManagedObjectContext {
   
   func fetch<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, error: NSErrorPointer = nil) -> [T]
   {
-    return fetchEntity(entityClass.entityInContext(self), withPredicate:predicate, error:error) as [T]
+    return fetchEntity(entityClass.entityInContext(self), withPredicate:predicate, error:error) as! [T]
   }
 
   func fetchSingle(entityName:String, withPredicate predicate: NSPredicate?, error: NSErrorPointer) -> NSManagedObject?
   {
     let array = self.fetch(entityName, withPredicate: predicate, error: error)
-    return array.isEmpty ? nil : (array[0] as NSManagedObject)
+    return array.isEmpty ? nil : (array[0] as! NSManagedObject)
   }
   
   func disableUndoRegistration()
@@ -88,7 +86,7 @@ extension NSManagedObject {
     let className = NSStringFromClass(self)
     for entity in mom.entities {
       if className == entity.managedObjectClassName {
-        return entity as NSEntityDescription
+        return entity as! NSEntityDescription
       }
     }
     return NSEntityDescription()
@@ -107,7 +105,7 @@ extension NSManagedObject {
   private class func _insert<SelfType>(#managedObjectContext: NSManagedObjectContext) -> SelfType
   {
     let entityName = self.entityNameInContext(managedObjectContext)
-    return (NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext:  managedObjectContext) as SelfType)
+    return (NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext:  managedObjectContext) as! SelfType)
   }
 
   class func allObjectsInContext(managedObjectContext:NSManagedObjectContext, withPredicate predicate: NSPredicate? = nil, error:NSErrorPointer = nil) -> [AnyObject]
@@ -124,7 +122,7 @@ extension NSManagedObject {
   private class func _first<SelfType>(#managedObjectContext: NSManagedObjectContext, withPredicate predicate:NSPredicate?, error:NSErrorPointer) -> SelfType?
   {
     let entityName = self.entityNameInContext(managedObjectContext)
-    return (managedObjectContext.fetchSingle(entityName, withPredicate: predicate, error: error) as SelfType?)
+    return (managedObjectContext.fetchSingle(entityName, withPredicate: predicate, error: error) as! SelfType?)
   }
 
   class func firstObjectInContext(managedObjectContext:NSManagedObjectContext, withPredicate predicate:NSPredicate? = nil, error:NSErrorPointer = nil) -> Self?

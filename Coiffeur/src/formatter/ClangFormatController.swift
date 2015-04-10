@@ -23,6 +23,7 @@ class ClangFormatController : CoiffeurController {
     static var Comment = "#"
     static var DocumentType = "Clang-Format Style File"
     static var ExecutableName = "clang-format"
+    static var ExecutableURLUDKey = "ClangFormatExecutableURL"
     
     static var OptionsDocumentation : String? = nil
     static var DefaultValues : String? = nil
@@ -30,55 +31,47 @@ class ClangFormatController : CoiffeurController {
   
   override class var documentType : String { return Private.DocumentType }
   
-  override init?(_ executableURL:NSURL?, error:NSErrorPointer)
+  override class func createCoiffeur() -> CoiffeurControllerResult
   {
-    super.init(executableURL, error: error)
-    
-    if Private.OptionsDocumentation == nil {
-      let bundle = NSBundle(forClass: self.dynamicType)
-      let docURL = bundle.URLForResource(Private.DocumentationFileName, withExtension: Private.DocumentationFileExtension)
-      
-      if docURL == nil {
-        if error != nil {
-          error.memory = Error(String(format: NSLocalizedString("Cannot find %@.%@", comment: ""), Private.DocumentationFileName, Private.DocumentationFileExtension))
-        }
-        return nil
-      }
-      
-      Private.OptionsDocumentation = String(contentsOfURL: docURL!, encoding: NSUTF8StringEncoding, error: error)
-      
+    let result = super.createCoiffeur()
+
+    switch result {
+    case .Failure:
+      return result
+    case .Success(let controller):
       if Private.OptionsDocumentation == nil {
-        return nil
-      }
-      
-    }
-    
-    if !self.readOptionsFromString(Private.OptionsDocumentation!) {
-      return nil
-    }
-    
-    if Private.DefaultValues == nil {
-      let result = self.runExecutable([Private.ShowDefaultConfigArgument])
-      switch (result) {
-      case .Failure(let err):
-        if error != nil {
-          error.memory = err
+        let bundle = NSBundle(forClass: self.dynamicType)
+        if let docURL = bundle.URLForResource(Private.DocumentationFileName, withExtension: Private.DocumentationFileExtension) {
+          var error: NSError?
+          Private.OptionsDocumentation = String(contentsOfURL: docURL, encoding: NSUTF8StringEncoding, error:&error)
+          if Private.OptionsDocumentation == nil {
+            return CoiffeurControllerResult.Failure(Error(format:"Failed to read the content of %@.%@ as UTF8 string", Private.DocumentationFileName, Private.DocumentationFileExtension))
+          }
+        } else {
+          return CoiffeurControllerResult.Failure(Error(format:"Cannot find %@.%@", Private.DocumentationFileName, Private.DocumentationFileExtension))
         }
-        return nil
-      case .Success(let text):
-        Private.DefaultValues = text()
       }
-    }
-    
-    if !self.readValuesFromString(Private.DefaultValues!) {
-      return nil
+      if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
+        return CoiffeurControllerResult.Failure(error)
+      }
+      if Private.DefaultValues == nil {
+        switch controller.runExecutable([Private.ShowDefaultConfigArgument]) {
+        case .Failure(let error):
+          return CoiffeurControllerResult.Failure(error)
+        case .Success(let text):
+          Private.DefaultValues = text
+        }
+      }
+      if let error = controller.readValuesFromString(Private.DefaultValues!) {
+        return CoiffeurControllerResult.Failure(error)
+      }
+      return result
     }
   }
   
-  convenience required init?(error:NSErrorPointer)
+  override class func findExecutableURL() -> URLResult
   {
-    let bundle = NSBundle(forClass: ClangFormatController.self)
-    self.init(bundle.URLForAuxiliaryExecutable(Private.ExecutableName), error:error)
+    return findExecutableURL(Private.ExecutableName, udKey:Private.ExecutableURLUDKey)
   }
   
   private class func _cleanUpRST(string:String) -> String
@@ -86,8 +79,6 @@ class ClangFormatController : CoiffeurController {
     var rst = string
     rst = rst.trim()
     rst += "\n"
-    
-    var mutableRST = NSMutableString(string: rst)
     
     let nl  = "__NL__"
     let sp  = "__SP__"
@@ -97,45 +88,45 @@ class ClangFormatController : CoiffeurController {
     let lif = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\\\code(.*?)\\\\endcode(\\s)")
     
     while true {
-      let match = lif.firstMatchInString(mutableRST)
+      let match = lif.firstMatchInString(rst)
       if match == nil {
         break
       }
       
-      var code = mutableRST.substringWithRange(match!.rangeAtIndex(1))
+      var code = rst.substringWithRange(match!.rangeAtIndex(1))
       code = code.stringByReplacingOccurrencesOfString("\n", withString:nl)
       code = code.stringByReplacingOccurrencesOfString(" ", withString:sp)
-      code += mutableRST.substringWithRange(match!.rangeAtIndex(2))
-      mutableRST.replaceCharactersInRange(match!.rangeAtIndex(0), withString:code)
+      code += rst.substringWithRange(match!.rangeAtIndex(2))
+      rst = rst.stringByReplacingCharactersInRange(match!.rangeAtIndex(0), withString:code)
     }
     
     // preserve double nl, breaks before * and - (list items)
-    mutableRST.replaceOccurrencesOfString("\n\n", withString:par)
-    mutableRST.replaceOccurrencesOfString("\n*", withString:"\(nl)*")
-    mutableRST.replaceOccurrencesOfString("\n-", withString:"\(nl)-")
+    rst = rst.stringByReplacingOccurrencesOfString("\n\n", withString:par)
+    rst = rst.stringByReplacingOccurrencesOfString("\n*", withString:"\(nl)*")
+    rst = rst.stringByReplacingOccurrencesOfString("\n-", withString:"\(nl)-")
     
     // un-escape escaped characters
     let esc = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\\\(.)")
     
-    esc.replaceMatchesInString(mutableRST, withTemplate:"$1")
+    rst = esc.stringByReplacingMatchesInString(rst, withTemplate:"$1")
     
     // wipe out remaining whitespaces as single space
-    mutableRST.replaceOccurrencesOfString("\n", withString:" ")
+    rst = rst.stringByReplacingOccurrencesOfString("\n", withString:" ")
     
     let wsp = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\s\\s+")
-    wsp.replaceMatchesInString(mutableRST, withTemplate:" ")
+    rst = wsp.stringByReplacingMatchesInString(rst, withTemplate:" ")
     
     // restore saved spacing
-    mutableRST.replaceOccurrencesOfString(nl, withString:"\n")
-    mutableRST.replaceOccurrencesOfString(sp, withString:" ")
-    mutableRST.replaceOccurrencesOfString(par, withString:"\n\n")
+    rst = rst.stringByReplacingOccurrencesOfString(nl, withString:"\n")
+    rst = rst.stringByReplacingOccurrencesOfString(sp, withString:" ")
+    rst = rst.stringByReplacingOccurrencesOfString(par, withString:"\n\n")
     
     // quote the emphasized words
     let quot = NSRegularExpression.ci_dmls_regularExpressionWithPattern("``(.*?)``")
-    quot.replaceMatchesInString(mutableRST, withTemplate:"“$1”")
+    rst = quot.stringByReplacingMatchesInString(rst, withTemplate:"“$1”")
     
     //      NSLog(@"%@", mutableRST);
-    return mutableRST
+    return rst
   }
   
   private func _closeOption(inout option: ConfigOption?)
@@ -146,7 +137,7 @@ class ClangFormatController : CoiffeurController {
     }
   }
   
-  override func readOptionsFromLineArray(lines: [String]) -> Bool
+  override func readOptionsFromLineArray(lines: [String]) -> NSError?
   {
     let section = ConfigSection.objectInContext(self.managedObjectContext)
     
@@ -163,7 +154,7 @@ class ClangFormatController : CoiffeurController {
     var in_title = false
     
     for aLine in lines {
-      var line = aLine as NSString
+      var line = aLine
       if !in_doc {
         if line.hasPrefix(".. START_FORMAT_STYLE_OPTIONS") {
           in_doc = true
@@ -189,10 +180,10 @@ class ClangFormatController : CoiffeurController {
         self._closeOption(&currentOption)
         
         var newOption = ConfigOption.objectInContext(self.managedObjectContext)
-        newOption.parent           = section;
-        newOption.indexKey         = line.substringWithRange(match.rangeAtIndex(1))
-        in_title                 = true
-        let type = line.substringWithRange(match.rangeAtIndex(2))
+        newOption.parent     = section;
+        newOption.indexKey   = line.substringWithRange(match.rangeAtIndex(1))
+        in_title             = true
+        let type             = line.substringWithRange(match.rangeAtIndex(2))
         
         if type == "bool" {
           newOption.type = "false,true"
@@ -213,7 +204,7 @@ class ClangFormatController : CoiffeurController {
         continue
       }
       
-      if line.length == 0 {
+      if line.isEmpty {
         in_title = false
       }
       
@@ -235,21 +226,21 @@ class ClangFormatController : CoiffeurController {
           option.title = option.title.stringByAppendingString(line, separatedBy:" ")
         }
       
-        option.documentation = line + CoiffeurController.NewLine
+        option.documentation += line + CoiffeurController.NewLine
       }
     }
     
     self._closeOption(&currentOption)
     
-    return true
+    return nil
   }
   
-  override func readValuesFromLineArray(lines:[String]) -> Bool
+  override func readValuesFromLineArray(lines:[String]) -> NSError?
   {
     let keyValue = NSRegularExpression.ci_regularExpressionWithPattern("^\\s*(.*?):\\s*(\\S.*)")
     
     for aLine in lines {
-      var line = aLine as NSString
+      var line = aLine
       line = line.trim()
       
       if line.hasPrefix(Private.Comment) {
@@ -260,17 +251,17 @@ class ClangFormatController : CoiffeurController {
         let key = line.substringWithRange(match.rangeAtIndex(1))
         let value = line.substringWithRange(match.rangeAtIndex(2))
         if let option = self.optionWithKey(key) {
-          option.value = value
+          option.stringValue = value
         } else {
           NSLog("Warning: unknown token %@ on line %@", key, line);
         }
       }
     }
     
-    return true
+    return nil
   }
   
-  override func writeValuesToURL(absoluteURL:NSURL, error:NSErrorPointer) -> Bool
+  override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
   {
     var data = ""
     
@@ -280,7 +271,7 @@ class ClangFormatController : CoiffeurController {
     allOptions.sort(CoiffeurController.KeyComparator)
     
     for option in allOptions {
-      if let value = option.value {
+      if let value = option.stringValue {
         data += "\(option.indexKey): \(value)" + CoiffeurController.NewLine
       }
       
@@ -288,27 +279,28 @@ class ClangFormatController : CoiffeurController {
     
     data += Private.SectionEnd + CoiffeurController.NewLine
     
-    return data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:error)
+    var error:NSError?
+    if data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:&error) {
+      return nil
+    }
+    return error ?? super.writeValuesToURL(absoluteURL)
   }
   
-  override func format(text: String, attributes: NSDictionary, completion: (_:Result<String>) -> Void) -> Bool
+  override func format(text: String, attributes: NSDictionary, completion: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configPath = workingDirectory.stringByAppendingPathComponent(Private.StyleFileName)
     
     var localError : NSError?
     
-    if !self.writeValuesToURL(NSURL(fileURLWithPath: configPath)!, error:&localError) {
-      if localError == nil {
-        localError = Error("Unknown Error")
-      }
-      completion(Result<String>.Failure(localError!))
+    if let error = self.writeValuesToURL(NSURL(fileURLWithPath: configPath)!) {
+      completion(StringResult.Failure(error))
       return false
     }
     
     var args = [Private.StyleFlag]
     
-    if let language = attributes[CoiffeurController.FormatLanguage] as? ALLanguage {
+    if let language = attributes[CoiffeurController.FormatLanguage] as? Language {
       if let clangFormatID = language.clangFormatID {
         if let ext = language.defaultExtension {
           args.append(String(format:Private.SourceFileNameFormat, ext))
@@ -316,7 +308,7 @@ class ClangFormatController : CoiffeurController {
       }
     }
     
-    let complete = { (result:Result<String>) -> Void  in
+    let complete = { (result:StringResult) -> Void  in
       NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
       completion(result)
     }
@@ -324,7 +316,7 @@ class ClangFormatController : CoiffeurController {
     localError = self.runExecutable(args, workingDirectory:workingDirectory, input:text, block:complete)
     
     if let err = localError {
-      completion(Result<String>.Failure(err))
+      completion(StringResult.Failure(err))
       return false
     }
     
@@ -341,8 +333,8 @@ class ClangFormatController : CoiffeurController {
   
   override var pageGuideColumn : Int
   {
-    if let value = self.optionWithKey(Private.PageGuideKey)?.value {
-      return value.unsignedIntegerValue
+    if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue, let int = value.toInt() {
+      return int
     }
     
     return super.pageGuideColumn

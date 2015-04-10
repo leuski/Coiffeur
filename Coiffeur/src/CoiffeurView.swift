@@ -8,30 +8,29 @@
 
 import Cocoa
 
-@objc(ALCoiffeurView)
-class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
+class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   
   @IBOutlet weak var optionsView : NSOutlineView!
   @IBOutlet weak var jumpMenu : NSPopUpButton!
   @IBOutlet var optionsController : NSTreeController!
 
   var optionsSortDescriptors : [NSSortDescriptor]!
-  private weak var model : CoiffeurController!
+  private weak var model : CoiffeurController?
   
   var managedObjectContext : NSManagedObjectContext? {
-    return self.model.managedObjectContext
+    return self.model?.managedObjectContext
   }
   
   var root : ConfigRoot? {
-    return self.model.root
+    return self.model?.root
   }
   
   var predicate : NSPredicate? {
     get {
-      return self.model.root?.predicate
+      return self.root?.predicate
     }
     set (newPredicate) {
-      self.model.root?.predicate = newPredicate
+      self.root?.predicate = newPredicate
     }
   }
   
@@ -39,12 +38,12 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
   
   init?(model:CoiffeurController, bundle:NSBundle?)
   {
-    super.init(nibName: "ALCoiffeurView", bundle: bundle)
+    super.init(nibName: "CoiffeurView", bundle: bundle)
     self.model = model
-    self.optionsSortDescriptors = [NSSortDescriptor(key: ConfigNode.TitleKey,
-      ascending: true, comparator: {(o1:AnyObject!, o2:AnyObject!) -> NSComparisonResult in
-        return (o1 as NSString).compare(o2 as NSString, options:NSStringCompareOptions.CaseInsensitiveSearch)
-    })]
+    let c : NSComparator = {(o1:AnyObject!, o2:AnyObject!) -> NSComparisonResult in
+      return (o1 as! String).compare(o2 as! String, options:NSStringCompareOptions.CaseInsensitiveSearch)
+    }
+    self.optionsSortDescriptors = [NSSortDescriptor(key: ConfigNode.TitleKey, ascending: true, comparator: c)]
   }
   
   required init?(coder: NSCoder) {
@@ -82,11 +81,11 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     self.optionsView.expandItem(nil, expandChildren:true)
     
     var foundNode = false
-    var node : NSTreeNode?
-    
-    for node = self.optionsController.arrangedObjects as? NSTreeNode;
-      node?.childNodes?.count != nil && node!.childNodes!.count > 0;
-      node = node!.childNodes![0] as? NSTreeNode
+
+    var node : AnyObject?
+    for node = self.optionsController.arrangedObjects;
+      node?.childNodes??.count != nil && node!.childNodes!!.count > 0;
+      node = node!.childNodes!![0]
     {
       foundNode = true
     }
@@ -123,8 +122,8 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     var sections = allNodes.filter { $0.representedObject is ConfigSubsection }
     
     sections.sort {
-      var obj1 = $0.representedObject as ConfigNode
-      var obj2 = $1.representedObject as ConfigNode
+      var obj1 = $0.representedObject as! ConfigNode
+      var obj2 = $1.representedObject as! ConfigNode
       var d1 = obj1.depth
       var d2 = obj2.depth
       
@@ -162,7 +161,7 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     
     for node in sections {
       var item    = NSMenuItem()
-      let section = node.representedObject as ConfigSubsection
+      let section = node.representedObject as! ConfigSubsection
       item.title = section.title;
       item.indentationLevel  = section.depth - 1;
       item.representedObject = node;
@@ -193,17 +192,17 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
       let tokens = node.tokens
       
       if node is ConfigRoot {
-        return outlineView.makeViewWithIdentifier("view.root", owner:self) as NSView?
+        return outlineView.makeViewWithIdentifier("view.root", owner:self) as! NSView?
       } else if (tokens.count == 0) {
-        return outlineView.makeViewWithIdentifier("view.section", owner:self) as NSView?
+        return outlineView.makeViewWithIdentifier("view.section", owner:self) as! NSView?
       } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
-        return outlineView.makeViewWithIdentifier("view.number", owner:self) as NSView?
+        return outlineView.makeViewWithIdentifier("view.number", owner:self) as! NSView?
       } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
-        return outlineView.makeViewWithIdentifier("view.number", owner:self) as NSView?
+        return outlineView.makeViewWithIdentifier("view.number", owner:self) as! NSView?
       } else if (tokens.count == 1) {
-        return outlineView.makeViewWithIdentifier("view.string", owner:self) as NSView?
+        return outlineView.makeViewWithIdentifier("view.string", owner:self) as! NSView?
       } else {
-        if let view = outlineView.makeViewWithIdentifier("view.choice", owner:self) as NSView? {
+        if let view = outlineView.makeViewWithIdentifier("view.choice", owner:self) as! NSView? {
           for v in view.subviews {
             if let segmented = v as? NSSegmentedControl {
               segmented.setLabels(tokens)
@@ -222,7 +221,7 @@ class ALCoiffeurView : NSViewController, NSOutlineViewDelegate {
     if let view = self.outlineView(outlineView, viewForTableColumn:nil, item:item) {
       return view.frame.size.height
     }
-    return 0
+    return 10
   }
   
   func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool

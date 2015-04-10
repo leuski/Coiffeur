@@ -8,7 +8,7 @@
 
 #import <DiffMatchPatch/DiffMatchPatch.h>
 
-@interface Diff (ALenum)
+@interface Diff (ALSwiftEnum)
 
 typedef NS_ENUM(NSUInteger, DiffOperation) {
   DiffOperationDelete,

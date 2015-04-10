@@ -8,7 +8,6 @@
 
 import Cocoa
 
-@objc(ALOutlineView)
 class OutlineView : NSOutlineView {
   // to enable NSStepper in the outline view cells
   override func validateProposedFirstResponder(responder: NSResponder, forEvent event: NSEvent?) -> Bool {

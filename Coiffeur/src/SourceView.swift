@@ -1,5 +1,5 @@
 //
-//  DocumentView.swift
+//  SourceView.swift
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/7/15.
@@ -8,15 +8,14 @@
 
 import Cocoa
 
-@objc(ALDocumentView)
-class ALDocumentView : NSViewController, NSPathControlDelegate {
+class SourceView: NSViewController, NSPathControlDelegate {
   
   var allowedFileTypes = [String]()
   var knownSampleURLs = [NSURL]()
   @IBOutlet weak var containerView: NSView!
   
-  private var windowController : ALMainWindowController? {
-    return self.view.window?.delegate as? ALMainWindowController
+  private var windowController : MainWindowController? {
+    return self.view.window?.delegate as? MainWindowController
   }
   
   func pathControl(pathControl: NSPathControl, willPopUpMenu menu: NSMenu)

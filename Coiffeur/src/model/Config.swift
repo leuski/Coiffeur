@@ -54,9 +54,9 @@ extension ConfigNode {
   
   private class func _insert<SelfType:ConfigNode>(#managedObjectContext: NSManagedObjectContext) -> SelfType
   {
-    var node = super.objectInContext(managedObjectContext) as ConfigNode
+    var node = super.objectInContext(managedObjectContext) as! ConfigNode as! SelfType
     node.title = ""
-    return node as SelfType
+    return node
   }
 
   override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
@@ -100,7 +100,7 @@ extension ConfigOption {
 
   override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> ConfigOption
   {
-    var option = super.objectInContext(managedObjectContext) as ConfigOption
+    var option = super.objectInContext(managedObjectContext) as! ConfigOption
     option.title = ""
     option.documentation = ""
     option.type = ""
@@ -119,7 +119,7 @@ extension ConfigRoot {
 
   override var predicate : NSPredicate? {
     get {
-      return self.storedPredicate as NSPredicate?
+      return self.storedPredicate as! NSPredicate?
     }
     set (newPredicate) {
       self.storedPredicate = newPredicate

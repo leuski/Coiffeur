@@ -22,6 +22,7 @@ class UncrustifyController : CoiffeurController {
     static var NumberOptionType = "number"
     static var DocumentType = "Uncrustify Style File"
     static var ExecutableName = "uncrustify"
+    static var ExecutableURLUDKey = "UncrustifyExecutableURL"
     
     static var OptionsDocumentation : String? = nil
     static var DefaultValues : String? = nil
@@ -29,56 +30,50 @@ class UncrustifyController : CoiffeurController {
   
   override class var documentType : String { return Private.DocumentType }
   
-  override init?(_ executableURL:NSURL?, error:NSErrorPointer)
+  override class func createCoiffeur() -> CoiffeurControllerResult
   {
-    super.init(executableURL, error: error)
+    let result = super.createCoiffeur()
     
-    if error != nil {
-      error.memory = nil
-    }
-    
-    if Private.OptionsDocumentation == nil {
-      let result = self.runExecutable([Private.ShowDocumentationArgument])
-      switch (result) {
-      case .Failure(let err):
-        if error != nil {
-          error.memory = err
+    switch result {
+    case .Failure:
+      return result
+      
+    case .Success(let controller):
+      if Private.OptionsDocumentation == nil {
+        switch controller.runExecutable([Private.ShowDocumentationArgument]) {
+        case .Failure(let error):
+          return CoiffeurControllerResult.Failure(error)
+        case .Success(let text):
+          Private.OptionsDocumentation = text
         }
-        return nil
-      case .Success(let text):
-        Private.OptionsDocumentation = text()
       }
-    }
-    
-    if !self.readOptionsFromString(Private.OptionsDocumentation!) {
-      return nil
-    }
-    
-    if Private.DefaultValues == nil {
-      let result = self.runExecutable([Private.ShowDefaultConfigArgument])
-      switch (result) {
-      case .Failure(let err):
-        if error != nil {
-          error.memory = err
+      
+      if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
+        return CoiffeurControllerResult.Failure(error)
+      }
+      
+      if Private.DefaultValues == nil {
+        switch controller.runExecutable([Private.ShowDefaultConfigArgument]) {
+        case .Failure(let error):
+          return CoiffeurControllerResult.Failure(error)
+        case .Success(let text):
+          Private.DefaultValues = text
         }
-        return nil
-      case .Success(let text):
-        Private.DefaultValues = text()
       }
+      
+      if let error = controller.readValuesFromString(Private.DefaultValues!) {
+        return CoiffeurControllerResult.Failure(error)
+      }
+      
+      return result
     }
-    
-    if !self.readValuesFromString(Private.DefaultValues!) {
-      return nil
-    }
-    
   }
   
-  convenience required init?(error:NSErrorPointer)
+  override class func findExecutableURL() -> URLResult
   {
-    let bundle = NSBundle(forClass: UncrustifyController.self)
-    self.init(bundle.URLForAuxiliaryExecutable(Private.ExecutableName), error:error)
+    return findExecutableURL(Private.ExecutableName, udKey:Private.ExecutableURLUDKey)
   }
-  
+
   private enum State {
     case None
     case ConfigSectionHeader
@@ -113,7 +108,7 @@ class UncrustifyController : CoiffeurController {
     }
   }
   
-  override func readOptionsFromLineArray(lines:[String]) -> Bool
+  override func readOptionsFromLineArray(lines:[String]) -> NSError?
   {
     var count = 0, optionCount = 0, sectionCount = 0
     var state = State.None
@@ -187,7 +182,7 @@ class UncrustifyController : CoiffeurController {
       self._cluster(i)
     }
     
-    return true
+    return nil
   }
   
   private func _cluster(tokenLimit:Int)
@@ -196,7 +191,7 @@ class UncrustifyController : CoiffeurController {
       if !(child is ConfigSection) {
         continue
       }
-      var section = child as ConfigSection
+      var section = child as! ConfigSection
       
       var index = [String:[ConfigOption]]()
       
@@ -204,7 +199,7 @@ class UncrustifyController : CoiffeurController {
         if !(node is ConfigOption) {
           continue
         }
-        let option : ConfigOption = node as ConfigOption
+        let option : ConfigOption = node as! ConfigOption
         
         let title  = option.title
         var tokens = title.lowercaseString.componentsSeparatedByString(CoiffeurController.Space)
@@ -248,7 +243,7 @@ class UncrustifyController : CoiffeurController {
     }
   }
   
-  override func readValuesFromLineArray(lines:[String]) -> Bool
+  override func readValuesFromLineArray(lines:[String]) -> NSError?
   {
     for aline in lines {
       var line = aline.trim()
@@ -295,7 +290,7 @@ class UncrustifyController : CoiffeurController {
       } else {
         
         if let option = self.optionWithKey(head) {
-          option.value = tokens[1]
+          option.stringValue = tokens[1]
         } else {
           NSLog("Warning: unknown token %@ on line %@", head, line)
         }
@@ -303,17 +298,17 @@ class UncrustifyController : CoiffeurController {
       
     }
     
-    return true
+    return nil
   }
   
-  override func writeValuesToURL(absoluteURL:NSURL, error:NSErrorPointer) -> Bool
+  override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
   {
     var data=""
     var allOptions = self.managedObjectContext.fetch(ConfigOption.self)
     allOptions.sort(CoiffeurController.KeyComparator)
     
     for option in allOptions {
-      if var value = option.value {
+      if var value = option.stringValue {
         
         if option.type == OptionType.String.rawValue {
           value = "\"\(value)\""
@@ -324,27 +319,26 @@ class UncrustifyController : CoiffeurController {
       }
     }
     
-    return data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:error)
+    var error:NSError?
+    if data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:&error) {
+      return nil
+    }
+    return error ?? super.writeValuesToURL(absoluteURL)
   }
   
-  override func format(text: String, attributes: NSDictionary, completion: (_:Result<String>) -> Void) -> Bool
+  override func format(text: String, attributes: NSDictionary, completion: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configPath = workingDirectory.stringByAppendingPathComponent(NSUUID().UUIDString)
     
-    var localError : NSError?
-    
-    if !self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!, error:&localError) {
-      if localError == nil {
-        localError = Error("Unknown error")
-      }
-      completion(Result<String>.Failure(localError!))
+    if let error = self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!) {
+      completion(StringResult.Failure(error))
       return false
     }
     
     var args = [Private.QuietFlag, Private.ConfigPathFlag, configPath]
     
-    if let language = attributes[CoiffeurController.FormatLanguage] as? ALLanguage {
+    if let language = attributes[CoiffeurController.FormatLanguage] as? Language {
       
       args.append(Private.LanguageFlag)
       args.append(language.uncrustifyID)
@@ -356,15 +350,13 @@ class UncrustifyController : CoiffeurController {
       }
     }
     
-    let complete = { (result:Result<String>) -> Void  in
+    let complete = { (result:StringResult) -> Void  in
       NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
       completion(result)
     }
     
-    localError = self.runExecutable(args, workingDirectory:workingDirectory, input:text, block:complete)
-    
-    if let err = localError {
-      completion(Result<String>.Failure(err))
+    if let error = self.runExecutable(args, workingDirectory:workingDirectory, input:text, block:complete) {
+      completion(StringResult.Failure(error))
       return false
     }
     
@@ -380,8 +372,8 @@ class UncrustifyController : CoiffeurController {
   
   override var pageGuideColumn : Int
     {
-      if let value = self.optionWithKey(Private.PageGuideKey)?.value {
-        return value.unsignedIntegerValue
+      if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue, let int = value.toInt() {
+        return int
       }
       
       return super.pageGuideColumn

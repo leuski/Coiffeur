@@ -8,7 +8,6 @@
 
 import Foundation
 
-@objc(ALString2NumberTransformer)
 class String2NumberTransformer : NSValueTransformer {
 
   override class func allowsReverseTransformation() -> Bool

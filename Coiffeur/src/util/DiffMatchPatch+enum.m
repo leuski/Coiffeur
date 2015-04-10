@@ -8,7 +8,7 @@
 
 #import "DiffMatchPatch+enum.h"
 
-@implementation Diff (ALenum)
+@implementation Diff (ALSwiftEnum)
 
 - (DiffOperation)diffOperation
 {

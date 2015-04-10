@@ -139,57 +139,30 @@ extension String {
     return 0;
    
   }
-  
-  var unsignedIntegerValue : Int
-  {
-    if let result = self.toInt() {
-      return result
-    }
-    return 0
-  }
-  
+    
   var nsRange : NSRange {
     return NSMakeRange(0, (self as NSString).length)
   }
-}
-
-extension NSString {
-  var commandLineComponents : [String] {
-    return (self as String).commandLineComponents
- }
   
-  func stringByAppendingString(s:String, separatedBy delimiter:String) -> String
+  func substringWithRange(range:NSRange) -> String
   {
-    return (self as String).stringByAppendingString(s, separatedBy: delimiter)
+    let start = advance(self.startIndex, range.location)
+    let end = advance(start, range.length)
+    return self[start..<end]
   }
   
-  func trim() -> String
+  func stringByReplacingCharactersInRange(range:NSRange, withString replacement: String) -> String
   {
-    return (self as String).trim()
+    let start = advance(self.startIndex, range.location)
+    let end = advance(start, range.length)
+    return self.stringByReplacingCharactersInRange(start..<end, withString:replacement)
   }
   
-  func stringByTrimmingPrefix(prefix:String) -> String
+  init?(data:NSData, encoding:NSStringEncoding)
   {
-    return (self as String).stringByTrimmingPrefix(prefix)
-  }
-  
-  func lineCountForCharacterRange(range: NSRange) -> Int
-  {
-    let s = self as String
-    return s.lineCountForCharacterRange(advance(s.startIndex, range.location)..<advance(s.startIndex, (range.location+range.length)))
-  }
-  
-  var unsignedIntegerValue : Int
-  {
-    return (self as String).unsignedIntegerValue
-  }
-  
-}
-
-extension NSMutableString {
-  func replaceOccurrencesOfString(target: String, withString replacement: String) -> Int
-  {
-    return self.replaceOccurrencesOfString(target, withString: replacement, options: NSStringCompareOptions(), range: NSMakeRange(0, self.length))
+    var buffer = [UInt8](count:data.length, repeatedValue:0)
+    data.getBytes(&buffer, length:data.length)
+    self.init(bytes:buffer, encoding:encoding)
   }
 }
 
@@ -217,6 +190,11 @@ extension NSRegularExpression {
   func replaceMatchesInString(string: NSMutableString, withTemplate template: String) -> Int
   {
     return self.replaceMatchesInString(string, options: NSMatchingOptions(), range: NSMakeRange(0, string.length), withTemplate: template)
+  }
+  
+  func stringByReplacingMatchesInString(string: String, withTemplate template: String) -> String
+  {
+    return self.stringByReplacingMatchesInString(string, options:NSMatchingOptions(), range:string.nsRange, withTemplate: template)
   }
 }
 

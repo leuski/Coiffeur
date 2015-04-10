@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1514" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ConfigNode" representedClassName="ConfigNode" isAbstract="YES" syncable="YES">
         <attribute name="title" transient="YES" attributeType="String" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConfigNode" inverseName="parent" inverseEntity="ConfigNode" syncable="YES"/>
@@ -9,7 +9,7 @@
         <attribute name="indexKey" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="storedDetails" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="storedType" transient="YES" attributeType="String" syncable="YES"/>
-        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="stringValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ConfigRoot" representedClassName="ConfigRoot" parentEntity="ConfigNode" syncable="YES">
         <attribute name="storedPredicate" optional="YES" transient="YES" attributeType="Transformable" syncable="YES"/>
@@ -18,7 +18,7 @@
     <entity name="ConfigSubsection" representedClassName="ConfigSubsection" parentEntity="ConfigNode" syncable="YES"/>
     <elements>
         <element name="ConfigNode" positionX="-18" positionY="81" width="128" height="90"/>
-        <element name="ConfigOption" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="ConfigOption" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="ConfigRoot" positionX="18" positionY="144" width="128" height="58"/>
         <element name="ConfigSection" positionX="-54" positionY="18" width="128" height="45"/>
         <element name="ConfigSubsection" positionX="36" positionY="153" width="128" height="45"/>

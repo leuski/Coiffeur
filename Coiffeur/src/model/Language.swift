@@ -8,13 +8,11 @@
 
 import Cocoa
 
-class ALLanguage : NSObject {
-  
-  typealias Language = ALLanguage
-  
+class Language : NSObject {
+    
   private class var FileName : String { return "languages" }
   private class var FileNameExtension : String { return "plist" }
-  private class var UserDefaultsKey : String { return "ALLanguage" }
+  private class var UserDefaultsKey : String { return "Language" }
 
   private struct LanguagePrivate {
     static var supportedLanguages: [Language] = Language._supportedLanguages()
@@ -38,7 +36,7 @@ class ALLanguage : NSObject {
       if let dictionaries = NSArray(contentsOfURL: url) {
         var result = [Language]()
         for d in dictionaries {
-          result.append(Language(dictionary:d as NSDictionary))
+          result.append(Language(dictionary:d as! [NSObject : AnyObject]))
         }
         return result
       }
@@ -63,10 +61,10 @@ class ALLanguage : NSObject {
         return language
       }
     }
-    return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource)!
+    return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
   
-  private init(dictionary:NSDictionary)
+  private init(dictionary:[NSObject : AnyObject])
   {
     super.init()
     setValuesForKeysWithDictionary(dictionary)

@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ALDocumentView">
+        <customObject id="-2" userLabel="File's Owner" customClass="SourceView">
             <connections>
                 <outlet property="containerView" destination="ada-sK-Zxq" id="E8J-sG-kdD"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
@@ -33,7 +33,7 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdE-Vm-nsM" customClass="ALPathControl">
+                                    <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WdE-Vm-nsM" customClass="PathControl" customModule="Coiffeur" customModuleProvider="target">
                                         <rect key="frame" x="133" y="-4" width="226" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="220" id="NyW-sj-rCw"/>

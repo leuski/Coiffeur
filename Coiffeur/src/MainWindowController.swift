@@ -8,19 +8,19 @@
 
 import Cocoa
 
-@objc(ALMainWindowController)
-class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
+class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   NSWindowDelegate, CoiffeurControllerDelegate, NSSplitViewDelegate {
   
-  typealias ALScrollLocation = CGFloat
+  typealias ScrollLocation = CGFloat
   
   @IBOutlet weak var splitView : NSSplitView!
-  var documentView : ALDocumentView!
+  var sourceView: SourceView!
+  var styleView: CoiffeurView!
   var fragaria : MGSFragaria
-  var codeString : NSString = ""
+  var codeString : String = ""
   var newString : Bool = false
   
-  var sourceTextViewScrollLocation : ALScrollLocation {
+  var sourceTextViewScrollLocation : ScrollLocation {
     get {
       // we will try and preserve visible frame position in the document
       // across changes.
@@ -82,7 +82,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   var diffMatchPatch : DiffMatchPatch
   weak var overviewScroller : OverviewScroller!
   
-  var language : ALLanguage {
+  var language : Language {
     didSet {
       let fragariaName = language.fragariaID
       self.fragaria.setObject(fragariaName, forKey:MGSFOSyntaxDefinitionName)
@@ -93,9 +93,9 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   var fileURL : NSURL? {
     didSet {
       if let url = self.fileURL {
-        NSUserDefaults.standardUserDefaults().setURL(url, forKey: ALLastSourceURL)
+        NSUserDefaults.standardUserDefaults().setURL(url, forKey: LastSourceURLUDKey)
         if let uti = NSWorkspace.sharedWorkspace().typeOfFile(url.path!, error:nil) {
-          if let lang = ALLanguage.languageWithUTI(uti) {
+          if let lang = Language.languageWithUTI(uti) {
             self.language = lang
           }
         }
@@ -105,7 +105,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   
   override var document: AnyObject? {
     didSet (oldDocument) {
-      let containerView = self.splitView.subviews[0] as NSView
+      let containerView = self.splitView.subviews[0] as! NSView
       
       if oldDocument != nil {
         // lets see if die here. need a copy of the subview list
@@ -115,8 +115,11 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
       }
       
       if var d = self.styleDocument {
-        d.embedInView(containerView)
-        d.model?.delegate = self
+        if let v = CoiffeurView(model:d.model!, bundle:nil) {
+          self.styleView = v
+          v.embedInView(containerView)
+          d.model!.delegate = self
+        }
       }
       
       self.uncrustify(nil)
@@ -127,7 +130,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
     return self.document as? Document
   }
   
-  var sourceDocument : ALMainWindowController? {
+  var sourceDocument : MainWindowController? {
     return self
   }
   
@@ -155,7 +158,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
     }
   }
 
-  private let ALLastSourceURL       = "LastSourceURL"
+  private let LastSourceURLUDKey    = "LastSourceURL"
   private let SamplesFolderName     = "samples"
   private let SampleFileName        = "sample"
   private let ObjectiveCPPExtension = "mm"
@@ -164,7 +167,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   {
     self.diffMatchPatch = DiffMatchPatch()
     self.fragaria       = MGSFragaria()
-    self.language       = ALLanguage.languageFromUserDefaults()
+    self.language       = Language.languageFromUserDefaults()
     super.init(window:window)
   }
   
@@ -173,21 +176,17 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
     fatalError("init(coder:) has not been implemented")
   }
   
-  convenience override init()
+  convenience init()
   {
-    self.init(windowNibName:"ALMainWindowController")
+    self.init(windowNibName:"MainWindowController")
     self._restoreSource()
     let x = self.window
   }
   
   @IBAction func uncrustify(sender : AnyObject?)
   {
-    if var formatter = self.styleDocument {
-      if let source = self.sourceDocument {
-        if let m = formatter.model {
-          m.format()
-        }
-      }
+    if let m = self.styleDocument?.model {
+      m.format()
     }
   }
   
@@ -212,7 +211,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   
   private func _restoreSource()
   {
-    if let lastURL = NSUserDefaults.standardUserDefaults().URLForKey(ALLastSourceURL) {
+    if let lastURL = NSUserDefaults.standardUserDefaults().URLForKey(LastSourceURLUDKey) {
       if self.loadSourceFormURL(lastURL, error:nil) {
         return
       }
@@ -243,15 +242,14 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   {
     super.windowDidLoad()
     
-    self.documentView = ALDocumentView()
-    var types = NSMutableSet()
-    
-    for  l in ALLanguage.supportedLanguages {
-      types.addObjectsFromArray(l.UTIs)
+    self.sourceView = SourceView(nibName:"SourceView", bundle:nil)
+
+    var types = Set<String>()
+    for  l in Language.supportedLanguages {
+      types.unionInPlace(l.UTIs)
     }
-    
-    self.documentView.allowedFileTypes  = types.allObjects as [String]
-    self.documentView.representedObject = self
+    self.sourceView.allowedFileTypes  = [String](types)
+    self.sourceView.representedObject = self
     
     let resourcesURL = NSBundle.mainBundle().resourceURL!
     let baseURL      = resourcesURL.URLByAppendingPathComponent(SamplesFolderName)
@@ -259,14 +257,14 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
     
     if let urls = fm.contentsOfDirectoryAtURL(baseURL, includingPropertiesForKeys:nil,
       options:NSDirectoryEnumerationOptions.SkipsHiddenFiles, error:nil) {
-        self.documentView.knownSampleURLs = urls as [NSURL]
+        self.sourceView.knownSampleURLs = urls as! [NSURL]
     }
     
-    self.splitView.replaceSubview(self.splitView.subviews[1] as NSView, with:self.documentView.view)
+    self.splitView.replaceSubview(self.splitView.subviews[1] as! NSView, with:self.sourceView.view)
     
     // we want to be the delegate
     self.fragaria.setObject(self, forKey:MGSFODelegate)
-    self.fragaria.embedInView(self.documentView.containerView)
+    self.fragaria.embedInView(self.sourceView.containerView)
     
     let textView : NSTextView = self.fragaria.textView()
     textView.editable = false
@@ -282,10 +280,10 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   
   func windowWillClose(notification:NSNotification)
   {
-    self.documentView.representedObject = nil
+    self.sourceView.representedObject = nil
   }
   
-  private func _showDiffs(diffs:[AnyObject], intensity:CGFloat) -> [OverviewRegion]
+  private func _showDiffs(diffs:NSMutableArray, intensity:CGFloat) -> [OverviewRegion]
   {
     let    textView    = self.fragaria.textView()
     let textStorage = textView.textStorage!
@@ -351,7 +349,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   
   @IBAction func changeLanguage(anItem:NSMenuItem)
   {
-    if let language = anItem.representedObject as? ALLanguage {
+    if let language = anItem.representedObject as? Language {
       self.language = language
       language.saveToUserDefaults()
     }
@@ -360,7 +358,7 @@ class ALMainWindowController : NSWindowController, NSOutlineViewDelegate,
   override func validateMenuItem(anItem:NSMenuItem) -> Bool
   {
     if anItem.action == Selector("changeLanguage:") {
-      if let language = anItem.representedObject as? ALLanguage {
+      if let language = anItem.representedObject as? Language {
         anItem.state = (self.language == language) ? NSOnState : NSOffState
       }
     }

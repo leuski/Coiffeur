@@ -195,9 +195,13 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   
   func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
   {
-    if var source = self.sourceDocument {
-      NSUserDefaults.standardUserDefaults().setInteger(coiffeurController.pageGuideColumn, forKey: MGSFragariaPrefsShowPageGuideAtColumn)
-      NSUserDefaults.standardUserDefaults().setBool(coiffeurController.pageGuideColumn != 0, forKey: MGSFragariaPrefsShowPageGuide)
+    if var source = self.sourceDocument {			
+			var pageGuideColumn = coiffeurController.pageGuideColumn
+			if NSUserDefaults.standardUserDefaults().boolForKey("CoiffeurOverwritePageGuide") {
+				pageGuideColumn = NSUserDefaults.standardUserDefaults().integerForKey("CoiffeurOverwritePageGuideValue")
+			}
+      NSUserDefaults.standardUserDefaults().setInteger(pageGuideColumn, forKey: MGSFragariaPrefsShowPageGuideAtColumn)
+      NSUserDefaults.standardUserDefaults().setBool(pageGuideColumn != 0, forKey: MGSFragariaPrefsShowPageGuide)
       source.string = text
     }
   }

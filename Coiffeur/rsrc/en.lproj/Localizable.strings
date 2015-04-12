@@ -5,3 +5,7 @@
 "Choose…" = "Choose…";
 "Format executable error code %d" = "Format executable error code %d";
 "Unknown document type “%@”" = "Unknown document type “%@”";
+
+"CoiffeurPreferences.label" = "Locations";
+"TextPresentationPreferences.label" = "Text";
+"ColorAndFontPreferences.label" = "Colors & Font";

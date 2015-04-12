@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14C1514" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="CoiffeurPreferences" customModule="Coiffeur" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="qht-Jj-k0X" id="gYX-Ec-ifh"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <view id="qht-Jj-k0X">
+            <rect key="frame" x="0.0" y="0.0" width="421" height="85"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="ghy-aI-9uw">
+                    <rect key="frame" x="0.0" y="0.0" width="421" height="85"/>
+                    <subviews>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="q2A-w7-0XP">
+                            <rect key="frame" x="18" y="46" width="183" height="17"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Clang-Format Executable" id="xjV-Qb-dfJ">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RiI-lA-6iu" customClass="PathControl" customModule="Coiffeur" customModuleProvider="target">
+                            <rect key="frame" x="204" y="41" width="200" height="26"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="194" id="A4d-dd-kh7"/>
+                            </constraints>
+                            <pathCell key="cell" selectable="YES" editable="YES" focusRingType="none" alignment="left" pathStyle="popUp" id="y4a-NO-cIC">
+                                <font key="font" metaFont="system"/>
+                                <url key="url" string="file://localhost/Applications/"/>
+                            </pathCell>
+                            <connections>
+                                <binding destination="-2" name="value" keyPath="self.clangFormatExecutable" id="JcN-8Y-MQr"/>
+                            </connections>
+                        </pathControl>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xIU-sU-N2Z">
+                            <rect key="frame" x="18" y="18" width="183" height="17"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Uncrustify Executable" id="rc2-Rz-cZb">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2rq-P0-gae" customClass="PathControl" customModule="Coiffeur" customModuleProvider="target">
+                            <rect key="frame" x="204" y="13" width="200" height="26"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="194" id="h09-TH-V63"/>
+                            </constraints>
+                            <pathCell key="cell" selectable="YES" editable="YES" focusRingType="none" alignment="left" pathStyle="popUp" id="mny-D1-bmm">
+                                <font key="font" metaFont="system"/>
+                                <url key="url" string="file://localhost/Applications/"/>
+                            </pathCell>
+                            <connections>
+                                <binding destination="-2" name="value" keyPath="self.uncrustifyExecutable" id="LpP-OC-iMi"/>
+                            </connections>
+                        </pathControl>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="RiI-lA-6iu" secondAttribute="trailing" constant="20" id="6MA-Xg-Qdc"/>
+                        <constraint firstAttribute="trailing" secondItem="2rq-P0-gae" secondAttribute="trailing" constant="20" id="Avo-Qy-B8C"/>
+                        <constraint firstItem="RiI-lA-6iu" firstAttribute="leading" secondItem="q2A-w7-0XP" secondAttribute="trailing" constant="8" id="CDq-f5-Oea"/>
+                        <constraint firstItem="q2A-w7-0XP" firstAttribute="leading" secondItem="ghy-aI-9uw" secondAttribute="leading" constant="20" id="EVw-yn-CPL"/>
+                        <constraint firstItem="q2A-w7-0XP" firstAttribute="baseline" secondItem="RiI-lA-6iu" secondAttribute="baseline" id="FsG-e0-xMJ"/>
+                        <constraint firstItem="2rq-P0-gae" firstAttribute="leading" secondItem="xIU-sU-N2Z" secondAttribute="trailing" constant="8" id="MuP-FH-ieD"/>
+                        <constraint firstItem="2rq-P0-gae" firstAttribute="top" secondItem="RiI-lA-6iu" secondAttribute="bottom" constant="8" id="PK7-WS-GBM"/>
+                        <constraint firstItem="xIU-sU-N2Z" firstAttribute="leading" secondItem="ghy-aI-9uw" secondAttribute="leading" constant="20" id="VJ9-Xq-Hzf"/>
+                        <constraint firstItem="RiI-lA-6iu" firstAttribute="top" secondItem="ghy-aI-9uw" secondAttribute="top" constant="20" id="cWu-9D-gbv"/>
+                        <constraint firstAttribute="width" constant="421" id="csn-O4-B2o"/>
+                        <constraint firstItem="xIU-sU-N2Z" firstAttribute="baseline" secondItem="2rq-P0-gae" secondAttribute="baseline" id="egi-0o-ZjZ"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="ghy-aI-9uw" secondAttribute="centerX" id="Dpk-yI-cxM"/>
+                <constraint firstAttribute="bottom" secondItem="ghy-aI-9uw" secondAttribute="bottom" id="QfX-f3-6xv"/>
+                <constraint firstItem="ghy-aI-9uw" firstAttribute="top" secondItem="qht-Jj-k0X" secondAttribute="top" id="eU2-Mz-RmB"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

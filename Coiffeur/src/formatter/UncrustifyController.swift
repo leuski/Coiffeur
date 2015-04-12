@@ -29,7 +29,9 @@ class UncrustifyController : CoiffeurController {
   }
   
   override class var documentType : String { return Private.DocumentType }
-  
+	override class var currentExecutableName : String { return Private.ExecutableName }
+	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }
+	
   override class func createCoiffeur() -> CoiffeurControllerResult
   {
     let result = super.createCoiffeur()
@@ -69,11 +71,6 @@ class UncrustifyController : CoiffeurController {
     }
   }
   
-  override class func findExecutableURL() -> URLResult
-  {
-    return findExecutableURL(Private.ExecutableName, udKey:Private.ExecutableURLUDKey)
-  }
-
   private enum State {
     case None
     case ConfigSectionHeader

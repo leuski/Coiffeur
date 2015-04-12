@@ -7,10 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		620668CB1ADAD3BF00F807B0 /* CoiffeurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */; };
+		620668CC1ADAD3BF00F807B0 /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */; };
+		620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C21ADAD3BF00F807B0 /* MainWindowController.swift */; };
+		620668CE1ADAD3BF00F807B0 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C31ADAD3BF00F807B0 /* MainWindowController.xib */; };
+		620668CF1ADAD3BF00F807B0 /* CoiffeurPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */; };
+		620668D01ADAD3BF00F807B0 /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */; };
+		620668D11ADAD3BF00F807B0 /* PreferencesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */; };
+		620668D21ADAD3BF00F807B0 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */; };
+		620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C91ADAD3BF00F807B0 /* SourceView.swift */; };
+		620668D41ADAD3BF00F807B0 /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668CA1ADAD3BF00F807B0 /* SourceView.xib */; };
+		620668D61ADAE63500F807B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D51ADAE63500F807B0 /* Preferences.swift */; };
+		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
+		620668DA1ADAF0FA00F807B0 /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */; };
+		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
+		620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */; };
+		620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 620668DF1ADB1B0D00F807B0 /* Locations.tiff */; };
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
 		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		626185221AC351CC0095CCD2 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185151AC351CC0095CCD2 /* MainWindowController.xib */; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
 		626185281AC351CC0095CCD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185201AC351CC0095CCD2 /* main.m */; };
@@ -20,20 +35,13 @@
 		6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6261852B1AC3524B0095CCD2 /* uncrustify */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		626185931AC51C780095CCD2 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185921AC51C780095CCD2 /* languages.plist */; };
 		626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185941AC52CA20095CCD2 /* UserDefaults.plist */; };
-		626185B61AC623000095CCD2 /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185B41AC623000095CCD2 /* CoiffeurView.xib */; };
-		626185C11AC6237E0095CCD2 /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185C31AC6237E0095CCD2 /* SourceView.xib */; };
 		6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEAF1AD44BE400671D12 /* AppDelegate.swift */; };
 		6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB11AD451A600671D12 /* DocumentController.swift */; };
-		6275AEB41AD4557900671D12 /* CoiffeurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB31AD4557900671D12 /* CoiffeurView.swift */; };
-		6275AEB61AD4733900671D12 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB51AD4733900671D12 /* MainWindowController.swift */; };
 		6275AEB81AD4734600671D12 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB71AD4734600671D12 /* Document.swift */; };
-		6275AEBA1AD4735700671D12 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB91AD4735700671D12 /* SourceView.swift */; };
 		6275AEBD1AD48FC600671D12 /* DiffMatchPatch+enum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEBC1AD48FC600671D12 /* DiffMatchPatch+enum.m */; };
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		62C1A4621AD8CE270081C71B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C1A4611AD8CE270081C71B /* Preferences.swift */; };
-		62C1A4651AD8CE640081C71B /* Preferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62C1A4671AD8CE640081C71B /* Preferences.xib */; };
 		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
 		62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 62EC8A231AD354F00068E9AD /* ALExceptions.m */; };
 		62F263281AD4DD30000B5DFE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F263271AD4DD30000B5DFE /* Error.swift */; };
@@ -99,9 +107,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurView.swift; sourceTree = "<group>"; };
+		620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoiffeurView.xib; sourceTree = "<group>"; };
+		620668C21ADAD3BF00F807B0 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		620668C31ADAD3BF00F807B0 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
+		620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurPreferences.swift; sourceTree = "<group>"; };
+		620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoiffeurPreferences.xib; sourceTree = "<group>"; };
+		620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindow.swift; sourceTree = "<group>"; };
+		620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
+		620668C91ADAD3BF00F807B0 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
+		620668CA1ADAD3BF00F807B0 /* SourceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SourceView.xib; sourceTree = "<group>"; };
+		620668D51ADAE63500F807B0 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
+		620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextPresentationPreferences.xib; sourceTree = "<group>"; };
+		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
+		620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorAndFontPreferences.xib; sourceTree = "<group>"; };
+		620668DF1ADB1B0D00F807B0 /* Locations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Locations.tiff; sourceTree = "<group>"; };
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
-		626185161AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindowController.xib; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6261851A1AC351CC0095CCD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,20 +134,13 @@
 		626185721AC3B7040095CCD2 /* MGSFragaria.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGSFragaria.framework; path = "3rd_party/Fragaria-master/build/Release/MGSFragaria.framework"; sourceTree = "<group>"; };
 		626185921AC51C780095CCD2 /* languages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = languages.plist; sourceTree = "<group>"; };
 		626185941AC52CA20095CCD2 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
-		626185B51AC623000095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurView.xib; sourceTree = "<group>"; };
-		626185C21AC6237E0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SourceView.xib; sourceTree = "<group>"; };
 		6275AEAF1AD44BE400671D12 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6275AEB11AD451A600671D12 /* DocumentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
-		6275AEB31AD4557900671D12 /* CoiffeurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurView.swift; sourceTree = "<group>"; };
-		6275AEB51AD4733900671D12 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		6275AEB71AD4734600671D12 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		6275AEB91AD4735700671D12 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 		6275AEBB1AD48FC600671D12 /* DiffMatchPatch+enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiffMatchPatch+enum.h"; sourceTree = "<group>"; };
 		6275AEBC1AD48FC600671D12 /* DiffMatchPatch+enum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DiffMatchPatch+enum.m"; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
 		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
-		62C1A4611AD8CE270081C71B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		62C1A4661AD8CE640081C71B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/Preferences.xib; sourceTree = "<group>"; };
 		62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coiffeur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoiffeurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D1C2FE1AC34C7500B7F996 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -179,9 +195,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		620668BF1ADAD3BF00F807B0 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */,
+				620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */,
+				620668C21ADAD3BF00F807B0 /* MainWindowController.swift */,
+				620668C31ADAD3BF00F807B0 /* MainWindowController.xib */,
+				620668C41ADAD3BF00F807B0 /* preferences */,
+				620668C91ADAD3BF00F807B0 /* SourceView.swift */,
+				620668CA1ADAD3BF00F807B0 /* SourceView.xib */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		620668C41ADAD3BF00F807B0 /* preferences */ = {
+			isa = PBXGroup;
+			children = (
+				620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */,
+				620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */,
+				620668D51ADAE63500F807B0 /* Preferences.swift */,
+				620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */,
+				620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */,
+				620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */,
+				620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */,
+				620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */,
+				620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */,
+			);
+			path = preferences;
+			sourceTree = "<group>";
+		};
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				620668DF1ADB1B0D00F807B0 /* Locations.tiff */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
 				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
@@ -194,12 +241,8 @@
 				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
 				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
 				626185191AC351CC0095CCD2 /* Images.xcassets */,
-				626185B41AC623000095CCD2 /* CoiffeurView.xib */,
-				626185C31AC6237E0095CCD2 /* SourceView.xib */,
-				626185151AC351CC0095CCD2 /* MainWindowController.xib */,
 				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
 				626185171AC351CC0095CCD2 /* MainMenu.xib */,
-				62C1A4671AD8CE640081C71B /* Preferences.xib */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -207,14 +250,11 @@
 		6261851B1AC351CC0095CCD2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				620668BF1ADAD3BF00F807B0 /* ui */,
 				6275AEAF1AD44BE400671D12 /* AppDelegate.swift */,
 				62F9F1B31AD1A76B002B7F1B /* Coiffeur-Bridging-Header.h */,
-				6275AEB31AD4557900671D12 /* CoiffeurView.swift */,
 				6275AEB71AD4734600671D12 /* Document.swift */,
 				6275AEB11AD451A600671D12 /* DocumentController.swift */,
-				6275AEB51AD4733900671D12 /* MainWindowController.swift */,
-				62C1A4611AD8CE270081C71B /* Preferences.swift */,
-				6275AEB91AD4735700671D12 /* SourceView.swift */,
 				62F9F1DC1AD24272002B7F1B /* formatter */,
 				626185201AC351CC0095CCD2 /* main.m */,
 				626185321AC35CA30095CCD2 /* model */,
@@ -414,20 +454,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				626185B61AC623000095CCD2 /* CoiffeurView.xib in Resources */,
+				620668D21ADAD3BF00F807B0 /* PreferencesWindow.xib in Resources */,
+				620668CE1ADAD3BF00F807B0 /* MainWindowController.xib in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
-				62C1A4651AD8CE640081C71B /* Preferences.xib in Resources */,
-				626185221AC351CC0095CCD2 /* MainWindowController.xib in Resources */,
 				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
 				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
+				620668D01ADAD3BF00F807B0 /* CoiffeurPreferences.xib in Resources */,
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
 				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
+				620668D41ADAD3BF00F807B0 /* SourceView.xib in Resources */,
+				620668DA1ADAF0FA00F807B0 /* TextPresentationPreferences.xib in Resources */,
+				620668CC1ADAD3BF00F807B0 /* CoiffeurView.xib in Resources */,
 				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
-				626185C11AC6237E0095CCD2 /* SourceView.xib in Resources */,
 				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
+				620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */,
+				620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
 			);
@@ -450,31 +494,35 @@
 				62F9F1CD1AD22873002B7F1B /* BorderlessTextView.swift in Sources */,
 				62F9F1BB1AD1A7A7002B7F1B /* ConfigRoot.swift in Sources */,
 				62F9F1DB1AD23F80002B7F1B /* PathControl.swift in Sources */,
-				62C1A4621AD8CE270081C71B /* Preferences.swift in Sources */,
 				62F9F1E01AD242B5002B7F1B /* ClangFormatController.swift in Sources */,
-				6275AEBA1AD4735700671D12 /* SourceView.swift in Sources */,
 				6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */,
 				62F9F1B71AD1A7A7002B7F1B /* ConfigSection.swift in Sources */,
 				62F9F1DE1AD2429B002B7F1B /* CoiffeurController.swift in Sources */,
 				62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */,
 				6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */,
+				620668CF1ADAD3BF00F807B0 /* CoiffeurPreferences.swift in Sources */,
+				620668D11ADAD3BF00F807B0 /* PreferencesWindow.swift in Sources */,
 				62F9F1CB1AD2284A002B7F1B /* CoreData.swift in Sources */,
 				62F9F1E21AD242C5002B7F1B /* UncrustifyController.swift in Sources */,
 				62F9F1BD1AD1A7A7002B7F1B /* ConfigSubsection.swift in Sources */,
-				6275AEB41AD4557900671D12 /* CoiffeurView.swift in Sources */,
 				6275AEB81AD4734600671D12 /* Document.swift in Sources */,
 				62F9F1D51AD23B26002B7F1B /* OutlineView.swift in Sources */,
 				62F9F1B91AD1A7A7002B7F1B /* ConfigOption.swift in Sources */,
 				62F9F1D31AD23127002B7F1B /* NSSegmentedControl+labels.swift in Sources */,
-				6275AEB61AD4733900671D12 /* MainWindowController.swift in Sources */,
 				62F9F1B51AD1A7A6002B7F1B /* ConfigNode.swift in Sources */,
 				62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */,
 				62F9F1D91AD23C8B002B7F1B /* TableCellView.swift in Sources */,
+				620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */,
+				620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */,
 				626185281AC351CC0095CCD2 /* main.m in Sources */,
+				620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */,
 				6275AEBD1AD48FC600671D12 /* DiffMatchPatch+enum.m in Sources */,
 				626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */,
 				62F9F1C31AD1CB92002B7F1B /* Language.swift in Sources */,
+				620668CB1ADAD3BF00F807B0 /* CoiffeurView.swift in Sources */,
 				62F9F1D71AD23C4A002B7F1B /* Transformers.swift in Sources */,
+				620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */,
+				620668D61ADAE63500F807B0 /* Preferences.swift in Sources */,
 				62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */,
 				62F263281AD4DD30000B5DFE /* Error.swift in Sources */,
 				62F9F1C91AD22835002B7F1B /* NSString+ALParsing.swift in Sources */,
@@ -500,44 +548,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		626185151AC351CC0095CCD2 /* MainWindowController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				626185161AC351CC0095CCD2 /* en */,
-			);
-			name = MainWindowController.xib;
-			sourceTree = "<group>";
-		};
 		626185171AC351CC0095CCD2 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				626185181AC351CC0095CCD2 /* en */,
 			);
 			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		626185B41AC623000095CCD2 /* CoiffeurView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				626185B51AC623000095CCD2 /* en */,
-			);
-			name = CoiffeurView.xib;
-			sourceTree = "<group>";
-		};
-		626185C31AC6237E0095CCD2 /* SourceView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				626185C21AC6237E0095CCD2 /* en */,
-			);
-			name = SourceView.xib;
-			sourceTree = "<group>";
-		};
-		62C1A4671AD8CE640081C71B /* Preferences.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				62C1A4661AD8CE640081C71B /* en */,
-			);
-			name = Preferences.xib;
 			sourceTree = "<group>";
 		};
 		62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */ = {

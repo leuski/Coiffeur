@@ -44,6 +44,10 @@ class CoiffeurController : NSObject {
   var root : ConfigRoot?
   var pageGuideColumn : Int { return 0 }
   weak var delegate : CoiffeurControllerDelegate?
+  class var currentExecutableURL : NSURL ? {
+    get { return nil }
+    set (value) {}
+  }
   
   class var KeyComparator : (ConfigOption,ConfigOption)->Bool
   {

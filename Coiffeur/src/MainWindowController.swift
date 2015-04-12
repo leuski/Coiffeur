@@ -288,11 +288,15 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
     
     var lineRanges = [OverviewRegion]();
     let saturation : CGFloat  = 0.5
+    let insertHue : CGFloat = 1.0 / 3.0
+    let deleteHue : CGFloat = 0.0 / 3.0
+    let textViewBrightness : CGFloat = 1.0
+    let scrollerBrightness : CGFloat = 0.75
     
-    let insertColor = NSColor(calibratedHue:(1.0/3.0), saturation:saturation, brightness:1.0, alpha:intensity)
-    let deleteColor = NSColor(calibratedHue:(0.0/3.0), saturation:saturation, brightness:1.0, alpha:intensity)
-    let insertColor1 = NSColor(calibratedHue:(1.0/3.0), saturation:saturation, brightness:0.75, alpha:intensity)
-    let deleteColor1 = NSColor(calibratedHue:(0.0/3.0), saturation:saturation, brightness:0.75, alpha:intensity)
+    let insertColor = NSColor(calibratedHue:insertHue, saturation:saturation, brightness:textViewBrightness, alpha:intensity)
+    let deleteColor = NSColor(calibratedHue:deleteHue, saturation:saturation, brightness:textViewBrightness, alpha:intensity)
+    let insertColor1 = NSColor(calibratedHue:insertHue, saturation:saturation, brightness:scrollerBrightness, alpha:intensity)
+    let deleteColor1 = NSColor(calibratedHue:deleteHue, saturation:saturation, brightness:scrollerBrightness, alpha:intensity)
     
     var index : String.Index = textStorage.string.startIndex
     var lineCount: Int = 0

@@ -24,11 +24,13 @@ class ClangFormatController : CoiffeurController {
     static var DocumentType = "Clang-Format Style File"
     static var ExecutableName = "clang-format"
     static var ExecutableURLUDKey = "ClangFormatExecutableURL"
-    
+		static var ExecutableTitleUDKey = "Clang-Format Executable"
+		
     static var OptionsDocumentation : String? = nil
     static var DefaultValues : String? = nil
   }
   
+	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
   override class var documentType : String { return Private.DocumentType }
 	override class var currentExecutableName : String { return Private.ExecutableName }
 	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }

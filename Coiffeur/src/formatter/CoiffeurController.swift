@@ -45,8 +45,19 @@ class CoiffeurController : NSObject {
 	var pageGuideColumn : Int { return 0 }
 	weak var delegate : CoiffeurControllerDelegate?
 	
+	class var localizedExecutableTitle : String { return "Executable" }
 	class var currentExecutableName : String { return "" }
 	class var currentExecutableURLUDKey : String { return "" }
+	
+	class var defaultExecutableURL : NSURL? {
+		let bundle = NSBundle(forClass:self)
+		if let url = bundle.URLForAuxiliaryExecutable(self.currentExecutableName), let path = url.path {
+			if NSFileManager.defaultManager().isExecutableFileAtPath(path) {
+				return url
+			}
+		}
+		return nil
+	}
 	
 	class var currentExecutableURL : NSURL? {
 		get {
@@ -58,17 +69,10 @@ class CoiffeurController : NSObject {
 					NSApp.presentError(Error(format:"Cannot locate executable at %@. Using the deafult application", path))
 				}
 			}
-			let bundle = NSBundle(forClass:self)
-			if let url = bundle.URLForAuxiliaryExecutable(self.currentExecutableName), let path = url.path {
-				if NSFileManager.defaultManager().isExecutableFileAtPath(path) {
-					return url
-				}
-			}
-			return nil
+			return self.defaultExecutableURL
 		}
 		set (value) {
-			let bundle = NSBundle(forClass:self)
-			let url = bundle.URLForAuxiliaryExecutable(self.currentExecutableName)
+			let url = self.defaultExecutableURL
 			if value == nil || value == url {
 				NSUserDefaults.standardUserDefaults().removeObjectForKey(self.currentExecutableURLUDKey)
 			} else {

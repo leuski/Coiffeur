@@ -23,6 +23,8 @@
 		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
 		620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */; };
 		620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 620668DF1ADB1B0D00F807B0 /* Locations.tiff */; };
+		621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */; };
+		621E6E871ADB7F5700225D3E /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E861ADB7F5700225D3E /* text.png */; };
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
 		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -123,6 +125,8 @@
 		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
 		620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorAndFontPreferences.xib; sourceTree = "<group>"; };
 		620668DF1ADB1B0D00F807B0 /* Locations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Locations.tiff; sourceTree = "<group>"; };
+		621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ProfileFontAndColor.icns; sourceTree = "<group>"; };
+		621E6E861ADB7F5700225D3E /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
+				621E6E861ADB7F5700225D3E /* text.png */,
 				620668DF1ADB1B0D00F807B0 /* Locations.tiff */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
 				625934BC1ACCE4ED00E2CC03 /* samples */,
@@ -243,6 +248,7 @@
 				626185191AC351CC0095CCD2 /* Images.xcassets */,
 				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
 				626185171AC351CC0095CCD2 /* MainMenu.xib */,
+				621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -456,6 +462,7 @@
 			files = (
 				620668D21ADAD3BF00F807B0 /* PreferencesWindow.xib in Resources */,
 				620668CE1ADAD3BF00F807B0 /* MainWindowController.xib in Resources */,
+				621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
 				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
@@ -471,6 +478,7 @@
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
 				620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */,
+				621E6E871ADB7F5700225D3E /* text.png in Resources */,
 				620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,

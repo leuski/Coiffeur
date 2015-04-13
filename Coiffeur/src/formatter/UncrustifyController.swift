@@ -23,11 +23,13 @@ class UncrustifyController : CoiffeurController {
     static var DocumentType = "Uncrustify Style File"
     static var ExecutableName = "uncrustify"
     static var ExecutableURLUDKey = "UncrustifyExecutableURL"
-    
+		static var ExecutableTitleUDKey = "Uncrustify Executable"
+
     static var OptionsDocumentation : String? = nil
     static var DefaultValues : String? = nil
   }
   
+	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
   override class var documentType : String { return Private.DocumentType }
 	override class var currentExecutableName : String { return Private.ExecutableName }
 	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }

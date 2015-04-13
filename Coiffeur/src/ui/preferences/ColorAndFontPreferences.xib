@@ -13,17 +13,17 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="5" width="829" height="374"/>
+            <rect key="frame" x="0.0" y="0.0" width="829" height="396"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <scrollView autohidesScrollers="YES" horizontalLineScroll="31" horizontalPageScroll="10" verticalLineScroll="31" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4kA-Sx-ehU">
-                    <rect key="frame" x="20" y="77" width="789" height="277"/>
+                <scrollView autohidesScrollers="YES" horizontalLineScroll="27" horizontalPageScroll="10" verticalLineScroll="27" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4kA-Sx-ehU">
+                    <rect key="frame" x="20" y="77" width="789" height="299"/>
                     <clipView key="contentView" id="vpn-SL-RBq">
                         <rect key="frame" x="1" y="0.0" width="238" height="134"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="29" rowSizeStyle="automatic" viewBased="YES" id="74Y-0n-TkR">
-                                <rect key="frame" x="0.0" y="0.0" width="238" height="134"/>
+                            <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="25" rowSizeStyle="automatic" viewBased="YES" id="74Y-0n-TkR">
+                                <rect key="frame" x="0.0" y="0.0" width="787" height="0.0"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <size key="intercellSpacing" width="3" height="2"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -43,11 +43,11 @@
                                         <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                         <prototypeCellViews>
                                             <tableCellView id="Hcb-mE-L6i">
-                                                <rect key="frame" x="1" y="1" width="784" height="29"/>
+                                                <rect key="frame" x="1" y="1" width="784" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <colorWell translatesAutoresizingMaskIntoConstraints="NO" id="FKI-az-FGG">
-                                                        <rect key="frame" x="3" y="3" width="44" height="23"/>
+                                                        <rect key="frame" x="4" y="1" width="44" height="23"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="44" id="Oxg-lD-x7B"/>
                                                             <constraint firstAttribute="height" constant="23" id="OzC-P6-dIy"/>
@@ -58,23 +58,23 @@
                                                         </connections>
                                                     </colorWell>
                                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="LWM-dq-GDb">
-                                                        <rect key="frame" x="53" y="6" width="730" height="17"/>
+                                                        <rect key="frame" x="54" y="4" width="729" height="17"/>
                                                         <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="wmT-sq-uEs">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                         <connections>
-                                                            <binding destination="-2" name="font" keyPath="self.font" id="TcS-TS-RkS"/>
                                                             <binding destination="Hcb-mE-L6i" name="value" keyPath="objectValue.displayName" id="cKQ-Nh-aTv"/>
+                                                            <binding destination="-2" name="font" keyPath="self.font" id="TcS-TS-RkS"/>
                                                         </connections>
                                                     </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="FKI-az-FGG" firstAttribute="top" secondItem="Hcb-mE-L6i" secondAttribute="top" constant="3" id="564-cR-hci"/>
-                                                    <constraint firstItem="FKI-az-FGG" firstAttribute="leading" secondItem="Hcb-mE-L6i" secondAttribute="leading" constant="3" id="ZeL-69-oSF"/>
+                                                    <constraint firstItem="FKI-az-FGG" firstAttribute="top" secondItem="Hcb-mE-L6i" secondAttribute="top" constant="1" id="564-cR-hci"/>
+                                                    <constraint firstItem="FKI-az-FGG" firstAttribute="leading" secondItem="Hcb-mE-L6i" secondAttribute="leading" constant="4" id="ZeL-69-oSF"/>
                                                     <constraint firstAttribute="trailing" secondItem="LWM-dq-GDb" secondAttribute="trailing" constant="3" id="ZpG-Tg-TPM"/>
-                                                    <constraint firstItem="LWM-dq-GDb" firstAttribute="top" secondItem="Hcb-mE-L6i" secondAttribute="top" constant="6" id="csF-Eq-gX1"/>
+                                                    <constraint firstItem="LWM-dq-GDb" firstAttribute="top" secondItem="Hcb-mE-L6i" secondAttribute="top" constant="4" id="csF-Eq-gX1"/>
                                                     <constraint firstItem="LWM-dq-GDb" firstAttribute="leading" secondItem="FKI-az-FGG" secondAttribute="trailing" constant="8" id="uet-Xt-cA2"/>
                                                 </constraints>
                                                 <connections>
@@ -83,9 +83,9 @@
                                             </tableCellView>
                                         </prototypeCellViews>
                                         <connections>
-                                            <binding destination="-2" name="font" keyPath="self.font" id="g0a-av-ON7"/>
                                             <binding destination="wzL-JC-6qi" name="textColor" keyPath="arrangedObjects.color" id="ykr-tz-VmW"/>
                                             <binding destination="wzL-JC-6qi" name="value" keyPath="arrangedObjects.displayName" id="8w2-hm-hLz"/>
+                                            <binding destination="-2" name="font" keyPath="self.font" id="g0a-av-ON7"/>
                                         </connections>
                                     </tableColumn>
                                 </tableColumns>

@@ -50,7 +50,7 @@ class FragariaColorRecord : NSObject {
 
 class ColorAndFontPreferences : DefaultPreferencePane {
 
-	override var toolbarItemImage : NSImage? { return NSImage(named: "Locations") }
+	override var toolbarItemImage : NSImage? { return NSImage(named: "ProfileFontAndColor") }
 	
 	let colors = [
 		FragariaColorRecord(fragariaKey: MGSFragariaPrefsBackgroundColourWell, displayNameKey: "Background"),

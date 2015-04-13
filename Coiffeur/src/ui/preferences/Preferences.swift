@@ -28,9 +28,11 @@ class Preferences : PreferencesWindow {
 
 	convenience init()
 	{
-		self.init(panes:[CoiffeurPreferences(),
+		self.init(panes:[
+			ColorAndFontPreferences(),
 			TextPresentationPreferences(),
-			ColorAndFontPreferences()])
+			CoiffeurPreferences()
+			])
 	}
 
 }

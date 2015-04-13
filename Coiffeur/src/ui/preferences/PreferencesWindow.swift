@@ -88,6 +88,7 @@ class PreferencesWindow : NSWindowController, NSWindowDelegate, NSToolbarDelegat
 			self.storedSelectedPane = newSelectedPane
 			
 			if let currentPane = self.storedSelectedPane {
+				self.window?.toolbar?.selectedItemIdentifier = currentPane.toolbarIdentifier
 				self.window?.title = currentPane.toolbarItemLabel
 				NSUserDefaults.standardUserDefaults().setObject(currentPane.toolbarIdentifier, forKey: selectedPaneUDKey)
 

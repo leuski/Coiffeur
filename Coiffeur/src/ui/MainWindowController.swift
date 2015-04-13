@@ -285,8 +285,9 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
     let    textView    = self.fragaria.textView()
     let textStorage = textView.textStorage!
     
-    if intensity == 0 {
-      textStorage.removeAttribute(NSBackgroundColorAttributeName, range:NSMakeRange(0, textStorage.length))
+		textStorage.removeAttribute(NSBackgroundColorAttributeName, range:NSMakeRange(0, textStorage.length))
+
+		if intensity == 0 {
       return []
     }
     
@@ -311,36 +312,28 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
         if diff.text.isEmpty {
           continue
         }
-        
-        //  let length = diff.text.length
-        var lineSpan : Int = 0
-        let length = distance(diff.text.startIndex,diff.text.endIndex)
-        let nextIndex = advance(index, length)
-        
-        switch (diff.diffOperation) {
-        case .Equal:
-          lineSpan   = textStorage.string.lineCountForCharacterRange(index..<nextIndex)
-          lineCount += lineSpan
-          index = nextIndex
-          offset += length
-          
-        case .Insert:
-          lineSpan   = textStorage.string.lineCountForCharacterRange(index..<nextIndex)
-          lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, lineSpan), color: insertColor1))
-          lineCount += lineSpan
-          textStorage.addAttribute(NSBackgroundColorAttributeName, value:insertColor, range:NSMakeRange(offset, length))
-          index = nextIndex
-          offset += length
-          break;
-          
-        case .Delete:
-          lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: deleteColor1))
-          if offset < textStorage.length {
-            textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset, 1))
-          } else if offset > 0 {
-            textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset-1, 1))
-          }
-        }
+				
+				if diff.diffOperation == .Delete {
+					lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: deleteColor1))
+					if offset < textStorage.length {
+						textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset, 1))
+					} else if offset > 0 {
+						textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset-1, 1))
+					}
+				} else {
+					let length = distance(diff.text.startIndex, diff.text.endIndex)
+					let nextIndex = advance(index, length)
+					let lineSpan   = textStorage.string.lineCountForCharacterRange(index..<nextIndex)
+					index = nextIndex
+
+					if diff.diffOperation == .Insert {
+						lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, lineSpan), color: insertColor1))
+						textStorage.addAttribute(NSBackgroundColorAttributeName, value:insertColor, range:NSMakeRange(offset, length))
+					}
+
+					lineCount += lineSpan
+					offset += length
+				}
       }
     }
     

@@ -56,14 +56,15 @@ class OverviewScroller : NSScroller {
       return
     }
     
-    let height = self.frame.size.height;
+		let margin = CGFloat(3.0)
+    let height = self.frame.size.height - 2 * margin;
     let width  = self.frame.size.width;
-    let scale  = height / CGFloat(lineCount);
-    
+    let scale  = (height-2.0) / CGFloat(lineCount);
+		
     for region in self.regions {
       if let color = region.color {
         let regionRect = NSMakeRect(0,
-          scale * CGFloat(region.lineRange.location),
+          margin + scale * CGFloat(region.lineRange.location),
           width,
           max(scale * CGFloat(region.lineRange.length), 2.0));
         

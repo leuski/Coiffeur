@@ -303,21 +303,24 @@ class UncrustifyController : CoiffeurController {
   override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
   {
     var data=""
-    var allOptions = self.managedObjectContext.fetch(ConfigOption.self)
-    allOptions.sort(CoiffeurController.KeyComparator)
-    
-    for option in allOptions {
-      if var value = option.stringValue {
-        
-        if option.type == OptionType.String.rawValue {
-          value = "\"\(value)\""
-        }
-        
-        data += "\(option.indexKey) = \(value)" + CoiffeurController.NewLine
-        
-      }
-    }
-    
+		switch self.managedObjectContext.fetch(ConfigOption.self, sortDescriptors:[CoiffeurController.KeySortDescriptor]) {
+		case .Success(var allOptions):
+			for option in allOptions {
+				if var value = option.stringValue {
+					
+					if option.type == OptionType.String.rawValue {
+						value = "\"\(value)\""
+					}
+					
+					data += "\(option.indexKey) = \(value)" + CoiffeurController.NewLine
+					
+				}
+			}
+			
+		case .Failure(let error):
+			return error
+		}
+		
     var error:NSError?
     if data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:&error) {
       return nil

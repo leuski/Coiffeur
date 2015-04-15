@@ -8,52 +8,82 @@
 
 import CoreData
 
+class BoxedArray<T:AnyObject> {
+	let array : [T]
+	init(_ array:[T]) {
+		self.array = array
+	}
+}
+
+enum FetchResult<T:AnyObject> {
+	case Success([T])
+	case Failure(NSError)
+}
+
+enum FetchSingleResult<T:AnyObject> {
+	case None
+	case Success(T)
+	case Failure(NSError)
+}
+
 extension NSManagedObjectContext {
   
-  func fetchEntity(entity:NSEntityDescription?, withPredicate predicate: NSPredicate? = nil, error outError: NSErrorPointer = nil) -> [AnyObject]
-  {
-    if let theEntity = entity {
-      
-      var fetchRequest = NSFetchRequest()
-      
-      fetchRequest.entity = theEntity
-      fetchRequest.predicate = predicate;
-      
-      var fetchError : NSError?
-      let result = self.executeFetchRequest(fetchRequest, error: &fetchError)
-      
-      if let error = fetchError {
-        error.assignTo(outError)
-        return []
-      }
-      
-      if let res = result {
-        return res
-      }
-    }
-    
-    return []
-  }
+	func entity<T:NSManagedObject>(entityClass:T.Type) -> NSEntityDescription?
+	{
+		let mom = self.persistentStoreCoordinator!.managedObjectModel
+		let className = NSStringFromClass(entityClass)
+		for entity in mom.entities {
+			if className == entity.managedObjectClassName {
+				return entity as? NSEntityDescription
+			}
+		}
+		return nil
+	}
 
-  func fetch(entityName:String?, withPredicate predicate: NSPredicate? = nil, error: NSErrorPointer = nil) -> [AnyObject]
-  {
-    if let name = entityName {
-      return fetchEntity(NSEntityDescription.entityForName(name, inManagedObjectContext: self), withPredicate:predicate, error:error)
-    }
-    return []
-  }
-  
-  func fetch<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, error: NSErrorPointer = nil) -> [T]
-  {
-    return fetchEntity(entityClass.entityInContext(self), withPredicate:predicate, error:error) as! [T]
-  }
+	func fetch(entity:NSEntityDescription?, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchResult<AnyObject>
+	{
+		if let theEntity = entity {
+			var fetchRequest = NSFetchRequest()
+			
+			fetchRequest.entity = theEntity
+			fetchRequest.predicate = predicate
+			fetchRequest.sortDescriptors = sortDescriptors
+			
+			var fetchError : NSError?
+			if let result = self.executeFetchRequest(fetchRequest, error: &fetchError) {
+				return FetchResult<AnyObject>.Success(result)
+			} else {
+				return FetchResult<AnyObject>.Failure(fetchError ?? Error(format:"Unknown error"))
+			}
+		}
+		return FetchResult<AnyObject>.Success([])
+	}
 
-  func fetchSingle(entityName:String, withPredicate predicate: NSPredicate?, error: NSErrorPointer) -> NSManagedObject?
-  {
-    let array = self.fetch(entityName, withPredicate: predicate, error: error)
-    return array.isEmpty ? nil : (array[0] as! NSManagedObject)
-  }
-  
+	func fetch<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchResult<T>
+	{
+		switch fetch(entity(entityClass), withPredicate:predicate, sortDescriptors:sortDescriptors) {
+		case .Success(let array):
+			return FetchResult<T>.Success(array as! [T])
+		case .Failure(let error):
+			return FetchResult<T>.Failure(error)
+		}
+	}
+
+	func fetchSingle<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
+	{
+		switch fetch(entity(entityClass), withPredicate:predicate, sortDescriptors:sortDescriptors) {
+		case .Success(let array):
+			return array.isEmpty ? FetchSingleResult<T>.None : FetchSingleResult<T>.Success(array[0] as! T)
+		case .Failure(let error):
+			return FetchSingleResult<T>.Failure(error)
+		}
+	}
+	
+	func insert<T:NSManagedObject>(entityClass:T.Type) -> T
+	{
+		return entityClass(entity:entity(entityClass)!, insertIntoManagedObjectContext:self)
+	}
+
   func disableUndoRegistration()
   {
     self.processPendingChanges()
@@ -80,56 +110,29 @@ extension NSManagedObjectContext {
 
 extension NSManagedObject {
   
-  class func entityInContext(managedObjectContext: NSManagedObjectContext) -> NSEntityDescription
-  {
-    let mom = managedObjectContext.persistentStoreCoordinator!.managedObjectModel
-    let className = NSStringFromClass(self)
-    for entity in mom.entities {
-      if className == entity.managedObjectClassName {
-        return entity as! NSEntityDescription
-      }
-    }
-    return NSEntityDescription()
-  }
+//  class func entityInContext(managedObjectContext: NSManagedObjectContext) -> NSEntityDescription?
+//  {
+//    let mom = managedObjectContext.persistentStoreCoordinator!.managedObjectModel
+//    let className = NSStringFromClass(self)
+//    for entity in mom.entities {
+//      if className == entity.managedObjectClassName {
+//        return entity as? NSEntityDescription
+//      }
+//    }
+//    return nil
+//  }
+//
+//  class func entityNameInContext(managedObjectContext: NSManagedObjectContext) -> String?
+//  {
+//    return entityInContext(managedObjectContext)?.name
+//  }
+//  
 
-  class func entityNameInContext(managedObjectContext: NSManagedObjectContext) -> String
+	class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
   {
-    return entityInContext(managedObjectContext).name!
+    return managedObjectContext.insert(self)
   }
-  
-  class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
-  {
-    return _insert(managedObjectContext: managedObjectContext)
-  }
-  
-  private class func _insert<SelfType>(#managedObjectContext: NSManagedObjectContext) -> SelfType
-  {
-    let entityName = self.entityNameInContext(managedObjectContext)
-    return (NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext:  managedObjectContext) as! SelfType)
-  }
-
-  class func allObjectsInContext(managedObjectContext:NSManagedObjectContext, withPredicate predicate: NSPredicate? = nil, error:NSErrorPointer = nil) -> [AnyObject]
-  {
-    return managedObjectContext.fetch(self, withPredicate: predicate, error: error)
-  }
-
-  private class func _allObjects<SelfType:NSManagedObject>(#managedObjectContext: NSManagedObjectContext, withPredicate predicate:NSPredicate?, error:NSErrorPointer) -> [SelfType]
-  {
-    return managedObjectContext.fetch(SelfType.self, withPredicate: predicate, error: error)
-  }
-
-
-  private class func _first<SelfType>(#managedObjectContext: NSManagedObjectContext, withPredicate predicate:NSPredicate?, error:NSErrorPointer) -> SelfType?
-  {
-    let entityName = self.entityNameInContext(managedObjectContext)
-    return (managedObjectContext.fetchSingle(entityName, withPredicate: predicate, error: error) as! SelfType?)
-  }
-
-  class func firstObjectInContext(managedObjectContext:NSManagedObjectContext, withPredicate predicate:NSPredicate? = nil, error:NSErrorPointer = nil) -> Self?
-  {
-    return _first(managedObjectContext: managedObjectContext, withPredicate: predicate, error: error)
-  }
-  
+	
 }
 
  

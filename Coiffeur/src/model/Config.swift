@@ -51,19 +51,18 @@ extension ConfigNode {
       return 0
     }
   }
-  
-  private class func _insert<SelfType:ConfigNode>(#managedObjectContext: NSManagedObjectContext) -> SelfType
-  {
-    var node = super.objectInContext(managedObjectContext) as! ConfigNode as! SelfType
-    node.title = ""
-    return node
-  }
-
+	
   override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
   {
-    return _insert(managedObjectContext:managedObjectContext)
+		return _insertConfigNode(managedObjectContext)
   }
-  
+	
+	private class func _insertConfigNode<T:ConfigNode>(managedObjectContext: NSManagedObjectContext) -> T
+	{
+		var node = super.objectInContext(managedObjectContext) as! T
+		node.title = ""
+		return node
+	}
 }
 
 extension ConfigOption {
@@ -98,15 +97,20 @@ extension ConfigOption {
     return NSSet(object:"storedType")
   }
 
-  override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> ConfigOption
+  override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
   {
-    var option = super.objectInContext(managedObjectContext) as! ConfigOption
-    option.title = ""
-    option.documentation = ""
-    option.type = ""
-    option.indexKey = ""
-    return option
+		return _insertConfigOption(managedObjectContext)
   }
+
+	private class func _insertConfigOption<T:ConfigOption>(managedObjectContext: NSManagedObjectContext) -> T
+	{
+		var option = super.objectInContext(managedObjectContext) as! T
+		option.title = ""
+		option.documentation = ""
+		option.type = ""
+		option.indexKey = ""
+		return option
+	}
 
 }
 

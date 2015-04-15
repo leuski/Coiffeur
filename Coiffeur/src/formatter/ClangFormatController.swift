@@ -265,16 +265,18 @@ class ClangFormatController : CoiffeurController {
     var data = ""
     
     data += Private.SectionBegin + CoiffeurController.NewLine
-    
-    var allOptions = self.managedObjectContext.fetch(ConfigOption.self)
-    allOptions.sort(CoiffeurController.KeyComparator)
-    
-    for option in allOptions {
-      if let value = option.stringValue {
-        data += "\(option.indexKey): \(value)" + CoiffeurController.NewLine
-      }
-    }
-    
+		
+		switch self.managedObjectContext.fetch(ConfigOption.self, sortDescriptors:[CoiffeurController.KeySortDescriptor]) {
+		case .Success(var allOptions):
+			for option in allOptions {
+				if let value = option.stringValue {
+					data += "\(option.indexKey): \(value)" + CoiffeurController.NewLine
+				}
+			}
+		case .Failure(let error):
+			return error
+		}
+		
     data += Private.SectionEnd + CoiffeurController.NewLine
     
     var error:NSError?

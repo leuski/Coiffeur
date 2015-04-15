@@ -81,21 +81,11 @@ class CoiffeurController : NSObject {
 		}
 	}
 	
-	class var KeyComparator : (ConfigOption,ConfigOption)->Bool
+	class var KeySortDescriptor : NSSortDescriptor
 	{
-		return { (obj1:AnyObject, obj2:AnyObject) -> Bool in
-			if let o1 = obj1 as? ConfigOption {
-				if let o2 = obj2 as? ConfigOption {
-					return o1.indexKey < o2.indexKey
-				} else {
-					return false
-				}
-			} else {
-				return true
-			}
-		}
+		return NSSortDescriptor(key: "indexKey", ascending:true)
 	}
-	
+
 	private class func _makeCopyOfEntity(entity:NSEntityDescription!, inout cache entities: Dictionary<String, NSEntityDescription>) -> NSEntityDescription
 	{
 		let entityName = entity.name!
@@ -263,8 +253,18 @@ class CoiffeurController : NSObject {
 	
 	func optionWithKey(key:String) -> ConfigOption?
 	{
-		return ConfigOption.firstObjectInContext(self.managedObjectContext,
-			withPredicate:NSPredicate(format: "indexKey = %@", key), error:nil)
+//		switch self.managedObjectContext.fetchSingle(ConfigOption.self, withPredicate:NSPredicate(format: "indexKey = %@", key)) {
+//		case .Success(let value):
+//			return value
+//		case .Failure, .None:
+//			return nil
+//		}
+		switch self.managedObjectContext.fetch(ConfigOption.self, withPredicate:NSPredicate(format: "indexKey = %@", key)) {
+		case .Success(let value):
+			return value.isEmpty ? nil : value[0]
+		case .Failure:
+			return nil
+		}
 	}
 	
 	class func contentsIsValidInString(string:String) -> Bool

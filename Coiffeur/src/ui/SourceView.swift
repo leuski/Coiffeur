@@ -49,7 +49,7 @@ class SourceView: NSViewController, NSPathControlDelegate {
   
   private func _openDocumentWithURL(url:NSURL)
   {
-    self.windowController?.loadSourceFormURL(url, error:nil)
+    self.windowController?.loadSourceFormURL(url)
   }
   
   private func _allowedURLForDraggingItem(draggingItem: NSDraggingItem) -> NSURL?

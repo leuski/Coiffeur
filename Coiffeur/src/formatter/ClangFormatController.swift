@@ -44,7 +44,7 @@ class ClangFormatController : CoiffeurController {
       return result
     case .Success(let controller):
       if Private.OptionsDocumentation == nil {
-        let bundle = NSBundle(forClass: self.dynamicType)
+        let bundle = NSBundle(forClass: self)
         if let docURL = bundle.URLForResource(Private.DocumentationFileName, withExtension: Private.DocumentationFileExtension) {
           var error: NSError?
           Private.OptionsDocumentation = String(contentsOfURL: docURL, encoding: NSUTF8StringEncoding, error:&error)

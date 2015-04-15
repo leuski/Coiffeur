@@ -32,6 +32,7 @@ class CoiffeurController : NSObject {
 		case Signed = "signed"
 		case Unsigned = "unsigned"
 		case String = "string"
+    case StringList = "stringList"
 	}
 	
 	class var documentType : String { return "" }

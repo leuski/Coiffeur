@@ -209,29 +209,29 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   private func _restoreSource()
   {
     if let lastURL = NSUserDefaults.standardUserDefaults().URLForKey(LastSourceURLUDKey) {
-      if self.loadSourceFormURL(lastURL, error:nil) {
+      if nil == self.loadSourceFormURL(lastURL) {
         return
       }
     }
     
     let url = NSBundle.mainBundle().URLForResource(SampleFileName,
       withExtension:ObjectiveCPPExtension, subdirectory:SamplesFolderName)!
-    var error : NSError?
     
-    if !self.loadSourceFormURL(url, error:&error) {
+    if let error = self.loadSourceFormURL(url) {
       NSException(name: "No Source", reason: "Failed to load the sample source file", userInfo: nil).raise()
     }
   }
   
-  func loadSourceFormURL(url:NSURL, error outError:NSErrorPointer) -> Bool
+  func loadSourceFormURL(url:NSURL) -> NSError?
   {
-    if let source = String(contentsOfURL:url, encoding:NSUTF8StringEncoding, error:outError) {
+    var error:NSError?
+    if let source = String(contentsOfURL:url, encoding:NSUTF8StringEncoding, error:&error) {
       self.newString = true
       self.codeString = source
       self.fileURL = url
-      return true
+      return nil
     } else {
-      return false
+      return error ?? Error(format:"Unknown error while reading source file from %@", url)
     }
   }
   

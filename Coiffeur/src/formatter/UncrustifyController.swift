@@ -11,7 +11,7 @@ import Foundation
 class UncrustifyController : CoiffeurController {
   
   private struct Private {
-    static var ShowDocumentationArgument = "--show-config"
+    static var ShowDocumentationArgument = "--update-config-with-doc"
     static var ShowDefaultConfigArgument = "--update-config"
     static var QuietFlag = "-q"
     static var ConfigPathFlag = "-c"
@@ -26,7 +26,6 @@ class UncrustifyController : CoiffeurController {
 		static var ExecutableTitleUDKey = "Uncrustify Executable"
 
     static var OptionsDocumentation : String? = nil
-    static var DefaultValues : String? = nil
   }
   
 	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
@@ -39,9 +38,6 @@ class UncrustifyController : CoiffeurController {
     let result = super.createCoiffeur()
     
     switch result {
-    case .Failure:
-      return result
-      
     case .Success(let controller):
       if Private.OptionsDocumentation == nil {
         switch controller.runExecutable([Private.ShowDocumentationArgument]) {
@@ -55,64 +51,19 @@ class UncrustifyController : CoiffeurController {
       if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
         return CoiffeurControllerResult.Failure(error)
       }
-      
-      if Private.DefaultValues == nil {
-        switch controller.runExecutable([Private.ShowDefaultConfigArgument]) {
-        case .Failure(let error):
-          return CoiffeurControllerResult.Failure(error)
-        case .Success(let text):
-          Private.DefaultValues = text
-        }
-      }
-      
-      if let error = controller.readValuesFromString(Private.DefaultValues!) {
-        return CoiffeurControllerResult.Failure(error)
-      }
-      
-      return result
-    }
-  }
-  
-  private enum State {
-    case None
-    case ConfigSectionHeader
-    case OptionDescription
-  }
-  
-  private func _parseSection(inout section:ConfigSection, line aline:String)
-  {
-    var  line = aline.stringByTrimmingPrefix(Private.Comment)
-    
-    if !line.isEmpty {
-      section.title = section.title.stringByAppendingString(line, separatedBy:" ")
-    }
-  }
-  
-  private func _parseOption(inout option:ConfigOption, firstLine line:String)
-  {
-    var c = 0
-    var tokens = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    tokens = tokens.filter { !$0.isEmpty }
-
-    for v in tokens {
-      if (++c == 1) {
-        option.indexKey = v
-      } else if v != "{" && v != "}" {
-        option.type = option.type.stringByAppendingString(v.lowercaseString)
-      }
-    }
-    
-    if (option.type == Private.NumberOptionType) {
-      option.type = OptionType.Signed.rawValue
-    }
+			
+		default:
+			break
+		}
+		
+		return result
   }
   
   override func readOptionsFromLineArray(lines:[String]) -> NSError?
   {
-    var count = 0, optionCount = 0, sectionCount = 0
-    var state = State.None
+    var count = 0
     var currentSection : ConfigSection?
-    var currentOption : ConfigOption?
+		var currentComment : String = ""
     
     for  aline in lines {
       ++count
@@ -124,63 +75,55 @@ class UncrustifyController : CoiffeurController {
       var line = aline.trim()
       
       if line.isEmpty {
-        state = State.None
-        continue
-      }
-      
-      switch (state) {
-      case .None:
-        
-        if line.hasPrefix(Private.Comment) {
-          ++sectionCount
-          state = State.ConfigSectionHeader
-          var section = ConfigSection.objectInContext(self.managedObjectContext)
-          section.parent = self.root
-          self._parseSection(&section, line:line)
-          currentSection = section
-        } else {
-          ++optionCount
-          state = State.OptionDescription
-          var option = ConfigOption.objectInContext(self.managedObjectContext)
-          option.parent = currentSection
-          self._parseOption(&option, firstLine:line)
-          currentOption = option
-        }
-        
-        break
-        
-      case .ConfigSectionHeader:
-        
-        if var section = currentSection {
-          if line.hasPrefix(Private.Comment) {
-            self._parseSection(&section, line:line)
-          }
-        }
-        
-        break
-        
-      case .OptionDescription:
-        
-        if var option = currentOption {
-          if line.hasPrefix(Private.Comment) {
-            line = line.stringByTrimmingPrefix(Private.Comment)
-          }
-          
-          if option.title.isEmpty {
-            option.title = line
-          }
-          
-          option.documentation = option.documentation.stringByAppendingString(line,
-            separatedBy:CoiffeurController.NewLine)
-        }
-        break
-      }
+
+				currentComment = currentComment.trim()
+				if !currentComment.isEmpty {
+					if let range = currentComment.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
+					} else {
+						var section = ConfigSection.objectInContext(self.managedObjectContext)
+						section.parent = self.root
+						section.title = currentComment
+						currentSection = section
+					}
+					currentComment = ""
+				}
+ 
+			} else if line.hasPrefix(Private.Comment) {
+
+				line = line.stringByTrimmingPrefix(Private.Comment)
+				currentComment += "\(line)\n"
+
+			} else if let range = line.rangeOfString(Private.Comment) {
+				
+				let keyValue = line.substringToIndex(range.startIndex)
+				var type = line.substringFromIndex(range.endIndex)
+				
+				if let (key, value) = _keyValuePairFromString(keyValue) {
+
+					type = type.trim().stringByReplacingOccurrencesOfString("/", withString: ConfigNode.TypeSeparator)
+					currentComment = currentComment.trim()
+					var option = ConfigOption.objectInContext(self.managedObjectContext)
+					option.parent = currentSection
+					option.indexKey = key
+					option.stringValue = value
+					option.documentation = currentComment
+					if type == "number" {
+						option.type = OptionType.Signed.rawValue
+					} else {
+						option.type = type
+					}
+					option.title = currentComment.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())[0]
+
+				}
+				currentComment = ""
+			}
+			
     }
     
     for var i = 8; i >= 5; --i {
       self._cluster(i)
     }
-    
+		
     return nil
   }
   
@@ -241,12 +184,57 @@ class UncrustifyController : CoiffeurController {
       }
     }
   }
-  
+	
+	private func _keyValuePairFromString(string:String) -> (key:String, value:String)?
+	{
+		var line = string
+		
+		if let range = line.rangeOfString(Private.Comment) {
+			line = line.substringToIndex(range.startIndex)
+		}
+		
+		if let range = line.rangeOfString("=") {
+			line = line.stringByReplacingCharactersInRange(range, withString: " ")
+		}
+		
+		while let range = line.rangeOfString(",") {
+			line = line.stringByReplacingCharactersInRange(range, withString: " ")
+		}
+		
+		let tokens = line.commandLineComponents
+		
+		if tokens.count == 0 {
+			return nil
+		}
+		
+		if tokens.count == 1 {
+			NSLog("Warning: wrong number of arguments %@", line)
+			return nil
+		}
+		
+		let head = tokens[0]
+		
+		if head == "type" {
+		} else if head == "define" {
+		} else if head == "macro-open" {
+		} else if head == "macro-close" {
+		} else if head == "macro-else" {
+		} else if head == "set" {
+		} else if head == "include" {
+		} else if head == "file_ext" {
+		} else {
+			return (key:head, value:tokens[1])
+		}
+		
+		return nil
+
+	}
+	
   override func readValuesFromLineArray(lines:[String]) -> NSError?
   {
     for aline in lines {
       var line = aline.trim()
-      
+			
       if line.isEmpty {
         continue
       }
@@ -254,47 +242,15 @@ class UncrustifyController : CoiffeurController {
       if line.hasPrefix(Private.Comment) {
         continue
       }
-      
-      if let range = line.rangeOfString(Private.Comment) {
-        line = line.substringFromIndex(range.startIndex)
-      }
-      
-      if let range = line.rangeOfString("=") {
-        let prefix = line.substringToIndex(range.startIndex)
-        let suffix = line.substringFromIndex(range.startIndex.successor())
-        line = "\(prefix) \(suffix)"
-      }
-      
-      let tokens = line.commandLineComponents
-      
-      if tokens.count == 0 {
-        continue
-      }
-      
-      if tokens.count == 1 {
-        NSLog("Warning: wrong number of arguments %@", line)
-        continue
-      }
-      
-      let head = tokens[0]
-      
-      if head == "type" {
-      } else if head == "define" {
-      } else if head == "macro-open" {
-      } else if head == "macro-close" {
-      } else if head == "macro-else" {
-      } else if head == "set" {
-      } else if head == "include" {
-      } else if head == "file_ext" {
-      } else {
-        
-        if let option = self.optionWithKey(head) {
-          option.stringValue = tokens[1]
-        } else {
-          NSLog("Warning: unknown token %@ on line %@", head, line)
-        }
-      }
-      
+			
+			if let (key, value) = _keyValuePairFromString(line) {
+				if let option = self.optionWithKey(key) {
+					option.stringValue = value
+				} else {
+					NSLog("Warning: unknown token %@ on line %@", key, line)
+				}
+			}
+			
     }
     
     return nil
@@ -307,13 +263,8 @@ class UncrustifyController : CoiffeurController {
 		case .Success(var allOptions):
 			for option in allOptions {
 				if var value = option.stringValue {
-					
-					if option.type == OptionType.String.rawValue {
-						value = "\"\(value)\""
-					}
-					
-					data += "\(option.indexKey) = \(value)" + CoiffeurController.NewLine
-					
+					value = value.stringByQuoting()
+					data += "\(option.indexKey) = \(value)\(CoiffeurController.NewLine)"
 				}
 			}
 			

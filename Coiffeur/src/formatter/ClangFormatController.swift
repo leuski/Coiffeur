@@ -193,7 +193,7 @@ class ClangFormatController : CoiffeurController {
         } else if type == "std::string" {
           newOption.type = OptionType.String.rawValue
         } else if type == "std::vector<std::string>" {
-          newOption.type = OptionType.String.rawValue
+          newOption.type = OptionType.StringList.rawValue
         } else {
           newOption.type = ""
         }
@@ -236,8 +236,6 @@ class ClangFormatController : CoiffeurController {
   
   override func readValuesFromLineArray(lines:[String]) -> NSError?
   {
-    let keyValue = NSRegularExpression.ci_regularExpressionWithPattern("^\\s*(.*?):\\s*(\\S.*)")
-    
     for aLine in lines {
       var line = aLine
       line = line.trim()
@@ -246,12 +244,18 @@ class ClangFormatController : CoiffeurController {
         continue
       }
       
-      if let match = keyValue.firstMatchInString(line) {
-        let key = line.substringWithRange(match.rangeAtIndex(1))
-        let value = line.substringWithRange(match.rangeAtIndex(2))
+			if let range = line.rangeOfString(":") {
+        let key = line.substringToIndex(range.startIndex).trim()
         if let option = self.optionWithKey(key) {
-          option.stringValue = value
-        } else {
+					var value = line.substringFromIndex(range.endIndex).trim()
+					if option.type == OptionType.StringList.rawValue {
+						value = value.stringByTrimmingPrefix("[")
+						value = value.stringByTrimmingSuffix("]")
+					} else {
+						value = value.commandLineComponents[0]
+					}
+					option.stringValue = value
+				} else {
           NSLog("Warning: unknown token %@ on line %@", key, line);
         }
       }
@@ -264,21 +268,26 @@ class ClangFormatController : CoiffeurController {
   {
     var data = ""
     
-    data += Private.SectionBegin + CoiffeurController.NewLine
+    data += "\(Private.SectionBegin)\(CoiffeurController.NewLine)"
 		
 		switch self.managedObjectContext.fetch(ConfigOption.self, sortDescriptors:[CoiffeurController.KeySortDescriptor]) {
 		case .Success(var allOptions):
 			for option in allOptions {
-				if let value = option.stringValue {
-					data += "\(option.indexKey): \(value)" + CoiffeurController.NewLine
+				if var value = option.stringValue {
+					if option.type == OptionType.StringList.rawValue {
+						value = "[\(value)]"
+					} else {
+						value = value.stringByQuoting(quote: "'")
+					}
+					data += "\(option.indexKey): \(value)\(CoiffeurController.NewLine)"
 				}
 			}
 		case .Failure(let error):
 			return error
 		}
 		
-    data += Private.SectionEnd + CoiffeurController.NewLine
-    
+		data += "\(Private.SectionEnd)\(CoiffeurController.NewLine)"
+		
     var error:NSError?
     if data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:&error) {
       return nil

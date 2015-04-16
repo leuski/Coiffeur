@@ -8,23 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		620668CB1ADAD3BF00F807B0 /* CoiffeurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */; };
-		620668CC1ADAD3BF00F807B0 /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */; };
 		620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C21ADAD3BF00F807B0 /* MainWindowController.swift */; };
-		620668CE1ADAD3BF00F807B0 /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C31ADAD3BF00F807B0 /* MainWindowController.xib */; };
 		620668CF1ADAD3BF00F807B0 /* CoiffeurPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */; };
-		620668D01ADAD3BF00F807B0 /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */; };
 		620668D11ADAD3BF00F807B0 /* PreferencesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */; };
-		620668D21ADAD3BF00F807B0 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */; };
 		620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C91ADAD3BF00F807B0 /* SourceView.swift */; };
-		620668D41ADAD3BF00F807B0 /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668CA1ADAD3BF00F807B0 /* SourceView.xib */; };
 		620668D61ADAE63500F807B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D51ADAE63500F807B0 /* Preferences.swift */; };
 		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
-		620668DA1ADAF0FA00F807B0 /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */; };
 		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
-		620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */; };
 		620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 620668DF1ADB1B0D00F807B0 /* Locations.tiff */; };
 		621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */; };
 		621E6E871ADB7F5700225D3E /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E861ADB7F5700225D3E /* text.png */; };
+		6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */; };
+		6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */; };
+		6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */; };
+		6248C5391ADF6E31005ED75A /* ColorAndFontPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */; };
+		6248C53C1ADF6E3C005ED75A /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C53E1ADF6E3C005ED75A /* SourceView.xib */; };
+		6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5411ADF6E41005ED75A /* MainWindowController.xib */; };
+		6248C5421ADF6E46005ED75A /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5441ADF6E46005ED75A /* CoiffeurView.xib */; };
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
 		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -110,23 +110,23 @@
 
 /* Begin PBXFileReference section */
 		620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurView.swift; sourceTree = "<group>"; };
-		620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoiffeurView.xib; sourceTree = "<group>"; };
 		620668C21ADAD3BF00F807B0 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
-		620668C31ADAD3BF00F807B0 /* MainWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindowController.xib; sourceTree = "<group>"; };
 		620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurPreferences.swift; sourceTree = "<group>"; };
-		620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CoiffeurPreferences.xib; sourceTree = "<group>"; };
 		620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindow.swift; sourceTree = "<group>"; };
-		620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
 		620668C91ADAD3BF00F807B0 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
-		620668CA1ADAD3BF00F807B0 /* SourceView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SourceView.xib; sourceTree = "<group>"; };
 		620668D51ADAE63500F807B0 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
-		620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextPresentationPreferences.xib; sourceTree = "<group>"; };
 		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
-		620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorAndFontPreferences.xib; sourceTree = "<group>"; };
 		620668DF1ADB1B0D00F807B0 /* Locations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Locations.tiff; sourceTree = "<group>"; };
 		621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ProfileFontAndColor.icns; sourceTree = "<group>"; };
 		621E6E861ADB7F5700225D3E /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
+		6248C5311ADF6E1F005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TextPresentationPreferences.xib; sourceTree = "<group>"; };
+		6248C5341ADF6E25005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PreferencesWindow.xib; sourceTree = "<group>"; };
+		6248C5371ADF6E2B005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurPreferences.xib; sourceTree = "<group>"; };
+		6248C53A1ADF6E31005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ColorAndFontPreferences.xib; sourceTree = "<group>"; };
+		6248C53D1ADF6E3C005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SourceView.xib; sourceTree = "<group>"; };
+		6248C5401ADF6E41005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindowController.xib; sourceTree = "<group>"; };
+		6248C5431ADF6E46005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurView.xib; sourceTree = "<group>"; };
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -203,12 +203,12 @@
 			isa = PBXGroup;
 			children = (
 				620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */,
-				620668C11ADAD3BF00F807B0 /* CoiffeurView.xib */,
+				6248C5441ADF6E46005ED75A /* CoiffeurView.xib */,
 				620668C21ADAD3BF00F807B0 /* MainWindowController.swift */,
-				620668C31ADAD3BF00F807B0 /* MainWindowController.xib */,
+				6248C5411ADF6E41005ED75A /* MainWindowController.xib */,
 				620668C41ADAD3BF00F807B0 /* preferences */,
 				620668C91ADAD3BF00F807B0 /* SourceView.swift */,
-				620668CA1ADAD3BF00F807B0 /* SourceView.xib */,
+				6248C53E1ADF6E3C005ED75A /* SourceView.xib */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -217,14 +217,14 @@
 			isa = PBXGroup;
 			children = (
 				620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */,
-				620668C61ADAD3BF00F807B0 /* CoiffeurPreferences.xib */,
+				6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */,
 				620668D51ADAE63500F807B0 /* Preferences.swift */,
 				620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */,
-				620668C81ADAD3BF00F807B0 /* PreferencesWindow.xib */,
+				6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */,
 				620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */,
-				620668D91ADAF0FA00F807B0 /* TextPresentationPreferences.xib */,
+				6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */,
 				620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */,
-				620668DD1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib */,
+				6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */,
 			);
 			path = preferences;
 			sourceTree = "<group>";
@@ -460,24 +460,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620668D21ADAD3BF00F807B0 /* PreferencesWindow.xib in Resources */,
-				620668CE1ADAD3BF00F807B0 /* MainWindowController.xib in Resources */,
+				6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */,
+				6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */,
 				621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
 				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
 				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
-				620668D01ADAD3BF00F807B0 /* CoiffeurPreferences.xib in Resources */,
+				6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */,
 				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
 				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
 				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
-				620668D41ADAD3BF00F807B0 /* SourceView.xib in Resources */,
-				620668DA1ADAF0FA00F807B0 /* TextPresentationPreferences.xib in Resources */,
-				620668CC1ADAD3BF00F807B0 /* CoiffeurView.xib in Resources */,
+				6248C53C1ADF6E3C005ED75A /* SourceView.xib in Resources */,
+				6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */,
+				6248C5421ADF6E46005ED75A /* CoiffeurView.xib in Resources */,
 				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
-				620668DE1ADAF3DB00F807B0 /* ColorAndFontPreferences.xib in Resources */,
+				6248C5391ADF6E31005ED75A /* ColorAndFontPreferences.xib in Resources */,
 				621E6E871ADB7F5700225D3E /* text.png in Resources */,
 				620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
@@ -556,6 +556,62 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5311ADF6E1F005ED75A /* en */,
+			);
+			name = TextPresentationPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5341ADF6E25005ED75A /* en */,
+			);
+			name = PreferencesWindow.xib;
+			sourceTree = "<group>";
+		};
+		6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5371ADF6E2B005ED75A /* en */,
+			);
+			name = CoiffeurPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C53A1ADF6E31005ED75A /* en */,
+			);
+			name = ColorAndFontPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C53E1ADF6E3C005ED75A /* SourceView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C53D1ADF6E3C005ED75A /* en */,
+			);
+			name = SourceView.xib;
+			sourceTree = "<group>";
+		};
+		6248C5411ADF6E41005ED75A /* MainWindowController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5401ADF6E41005ED75A /* en */,
+			);
+			name = MainWindowController.xib;
+			sourceTree = "<group>";
+		};
+		6248C5441ADF6E46005ED75A /* CoiffeurView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5431ADF6E46005ED75A /* en */,
+			);
+			name = CoiffeurView.xib;
+			sourceTree = "<group>";
+		};
 		626185171AC351CC0095CCD2 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

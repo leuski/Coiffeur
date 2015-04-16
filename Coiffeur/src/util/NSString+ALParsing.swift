@@ -57,7 +57,41 @@ extension String {
 
     return result
   }
-  
+	
+	private func _stringByQuoting(quote:Character) -> String
+	{
+		let bs : Character = "\\"
+		var result = ""
+		result.append(quote)
+		
+		for ch in self {
+			switch ch {
+			case quote, "\\", "\"", "'", "`", " ", "\t", "\r", "\n":
+				result.append(bs)
+				fallthrough
+			default:
+				result.append(ch)
+			}
+		}
+		
+		result.append(quote)
+		return result
+	}
+	
+	func stringByQuoting(quote:Character = "\"") -> String
+	{
+		var set = NSMutableCharacterSet(charactersInString: String(quote))
+		set.addCharactersInString("\\\"'` \t\r\n")
+
+		if self.isEmpty {
+			return _stringByQuoting(quote)
+		} else if let range = self.rangeOfCharacterFromSet(set) {
+			return _stringByQuoting(quote)
+		} else {
+			return self
+		}
+	}
+	
   func stringByAppendingString(s:String, separatedBy delimiter:String) -> String
   {
     var result = self
@@ -87,7 +121,21 @@ extension String {
     return result
   }
   
-  func lineRangeForCharacterRange(range: Range<String.Index>) -> Range<Int>
+	func stringByTrimmingSuffix(suffix:String) -> String
+	{
+		var result = self.trim()
+		if suffix.isEmpty {
+			return result
+		}
+		let length = distance(suffix.startIndex, suffix.endIndex)
+		while result.hasSuffix(suffix) {
+			let resultLength = distance(result.startIndex, result.endIndex)
+			result = result.substringToIndex(advance(result.startIndex, resultLength-length)).trim()
+		}
+		return result
+	}
+
+	func lineRangeForCharacterRange(range: Range<String.Index>) -> Range<Int>
   {
     var numberOfLines = 0
     var index = self.startIndex

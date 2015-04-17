@@ -119,72 +119,10 @@ class UncrustifyController : CoiffeurController {
 			}
 			
     }
-    
-    for var i = 8; i >= 5; --i {
-      self._cluster(i)
-    }
+
+		return nil
+  }
 		
-    return nil
-  }
-  
-  private func _cluster(tokenLimit:Int)
-  {
-    for child in self.root!.children  {
-      if !(child is ConfigSection) {
-        continue
-      }
-      var section = child as! ConfigSection
-      
-      var index = [String:[ConfigOption]]()
-      
-      for node in section.children {
-        if !(node is ConfigOption) {
-          continue
-        }
-        let option : ConfigOption = node as! ConfigOption
-        
-        let title  = option.title
-        var tokens = title.lowercaseString.componentsSeparatedByString(CoiffeurController.Space)
-        tokens = tokens.filter { !$0.isEmpty && $0 != "a" && $0 != "the" }
-        
-        if tokens.count < (tokenLimit + 1) {
-          continue
-        }
-        
-        let key = tokens[0..<tokenLimit].reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
-        
-        if index[key] == nil {
-          index[key] = [ConfigOption]()
-        }
-        
-        index[key]!.append(option)
-      }
-      
-      //          NSUInteger limit = section.children.count
-      for (key, list) in index {
-        
-        if list.count < 5 {
-          continue
-        }
-        
-        //                      if (list.count < 0.15 * limit) continue
-        //                      if (list.count < 0.15 * limit) continue
-        
-        var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
-        subsection.title  = key + "…"
-        subsection.parent = section
-        
-        for option in list {
-          let title  = option.title
-          var  tokens = title.componentsSeparatedByString(CoiffeurController.Space)
-          tokens = tokens.filter { !$0.isEmpty && $0 != "a" && $0 != "the" }
-          option.title  = tokens[tokenLimit..<tokens.count].reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
-          option.parent = subsection
-        }
-      }
-    }
-  }
-	
 	private func _keyValuePairFromString(string:String) -> (key:String, value:String)?
 	{
 		var line = string

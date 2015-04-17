@@ -178,6 +178,126 @@ class CoiffeurController : NSObject {
 		self.format()
 	}
 	
+	func clusterOptions()
+	{
+		for var i = 8; i >= 2; --i {
+			self._cluster(i)
+		}
+
+		for child in self.root!.children  {
+			if !(child is ConfigSection) {
+				continue
+			}
+			var section = child as! ConfigSection
+			
+			var index = [ConfigOption]()
+			var foundSubSection = false
+			
+			for node in section.children {
+				if !(node is ConfigOption) {
+					foundSubSection = true
+				} else {
+					index.append(node as! ConfigOption)
+				}
+			}
+			
+			if !foundSubSection {
+				continue
+			}
+			
+			var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
+			subsection.title  = "Other " + section.title.lowercaseString
+			subsection.parent = section
+
+			for option in index {
+				option.parent = subsection
+			}
+		}
+	}
+	
+	private func _splitTokens(title:String, boundary:Int, stem:Bool = false) -> (head:[String], tail:[String])
+	{
+		var tokens = title.componentsSeparatedByString(CoiffeurController.Space)
+		var head = [String]()
+		var tail = [String]()
+		for token in tokens  {
+			if head.count < boundary {
+				var lcToken = token.lowercaseString
+				if lcToken.isEmpty || lcToken == "a" || lcToken == "the" {
+					continue
+				}
+				if stem {
+					if lcToken.hasSuffix("ing") {
+						lcToken = lcToken.stringByTrimmingSuffix("ing")
+					} else if lcToken.hasSuffix("ed") {
+						lcToken = lcToken.stringByTrimmingSuffix("ed")
+					} else if lcToken.hasSuffix("s") {
+						lcToken = lcToken.stringByTrimmingSuffix("s")
+					}
+				}
+				head.append(lcToken)
+			} else {
+				tail.append(token)
+			}
+		}
+		return (head:head, tail:tail)
+	}
+	
+	private func _cluster(tokenLimit:Int)
+	{
+		for child in self.root!.children  {
+			if !(child is ConfigSection) {
+				continue
+			}
+			var section = child as! ConfigSection
+			
+			var index = [String:[ConfigOption]]()
+			
+			for node in section.children {
+				if !(node is ConfigOption) {
+					continue
+				}
+				let option : ConfigOption = node as! ConfigOption
+				let (head, tail) = _splitTokens(option.title, boundary:tokenLimit, stem:true)
+				
+				if tail.isEmpty {
+					continue
+				}
+				
+				let key = head.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
+				
+				if index[key] == nil {
+					index[key] = [ConfigOption]()
+				}
+				
+				index[key]!.append(option)
+			}
+			
+			//          NSUInteger limit = section.children.count
+			for (key, list) in index {
+				
+				if list.count < 5 {
+					continue
+				}
+				
+				var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
+				subsection.title  = key + "…"
+				subsection.parent = section
+				
+				var count = 0
+				for option in list {
+					option.parent = subsection
+					let (head, tail) = _splitTokens(option.title, boundary:tokenLimit)
+					option.title  = tail.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
+					if ++count == 1 {
+						let title = head.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
+						subsection.title  = title.capitalizedStringFirstWord + "…"
+					}
+				}
+			}
+		}
+	}
+
 	func format() -> Bool
 	{
 		var result = false;
@@ -220,6 +340,7 @@ class CoiffeurController : NSObject {
 		self.root = ConfigRoot.objectInContext(self.managedObjectContext);
 		
 		let result = self.readOptionsFromLineArray(lines)
+		clusterOptions()
 		
 		self.managedObjectContext.enableUndoRegistration()
 		

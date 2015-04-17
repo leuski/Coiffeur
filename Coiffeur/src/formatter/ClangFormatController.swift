@@ -140,7 +140,7 @@ class ClangFormatController : CoiffeurController {
   {
     let section = ConfigSection.objectInContext(self.managedObjectContext)
     
-    section.title  = "All Options";
+    section.title  = "Options";
     section.parent = self.root;
     
     var currentOption : ConfigOption?

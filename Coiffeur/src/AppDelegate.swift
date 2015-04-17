@@ -27,7 +27,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     
     let bundle = NSBundle(forClass:self.dynamicType)
     if let UDURL  = bundle.URLForResource(UserDefaultsFileName, withExtension:UserDefaultsFileNameExtension) {
-      if let ud     = NSDictionary(contentsOfURL:UDURL) as? [String:AnyObject] {
+      if let ud = NSDictionary(contentsOfURL:UDURL) as? [String:AnyObject] {
         NSUserDefaults.standardUserDefaults().registerDefaults(ud)
       }
     }

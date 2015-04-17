@@ -8,13 +8,6 @@
 
 import CoreData
 
-class BoxedArray<T:AnyObject> {
-	let array : [T]
-	init(_ array:[T]) {
-		self.array = array
-	}
-}
-
 enum FetchResult<T:AnyObject> {
 	case Success([T])
 	case Failure(NSError)

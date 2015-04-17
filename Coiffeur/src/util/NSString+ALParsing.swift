@@ -58,6 +58,23 @@ extension String {
     return result
   }
 	
+	var words : [String] {
+		var result = [String]()
+		self.enumerateLinguisticTagsInRange(self.startIndex..<self.endIndex,
+			scheme: NSLinguisticTagSchemeTokenType,
+			options: NSLinguisticTaggerOptions.OmitWhitespace,
+			orthography: nil) {
+				(tag:String, tokenRange:Range<String.Index>, sentenceRange:Range<String.Index>, inout stop:Bool) -> () in
+				result.append(self.substringWithRange(tokenRange))
+		}
+		return result
+	}
+	
+	var capitalizedStringFirstWord : String {
+		return self.substringToIndex(self.startIndex.successor()).capitalizedString +
+			self.substringFromIndex(self.startIndex.successor())
+	}
+	
 	private func _stringByQuoting(quote:Character) -> String
 	{
 		let bs : Character = "\\"

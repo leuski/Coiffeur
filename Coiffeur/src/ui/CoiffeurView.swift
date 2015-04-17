@@ -241,8 +241,19 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     
     let offset = Int(CGFloat(1 + outlineView.levelForItem(item)) * outlineView.indentationPerLevel + 3)
     
-    var container   = NSTableRowView()
-    
+    var container   = OutlineRowView()
+
+		var outlineNode : AnyObject? = outlineView.parentForItem(item)
+		let itemPath = item.indexPath!
+		var colors = [NSColor]()
+		for var i = itemPath.length - 2; i >= 0; --i {
+			let index = itemPath.indexAtPosition(i)
+			outlineNode = outlineView.parentForItem(outlineNode)
+			let count = outlineView.numberOfChildrenOfItem(outlineNode)
+			colors.insert(NSColor(calibratedHue: CGFloat(index)/CGFloat(count+1), saturation: 1, brightness: 1, alpha: 1), atIndex: 0)
+		}
+		container.colors = colors
+		
     let smallSystemFontSize = NSFont.systemFontSizeForControlSize(NSControlSize.SmallControlSize)
     var childView   = NSTextField()
     childView.editable        = false

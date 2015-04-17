@@ -201,12 +201,12 @@ class CoiffeurController : NSObject {
 				}
 			}
 			
-			if !foundSubSection {
+			if !foundSubSection || index.isEmpty {
 				continue
 			}
 			
 			var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
-			subsection.title  = "Other " + section.title.lowercaseString
+      subsection.title  = "\u{200B}" + NSLocalizedString("Other", comment:"") + " " + section.title.lowercaseString
 			subsection.parent = section
 
 			for option in index {
@@ -276,12 +276,12 @@ class CoiffeurController : NSObject {
 			//          NSUInteger limit = section.children.count
 			for (key, list) in index {
 				
-				if list.count < 5 {
+				if list.count < 5 || list.count == section.children.count {
 					continue
 				}
 				
 				var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
-				subsection.title  = key + "…"
+				subsection.title  = key + " …"
 				subsection.parent = section
 				
 				var count = 0
@@ -291,7 +291,7 @@ class CoiffeurController : NSObject {
 					option.title  = tail.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
 					if ++count == 1 {
 						let title = head.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
-						subsection.title  = title.capitalizedStringFirstWord + "…"
+						subsection.title  = title.capitalizedStringFirstWord + " …"
 					}
 				}
 			}

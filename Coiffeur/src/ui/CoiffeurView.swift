@@ -233,20 +233,20 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   func outlineView(outlineView: NSOutlineView, rowViewForItem item: AnyObject) -> NSTableRowView?
   {
     let aNode = item.representedObject as? ConfigNode
-    if aNode == nil || !aNode!.leaf {
+    if aNode == nil  {
       return nil
     }
     
     let node = aNode!
     
-    let offset = Int(CGFloat(1 + outlineView.levelForItem(item)) * outlineView.indentationPerLevel + 3)
+    let hOffset = Int((1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+1.0)
     
     var container   = OutlineRowView()
 
-		var outlineNode : AnyObject? = outlineView.parentForItem(item)
+		var outlineNode : AnyObject? = item
 		let itemPath = item.indexPath!
 		var colors = [NSColor]()
-		for var i = itemPath.length - 2; i >= 0; --i {
+		for var i = itemPath.length - 1; i >= 0; --i {
 			let index = itemPath.indexAtPosition(i)
 			outlineNode = outlineView.parentForItem(outlineNode)
 			let count = outlineView.numberOfChildrenOfItem(outlineNode)
@@ -254,23 +254,34 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
 		}
 		container.colors = colors
 		
-    let smallSystemFontSize = NSFont.systemFontSizeForControlSize(NSControlSize.SmallControlSize)
     var childView   = NSTextField()
     childView.editable        = false
     childView.selectable      = false
     childView.bordered        = false
     childView.drawsBackground = false
-    childView.font = NSFont.systemFontOfSize(smallSystemFontSize)
     childView.translatesAutoresizingMaskIntoConstraints = false
     childView.stringValue = node.title
     container.addSubview(childView)
+
+    var vOffset = 0
+    if node is ConfigOption {
+      let fontSize = NSFont.systemFontSizeForControlSize(NSControlSize.SmallControlSize)
+      childView.font = NSFont.systemFontOfSize(fontSize)
+      vOffset = 2
+    } else {
+      let fontSize = NSFont.systemFontSizeForControlSize(NSControlSize.RegularControlSize)
+      childView.font = NSFont.boldSystemFontOfSize(fontSize)
+      childView.textColor = NSColor.secondaryLabelColor()
+      childView.backgroundColor = NSColor.controlBackgroundColor()
+      vOffset = 3
+    }
     
     let views   = ["childView":childView]
     
-    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(offset)-[childView]|",
+    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-\(hOffset)-[childView]|",
       options:NSLayoutFormatOptions(), metrics:nil, views:views))
     
-    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-2-[childView]",
+    container.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-\(vOffset)-[childView]",
       options:NSLayoutFormatOptions(), metrics:nil, views:views))
     
     return container

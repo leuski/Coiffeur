@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-class ConfigSection: ConfigSubsection {
-
-
+class ConfigSection: ConfigNode {
+	@NSManaged var storedFilteredChildren: AnyObject?
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
@@ -28,10 +28,10 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                     <connections>
-                        <binding destination="-2" name="predicate" keyPath="self.predicate" id="KUb-gE-3xu">
+                        <binding destination="-2" name="predicate" keyPath="self.model.root.predicate" id="0wc-ZS-5F9">
                             <dictionary key="options">
                                 <string key="NSDisplayName">predicate</string>
-                                <string key="NSPredicateFormat">documentation contains[cd] $value OR name contains[cd] $value</string>
+                                <string key="NSPredicateFormat">(documentation contains[cd] $value) OR (name contains[cd] $value) OR (filteredChildrenCount &gt; 0)</string>
                             </dictionary>
                         </binding>
                         <outlet property="menu" destination="jzn-yH-Cli" id="kPS-Hj-J33"/>
@@ -39,11 +39,12 @@
                     </connections>
                 </searchField>
                 <popUpButton translatesAutoresizingMaskIntoConstraints="NO" id="F3P-oX-V8O">
-                    <rect key="frame" x="200" y="773" width="79" height="18"/>
+                    <rect key="frame" x="190" y="773" width="100" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="CdG-Zb-xdj"/>
+                        <constraint firstAttribute="width" constant="100" id="qkC-ak-4Kz"/>
                     </constraints>
-                    <popUpButtonCell key="cell" type="bevel" title="Jump to…" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" selectedItem="AN7-A3-yzG" id="BwT-Q7-AEq">
+                    <popUpButtonCell key="cell" type="bevel" title="Jump to…" bezelStyle="rounded" alignment="center" controlSize="small" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" pullsDown="YES" id="BwT-Q7-AEq">
                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystem"/>
                         <menu key="menu" id="kuj-Va-yTp">
@@ -183,7 +184,6 @@
                                         <connections>
                                             <binding destination="h9y-4G-n2j" name="content" keyPath="arrangedObjects" id="7k0-a6-GR4"/>
                                             <binding destination="h9y-4G-n2j" name="selectionIndexPaths" keyPath="selectionIndexPaths" previousBinding="7k0-a6-GR4" id="cUi-wI-Nzn"/>
-                                            <binding destination="h9y-4G-n2j" name="sortDescriptors" keyPath="sortDescriptors" previousBinding="cUi-wI-Nzn" id="Gnr-k7-iwe"/>
                                             <outlet property="delegate" destination="-2" id="hxp-YD-Kun"/>
                                             <outlet property="nextKeyView" destination="3Zc-Ww-ckx" id="zkU-ZO-DvF"/>
                                         </connections>
@@ -260,10 +260,9 @@
             </constraints>
             <point key="canvasLocation" x="313" y="332.5"/>
         </customView>
-        <treeController mode="entity" entityName="ConfigSection" automaticallyPreparesContent="YES" childrenKeyPath="filteredChildren" leafKeyPath="leaf" id="h9y-4G-n2j" userLabel="options">
+        <treeController mode="entity" entityName="ConfigSection" childrenKeyPath="filteredChildren" countKeyPath="filteredChildrenCount" leafKeyPath="leaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="h9y-4G-n2j" userLabel="options">
             <connections>
-                <binding destination="-2" name="managedObjectContext" keyPath="self.managedObjectContext" id="sep-jQ-3ID"/>
-                <binding destination="-2" name="sortDescriptors" keyPath="self.optionsSortDescriptors" id="n7f-DB-Tj8"/>
+                <binding destination="-2" name="contentArray" keyPath="self.model.root.filteredChildren" id="7df-VX-xzx"/>
             </connections>
         </treeController>
         <menu id="jzn-yH-Cli">

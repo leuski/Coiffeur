@@ -1,5 +1,5 @@
 //
-//  DiffMatchPatch+enum.h
+//  DiffMatchPatch+ALSwiftEnum.h
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/7/15.

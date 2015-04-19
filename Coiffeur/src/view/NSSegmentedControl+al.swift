@@ -1,5 +1,5 @@
 //
-//  NSSegmentedControl+labels.swift
+//  NSSegmentedControl+al.swift
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/5/15.

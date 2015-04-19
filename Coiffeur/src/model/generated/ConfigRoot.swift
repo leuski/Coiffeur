@@ -9,6 +9,6 @@
 import Foundation
 import CoreData
 
-class ConfigRoot: ConfigNode {
+class ConfigRoot: ConfigSection {
   @NSManaged var storedPredicate: AnyObject?
 }

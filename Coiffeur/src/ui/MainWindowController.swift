@@ -183,13 +183,12 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
     }
   }
   
-  func formatArgumentsForCoiffeurController(controller:CoiffeurController) -> (text:String, attributes: NSDictionary)
+	func coiffeurControllerArguments(controller: CoiffeurController) -> CoiffeurController.Arguments
   {
     if let source = self.sourceDocument {
-      return (text:source.string, attributes:[CoiffeurController.FormatLanguage:source.language,
-        CoiffeurController.FormatFragment:NSNumber(bool:false)])
+      return CoiffeurController.Arguments(source.string, language:source.language)
     } else {
-      return (text:"", attributes: [:])
+			return CoiffeurController.Arguments("", language:Language.languageFromUserDefaults())
     }
   }
   

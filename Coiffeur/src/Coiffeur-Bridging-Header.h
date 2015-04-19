@@ -6,4 +6,4 @@
 #import "ALExceptions.h"
 #import <MGSFragaria/MGSFragaria.h>
 #import <DiffMatchPatch/DiffMatchPatch.h>
-#import "DiffMatchPatch+enum.h"
+#import "DiffMatchPatch+ALSwiftEnum.h"

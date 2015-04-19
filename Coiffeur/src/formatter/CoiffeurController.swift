@@ -10,16 +10,28 @@ import Foundation
 import CoreData
 
 protocol CoiffeurControllerDelegate : class {
-	func formatArgumentsForCoiffeurController(controller:CoiffeurController) -> (text:String, attributes: NSDictionary)
+	func coiffeurControllerArguments(controller:CoiffeurController) -> CoiffeurController.Arguments
 	func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
 }
 
-enum CoiffeurControllerResult {
-	case Success(CoiffeurController)
-	case Failure(NSError)
-}
-
 class CoiffeurController : NSObject {
+
+	class Arguments {
+		let text:String
+		let language:Language
+		var fragment = false
+
+		init(_ text:String, language:Language)
+		{
+			self.text = text
+			self.language = language
+		}
+	}
+	
+	enum Result {
+		case Success(CoiffeurController)
+		case Failure(NSError)
+	}
 	
 	class var availableTypes : [CoiffeurController.Type] { return [ ClangFormatController.self, UncrustifyController.self ] }
 	
@@ -134,11 +146,11 @@ class CoiffeurController : NSObject {
 		return URLResult.Failure(Error(format:"Format executable URL is not specified"))
 	}
 	
-	class func createCoiffeur() -> CoiffeurControllerResult
+	class func createCoiffeur() -> CoiffeurController.Result
 	{
 		switch self.findExecutableURL() {
 		case .Failure(let error):
-			return CoiffeurControllerResult.Failure(error)
+			return CoiffeurController.Result.Failure(error)
 		case .Success(let url):
 			if let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: CoiffeurController.self)]) {
 				let mom = CoiffeurController._fixMOM(originalModel)
@@ -147,15 +159,15 @@ class CoiffeurController : NSObject {
 				if let psc = moc.persistentStoreCoordinator {
 					var error: NSError?
 					if nil == psc.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: &error) {
-						return CoiffeurControllerResult.Failure(error ?? Error(format:"Failed to initialize coiffeur persistent store"))
+						return CoiffeurController.Result.Failure(error ?? Error(format:"Failed to initialize coiffeur persistent store"))
 					}
 				} else {
-					return CoiffeurControllerResult.Failure(Error(format:"Failed to initialize coiffeur persistent store coordinator"))
+					return CoiffeurController.Result.Failure(Error(format:"Failed to initialize coiffeur persistent store coordinator"))
 				}
 				moc.undoManager = NSUndoManager()
-				return CoiffeurControllerResult.Success(self(executableURL:url, managedObjectModel:mom, managedObjectContext:moc))
+				return CoiffeurController.Result.Success(self(executableURL:url, managedObjectModel:mom, managedObjectContext:moc))
 			} else {
-				return CoiffeurControllerResult.Failure(Error(format:"Failed to initialize coiffeur managed object model"))
+				return CoiffeurController.Result.Failure(Error(format:"Failed to initialize coiffeur managed object model"))
 			}
 		}
 	}
@@ -178,12 +190,8 @@ class CoiffeurController : NSObject {
 		self.format()
 	}
 	
-	func clusterOptions()
+	private func _makeOthersSubsection()
 	{
-		for var i = 8; i >= 2; --i {
-			self._cluster(i)
-		}
-
 		for child in self.root!.children  {
 			if !(child is ConfigSection) {
 				continue
@@ -205,14 +213,25 @@ class CoiffeurController : NSObject {
 				continue
 			}
 			
-			var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
-      subsection.title  = "\u{200B}" + NSLocalizedString("Other", comment:"") + " " + section.title.lowercaseString
+			var subsection = ConfigSection.objectInContext(self.managedObjectContext)
+			subsection.title  = "\u{200B}" + NSLocalizedString("Other", comment:"") + " " + section.title.lowercaseString
 			subsection.parent = section
-
+			
 			for option in index {
 				option.parent = subsection
 			}
 		}
+	}
+	
+	func clusterOptions()
+	{
+		for var i = 8; i >= 2; --i {
+			self._cluster(i)
+		}
+
+		_makeOthersSubsection()
+		
+		self.root?.sortAndIndexChildren()
 	}
 	
 	private func _splitTokens(title:String, boundary:Int, stem:Bool = false) -> (head:[String], tail:[String])
@@ -280,7 +299,7 @@ class CoiffeurController : NSObject {
 					continue
 				}
 				
-				var subsection = ConfigSubsection.objectInContext(self.managedObjectContext)
+				var subsection = ConfigSection.objectInContext(self.managedObjectContext)
 				subsection.title  = key + " …"
 				subsection.parent = section
 				
@@ -303,9 +322,9 @@ class CoiffeurController : NSObject {
 		var result = false;
 		
 		if let del = self.delegate {
-			let (text, attributes) = del.formatArgumentsForCoiffeurController(self)
+			let arguments = del.coiffeurControllerArguments(self)
 			
-			result = self.format(text, attributes:attributes, completion: {(result:StringResult) in
+			result = self.format(arguments, completionHandler: {(result:StringResult) in
 				switch (result) {
 				case .Failure(let err):
 					NSLog("%@", err)
@@ -317,7 +336,7 @@ class CoiffeurController : NSObject {
 		return result;
 	}
 	
-	func format(text:String, attributes:NSDictionary, completion:(_:StringResult) -> Void) -> Bool
+	func format(args:Arguments, completionHandler:(_:StringResult) -> Void) -> Bool
 	{
 		return false
 	}
@@ -393,103 +412,6 @@ class CoiffeurController : NSObject {
 	{
 		return false
 	}
-	
-	func startExecutable(arguments:[String], workingDirectory:String?, input:String?) -> TaskResult
-	{
-		var result : TaskResult?
-		
-		ALExceptions.try({
-			var task = NSTask()
-			
-			task.launchPath = self.executableURL.path!
-			task.arguments = arguments
-			if workingDirectory != nil {
-				task.currentDirectoryPath = workingDirectory!
-			}
-			
-			task.standardOutput = NSPipe()
-			task.standardInput = NSPipe()
-			task.standardError = NSPipe()
-			
-			let writeHandle = input != nil ? task.standardInput.fileHandleForWriting : nil
-			
-			task.launch()
-			
-			if writeHandle != nil {
-				writeHandle.writeData(input!.dataUsingEncoding(NSUTF8StringEncoding)!)
-				writeHandle.closeFile()
-			}
-			
-			result = TaskResult.Success(task)
-			
-			}, catch: { (ex:NSException?) in
-				
-				result = TaskResult.Failure(Error(format:"An error while running format executable: %@",
-					ex?.reason ?? "unknown error"))
-				
-			}, finally: {})
-		
-		return result!
-	}
-	
-	func runTask(task:NSTask) -> StringResult
-	{
-		let outHandle = task.standardOutput.fileHandleForReading
-		let outData = outHandle.readDataToEndOfFile()
-		
-		let errHandle = task.standardError.fileHandleForReading
-		let errData = errHandle.readDataToEndOfFile()
-		
-		task.waitUntilExit()
-		
-		let status = task.terminationStatus
-		
-		if status == 0 {
-			if let string = String(data:outData, encoding: NSUTF8StringEncoding) {
-				return StringResult.Success(string)
-			} else {
-				return StringResult.Failure(Error(format:"Failed to interpret the output of the format executable"))
-			}
-		} else {
-			if let errText = String(data: errData, encoding: NSUTF8StringEncoding) {
-				return StringResult.Failure(Error(format:"Format excutable error code %d: %@", status, errText))
-			} else {
-				return StringResult.Failure(Error(format:"Format excutable error code %d", status))
-			}
-		}
-	}
-	
-	func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil, block:(_:StringResult)->Void) -> NSError?
-	{
-		let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
-		
-		switch result {
-		case .Failure(let err):
-			return err
-		case .Success(let task):
-			dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
-				let result = self.runTask(task)
-				dispatch_async(dispatch_get_main_queue(), {
-					block(result)
-				});
-			});
-			
-			return nil;
-		}
-		
-	}
-	
-	func runExecutable(arguments:[String], workingDirectory:String? = nil, input:String? = nil) -> StringResult
-	{
-		let result = self.startExecutable(arguments, workingDirectory: workingDirectory, input: input)
-		switch result {
-		case .Failure(let err):
-			return StringResult.Failure(err)
-		case .Success(let task):
-			return self.runTask(task)
-		}
-	}
-	
 }
 
 

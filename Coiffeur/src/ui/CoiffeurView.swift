@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Carbon
 
 class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   
@@ -15,25 +16,10 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   @IBOutlet var optionsController : NSTreeController!
 
   var optionsSortDescriptors : [NSSortDescriptor]!
-  private weak var model : CoiffeurController?
+	weak var model : CoiffeurController?
   
-  var managedObjectContext : NSManagedObjectContext? {
-    return self.model?.managedObjectContext
-  }
-  
-  var root : ConfigRoot? {
-    return self.model?.root
-  }
-  
-  var predicate : NSPredicate? {
-    get {
-      return self.root?.predicate
-    }
-    set (newPredicate) {
-      self.root?.predicate = newPredicate
-    }
-  }
-  
+	private var rowHeightCache = Dictionary<String,CGFloat>()
+
   private var myContext : UnsafeMutablePointer<Void> { return unsafeBitCast(self, UnsafeMutablePointer<Void>.self) }
   
   init?(model:CoiffeurController, bundle:NSBundle?)
@@ -68,9 +54,19 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    self.optionsController.addObserver(self, forKeyPath:"content", options:NSKeyValueObservingOptions.New, context:self.myContext)
+		_finishSettingUpView()
+//    self.optionsController.addObserver(self, forKeyPath:"content", options:NSKeyValueObservingOptions.New, context:self.myContext)
   }
-  
+	
+	override func viewWillDisappear()
+	{
+//		self.view.removeFromSuperviewWithoutNeedingDisplay()
+//		self.optionsController.setSelectionIndexPaths([])
+//		self.model = nil
+//		self.optionsController = nil
+		super.viewWillDisappear()
+	}
+	
   override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>)
   {
     if (context != self.myContext) {
@@ -78,25 +74,31 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     }
     
     self.optionsController.removeObserver(self, forKeyPath:"content")
-    self.optionsView.expandItem(nil, expandChildren:true)
-    
-    var foundNode = false
-
-    var node : AnyObject?
-    for node = self.optionsController.arrangedObjects;
-      node?.childNodes??.count != nil && node!.childNodes!!.count > 0;
-      node = node!.childNodes!![0]
-    {
-      foundNode = true
-    }
-    
-    if foundNode && node != nil {
-      self.optionsController.setSelectionIndexPath(node!.indexPath)
-    }
-    
-    self._fillMenu()
+		
+    _finishSettingUpView()
   }
-  
+	
+	private func _finishSettingUpView()
+	{
+		self.optionsView.expandItem(nil, expandChildren:true)
+
+		var foundNode = false
+		
+		var node : AnyObject?
+		for node = self.optionsController.arrangedObjects;
+			node?.childNodes??.count != nil && node!.childNodes!!.count > 0;
+			node = node!.childNodes!![0]
+		{
+			foundNode = true
+		}
+		
+		if foundNode && node != nil {
+			self.optionsController.setSelectionIndexPath(node!.indexPath)
+		}
+		
+		self._fillMenu()
+	}
+	
   private func allNodes() -> [AnyObject]
   {
     var array = [AnyObject]()
@@ -119,42 +121,7 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   {
     let allNodes = self.allNodes()
     
-    var sections = allNodes.filter { $0.representedObject is ConfigSubsection }
-    
-    sections.sort {
-      var obj1 = $0.representedObject as! ConfigNode
-      var obj2 = $1.representedObject as! ConfigNode
-      var d1 = obj1.depth
-      var d2 = obj2.depth
-      
-      while (d1 > d2) {
-        if (obj1.parent == obj2) {
-          return false
-        }
-        
-        obj1 = obj1.parent!
-        --d1;
-      }
-      
-      while (d2 > d1) {
-        if (obj2.parent == obj1) {
-          return true
-        }
-        
-        obj2 = obj2.parent!
-        --d2;
-      }
-      
-      while (obj1.parent != obj2.parent) {
-        obj1 = obj1.parent!
-        --d1;
-        obj2 = obj2.parent!
-        --d2;
-      }
-      
-      return obj1.title.compare(obj2.title, options:NSStringCompareOptions.CaseInsensitiveSearch)
-        == NSComparisonResult.OrderedAscending
-    }
+    var sections = allNodes.filter { $0.representedObject is ConfigSection }
     
     for var i = self.jumpMenu.numberOfItems - 1; i >= 1; --i {
       self.jumpMenu.removeItemAtIndex(i)
@@ -162,7 +129,7 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     
     for node in sections {
       var item    = NSMenuItem()
-      let section = node.representedObject as! ConfigSubsection
+      let section = node.representedObject as! ConfigSection
       item.title = section.title;
       item.indentationLevel  = section.depth - 1;
       item.representedObject = node;
@@ -186,42 +153,61 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     }
     return false
   }
-  
-  func outlineView(outlineView:NSOutlineView, viewForTableColumn tableColumn:NSTableColumn?, item:AnyObject) -> NSView?
+	
+	private func _outlineView(outlineView:NSOutlineView, viewIdentifierForItem item:AnyObject) -> String?
+	{
+		if let node = item.representedObject as? ConfigNode {
+			let tokens = node.tokens
+			if node is ConfigRoot {
+				return "view.root"
+			} else if (tokens.count == 0) {
+				return "view.section"
+			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
+				return "view.number"
+			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
+				return "view.number"
+			} else if (tokens.count == 1) {
+				return "view.string"
+			} else {
+				return "view.choice"
+			}
+		}
+		return nil
+	}
+
+	func outlineView(outlineView:NSOutlineView, viewForTableColumn tableColumn:NSTableColumn?, item:AnyObject) -> NSView?
   {
-    if let node = item.representedObject as? ConfigNode {
-      let tokens = node.tokens
-      
-      if node is ConfigRoot {
-        return outlineView.makeViewWithIdentifier("view.root", owner:self) as! NSView?
-      } else if (tokens.count == 0) {
-        return outlineView.makeViewWithIdentifier("view.section", owner:self) as! NSView?
-      } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
-        return outlineView.makeViewWithIdentifier("view.number", owner:self) as! NSView?
-      } else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
-        return outlineView.makeViewWithIdentifier("view.number", owner:self) as! NSView?
-      } else if (tokens.count == 1) {
-        return outlineView.makeViewWithIdentifier("view.string", owner:self) as! NSView?
-      } else {
-        if let view = outlineView.makeViewWithIdentifier("view.choice", owner:self) as! NSView? {
-          for v in view.subviews {
-            if let segmented = v as? NSSegmentedControl {
-              segmented.setLabels(tokens)
-              break
-            }
-          }
-          return view
-        }
-      }
-    }
+		if let identifier = _outlineView(outlineView, viewIdentifierForItem:item),
+			 let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as! NSView?,
+			 let node = item.representedObject as? ConfigNode
+		{
+			if identifier == "view.choice" {
+				for v in view.subviews {
+					if let segmented = v as? NSSegmentedControl {
+						segmented.setLabels(node.tokens)
+						break
+					}
+				}
+			}
+			return view
+		}
     return nil
   }
   
   func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat
   {
-    if let view = self.outlineView(outlineView, viewForTableColumn:nil, item:item) {
-      return view.frame.size.height
-    }
+		if let identifier = _outlineView(outlineView, viewIdentifierForItem:item) {
+			if let height = rowHeightCache[identifier] {
+				return height
+			}
+			if let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as? NSView {
+				let height = view.frame.size.height
+				if height > 0 {
+					rowHeightCache[identifier] = height
+					return height
+				}
+			}
+		}
     return 10
   }
   
@@ -232,27 +218,27 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   
   func outlineView(outlineView: NSOutlineView, rowViewForItem item: AnyObject) -> NSTableRowView?
   {
-    let aNode = item.representedObject as? ConfigNode
-    if aNode == nil  {
+    let optionalNode = item.representedObject as? ConfigNode
+    if optionalNode == nil  {
       return nil
     }
     
-    let node = aNode!
+    let theNode = optionalNode!
     
-    let hOffset = Int((1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+1.0)
-    
-    var container   = OutlineRowView()
-
-		var outlineNode : AnyObject? = item
-		let itemPath = item.indexPath!
-		var colors = [NSColor]()
-		for var i = itemPath.length - 1; i >= 0; --i {
-			let index = itemPath.indexAtPosition(i)
-			outlineNode = outlineView.parentForItem(outlineNode)
-			let count = outlineView.numberOfChildrenOfItem(outlineNode)
-			colors.insert(NSColor(calibratedHue: CGFloat(index)/CGFloat(count+1), saturation: 1, brightness: 1, alpha: 1), atIndex: 0)
+		var node : ConfigNode = theNode
+		var locations : [OutlineRowView.Location] = []
+		
+		while true {
+			if let parent = node.parent {
+				locations.insert(OutlineRowView.Location(node.index, of:parent.children.count), atIndex:0)
+				node = parent
+			} else {
+				break
+			}
 		}
-		container.colors = colors
+
+		var container   = OutlineRowView()
+		container.locations = locations
 		
     var childView   = NSTextField()
     childView.editable        = false
@@ -260,11 +246,12 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     childView.bordered        = false
     childView.drawsBackground = false
     childView.translatesAutoresizingMaskIntoConstraints = false
-    childView.stringValue = node.title
+    childView.stringValue = theNode.title
     container.addSubview(childView)
 
+		let hOffset = Int((1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+1.0)
     var vOffset = 0
-    if node is ConfigOption {
+    if theNode is ConfigOption {
       let fontSize = NSFont.systemFontSizeForControlSize(NSControlSize.SmallControlSize)
       childView.font = NSFont.systemFontOfSize(fontSize)
       vOffset = 2

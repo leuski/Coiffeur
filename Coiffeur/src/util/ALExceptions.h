@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ This is a hack to handle ObjC exceptions in Swift. It will go away at some
+ point when Swift figures out what to do with exceptions...
+ */
 @interface ALExceptions : NSObject
-
 + (void)try:(void(^)())try catch:(void(^)(NSException*))catch finally:(void(^)())finally;
-//+ (void)throwString:(NSString*)string;
-
 @end

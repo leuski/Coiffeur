@@ -13,11 +13,12 @@ enum FetchResult<T:AnyObject> {
 	case Failure(NSError)
 }
 
-enum FetchSingleResult<T:AnyObject> {
-	case None
-	case Success(T)
-	case Failure(NSError)
-}
+// this is actuavlly does not work as of Swift 1.2
+//enum FetchSingleResult<T:AnyObject> {
+//	case None
+//	case Success(T)
+//	case Failure(NSError)
+//}
 
 extension NSManagedObjectContext {
   
@@ -62,15 +63,15 @@ extension NSManagedObjectContext {
 		}
 	}
 
-	func fetchSingle<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
-	{
-		switch fetch(entity(entityClass), withPredicate:predicate, sortDescriptors:sortDescriptors) {
-		case .Success(let array):
-			return array.isEmpty ? FetchSingleResult<T>.None : FetchSingleResult<T>.Success(array[0] as! T)
-		case .Failure(let error):
-			return FetchSingleResult<T>.Failure(error)
-		}
-	}
+//	func fetchSingle<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
+//	{
+//		switch fetch(entity(entityClass), withPredicate:predicate, sortDescriptors:sortDescriptors) {
+//		case .Success(let array):
+//			return array.isEmpty ? FetchSingleResult<T>.None : FetchSingleResult<T>.Success(array[0] as! T)
+//		case .Failure(let error):
+//			return FetchSingleResult<T>.Failure(error)
+//		}
+//	}
 	
 	func insert<T:NSManagedObject>(entityClass:T.Type) -> T
 	{
@@ -102,25 +103,7 @@ extension NSManagedObjectContext {
 }
 
 extension NSManagedObject {
-  
-//  class func entityInContext(managedObjectContext: NSManagedObjectContext) -> NSEntityDescription?
-//  {
-//    let mom = managedObjectContext.persistentStoreCoordinator!.managedObjectModel
-//    let className = NSStringFromClass(self)
-//    for entity in mom.entities {
-//      if className == entity.managedObjectClassName {
-//        return entity as? NSEntityDescription
-//      }
-//    }
-//    return nil
-//  }
-//
-//  class func entityNameInContext(managedObjectContext: NSManagedObjectContext) -> String?
-//  {
-//    return entityInContext(managedObjectContext)?.name
-//  }
-//  
-
+	
 	class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
   {
     return managedObjectContext.insert(self)

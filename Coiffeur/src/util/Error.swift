@@ -35,18 +35,14 @@ extension NSError {
   }
 }
 
-enum Result<T:AnyObject> {
-  case Success(T)
-  case Failure(NSError)
-}
+// Does not compile as of Swift 1.2
+//enum Result<T:AnyObject> {
+//  case Success(T)
+//  case Failure(NSError)
+//}
 
 enum StringResult {
   case Success(String)
-  case Failure(NSError)
-}
-
-enum TaskResult {
-  case Success(NSTask)
   case Failure(NSError)
 }
 

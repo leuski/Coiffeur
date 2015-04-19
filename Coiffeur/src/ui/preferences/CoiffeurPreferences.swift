@@ -22,7 +22,7 @@ class CoiffeurControllerClass : NSObject {
 		return controllerClass.contentsIsValidInString(string)
 	}
 	
-	func createCoiffeur() -> CoiffeurControllerResult
+	func createCoiffeur() -> CoiffeurController.Result
 	{
 		return controllerClass.createCoiffeur()
 	}

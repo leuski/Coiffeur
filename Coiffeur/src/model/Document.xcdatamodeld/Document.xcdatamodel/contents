@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ConfigNode" representedClassName="ConfigNode" isAbstract="YES" syncable="YES">
+        <attribute name="storedIndex" transient="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="title" transient="YES" attributeType="String" syncable="YES"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConfigNode" inverseName="parent" inverseEntity="ConfigNode" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ConfigNode" inverseName="parent" inverseEntity="ConfigNode" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ConfigNode" inverseName="children" inverseEntity="ConfigNode" syncable="YES"/>
     </entity>
     <entity name="ConfigOption" representedClassName="ConfigOption" parentEntity="ConfigNode" syncable="YES">
@@ -11,16 +12,16 @@
         <attribute name="storedType" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="stringValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ConfigRoot" representedClassName="ConfigRoot" parentEntity="ConfigNode" syncable="YES">
+    <entity name="ConfigRoot" representedClassName="ConfigRoot" parentEntity="ConfigSection" syncable="YES">
         <attribute name="storedPredicate" optional="YES" transient="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
-    <entity name="ConfigSection" representedClassName="ConfigSection" parentEntity="ConfigSubsection" syncable="YES"/>
-    <entity name="ConfigSubsection" representedClassName="ConfigSubsection" parentEntity="ConfigNode" syncable="YES"/>
+    <entity name="ConfigSection" representedClassName="ConfigSection" parentEntity="ConfigNode" syncable="YES">
+        <attribute name="storedFilteredChildren" optional="YES" transient="YES" attributeType="Transformable" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="ConfigNode" positionX="-18" positionY="81" width="128" height="90"/>
+        <element name="ConfigNode" positionX="-18" positionY="81" width="128" height="105"/>
         <element name="ConfigOption" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="ConfigRoot" positionX="18" positionY="144" width="128" height="58"/>
-        <element name="ConfigSection" positionX="-54" positionY="18" width="128" height="45"/>
-        <element name="ConfigSubsection" positionX="36" positionY="153" width="128" height="45"/>
+        <element name="ConfigRoot" positionX="18" positionY="144" width="128" height="60"/>
+        <element name="ConfigSection" positionX="-54" positionY="18" width="128" height="60"/>
     </elements>
 </model>

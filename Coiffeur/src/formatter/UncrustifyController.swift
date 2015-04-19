@@ -33,23 +33,23 @@ class UncrustifyController : CoiffeurController {
 	override class var currentExecutableName : String { return Private.ExecutableName }
 	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }
 	
-  override class func createCoiffeur() -> CoiffeurControllerResult
+  override class func createCoiffeur() -> CoiffeurController.Result
   {
     let result = super.createCoiffeur()
     
     switch result {
     case .Success(let controller):
       if Private.OptionsDocumentation == nil {
-        switch controller.runExecutable([Private.ShowDocumentationArgument]) {
+        switch NSTask(controller.executableURL, arguments: [Private.ShowDocumentationArgument]).run() {
         case .Failure(let error):
-          return CoiffeurControllerResult.Failure(error)
+          return CoiffeurController.Result.Failure(error)
         case .Success(let text):
           Private.OptionsDocumentation = text
         }
       }
       
       if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
-        return CoiffeurControllerResult.Failure(error)
+        return CoiffeurController.Result.Failure(error)
       }
 			
 		default:
@@ -217,38 +217,29 @@ class UncrustifyController : CoiffeurController {
     return error ?? super.writeValuesToURL(absoluteURL)
   }
   
-  override func format(text: String, attributes: NSDictionary, completion: (_:StringResult) -> Void) -> Bool
+	override func format(arguments:Arguments, completionHandler: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configPath = workingDirectory.stringByAppendingPathComponent(NSUUID().UUIDString)
     
     if let error = self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!) {
-      completion(StringResult.Failure(error))
+      completionHandler(StringResult.Failure(error))
       return false
     }
     
     var args = [Private.QuietFlag, Private.ConfigPathFlag, configPath]
     
-    if let language = attributes[CoiffeurController.FormatLanguage] as? Language {
-      
-      args.append(Private.LanguageFlag)
-      args.append(language.uncrustifyID)
-    }
-    
-    if let fragmentFlag  = attributes[CoiffeurController.FormatFragment] as? NSNumber {
-      if fragmentFlag.boolValue {
-        args.append(Private.FragmentFlag)
-      }
-    }
-    
-    let complete = { (result:StringResult) -> Void  in
-      NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
-      completion(result)
-    }
-    
-    if let error = self.runExecutable(args, workingDirectory:workingDirectory, input:text, block:complete) {
-      completion(StringResult.Failure(error))
-      return false
+		args.append(Private.LanguageFlag)
+		args.append(arguments.language.uncrustifyID)
+		
+		if arguments.fragment {
+			args.append(Private.FragmentFlag)
+		}
+		
+		NSTask(self.executableURL, arguments: args, workingDirectory: workingDirectory).runAsync(arguments.text) {
+			(result:StringResult) -> Void in
+			NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
+			completionHandler(result)
     }
     
     return true

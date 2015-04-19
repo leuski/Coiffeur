@@ -1,5 +1,5 @@
 //
-//  NSString+ALParsing.swift
+//  NSString+al.swift
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/5/15.
@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+Adds string processing utilities
+*/
 extension String {
   
   var commandLineComponents : [String] {
@@ -234,44 +237,6 @@ extension String {
     self.init(bytes:buffer, encoding:encoding)
   }
 }
-
-extension NSRegularExpression {
-  func firstMatchInString(string:String) -> NSTextCheckingResult?
-  {
-    return firstMatchInString(string, options: NSMatchingOptions(), range: string.nsRange)
-  }
-  
-  class func ci_dmls_regularExpressionWithPattern(pattern: String) -> NSRegularExpression
-  {
-    return NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive | NSRegularExpressionOptions.DotMatchesLineSeparators, error: nil)!
-  }
-
-  class func ci_regularExpressionWithPattern(pattern: String) -> NSRegularExpression
-  {
-    return NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive, error: nil)!
-  }
-
-  class func aml_regularExpressionWithPattern(pattern: String) -> NSRegularExpression
-  {
-    return NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.AnchorsMatchLines, error: nil)!
-  }
-  
-  func replaceMatchesInString(string: NSMutableString, withTemplate template: String) -> Int
-  {
-    return self.replaceMatchesInString(string, options: NSMatchingOptions(), range: NSMakeRange(0, string.length), withTemplate: template)
-  }
-  
-  func stringByReplacingMatchesInString(string: String, withTemplate template: String) -> String
-  {
-    return self.stringByReplacingMatchesInString(string, options:NSMatchingOptions(), range:string.nsRange, withTemplate: template)
-  }
-}
-
-
-
-
-
-
 
 
 

@@ -101,8 +101,8 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   override var document: AnyObject? {
     didSet (oldDocument) {
       let containerView = self.splitView.subviews[0] as! NSView
-      
-      if oldDocument != nil {
+
+			if oldDocument != nil {
         // lets see if die here. need a copy of the subview list
         for v in containerView.subviews {
           v.removeFromSuperviewWithoutNeedingDisplay()
@@ -110,9 +110,9 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
       }
       
       if var d = self.styleDocument, let v = CoiffeurView(model:d.model!, bundle:nil) {
-          self.styleView = v
-          v.embedInView(containerView)
-          d.model!.delegate = self
+				self.styleView = v
+				v.embedInView(containerView)
+				d.model!.delegate = self
       }
       
       self.uncrustify(nil)
@@ -277,6 +277,8 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   func windowWillClose(notification:NSNotification)
   {
     self.sourceView.representedObject = nil
+		self.sourceView = nil
+		self.styleView = nil
   }
   
   private func _showDiffs(diffs:NSMutableArray, intensity:CGFloat) -> [OverviewRegion]

@@ -28,7 +28,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                     <connections>
-                        <binding destination="-2" name="predicate" keyPath="self.model.root.predicate" id="0wc-ZS-5F9">
+                        <binding destination="-2" name="predicate" keyPath="self.predicate" id="FBO-UK-pue">
                             <dictionary key="options">
                                 <string key="NSDisplayName">predicate</string>
                                 <string key="NSPredicateFormat">(documentation contains[cd] $value) OR (name contains[cd] $value) OR (filteredChildrenCount &gt; 0)</string>
@@ -260,9 +260,9 @@
             </constraints>
             <point key="canvasLocation" x="313" y="332.5"/>
         </customView>
-        <treeController mode="entity" entityName="ConfigSection" childrenKeyPath="filteredChildren" countKeyPath="filteredChildrenCount" leafKeyPath="leaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="h9y-4G-n2j" userLabel="options">
+        <treeController editable="NO" childrenKeyPath="filteredChildren" countKeyPath="filteredChildrenCount" leafKeyPath="leaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="h9y-4G-n2j" userLabel="options">
             <connections>
-                <binding destination="-2" name="contentArray" keyPath="self.model.root.filteredChildren" id="7df-VX-xzx"/>
+                <binding destination="-2" name="contentArray" keyPath="self.sections" id="zMK-IL-bjt"/>
             </connections>
         </treeController>
         <menu id="jzn-yH-Cli">

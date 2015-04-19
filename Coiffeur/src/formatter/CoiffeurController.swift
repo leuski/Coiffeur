@@ -54,7 +54,15 @@ class CoiffeurController : NSObject {
 	let managedObjectModel : NSManagedObjectModel
 	let executableURL : NSURL
 	
-	var root : ConfigRoot?
+	var root : ConfigRoot? {
+		switch self.managedObjectContext.fetch(ConfigRoot.self) {
+		case .Success(let array):
+			return array.isEmpty ? nil : array[0]
+		case .Failure(let error):
+			return nil
+		}
+	}
+	
 	var pageGuideColumn : Int { return 0 }
 	weak var delegate : CoiffeurControllerDelegate?
 	
@@ -356,7 +364,7 @@ class CoiffeurController : NSObject {
 		let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
 		self.managedObjectContext.disableUndoRegistration()
 		
-		self.root = ConfigRoot.objectInContext(self.managedObjectContext);
+		ConfigRoot.objectInContext(self.managedObjectContext);
 		
 		let result = self.readOptionsFromLineArray(lines)
 		clusterOptions()

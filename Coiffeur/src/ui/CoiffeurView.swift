@@ -16,7 +16,7 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
   @IBOutlet var optionsController : NSTreeController!
 
   var optionsSortDescriptors : [NSSortDescriptor]!
-	weak var model : CoiffeurController?
+	@objc weak var model : CoiffeurController?
   
 	private var rowHeightCache = Dictionary<String,CGFloat>()
 
@@ -31,7 +31,26 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     }
     self.optionsSortDescriptors = [NSSortDescriptor(key: ConfigNode.TitleKey, ascending: true, comparator: c)]
   }
-  
+	
+	class func keyPathsForValuesAffectingSections() -> NSSet
+	{
+		return NSSet(object:"model.root.filteredChildren")
+	}
+	
+	class func keyPathsForValuesAffectingPredicate() -> NSSet
+	{
+		return NSSet(object:"model.root.predicate")
+	}
+	
+	var sections : NSArray? {
+		return self.model?.root?.filteredChildren
+	}
+
+	var predicate : NSPredicate? {
+		get { return self.model?.root?.predicate }
+		set (value) { self.model?.root?.predicate = value }
+	}
+	
   required init?(coder: NSCoder) {
     super.init(coder:coder)
   }
@@ -60,10 +79,10 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
 	
 	override func viewWillDisappear()
 	{
-//		self.view.removeFromSuperviewWithoutNeedingDisplay()
-//		self.optionsController.setSelectionIndexPaths([])
-//		self.model = nil
-//		self.optionsController = nil
+		self.view.removeFromSuperviewWithoutNeedingDisplay()
+		self.optionsController.setSelectionIndexPaths([])
+		self.model = nil
+		self.optionsController = nil
 		super.viewWillDisappear()
 	}
 	
@@ -247,6 +266,7 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     childView.drawsBackground = false
     childView.translatesAutoresizingMaskIntoConstraints = false
     childView.stringValue = theNode.title
+		childView.backgroundColor = NSColor.controlBackgroundColor()
     container.addSubview(childView)
 
 		let hOffset = Int((1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+1.0)
@@ -254,12 +274,12 @@ class CoiffeurView : NSViewController, NSOutlineViewDelegate {
     if theNode is ConfigOption {
       let fontSize = NSFont.systemFontSizeForControlSize(NSControlSize.SmallControlSize)
       childView.font = NSFont.systemFontOfSize(fontSize)
-      vOffset = 2
+			childView.textColor = NSColor.textColor()
+			vOffset = 2
     } else {
       let fontSize = NSFont.systemFontSizeForControlSize(NSControlSize.RegularControlSize)
       childView.font = NSFont.boldSystemFontOfSize(fontSize)
       childView.textColor = NSColor.secondaryLabelColor()
-      childView.backgroundColor = NSColor.controlBackgroundColor()
       vOffset = 3
     }
     

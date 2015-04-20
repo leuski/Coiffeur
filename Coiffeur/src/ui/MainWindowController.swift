@@ -8,114 +8,30 @@
 
 import Cocoa
 
-class MainWindowController : NSWindowController, NSOutlineViewDelegate,
-  NSWindowDelegate, CoiffeurControllerDelegate, NSSplitViewDelegate {
-  
-  typealias ScrollLocation = CGFloat
+class MainWindowController : NSWindowController, NSWindowDelegate,
+	NSSplitViewDelegate {
   
   @IBOutlet weak var splitView : NSSplitView!
   var sourceView: SourceView!
   var styleView: CoiffeurView!
-  var fragaria : MGSFragaria
-  var codeString : String = ""
-  var newString : Bool = false
-  
-  var sourceTextViewScrollLocation : ScrollLocation {
-    get {
-      // we will try and preserve visible frame position in the document
-      // across changes.
-      
-      let textView : NSTextView     = self.fragaria.textView()
-      let textStorage   = textView.textStorage!
-      let layoutManager = textView.layoutManager!
-      
-      // first we need the document height.
-      // textView lays text out lazily, so we cannot just use the textView frame
-      // to get the height. It's not computed yet.
-      
-      // Here we are taking advantage of two assumptions:
-      // 1. the text is not wrapping, so we only count hard line breaks
-      let oldDocumentLineCount = textStorage.string.lineCount()
-      
-      // 2. the text is laid out in one font size, so the line height is constant
-      let lineHeight        = layoutManager.defaultLineHeightForFont(textView.font!)
-      
-      let frameHeight       = CGFloat(oldDocumentLineCount) * lineHeight
-      let  visRect           = textView.visibleRect
-      let maxScrollLocation = frameHeight - visRect.size.height
-      let relativeScrollLocation = (maxScrollLocation > 0) ? visRect.origin.y / maxScrollLocation : 0
-      
-      //              NSLog("%f %f %f %f %f %ld", frameHeight, visRect.size.height,
-      //                                      visRect.origin.y, maxScrollLocation,
-      // relativeScrollLocation, textStorage.string.length);
-      
-      return relativeScrollLocation
-    }
-    set (relativeScrollLocation) {
-      let      textView :NSTextView     = self.fragaria.textView()
-      let  textStorage   = textView.textStorage!
-      let layoutManager = textView.layoutManager!
-      
-      layoutManager.ensureLayoutForTextContainer(textView.textContainer!)
-      
-      let lineHeight        = layoutManager.defaultLineHeightForFont(textView.font!)
-      
-      let newDocumentLineCount = textStorage.string.lineCount()
-      
-      let frameHeight       = CGFloat(newDocumentLineCount) * lineHeight
-      var  visRect           = textView.visibleRect
-      let maxScrollLocation = frameHeight - visRect.size.height
-      
-      //              NSLog("%f %f %f %f %f %ld", frameHeight, visRect.size.height,
-      //                                      visRect.origin.y, maxScrollLocation,
-      // relativeScrollLocation, textStorage.string.length);
-      
-      visRect.origin.y = round(relativeScrollLocation * maxScrollLocation)
-      visRect.origin.x = 0;
-      textView.scrollRectToVisible(visRect)
-      
-    }
-  }
-  var diffMatchPatch : DiffMatchPatch
-  weak var overviewScroller : OverviewScroller!
-  
-  var language : Language {
-    didSet {
-      let fragariaName = language.fragariaID
-      self.fragaria.setObject(fragariaName, forKey:MGSFOSyntaxDefinitionName)
-      self.uncrustify(nil)
-    }
-  }
-  
-  var fileURL : NSURL? {
-    didSet {
-      if let url = self.fileURL {
-        NSUserDefaults.standardUserDefaults().setURL(url, forKey: LastSourceURLUDKey)
-        if let uti = NSWorkspace.sharedWorkspace().typeOfFile(url.path!, error:nil), let lang = Language.languageWithUTI(uti) {
-          self.language = lang
-        }
-      }
-    }
-  }
-  
+	
   override var document: AnyObject? {
     didSet (oldDocument) {
-      let containerView = self.splitView.subviews[0] as! NSView
-
-			if oldDocument != nil {
-        // lets see if die here. need a copy of the subview list
-        for v in containerView.subviews {
-          v.removeFromSuperviewWithoutNeedingDisplay()
-        }
+			
+			if oldDocument != nil && self.styleView != nil {
+				self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
+				self.styleView = nil
       }
       
-      if var d = self.styleDocument, let v = CoiffeurView(model:d.model!, bundle:nil) {
-				self.styleView = v
-				v.embedInView(containerView)
-				d.model!.delegate = self
+      if var d = self.styleDocument {
+				self.styleView = CoiffeurView()
+				self.splitView.subviews.insert(self.styleView.view, atIndex: 0)
+				self.window?.initialFirstResponder = self.styleView.optionsView
+				self.styleView.representedObject = d.model!
+				d.model!.delegate = self.sourceView
       }
       
-      self.uncrustify(nil)
+      self.uncrustify()
     }
   }
   
@@ -123,44 +39,8 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
     return self.document as? Document
   }
   
-  var sourceDocument : MainWindowController? {
-    return self
-  }
-  
-  var string:String {
-    get {
-      return self.codeString
-    }
-    set (string){
-      let oldString : String = self.fragaria.string()
-      let scrollLocation = self.sourceTextViewScrollLocation
-      
-      self.fragaria.setString(string)
-      
-      if self.newString {
-        self.sourceTextViewScrollLocation = 0
-        self.overviewScroller.regions     = []
-      } else {
-        self.sourceTextViewScrollLocation = scrollLocation
-        
-        let diffs = self.diffMatchPatch.diff_mainOfOldString(oldString, andNewString:string)
-        self.overviewScroller.regions = self._showDiffs(diffs, intensity:1)
-      }
-      
-      self.newString = false
-    }
-  }
-
-  private let LastSourceURLUDKey    = "LastSourceURL"
-  private let SamplesFolderName     = "samples"
-  private let SampleFileName        = "sample"
-  private let ObjectiveCPPExtension = "mm"
-  
   override init(window:NSWindow?)
   {
-    self.diffMatchPatch = DiffMatchPatch()
-    self.fragaria       = MGSFragaria()
-    self.language       = Language.languageFromUserDefaults()
     super.init(window:window)
   }
   
@@ -172,65 +52,13 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   convenience init()
   {
     self.init(windowNibName:"MainWindowController")
-    self._restoreSource()
     let x = self.window
   }
   
-  @IBAction func uncrustify(sender : AnyObject?)
+  @IBAction func uncrustify(_ sender : AnyObject? = nil)
   {
     if let m = self.styleDocument?.model {
       m.format()
-    }
-  }
-  
-	func coiffeurControllerArguments(controller: CoiffeurController) -> CoiffeurController.Arguments
-  {
-    if let source = self.sourceDocument {
-      return CoiffeurController.Arguments(source.string, language:source.language)
-    } else {
-			return CoiffeurController.Arguments("", language:Language.languageFromUserDefaults())
-    }
-  }
-  
-  func coiffeurController(coiffeurController:CoiffeurController, setText text:String)
-  {
-    if var source = self.sourceDocument {			
-			var pageGuideColumn = coiffeurController.pageGuideColumn
-			if NSUserDefaults.standardUserDefaults().boolForKey("CoiffeurOverwritePageGuide") {
-				pageGuideColumn = NSUserDefaults.standardUserDefaults().integerForKey("CoiffeurOverwritePageGuideValue")
-			}
-      NSUserDefaults.standardUserDefaults().setInteger(pageGuideColumn, forKey: MGSFragariaPrefsShowPageGuideAtColumn)
-      NSUserDefaults.standardUserDefaults().setBool(pageGuideColumn != 0, forKey: MGSFragariaPrefsShowPageGuide)
-      source.string = text
-    }
-  }
-  
-  private func _restoreSource()
-  {
-    if let lastURL = NSUserDefaults.standardUserDefaults().URLForKey(LastSourceURLUDKey) {
-      if nil == self.loadSourceFormURL(lastURL) {
-        return
-      }
-    }
-    
-    let url = NSBundle.mainBundle().URLForResource(SampleFileName,
-      withExtension:ObjectiveCPPExtension, subdirectory:SamplesFolderName)!
-    
-    if let error = self.loadSourceFormURL(url) {
-      NSException(name: "No Source", reason: "Failed to load the sample source file", userInfo: nil).raise()
-    }
-  }
-  
-  func loadSourceFormURL(url:NSURL) -> NSError?
-  {
-    var error:NSError?
-    if let source = String(contentsOfURL:url, encoding:NSUTF8StringEncoding, error:&error) {
-      self.newString = true
-      self.codeString = source
-      self.fileURL = url
-      return nil
-    } else {
-      return error ?? Error(format:"Unknown error while reading source file from %@", url)
     }
   }
   
@@ -238,115 +66,26 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   {
     super.windowDidLoad()
     
-    self.sourceView = SourceView(nibName:"SourceView", bundle:nil)
+    self.sourceView = SourceView()
+		self.splitView.addSubview(self.sourceView.view)
 
-    var types = Set<String>()
-    for  l in Language.supportedLanguages {
-      types.unionInPlace(l.UTIs)
-    }
-    self.sourceView.allowedFileTypes  = [String](types)
-    self.sourceView.representedObject = self
-    
-    let resourcesURL = NSBundle.mainBundle().resourceURL!
-    let baseURL      = resourcesURL.URLByAppendingPathComponent(SamplesFolderName)
-    let fm           = NSFileManager.defaultManager()
-    
-    if let urls = fm.contentsOfDirectoryAtURL(baseURL, includingPropertiesForKeys:nil,
-      options:NSDirectoryEnumerationOptions.SkipsHiddenFiles, error:nil) {
-        self.sourceView.knownSampleURLs = urls as! [NSURL]
-    }
-    
-    self.splitView.replaceSubview(self.splitView.subviews[1] as! NSView, with:self.sourceView.view)
-    
-    // we want to be the delegate
-    self.fragaria.setObject(self, forKey:MGSFODelegate)
-    self.fragaria.embedInView(self.sourceView.containerView)
-    
-    let textView : NSTextView = self.fragaria.textView()
-    textView.editable = false
-    textView.textContainer!.widthTracksTextView = false
-    textView.textContainer!.containerSize       = NSMakeSize(CGFloat.max, CGFloat.max)
-    
-    let       scrollView       = textView.enclosingScrollView!
-    let overviewScroller = OverviewScroller(frame:NSMakeRect(0,0,0,0))
-    self.overviewScroller       = overviewScroller
-    scrollView.verticalScroller = overviewScroller
-    scrollView.verticalScroller!.scrollerStyle = NSScrollerStyle.Legacy
-  }
-  
+		let uncrustify : BlockObserver = { _, _ in self.uncrustify() }
+		self.sourceView.addObserverForKeyPath("language", observer:uncrustify)
+		self.sourceView.addObserverForKeyPath("sourceString", options: .Initial, observer:uncrustify)
+	}
+	
   func windowWillClose(notification:NSNotification)
   {
-    self.sourceView.representedObject = nil
+		self.sourceView.representedObject = nil
 		self.sourceView = nil
+		self.styleView.representedObject = nil
 		self.styleView = nil
   }
-  
-  private func _showDiffs(diffs:NSMutableArray, intensity:CGFloat) -> [OverviewRegion]
-  {
-    let    textView    = self.fragaria.textView()
-    let textStorage = textView.textStorage!
-    
-		textStorage.removeAttribute(NSBackgroundColorAttributeName, range:NSMakeRange(0, textStorage.length))
-
-		if intensity == 0 {
-      return []
-    }
-    
-    var lineRanges = [OverviewRegion]();
-    let saturation : CGFloat  = 0.5
-    let insertHue : CGFloat = 1.0 / 3.0
-    let deleteHue : CGFloat = 0.0 / 3.0
-    let textViewBrightness : CGFloat = 1.0
-    let scrollerBrightness : CGFloat = 0.75
-    
-    let insertColor = NSColor(calibratedHue:insertHue, saturation:saturation, brightness:textViewBrightness, alpha:intensity)
-    let deleteColor = NSColor(calibratedHue:deleteHue, saturation:saturation, brightness:textViewBrightness, alpha:intensity)
-    let insertColor1 = NSColor(calibratedHue:insertHue, saturation:saturation, brightness:scrollerBrightness, alpha:intensity)
-    let deleteColor1 = NSColor(calibratedHue:deleteHue, saturation:saturation, brightness:scrollerBrightness, alpha:intensity)
-    
-    var index : String.Index = textStorage.string.startIndex
-    var lineCount: Int = 0
-    var offset  = 0
-    
-    for aDiff in diffs {
-      if let diff = aDiff as? Diff {
-        if diff.text.isEmpty {
-          continue
-        }
-				
-				if diff.diffOperation == .Delete {
-					lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: deleteColor1))
-					if offset < textStorage.length {
-						textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset, 1))
-					} else if offset > 0 {
-						textStorage.addAttribute(NSBackgroundColorAttributeName, value:deleteColor, range:NSMakeRange(offset-1, 1))
-					}
-				} else {
-					let length = distance(diff.text.startIndex, diff.text.endIndex)
-					let nextIndex = advance(index, length)
-					let lineSpan   = textStorage.string.lineCountForCharacterRange(index..<nextIndex)
-					index = nextIndex
-
-					if diff.diffOperation == .Insert {
-						lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, lineSpan), color: insertColor1))
-						textStorage.addAttribute(NSBackgroundColorAttributeName, value:insertColor, range:NSMakeRange(offset, length))
-					}
-
-					lineCount += lineSpan
-					offset += length
-				}
-      }
-    }
-    
-    lineRanges.append(OverviewRegion(lineRange: NSMakeRange(lineCount, 0), color: nil))
-    return lineRanges
-  }
-  
+	
   @IBAction func changeLanguage(anItem:NSMenuItem)
   {
     if let language = anItem.representedObject as? Language {
-      self.language = language
-      language.saveToUserDefaults()
+      self.sourceView.language = language
     }
   }
   
@@ -354,7 +93,7 @@ class MainWindowController : NSWindowController, NSOutlineViewDelegate,
   {
     if anItem.action == Selector("changeLanguage:") {
       if let language = anItem.representedObject as? Language {
-        anItem.state = (self.language == language) ? NSOnState : NSOffState
+        anItem.state = (self.sourceView.language == language) ? NSOnState : NSOffState
       }
     }
     

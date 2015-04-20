@@ -19,6 +19,13 @@ class Language : NSObject {
   }
 
   class var supportedLanguages : [Language] { return LanguagePrivate.supportedLanguages }
+	class var supportedLanguageUTIs : [String] {
+		var types = Set<String>()
+		for  l in Language.supportedLanguages {
+			types.unionInPlace(l.UTIs)
+		}
+		return [String](types)
+	}
 
   private(set) var uncrustifyID = ""
   private(set) var displayName = ""

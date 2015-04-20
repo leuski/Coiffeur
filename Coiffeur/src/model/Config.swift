@@ -9,8 +9,42 @@
 import Foundation
 import CoreData
 
+class ConfigNodeLocation {
+	var index = 0
+	var count = 0
+	init(_ index:Int, of count:Int) {
+		self.index = index
+		self.count = count
+	}
+}
+
 extension ConfigNode {
-  
+	
+//	class Location {
+//		var index = 0
+//		var count = 0
+//		init(_ index:Int, of count:Int) {
+//			self.index = index
+//			self.count = count
+//		}
+//	}
+	typealias Location = ConfigNodeLocation
+	
+	var path : [Location] {
+		var node : ConfigNode = self
+		var locations : [Location] = []
+		
+		while true {
+			if let parent = node.parent {
+				locations.insert(Location(node.index, of:parent.children.count), atIndex:0)
+				node = parent
+			} else {
+				break
+			}
+		}
+		return locations
+	}
+	
   class var TypeSeparator : String { return "," }
   class var TitleKey : String { return "title" }
   

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
@@ -28,7 +28,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                     <connections>
-                        <binding destination="-2" name="predicate" keyPath="self.predicate" id="FBO-UK-pue">
+                        <binding destination="wNq-1o-oaq" name="predicate" keyPath="selection.predicate" id="AXy-hF-DlR">
                             <dictionary key="options">
                                 <string key="NSDisplayName">predicate</string>
                                 <string key="NSPredicateFormat">(documentation contains[cd] $value) OR (name contains[cd] $value) OR (filteredChildrenCount &gt; 0)</string>
@@ -89,11 +89,57 @@
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 <prototypeCellViews>
-                                                    <tableCellView identifier="view.section" id="dul-pu-zyR" customClass="TableCellView" customModule="Coiffeur">
+                                                    <customView identifier="row.option" autoresizesSubviews="NO" id="ehB-SY-d4v" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
+                                                        <rect key="frame" x="1" y="1" width="477" height="16"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <subviews>
+                                                            <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="69f-yx-URr">
+                                                                <rect key="frame" x="0.0" y="0.0" width="477" height="14"/>
+                                                                <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Label" usesSingleLineMode="YES" id="alv-B7-oq1">
+                                                                    <font key="font" metaFont="smallSystem"/>
+                                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="69f-yx-URr" secondAttribute="trailing" constant="2" id="lQF-2H-oNs"/>
+                                                            <constraint firstItem="69f-yx-URr" firstAttribute="leading" secondItem="ehB-SY-d4v" secondAttribute="leading" constant="2" id="njO-cw-Z8t"/>
+                                                            <constraint firstItem="69f-yx-URr" firstAttribute="top" secondItem="ehB-SY-d4v" secondAttribute="top" constant="2" id="zfd-o8-yko"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <outlet property="leftMargin" destination="njO-cw-Z8t" id="g6X-8N-koi"/>
+                                                            <outlet property="textField" destination="69f-yx-URr" id="eEZ-xE-NFf"/>
+                                                        </connections>
+                                                    </customView>
+                                                    <customView identifier="row.section" autoresizesSubviews="NO" id="RMt-bD-di2" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
+                                                        <rect key="frame" x="1" y="1" width="477" height="16"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                        <subviews>
+                                                            <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CpY-yV-u1p">
+                                                                <rect key="frame" x="0.0" y="-3" width="477" height="17"/>
+                                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="Hrf-bU-AhJ">
+                                                                    <font key="font" metaFont="systemBold"/>
+                                                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="CpY-yV-u1p" secondAttribute="trailing" constant="2" id="5TW-xm-3LM"/>
+                                                            <constraint firstItem="CpY-yV-u1p" firstAttribute="leading" secondItem="RMt-bD-di2" secondAttribute="leading" constant="2" id="JSn-hu-5we"/>
+                                                            <constraint firstItem="CpY-yV-u1p" firstAttribute="top" secondItem="RMt-bD-di2" secondAttribute="top" constant="2" id="YYT-62-k0s"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <outlet property="leftMargin" destination="JSn-hu-5we" id="mgt-aO-up2"/>
+                                                            <outlet property="textField" destination="CpY-yV-u1p" id="cqS-ER-ZP9"/>
+                                                        </connections>
+                                                    </customView>
+                                                    <tableCellView identifier="view.section" id="dul-pu-zyR" customClass="ConfigCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="1" width="477" height="22"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     </tableCellView>
-                                                    <tableCellView identifier="view.string" id="V2b-6p-fqf" customClass="TableCellView" customModule="Coiffeur">
+                                                    <tableCellView identifier="view.string" id="V2b-6p-fqf" customClass="ConfigOptionCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="25" width="477" height="38"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -115,7 +161,7 @@
                                                             <constraint firstAttribute="trailing" secondItem="1l6-Lz-CFJ" secondAttribute="trailing" constant="3" id="wPH-iY-GXV"/>
                                                         </constraints>
                                                     </tableCellView>
-                                                    <tableCellView identifier="view.number" id="e65-PG-vLV" customClass="TableCellView" customModule="Coiffeur">
+                                                    <tableCellView identifier="view.number" id="e65-PG-vLV" customClass="ConfigOptionCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="65" width="477" height="38"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -152,7 +198,7 @@
                                                             <constraint firstItem="qGd-cm-8AR" firstAttribute="leading" secondItem="tB8-Q8-GYL" secondAttribute="trailing" constant="3" id="xHp-Ss-Oq3"/>
                                                         </constraints>
                                                     </tableCellView>
-                                                    <tableCellView identifier="view.choice" id="JWl-XT-3dd" customClass="TableCellView" customModule="Coiffeur">
+                                                    <tableCellView identifier="view.choice" id="JWl-XT-3dd" customClass="ConfigChoiceCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="105" width="477" height="38"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <subviews>
@@ -177,6 +223,9 @@
                                                             <constraint firstItem="bdv-fS-xTF" firstAttribute="top" secondItem="JWl-XT-3dd" secondAttribute="top" constant="17" id="66t-Uf-HbO"/>
                                                             <constraint firstItem="bdv-fS-xTF" firstAttribute="leading" secondItem="JWl-XT-3dd" secondAttribute="leading" constant="3" id="G7I-wQ-Sp7"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outlet property="segmented" destination="bdv-fS-xTF" id="5fO-q0-p6a"/>
+                                                        </connections>
                                                     </tableCellView>
                                                 </prototypeCellViews>
                                             </tableColumn>
@@ -262,7 +311,7 @@
         </customView>
         <treeController editable="NO" childrenKeyPath="filteredChildren" countKeyPath="filteredChildrenCount" leafKeyPath="leaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="h9y-4G-n2j" userLabel="options">
             <connections>
-                <binding destination="-2" name="contentArray" keyPath="self.sections" id="zMK-IL-bjt"/>
+                <binding destination="wNq-1o-oaq" name="contentArray" keyPath="selection.filteredChildren" id="Vt2-i4-bIC"/>
             </connections>
         </treeController>
         <menu id="jzn-yH-Cli">
@@ -281,5 +330,10 @@
                 </menuItem>
             </items>
         </menu>
+        <objectController objectClassName="ConfigRoot" id="wNq-1o-oaq" userLabel="root">
+            <connections>
+                <binding destination="-2" name="contentObject" keyPath="self.representedObject.root" id="kmW-i7-T8d"/>
+            </connections>
+        </objectController>
     </objects>
 </document>

@@ -1,5 +1,5 @@
 //
-//  OutlineRowView.swift
+//  OptionsRowView.swift
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/16/15.
@@ -8,20 +8,51 @@
 
 import Cocoa
 
-class OutlineRowView : NSTableRowView {
-	
-	class Location {
-		var index = 0
-		var count = 0
-		var color : NSColor {
-			return NSColor(calibratedHue: CGFloat(index)/CGFloat(12), saturation: 1, brightness: 1, alpha: 1)
-		}
-		init(_ index:Int, of count:Int) {
-			self.index = index
-			self.count = count
-		}
+class ConfigCellView : NSTableCellView {
+//	override var backgroundStyle: NSBackgroundStyle {
+//		didSet {
+//			// If the cell's text color is black, this sets it to white
+//			if let cell = self.textField?.cell() as? NSCell {
+//				cell.backgroundStyle = self.backgroundStyle
+//			}
+//			
+//			// Otherwise you need to change the color manually
+//			switch (self.backgroundStyle) {
+//			case NSBackgroundStyle.Light:
+//				if let textField = self.textField {
+//					textField.textColor = NSColor(calibratedWhite: 0.0, alpha: 1.0)
+//				}
+//				break;
+//				
+//			default:
+//				if let textField = self.textField {
+//					textField.textColor = NSColor(calibratedWhite: 1.0, alpha: 1.0)
+//				}
+//				break;
+//			}
+//		}
+//	}
+}
+
+class ConfigOptionCellView : NSTableCellView {
+}
+
+class ConfigChoiceCellView : ConfigOptionCellView {
+	@IBOutlet weak var segmented : NSSegmentedControl!
+}
+
+extension ConfigNodeLocation {
+	var color : NSColor {
+		return NSColor(calibratedHue: CGFloat(index)/CGFloat(12), saturation: 1, brightness: 1, alpha: 1)
 	}
+}
+
+class ConfigRowView : NSTableRowView {
 	
+	@IBOutlet weak var leftMargin : NSLayoutConstraint!
+	@IBOutlet weak var textField : NSTextField!
+	
+	typealias Location = ConfigNode.Location
 	var locations = [Location]()
 	
 	override func drawBackgroundInRect(dirtyRect: NSRect)
@@ -37,7 +68,15 @@ class OutlineRowView : NSTableRowView {
         backgroundColor = backgroundColor.colorWithAlphaComponent(0.75)
       }
       backgroundColor.setFill()
-    } else {
+
+		} else {
+			
+			if self.selected && self._focused() {
+				self.textField.textColor = NSColor.selectedTextColor()
+			} else {
+				self.textField.textColor = NSColor.textColor()
+			}
+			
       self.backgroundColor.setFill()
     }
     

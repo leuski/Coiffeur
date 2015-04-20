@@ -9,42 +9,46 @@
 import Cocoa
 
 extension NSSegmentedControl {
-  
-  private class var SufficientlyLongWord : String { return "remove" }
-  
-  func setLabels(labels:[String])
-  {
-    self.segmentCount = labels.count;
-    
-    let font       = self.font!
-    let fontName = font.familyName!
-    let fontSize : NSNumber = font.xHeight
-      
-    let attributes : [NSString : AnyObject] = [
-      NSFontFamilyAttribute: fontName,
-      NSFontSizeAttribute: fontSize
-    ];
-    
-    var attributedString = NSAttributedString(string: NSSegmentedControl.SufficientlyLongWord, attributes: attributes)
-
-    var size  = attributedString.size;
-    var width = size.width;
-    var i     = 0;
-    
-    for token in labels {
-      attributedString = NSAttributedString(string:token, attributes:attributes)
-      size = attributedString.size;
-      
-      if (width < size.width) {
-        width = size.width;
-      }
-      
-      setLabel(token, forSegment: i++)
-    }
-    
-    for var j = 0; j < self.segmentCount; ++j {
-      setWidth(width+12, forSegment: j)
-    }
-   
-  }
+	
+	var labels : [String] {
+		get {
+			var value = [String]()
+			for var i = 0; i < self.segmentCount; ++i {
+				value.append(labelForSegment(i)!)
+			}
+			return value
+		}
+		
+		set (value) {
+			self.segmentCount = value.count
+			
+			let font       = self.font!
+			let fontName = font.familyName!
+			let fontSize : NSNumber = font.xHeight
+			
+			let attributes : [NSString : AnyObject] = [
+				NSFontFamilyAttribute: fontName,
+				NSFontSizeAttribute: fontSize
+			];
+			
+			var width = CGFloat(40.0)
+			var i     = 0
+			
+			for token in value {
+				let attributedString = NSAttributedString(string:token, attributes:attributes)
+				let size = attributedString.size;
+				
+				if (width < size.width) {
+					width = size.width;
+				}
+				
+				setLabel(token, forSegment: i++)
+			}
+			
+			for var j = 0; j < self.segmentCount; ++j {
+				setWidth(width+12, forSegment: j)
+			}
+		}
+	}
+	
 }

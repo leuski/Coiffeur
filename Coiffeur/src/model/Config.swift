@@ -181,7 +181,12 @@ extension ConfigOption {
 extension ConfigSection {
 	private struct Private {
 		static let titleSortDescriptors = [NSSortDescriptor(key: "title",
-			ascending: true, selector: Selector("localizedCaseInsensitiveCompare:"))]
+			ascending: true, selector: Selector("caseInsensitiveCompare:"))]
+    // we want to put "other..." subsection at the end of each section list.
+    // we add a hidden character (non-breaking space) at the beginning
+    // of the "other..." title, so sorting should sort titles in the order we need
+    // you cannot use localized... message to sort the titles, this trick does not 
+    // work. It looks like localized...copare strips the space out.
 	}
 	
 	// I want to cache filtered children, so I do not run the filter unnecessarily

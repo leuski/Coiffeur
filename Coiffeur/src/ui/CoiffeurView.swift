@@ -10,7 +10,7 @@ import Cocoa
 
 class CoiffeurView : NSViewController {
   
-  @IBOutlet weak var optionsView : NSOutlineView!
+  @IBOutlet weak var optionsView : OutlineView!
   @IBOutlet weak var jumpMenu : NSPopUpButton!
   @IBOutlet var optionsController : NSTreeController!
 	
@@ -95,7 +95,7 @@ class CoiffeurView : NSViewController {
   @IBAction func jumpToSection(sender:AnyObject)
   {
     if let popup = sender as? NSPopUpButton {
-      self.optionsView.scrollRowToVisible(self.optionsView.rowForItem(popup.selectedItem?.representedObject))
+      self.optionsView.scrollItemToVisible(popup.selectedItem?.representedObject)
     }
   }
 }

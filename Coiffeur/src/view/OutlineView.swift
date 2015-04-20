@@ -41,5 +41,16 @@ class OutlineView : NSOutlineView {
 		}
 		super.keyDown(theEvent)
 	}
+  
+  func scrollItemToVisible(item: AnyObject?)
+  {
+    let row = self.rowForItem(item)
+    let rowFrame = self.frameOfCellAtColumn(0, row: row)
+    var visRect = self.visibleRect
+    visRect.origin.y = rowFrame.origin.y - 1.0 // +1 beacuse of the row frame? separator?, otherwise
+    // it's going to scroll a bit, once you move the selection
+
+    self.scrollRectToVisible(visRect)
+  }
 }
 

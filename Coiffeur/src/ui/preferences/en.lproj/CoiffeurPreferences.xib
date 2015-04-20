@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
@@ -54,7 +54,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <pathControl focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vnh-jG-MC4" customClass="PathControl" customModule="Coiffeur" customModuleProvider="target">
-                                                                    <rect key="frame" x="195" y="1" width="213" height="26"/>
+                                                                    <rect key="frame" x="195" y="0.0" width="213" height="26"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="207" id="kBY-X2-8ha"/>
                                                                     </constraints>
@@ -82,7 +82,7 @@
                                                             <constraints>
                                                                 <constraint firstItem="3BG-U1-sch" firstAttribute="leading" secondItem="dl3-cL-tEY" secondAttribute="leading" constant="4" id="CJc-Lv-nJo"/>
                                                                 <constraint firstAttribute="trailing" secondItem="vnh-jG-MC4" secondAttribute="trailing" constant="8" id="JNb-GT-65S"/>
-                                                                <constraint firstItem="vnh-jG-MC4" firstAttribute="baseline" secondItem="3BG-U1-sch" secondAttribute="baseline" constant="-1" id="M5h-Eg-aEL"/>
+                                                                <constraint firstItem="vnh-jG-MC4" firstAttribute="baseline" secondItem="3BG-U1-sch" secondAttribute="baseline" id="M5h-Eg-aEL"/>
                                                                 <constraint firstItem="vnh-jG-MC4" firstAttribute="leading" secondItem="3BG-U1-sch" secondAttribute="trailing" constant="8" id="sTO-aj-ycT"/>
                                                                 <constraint firstAttribute="centerY" secondItem="3BG-U1-sch" secondAttribute="centerY" id="wL2-od-Aok"/>
                                                             </constraints>

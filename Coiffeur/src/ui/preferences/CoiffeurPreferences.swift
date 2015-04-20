@@ -27,12 +27,19 @@ class CoiffeurControllerClass : NSObject {
 		return controllerClass.createCoiffeur()
 	}
 	
+  class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
+  {
+    return NSSet(object:"controllerClass.currentExecutableURL")
+  }
+  
 	var currentExecutableURL : NSURL? {
 		get {
 			return controllerClass.currentExecutableURL
 		}
 		set (value) {
+      willChangeValueForKey("currentExecutableURL")
 			controllerClass.currentExecutableURL = value
+      didChangeValueForKey("currentExecutableURL")
 		}
 	}
 	

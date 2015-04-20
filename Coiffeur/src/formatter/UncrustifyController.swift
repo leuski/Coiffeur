@@ -33,6 +33,12 @@ class UncrustifyController : CoiffeurController {
 	override class var currentExecutableName : String { return Private.ExecutableName }
 	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }
 	
+  override class var currentExecutableURL : NSURL? {
+    didSet {
+      Private.OptionsDocumentation = nil
+    }
+  }
+  
   override class func createCoiffeur() -> CoiffeurController.Result
   {
     let result = super.createCoiffeur()

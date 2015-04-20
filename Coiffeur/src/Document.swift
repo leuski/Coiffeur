@@ -117,12 +117,12 @@ class Document : NSDocument {
     self.addWindowController(MainWindowController())
   }
   
-  override func canCloseDocumentWithDelegate(delegate: AnyObject, shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
-  {
-    self.model?.managedObjectContext.commitEditing()
-    super.canCloseDocumentWithDelegate(delegate, shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
-  }
-  
+//  override func canCloseDocumentWithDelegate(delegate: AnyObject, shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
+//  {
+//    self.model?.managedObjectContext.commitEditing()
+//    super.canCloseDocumentWithDelegate(delegate, shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
+//  }
+	
   override func writableTypesForSaveOperation(saveOperation: NSSaveOperationType) -> [AnyObject]
   {
     if let m = self.model {

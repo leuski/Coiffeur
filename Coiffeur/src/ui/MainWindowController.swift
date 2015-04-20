@@ -8,8 +8,7 @@
 
 import Cocoa
 
-class MainWindowController : NSWindowController, NSWindowDelegate,
-	NSSplitViewDelegate {
+class MainWindowController : NSWindowController {
   
   @IBOutlet weak var splitView : NSSplitView!
   var sourceView: SourceView!
@@ -74,14 +73,6 @@ class MainWindowController : NSWindowController, NSWindowDelegate,
 		self.sourceView.addObserverForKeyPath("sourceString", options: .Initial, observer:uncrustify)
 	}
 	
-  func windowWillClose(notification:NSNotification)
-  {
-		self.sourceView.representedObject = nil
-		self.sourceView = nil
-		self.styleView.representedObject = nil
-		self.styleView = nil
-  }
-	
   @IBAction func changeLanguage(anItem:NSMenuItem)
   {
     if let language = anItem.representedObject as? Language {
@@ -99,7 +90,21 @@ class MainWindowController : NSWindowController, NSWindowDelegate,
     
     return true
   }
-  
+}
+
+extension MainWindowController : NSWindowDelegate
+{
+	func windowWillClose(notification:NSNotification)
+	{
+		self.sourceView.representedObject = nil
+		self.sourceView = nil
+		self.styleView.representedObject = nil
+		self.styleView = nil
+	}
+}
+
+extension MainWindowController : NSSplitViewDelegate
+{
   func splitView(splitView: NSSplitView, constrainMaxCoordinate proposedMax: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat
   {
     return self.splitView.frame.size.width - 370
@@ -109,7 +114,6 @@ class MainWindowController : NSWindowController, NSWindowDelegate,
   {
     return 200
   }
-  
 }
 
 

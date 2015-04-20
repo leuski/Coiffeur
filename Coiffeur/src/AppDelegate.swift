@@ -44,7 +44,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     var count = 0
     
     for aClass in CoiffeurController.availableTypes {
-      var item = NSMenuItem(title: aClass.documentType, action: Selector("AL_openUntitledDocumentOfType:"), keyEquivalent: "")
+      var item = NSMenuItem(title: aClass.documentType, action: Selector("openUntitledDocumentOfType:"), keyEquivalent: "")
       item.representedObject = aClass.documentType
       
       if (count < 2) {
@@ -68,7 +68,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     // Insert code here to tear down your application
   }
   
-  @IBAction func AL_openUntitledDocumentOfType(sender : AnyObject)
+  @IBAction func openUntitledDocumentOfType(sender : AnyObject)
   {
     if let type = sender.representedObject as? String {
       let controller = NSDocumentController.sharedDocumentController() as! DocumentController

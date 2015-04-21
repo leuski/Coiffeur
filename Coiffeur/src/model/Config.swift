@@ -98,15 +98,16 @@ extension ConfigNode {
 		set (value) { self.storedIndex = Int32(value) }
 	}
 	
-  override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
+	class func objectInContext(managedObjectContext: NSManagedObjectContext, parent:ConfigNode? = nil, title:String = "") -> Self
   {
-		return _insertConfigNode(managedObjectContext)
+		return _insertConfigNode(managedObjectContext, parent:parent, title:title)
   }
 	
-	private class func _insertConfigNode<T:ConfigNode>(managedObjectContext: NSManagedObjectContext) -> T
+	private class func _insertConfigNode<T:ConfigNode>(managedObjectContext: NSManagedObjectContext, parent:ConfigNode?, title:String) -> T
 	{
 		var node = super.objectInContext(managedObjectContext) as! T
-		node.title = ""
+		node.parent = parent
+		node.title = title
 		return node
 	}
 	
@@ -161,15 +162,16 @@ extension ConfigOption {
     return NSSet(object:"storedType")
   }
 
-  override class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
+  override class func objectInContext(managedObjectContext: NSManagedObjectContext, parent:ConfigNode? = nil, title:String = "") -> Self
   {
-		return _insertConfigOption(managedObjectContext)
+		return _insertConfigOption(managedObjectContext, parent:parent, title:title)
   }
 
-	private class func _insertConfigOption<T:ConfigOption>(managedObjectContext: NSManagedObjectContext) -> T
+	private class func _insertConfigOption<T:ConfigOption>(managedObjectContext: NSManagedObjectContext, parent:ConfigNode?, title:String) -> T
 	{
 		var option = super.objectInContext(managedObjectContext) as! T
-		option.title = ""
+		option.title = title
+		option.parent = parent
 		option.documentation = ""
 		option.type = ""
 		option.indexKey = ""

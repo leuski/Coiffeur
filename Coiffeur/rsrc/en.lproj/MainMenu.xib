@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
@@ -420,16 +420,16 @@
         </menu>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="FJJ-iL-Nf8">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
-            <rect key="contentRect" x="564" y="529" width="480" height="192"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+            <rect key="contentRect" x="564" y="529" width="480" height="181"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1577"/>
             <value key="minSize" type="size" width="480" height="192"/>
             <value key="maxSize" type="size" width="480" height="192"/>
             <view key="contentView" id="dbI-mD-rQU">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="192"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="181"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FLa-HJ-tdp">
-                        <rect key="frame" x="20" y="44" width="128" height="128"/>
+                        <rect key="frame" x="20" y="33" width="128" height="128"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="128" id="WIn-Ag-gKu"/>
                             <constraint firstAttribute="height" constant="128" id="ua0-ux-sv9"/>
@@ -437,7 +437,7 @@
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="scissors-512" id="AOf-9o-apK"/>
                     </imageView>
                     <scrollView focusRingType="none" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dyi-V8-KDg">
-                        <rect key="frame" x="168" y="20" width="292" height="105"/>
+                        <rect key="frame" x="168" y="20" width="292" height="94"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Azs-cU-oQM">
                             <rect key="frame" x="1" y="1" width="223" height="133"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -446,10 +446,10 @@
                                     <rect key="frame" x="0.0" y="0.0" width="223" height="133"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="292" height="105"/>
+                                    <size key="minSize" width="292" height="94"/>
                                     <size key="maxSize" width="463" height="10000000"/>
                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                    <size key="minSize" width="292" height="105"/>
+                                    <size key="minSize" width="292" height="94"/>
                                     <size key="maxSize" width="463" height="10000000"/>
                                     <connections>
                                         <binding destination="Voe-Tx-rLC" name="valueURL" keyPath="self.aboutURL" id="Fcd-IK-sJD">
@@ -472,7 +472,7 @@
                         </scroller>
                     </scrollView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iur-Hv-5vo">
-                        <rect key="frame" x="166" y="133" width="296" height="14"/>
+                        <rect key="frame" x="166" y="122" width="296" height="14"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="pcR-ZQ-SBY">
                             <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -487,7 +487,7 @@
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h7P-6v-hLl">
-                        <rect key="frame" x="166" y="155" width="296" height="17"/>
+                        <rect key="frame" x="166" y="144" width="296" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="e9w-gO-Isn">
                             <font key="font" metaFont="systemBold"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -513,7 +513,7 @@
                     <constraint firstItem="h7P-6v-hLl" firstAttribute="top" secondItem="dbI-mD-rQU" secondAttribute="top" constant="20" id="zu7-zc-VFM"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="434" y="449"/>
+            <point key="canvasLocation" x="434" y="443.5"/>
         </window>
     </objects>
     <resources>

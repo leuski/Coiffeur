@@ -11,14 +11,14 @@ import Foundation
 class Error : NSError {
   class var Domain : String { return "CoiffeurErrorDomain" }
   
-  init(_ localizedDescription:String)
+  init(localizedDescription:String)
   {
     super.init(domain: Error.Domain, code: 0, userInfo: [NSLocalizedDescriptionKey:localizedDescription])
   }
   
-  convenience init(format:String, _ args: CVarArgType...)
+  convenience init(_ format:String, _ args: CVarArgType...)
   {
-    self.init(String(format:NSLocalizedString(format, comment:""), arguments:args))
+    self.init(localizedDescription:String(format:NSLocalizedString(format, comment:""), arguments:args))
   }
   
   required init(coder aDecoder: NSCoder) {
@@ -44,9 +44,25 @@ extension NSError {
 enum StringResult {
   case Success(String)
   case Failure(NSError)
+	init(_ value:String)
+	{
+		self = .Success(value)
+	}
+	init(_ error:NSError)
+	{
+		self = .Failure(error)
+	}
 }
 
 enum URLResult {
   case Success(NSURL)
   case Failure(NSError)
+	init(_ value:NSURL)
+	{
+		self = .Success(value)
+	}
+	init(_ error:NSError)
+	{
+		self = .Failure(error)
+	}
 }

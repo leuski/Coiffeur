@@ -129,9 +129,9 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			if (tokens.count == 0) {
 				return "view.section"
 			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
-				return "view.number"
+				return "view.signed"
 			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
-				return "view.number"
+				return "view.unsigned"
 			} else if (tokens.count == 1) {
 				return "view.string"
 			} else {
@@ -154,20 +154,31 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
     return nil
   }
-  
-  func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat
-  {
-		if let identifier = _cellViewIdentifierForItem(item) {
-			if let height = rowHeightCache[identifier] {
+	
+	private func _outlineView(outlineView: NSOutlineView, heightOfRowByIdentifier identifier: String) -> CGFloat
+	{
+		if let height = rowHeightCache[identifier] {
+			return height
+		}
+		if let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as? NSView {
+			var height = view.frame.size.height
+			if height > 0 {
+				rowHeightCache[identifier] = height
 				return height
 			}
-			if let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as? NSView {
-				let height = view.frame.size.height
-				if height > 0 {
-					rowHeightCache[identifier] = height
-					return height
-				}
-			}
+		}
+		return 10
+	}
+	
+	// this is a very, very, very frequently called method. We need to make it
+	// as fast as possible. We cache the view height based on the cell view identifier
+  func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat
+  {
+		if let identifier = _cellViewIdentifierForItem(item),
+			 let rowIdentifier = _rowViewIdentifierForItem(item)
+		{
+			return _outlineView(outlineView, heightOfRowByIdentifier:identifier)
+				+ _outlineView(outlineView, heightOfRowByIdentifier:rowIdentifier)
 		}
     return 10
   }
@@ -191,7 +202,42 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			return nil
 		}
   }
-  
+	
+	// the row is added as the predicate changes. Restore the expanded state
+	// from the model. 
+	// We do it asynchroniously, because node expansion
+	// can lead to more rows being added to the view.
+	func outlineView(outlineView: NSOutlineView, didAddRowView rowView: NSTableRowView, forRow row: Int)
+	{
+		let item: AnyObject? = outlineView.itemAtRow(row)
+		if let section = item?.representedObject as? ConfigSection {
+			if section.expanded {
+				dispatch_async(dispatch_get_main_queue()) {
+					outlineView.animator().expandItem(item)
+				}
+			}
+		}
+	}
+	
+	// records the state of the node in the model
+	func outlineViewItemDidExpand(notification: NSNotification)
+	{
+		if var section = notification.userInfo!["NSObject" as NSString]!.representedObject
+			as? ConfigSection
+		{
+			section.expanded = true
+		}
+	}
+	
+	func outlineViewItemDidCollapse(notification: NSNotification)
+	{
+		if var section = notification.userInfo!["NSObject" as NSString]!.representedObject
+			as? ConfigSection
+		{
+			section.expanded = false
+		}
+	}
+	
   // - (BOOL)outlineView:(NSOutlineView *)outlineView
   // shouldShowOutlineCellForItem:(id)item
   // {

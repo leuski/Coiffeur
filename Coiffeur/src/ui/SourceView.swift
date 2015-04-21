@@ -305,7 +305,7 @@ extension SourceView {
 			self.fileURL = url
 			return nil
 		} else {
-			return error ?? Error(format:"Unknown error while reading source file from %@", url)
+			return error ?? Error("Unknown error while reading source file from %@", url)
 		}
 	}
 	

@@ -54,7 +54,7 @@ class Document : NSDocument {
       }
     }
     
-    return CoiffeurController.Result.Failure(Error(format:"Unknown document type “%@”", type))
+    return CoiffeurController.Result(Error("Unknown document type “%@”", type))
   }
   
   private func _ensureWeHaveModelOfType(typeName:String, errorFormatKey:String) -> NSError?
@@ -64,7 +64,7 @@ class Document : NSDocument {
       if typeName == documentType {
         return nil
       }
-      return Error(format:errorFormatKey, typeName, documentType)
+      return Error(errorFormatKey, typeName, documentType)
     } else {
       let result = self._modelControllerOfType(typeName)
       switch result {

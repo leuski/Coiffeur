@@ -18,7 +18,10 @@ class String2NumberTransformer : NSValueTransformer {
   override func transformedValue(value: AnyObject?) -> AnyObject?
   {
     if let string = value as? String {
-      return string.toInt()
+			if let number = string.toInt() {
+				return number
+			}
+      return 0
     }
     return nil
   }
@@ -28,6 +31,44 @@ class String2NumberTransformer : NSValueTransformer {
     if let number = value as? NSNumber {
       return number.stringValue
     }
-    return nil
+    return "0"
   }
+}
+
+class OnlyIntegers : NSNumberFormatter {
+	
+	override init()
+	{
+		super.init()
+		self.allowsFloats = false
+	}
+	
+	required init(coder aDecoder: NSCoder) {
+		super.init(coder:aDecoder)
+		self.allowsFloats = false
+	}
+	
+//	override func isPartialStringValid(partialString: String,
+//		newEditingString newString: AutoreleasingUnsafeMutablePointer<NSString?>,
+//		errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
+//	{
+//		if (partialString.isEmpty) {
+//			newString.memory = "0"
+//			return false
+//		}
+//		
+//		return super.isPartialStringValid(partialString, newEditingString: newString, errorDescription: error)
+//	}
+	
+	override func getObjectValue(obj: AutoreleasingUnsafeMutablePointer<AnyObject?>,
+		forString string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
+	{
+		if string.isEmpty {
+			if error != nil {
+				error.memory = NSLocalizedString("Empty string is not a valid number. Please provide a number", comment:"")
+			}
+			return false
+		}
+		return super.getObjectValue(obj, forString:string, errorDescription: error)
+	}
 }

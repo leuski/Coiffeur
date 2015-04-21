@@ -56,32 +56,32 @@ class ClangFormatController : CoiffeurController {
 						encoding: NSUTF8StringEncoding,
 						error:&error)
           if Private.OptionsDocumentation == nil {
-            return CoiffeurController.Result.Failure(Error(
-							format:"Failed to read the content of %@.%@ as UTF8 string",
+            return CoiffeurController.Result(Error(
+							"Failed to read the content of %@.%@ as UTF8 string",
 							Private.DocumentationFileName,
 							Private.DocumentationFileExtension))
           }
         } else {
-          return CoiffeurController.Result.Failure(Error(
-						format:"Cannot find %@.%@",
+          return CoiffeurController.Result(Error(
+						"Cannot find %@.%@",
 						Private.DocumentationFileName,
 						Private.DocumentationFileExtension))
         }
       }
       if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
-        return CoiffeurController.Result.Failure(error)
+        return CoiffeurController.Result(error)
       }
       if Private.DefaultValues == nil {
 				switch NSTask(controller.executableURL,
 					arguments: [Private.ShowDefaultConfigArgument]).run() {
         case .Failure(let error):
-          return CoiffeurController.Result.Failure(error)
+          return CoiffeurController.Result(error)
         case .Success(let text):
           Private.DefaultValues = text
         }
       }
       if let error = controller.readValuesFromString(Private.DefaultValues!) {
-        return CoiffeurController.Result.Failure(error)
+        return CoiffeurController.Result(error)
       }
       return result
     }
@@ -152,11 +152,8 @@ class ClangFormatController : CoiffeurController {
   
   override func readOptionsFromLineArray(lines: [String]) -> NSError?
   {
-    let section = ConfigSection.objectInContext(self.managedObjectContext)
-    
-    section.title  = "Options";
-    section.parent = self.root;
-    
+		let section = ConfigSection.objectInContext(self.managedObjectContext, parent:self.root, title:"Options")
+		
     var currentOption : ConfigOption?
     
     var in_doc = false
@@ -192,8 +189,7 @@ class ClangFormatController : CoiffeurController {
         
         self._closeOption(&currentOption)
         
-        var newOption = ConfigOption.objectInContext(self.managedObjectContext)
-        newOption.parent     = section;
+				var newOption = ConfigOption.objectInContext(self.managedObjectContext, parent:section)
         newOption.indexKey   = line.substringWithRange(match.rangeAtIndex(1))
         in_title             = true
         let type             = line.substringWithRange(match.rangeAtIndex(2))
@@ -323,7 +319,7 @@ class ClangFormatController : CoiffeurController {
     var localError : NSError?
     
     if let error = self.writeValuesToURL(NSURL(fileURLWithPath: configPath)!) {
-      completionHandler(StringResult.Failure(error))
+      completionHandler(StringResult(error))
       return false
     }
     

@@ -50,8 +50,10 @@ class ConfigRowView : NSTableRowView {
 			
 			if self.selected && self._focused() {
 				self.textField.textColor = NSColor.selectedTextColor()
+				self.textField.font = NSFontManager.sharedFontManager().convertFont(self.textField.font!, toHaveTrait: NSFontTraitMask.BoldFontMask)
 			} else {
 				self.textField.textColor = NSColor.textColor()
+				self.textField.font = NSFontManager.sharedFontManager().convertFont(self.textField.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
 			}
 			
       self.backgroundColor.setFill()
@@ -67,12 +69,12 @@ class ConfigRowView : NSTableRowView {
       path.stroke()
     }
 
-    for var i = 0; i < locations.count - 1; ++i {
+    for var i = 0; i < min(1, locations.count - 1); ++i {
 			locations[i].color.setFill()
 			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(0), CGFloat(1+1*i), self.bounds.size.height))
 		}
     
-    if self.groupRowStyle {
+    if self.groupRowStyle && locations.count == 1 {
       locations.last!.color.set()
       var path = NSBezierPath()
       let lineLength = 200
@@ -106,6 +108,7 @@ class ConfigRowView : NSTableRowView {
 	override func drawSelectionInRect(dirtyRect: NSRect)
 	{
     var color = NSColor.selectedMenuItemColor()
+		let margin = CGFloat(5)
 		
     color = color.blendedColorWithFraction(0.25, ofColor:locations.first!.color)!
 		if !self._focused() {
@@ -113,6 +116,6 @@ class ConfigRowView : NSTableRowView {
 		}
     color = color.colorWithAlphaComponent(1)
 		color.setFill()
-		NSRectFill(NSMakeRect(CGFloat(10), CGFloat(0), self.bounds.size.width-10, self.bounds.size.height))
+		NSRectFill(NSMakeRect(margin, CGFloat(0), self.bounds.size.width-margin, self.bounds.size.height))
 	}
 }

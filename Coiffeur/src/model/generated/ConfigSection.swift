@@ -11,4 +11,5 @@ import CoreData
 
 class ConfigSection: ConfigNode {
 	@NSManaged var storedFilteredChildren: AnyObject?
+	@NSManaged var expanded: Bool
 }

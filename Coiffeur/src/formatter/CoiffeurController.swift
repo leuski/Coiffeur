@@ -31,6 +31,14 @@ class CoiffeurController : NSObject {
 	enum Result {
 		case Success(CoiffeurController)
 		case Failure(NSError)
+		init(_ controller:CoiffeurController)
+		{
+			self = .Success(controller)
+		}
+		init(_ error:NSError)
+		{
+			self = .Failure(error)
+		}
 	}
 	
 	class var availableTypes : [CoiffeurController.Type] { return [ ClangFormatController.self, UncrustifyController.self ] }
@@ -87,7 +95,7 @@ class CoiffeurController : NSObject {
 					return url
 				} else {
 					NSUserDefaults.standardUserDefaults().removeObjectForKey(self.currentExecutableURLUDKey)
-					NSApp.presentError(Error(format:"Cannot locate executable at %@. Using the deafult application", path))
+					NSApp.presentError(Error("Cannot locate executable at %@. Using the deafult application", path))
 				}
 			}
 			return self.defaultExecutableURL
@@ -149,16 +157,16 @@ class CoiffeurController : NSObject {
 	class func findExecutableURL() -> URLResult
 	{
 		if let url = self.currentExecutableURL {
-			return URLResult.Success(url)
+			return URLResult(url)
 		}
-		return URLResult.Failure(Error(format:"Format executable URL is not specified"))
+		return URLResult(Error("Format executable URL is not specified"))
 	}
 	
 	class func createCoiffeur() -> CoiffeurController.Result
 	{
 		switch self.findExecutableURL() {
 		case .Failure(let error):
-			return CoiffeurController.Result.Failure(error)
+			return CoiffeurController.Result(error)
 		case .Success(let url):
 			if let originalModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: CoiffeurController.self)]) {
 				let mom = CoiffeurController._fixMOM(originalModel)
@@ -167,15 +175,15 @@ class CoiffeurController : NSObject {
 				if let psc = moc.persistentStoreCoordinator {
 					var error: NSError?
 					if nil == psc.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: &error) {
-						return CoiffeurController.Result.Failure(error ?? Error(format:"Failed to initialize coiffeur persistent store"))
+						return CoiffeurController.Result(error ?? Error("Failed to initialize coiffeur persistent store"))
 					}
 				} else {
-					return CoiffeurController.Result.Failure(Error(format:"Failed to initialize coiffeur persistent store coordinator"))
+					return CoiffeurController.Result(Error("Failed to initialize coiffeur persistent store coordinator"))
 				}
 				moc.undoManager = NSUndoManager()
-				return CoiffeurController.Result.Success(self(executableURL:url, managedObjectModel:mom, managedObjectContext:moc))
+				return CoiffeurController.Result(self(executableURL:url, managedObjectModel:mom, managedObjectContext:moc))
 			} else {
-				return CoiffeurController.Result.Failure(Error(format:"Failed to initialize coiffeur managed object model"))
+				return CoiffeurController.Result(Error("Failed to initialize coiffeur managed object model"))
 			}
 		}
 	}
@@ -221,9 +229,9 @@ class CoiffeurController : NSObject {
 				continue
 			}
 			
-			var subsection = ConfigSection.objectInContext(self.managedObjectContext)
-			subsection.title  = "\u{200B}" + NSLocalizedString("Other", comment:"") + " " + section.title.lowercaseString
-			subsection.parent = section
+			var subsection = ConfigSection.objectInContext(self.managedObjectContext,
+				parent:section,
+				title:"\u{200B}" + NSLocalizedString("Other", comment:"") + " " + section.title.lowercaseString)
 			
 			for option in index {
 				option.parent = subsection
@@ -307,9 +315,8 @@ class CoiffeurController : NSObject {
 					continue
 				}
 				
-				var subsection = ConfigSection.objectInContext(self.managedObjectContext)
-				subsection.title  = key + " …"
-				subsection.parent = section
+				var subsection = ConfigSection.objectInContext(self.managedObjectContext,
+					parent:section, title:key + " …")
 				
 				var count = 0
 				for option in list {
@@ -364,7 +371,7 @@ class CoiffeurController : NSObject {
 		let lines = text.componentsSeparatedByString(CoiffeurController.NewLine)
 		self.managedObjectContext.disableUndoRegistration()
 		
-		ConfigRoot.objectInContext(self.managedObjectContext);
+		ConfigRoot.objectInContext(self.managedObjectContext, parent:nil)
 		
 		let result = self.readOptionsFromLineArray(lines)
 		clusterOptions()
@@ -392,23 +399,24 @@ class CoiffeurController : NSObject {
 		if let data = String(contentsOfURL:absoluteURL, encoding:NSUTF8StringEncoding, error:&error) {
 			return self.readValuesFromString(data)
 		}
-		return error ?? Error(format:"Unknown error while trying to read style from %@", absoluteURL)
+		return error ?? Error("Unknown error while trying to read style from %@", absoluteURL)
 	}
 	
 	func writeValuesToURL(absoluteURL:NSURL) -> NSError?
 	{
-		return Error(format:"Unknown error while trying to write style to %@", absoluteURL)
+		return Error("Unknown error while trying to write style to %@", absoluteURL)
 	}
 	
 	func optionWithKey(key:String) -> ConfigOption?
 	{
-//		switch self.managedObjectContext.fetchSingle(ConfigOption.self, withPredicate:NSPredicate(format: "indexKey = %@", key)) {
+// TODO: crashes compiler in Swift 1.2
+//		switch self.managedObjectContext.fetchSingle(ConfigOption.self, withFormat:"indexKey = %@", key) {
 //		case .Success(let value):
 //			return value
-//		case .Failure, .None:
+//		default:
 //			return nil
 //		}
-		switch self.managedObjectContext.fetch(ConfigOption.self, withPredicate:NSPredicate(format: "indexKey = %@", key)) {
+		switch self.managedObjectContext.fetch(ConfigOption.self, withFormat:"indexKey = %@", key) {
 		case .Success(let value):
 			return value.isEmpty ? nil : value[0]
 		case .Failure:

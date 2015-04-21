@@ -11,6 +11,7 @@ import Foundation
 class UncrustifyController : CoiffeurController {
   
   private struct Private {
+		static var VersionArgument = "--version"
     static var ShowDocumentationArgument = "--update-config-with-doc"
     static var ShowDefaultConfigArgument = "--update-config"
     static var QuietFlag = "-q"
@@ -28,6 +29,8 @@ class UncrustifyController : CoiffeurController {
     static var OptionsDocumentation : String? = nil
   }
   
+	var versionString : String? = nil
+
 	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
   override class var documentType : String { return Private.DocumentType }
 	override class var currentExecutableName : String { return Private.ExecutableName }
@@ -41,21 +44,31 @@ class UncrustifyController : CoiffeurController {
   
   override class func createCoiffeur() -> CoiffeurController.Result
   {
-    let result = super.createCoiffeur()
+    var result = super.createCoiffeur()
     
     switch result {
     case .Success(let controller):
       if Private.OptionsDocumentation == nil {
         switch NSTask(controller.executableURL, arguments: [Private.ShowDocumentationArgument]).run() {
         case .Failure(let error):
-          return CoiffeurController.Result.Failure(error)
+          return CoiffeurController.Result(error)
         case .Success(let text):
           Private.OptionsDocumentation = text
         }
-      }
-      
+
+				switch NSTask(controller.executableURL, arguments: [Private.VersionArgument]).run() {
+				case .Failure(let error):
+					return CoiffeurController.Result(error)
+				case .Success(let text):
+					if var c = controller as? UncrustifyController {
+						c.versionString = text
+						result = CoiffeurController.Result(c)
+					}
+				}
+			}
+			
       if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
-        return CoiffeurController.Result.Failure(error)
+        return CoiffeurController.Result(error)
       }
 			
 		default:
@@ -86,10 +99,7 @@ class UncrustifyController : CoiffeurController {
 				if !currentComment.isEmpty {
 					if let range = currentComment.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
 					} else {
-						var section = ConfigSection.objectInContext(self.managedObjectContext)
-						section.parent = self.root
-						section.title = currentComment
-						currentSection = section
+						currentSection = ConfigSection.objectInContext(self.managedObjectContext, parent:self.root, title:currentComment)
 					}
 					currentComment = ""
 				}
@@ -108,8 +118,9 @@ class UncrustifyController : CoiffeurController {
 
 					type = type.trim().stringByReplacingOccurrencesOfString("/", withString: ConfigNode.TypeSeparator)
 					currentComment = currentComment.trim()
-					var option = ConfigOption.objectInContext(self.managedObjectContext)
-					option.parent = currentSection
+					var option = ConfigOption.objectInContext(self.managedObjectContext,
+						parent:currentSection,
+						title:currentComment.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())[0])
 					option.indexKey = key
 					option.stringValue = value
 					option.documentation = currentComment
@@ -118,7 +129,6 @@ class UncrustifyController : CoiffeurController {
 					} else {
 						option.type = type
 					}
-					option.title = currentComment.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())[0]
 
 				}
 				currentComment = ""
@@ -203,6 +213,11 @@ class UncrustifyController : CoiffeurController {
   override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
   {
     var data=""
+		
+		if let version = self.versionString {
+			data += "\(Private.Comment) \(version)\(CoiffeurController.NewLine)"
+		}
+		
 		switch self.managedObjectContext.fetch(ConfigOption.self, sortDescriptors:[CoiffeurController.KeySortDescriptor]) {
 		case .Success(var allOptions):
 			for option in allOptions {
@@ -229,7 +244,7 @@ class UncrustifyController : CoiffeurController {
     let configPath = workingDirectory.stringByAppendingPathComponent(NSUUID().UUIDString)
     
     if let error = self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!) {
-      completionHandler(StringResult.Failure(error))
+      completionHandler(StringResult(error))
       return false
     }
     

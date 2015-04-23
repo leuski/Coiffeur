@@ -47,19 +47,7 @@ class OnlyIntegers : NSNumberFormatter {
 		super.init(coder:aDecoder)
 		self.allowsFloats = false
 	}
-	
-//	override func isPartialStringValid(partialString: String,
-//		newEditingString newString: AutoreleasingUnsafeMutablePointer<NSString?>,
-//		errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
-//	{
-//		if (partialString.isEmpty) {
-//			newString.memory = "0"
-//			return false
-//		}
-//		
-//		return super.isPartialStringValid(partialString, newEditingString: newString, errorDescription: error)
-//	}
-	
+
 	override func getObjectValue(obj: AutoreleasingUnsafeMutablePointer<AnyObject?>,
 		forString string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
 	{

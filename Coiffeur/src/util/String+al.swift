@@ -1,5 +1,5 @@
 //
-//  NSString+al.swift
+//  String+al.swift
 //  Coiffeur
 //
 //  Created by Anton Leuski on 4/5/15.
@@ -73,7 +73,7 @@ extension String {
 		return result
 	}
 	
-	var capitalizedStringFirstWord : String {
+	var stringByCapitalizingFirstWord : String {
 		return self.substringToIndex(self.startIndex.successor()).capitalizedString +
 			self.substringFromIndex(self.startIndex.successor())
 	}

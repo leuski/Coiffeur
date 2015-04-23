@@ -16,14 +16,18 @@ extension NSObject {
 	class BlockObserverImplementation : NSObject {
 		let observer: BlockObserver
 		let keyPath: String
-		let token:ObserverToken
+		let token: ObserverToken
+		let removeWhenChangedOnce: Bool
 		weak var target: NSObject?
-
-		init(_ observer:BlockObserver, keyPath:String, token:ObserverToken, target:NSObject) {
+		
+		init(_ observer:BlockObserver, keyPath:String, removeWhenChangedOnce:Bool,
+			token:ObserverToken, target:NSObject)
+		{
 			self.observer = observer
 			self.keyPath = keyPath
 			self.token = token
 			self.target = target
+			self.removeWhenChangedOnce = removeWhenChangedOnce
 		}
 
 		override func observeValueForKeyPath(keyPath: String,
@@ -31,36 +35,18 @@ extension NSObject {
 			change: [NSObject : AnyObject],
 			context: UnsafeMutablePointer<Void>)
 		{
-			if context == AssociatedKeys.BlockObserverContext {
-				self.observer(object, change)
-			}
-		}
-		
-		func stopObserving()
-		{
-			if let t: NSObject = self.target {
-				self.target = nil
-				t.removeObserver(self, forKeyPath: self.keyPath, context: AssociatedKeys.BlockObserverContext)
+			if context != AssociatedKeys.BlockObserverContext { return }
+			self.observer(object, change)
+			if !self.removeWhenChangedOnce { return }
+			if let t = self.target {
 				t.al_observers.removeObjectForKey(self.token)
 			}
 		}
 		
 		deinit {
-			stopObserving()
-		}
-	}
-
-	class OneShotBlockObserverImplementation : BlockObserverImplementation {
-		override func observeValueForKeyPath(keyPath: String,
-			ofObject object: AnyObject,
-			change: [NSObject : AnyObject],
-			context: UnsafeMutablePointer<Void>)
-		{
-			if context == AssociatedKeys.BlockObserverContext {
-				self.observer(object, change)
-				if let t: AnyObject = self.target {
-					t.removeObserverWithToken(self.token)
-				}
+			if let t = self.target {
+				t.removeObserver(self, forKeyPath: self.keyPath,
+					context: AssociatedKeys.BlockObserverContext)
 			}
 		}
 	}
@@ -72,27 +58,28 @@ extension NSObject {
 	
 	var al_observers: NSMutableDictionary {
 		get {
-			if let dict = objc_getAssociatedObject(self, AssociatedKeys.BlockObserverAOName) as? NSMutableDictionary {
+			if let dict = objc_getAssociatedObject(self,
+				AssociatedKeys.BlockObserverAOName) as? NSMutableDictionary
+			{
 				return dict
 			}
 			let dict = NSMutableDictionary()
-			objc_setAssociatedObject(
-				self,
-				AssociatedKeys.BlockObserverAOName,
-				dict,
-				UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-			)
+			objc_setAssociatedObject(self, AssociatedKeys.BlockObserverAOName,
+				dict, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
 			return dict
 		}
 	}
 	
 	func addObserverForKeyPath(keyPath:String,
 		options: NSKeyValueObservingOptions = NSKeyValueObservingOptions(),
+		removeWhenChangedOnce: Bool = false,
 		observer: (AnyObject, [NSObject : AnyObject]) -> Void) -> ObserverToken
 	{
 		let token = ObserverToken()
-		let observer = BlockObserverImplementation(observer, keyPath:keyPath, token:token, target:self)
-		self.addObserver(observer, forKeyPath: keyPath, options: options, context: AssociatedKeys.BlockObserverContext)
+		let observer = BlockObserverImplementation(observer, keyPath:keyPath,
+			removeWhenChangedOnce:removeWhenChangedOnce, token:token, target:self)
+		self.addObserver(observer, forKeyPath: keyPath, options: options,
+			context: AssociatedKeys.BlockObserverContext)
 		al_observers.setObject(observer, forKey: token)
 		return token
 	}
@@ -101,21 +88,26 @@ extension NSObject {
 		options: NSKeyValueObservingOptions = NSKeyValueObservingOptions(),
 		observer: (AnyObject, [NSObject : AnyObject]) -> Void) -> ObserverToken
 	{
-		let token = ObserverToken()
-		let observer = OneShotBlockObserverImplementation(observer, keyPath:keyPath, token:token, target:self)
-		self.addObserver(observer, forKeyPath: keyPath, options: options, context: AssociatedKeys.BlockObserverContext)
-		al_observers.setObject(observer, forKey: token)
-		return token
+		return addObserverForKeyPath(keyPath, options:options,
+			removeWhenChangedOnce:true, observer:observer)
 	}
 
 	func removeObserverWithToken(token:ObserverToken)
 	{
-		al_observers.removeObjectForKey(token)
+		if let dict = objc_getAssociatedObject(self,
+			AssociatedKeys.BlockObserverAOName) as? NSMutableDictionary
+		{
+			dict.removeObjectForKey(token)
+		}
 	}
 
 	func removeAllObservers()
 	{
-		al_observers.removeAllObjects()
+		if let dict = objc_getAssociatedObject(self,
+			AssociatedKeys.BlockObserverAOName) as? NSMutableDictionary
+		{
+			dict.removeAllObjects()
+		}
 	}
 
 }

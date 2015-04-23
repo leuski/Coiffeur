@@ -148,7 +148,6 @@ class SourceView: NSViewController {
 		super.viewDidLoad()
 		
 		// we want to be the delegate
-		self.fragaria.setObject(self, forKey:MGSFODelegate)
 		self.fragaria.embedInView(self.containerView)
 		
 		let textView : NSTextView = self.fragaria.textView()

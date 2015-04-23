@@ -20,6 +20,7 @@ class MainWindowController : NSWindowController {
 			if oldDocument != nil && self.styleView != nil {
 				self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
 				self.styleView = nil
+				(oldDocument! as! Document).model!.delegate = nil
       }
       
       if var d = self.styleDocument {
@@ -53,7 +54,7 @@ class MainWindowController : NSWindowController {
     self.init(windowNibName:"MainWindowController")
     let x = self.window
   }
-  
+	
   @IBAction func uncrustify(_ sender : AnyObject? = nil)
   {
     if let m = self.styleDocument?.model {
@@ -96,6 +97,7 @@ extension MainWindowController : NSWindowDelegate
 {
 	func windowWillClose(notification:NSNotification)
 	{
+		self.sourceView.removeAllObservers()
 		self.sourceView.representedObject = nil
 		self.sourceView = nil
 		self.styleView.representedObject = nil

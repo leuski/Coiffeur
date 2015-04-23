@@ -35,10 +35,18 @@ extension NSError {
   }
 }
 
-// Does not compile as of Swift 1.2
+// Compiler crashes if I use this as of Swift 1.2
 //enum Result<T:AnyObject> {
 //  case Success(T)
 //  case Failure(NSError)
+//	init(_ value:T)
+//	{
+//		self = .Success(value)
+//	}
+//	init(_ error:NSError)
+//	{
+//		self = .Failure(error)
+//	}
 //}
 
 enum StringResult {

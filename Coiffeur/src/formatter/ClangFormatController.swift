@@ -39,7 +39,14 @@ class ClangFormatController : CoiffeurController {
 	override class var currentExecutableURLUDKey : String {
 		return Private.ExecutableURLUDKey }
 	
-  override class func createCoiffeur() -> CoiffeurController.Result
+	override class var currentExecutableURL : NSURL? {
+		didSet {
+			Private.OptionsDocumentation = nil
+			Private.DefaultValues = nil
+		}
+	}
+
+	override class func createCoiffeur() -> CoiffeurController.Result
   {
     let result = super.createCoiffeur()
 
@@ -228,7 +235,7 @@ class ClangFormatController : CoiffeurController {
           }
         
           let prefix = line.substringWithRange(match.rangeAtIndex(1))
-          option.documentation = option.documentation.stringByAppendingString("\(prefix)``\(token)``\n")
+          option.documentation = option.documentation.stringByAppendingString("\(prefix)``\(token)``\(CoiffeurController.NewLine)")
           continue
         }
       
@@ -333,7 +340,7 @@ class ClangFormatController : CoiffeurController {
 		
 		NSTask(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text) {
-				(result:StringResult) -> Void in
+				(result:StringResult) in
 				NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
 				completionHandler(result)
 		}

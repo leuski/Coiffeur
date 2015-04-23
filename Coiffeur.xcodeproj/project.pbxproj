@@ -62,7 +62,7 @@
 		62F9F1BB1AD1A7A7002B7F1B /* ConfigRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1BA1AD1A7A7002B7F1B /* ConfigRoot.swift */; };
 		62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1BE1AD1A7EC002B7F1B /* Config.swift */; };
 		62F9F1C31AD1CB92002B7F1B /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1C21AD1CB92002B7F1B /* Language.swift */; };
-		62F9F1C91AD22835002B7F1B /* NSString+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1C81AD22835002B7F1B /* NSString+al.swift */; };
+		62F9F1C91AD22835002B7F1B /* String+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1C81AD22835002B7F1B /* String+al.swift */; };
 		62F9F1CB1AD2284A002B7F1B /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1CA1AD2284A002B7F1B /* CoreData.swift */; };
 		62F9F1CD1AD22873002B7F1B /* BorderlessTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1CC1AD22873002B7F1B /* BorderlessTextView.swift */; };
 		62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1D01AD22B5C002B7F1B /* OverviewScroller.swift */; };
@@ -170,7 +170,7 @@
 		62F9F1BA1AD1A7A7002B7F1B /* ConfigRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigRoot.swift; sourceTree = "<group>"; };
 		62F9F1BE1AD1A7EC002B7F1B /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		62F9F1C21AD1CB92002B7F1B /* Language.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
-		62F9F1C81AD22835002B7F1B /* NSString+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+al.swift"; sourceTree = "<group>"; };
+		62F9F1C81AD22835002B7F1B /* String+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+al.swift"; sourceTree = "<group>"; };
 		62F9F1CA1AD2284A002B7F1B /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		62F9F1CC1AD22873002B7F1B /* BorderlessTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderlessTextView.swift; sourceTree = "<group>"; };
 		62F9F1D01AD22B5C002B7F1B /* OverviewScroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewScroller.swift; sourceTree = "<group>"; };
@@ -365,7 +365,7 @@
 				6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */,
 				62F263271AD4DD30000B5DFE /* Error.swift */,
 				6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */,
-				62F9F1C81AD22835002B7F1B /* NSString+al.swift */,
+				62F9F1C81AD22835002B7F1B /* String+al.swift */,
 				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
 				62F9F1D61AD23C4A002B7F1B /* Transformers.swift */,
 				62B64F591AE4C7BB009C53EE /* NSObject+al.swift */,
@@ -541,7 +541,7 @@
 				620668D61ADAE63500F807B0 /* Preferences.swift in Sources */,
 				62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */,
 				62F263281AD4DD30000B5DFE /* Error.swift in Sources */,
-				62F9F1C91AD22835002B7F1B /* NSString+al.swift in Sources */,
+				62F9F1C91AD22835002B7F1B /* String+al.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

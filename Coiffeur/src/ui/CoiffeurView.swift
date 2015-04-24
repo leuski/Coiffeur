@@ -150,6 +150,9 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			if let v = view as? ConfigChoiceCellView, let segmented = v.segmented {
 				segmented.labels = node.tokens
 			}
+			if let v = view as? ConfigOptionCellView {
+				v.leftMargin.constant = 8
+			}
 			return view
 		}
     return nil
@@ -196,7 +199,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		{
 			container.locations = theNode.path
 			container.textField.stringValue = theNode.title
-			container.leftMargin.constant = (1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+1.0
+			container.leftMargin.constant = (1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+4.0
 			return container
 		} else {
 			return nil

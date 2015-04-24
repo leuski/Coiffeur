@@ -89,11 +89,11 @@
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 <prototypeCellViews>
-                                                    <customView identifier="row.option" autoresizesSubviews="NO" id="ehB-SY-d4v" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
+                                                    <customView identifier="row.option" id="ehB-SY-d4v" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
                                                         <rect key="frame" x="1" y="1" width="477" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <subviews>
-                                                            <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="69f-yx-URr">
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="69f-yx-URr">
                                                                 <rect key="frame" x="0.0" y="2" width="477" height="14"/>
                                                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Label" usesSingleLineMode="YES" id="alv-B7-oq1">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -112,11 +112,11 @@
                                                             <outlet property="textField" destination="69f-yx-URr" id="eEZ-xE-NFf"/>
                                                         </connections>
                                                     </customView>
-                                                    <customView identifier="row.section" autoresizesSubviews="NO" id="RMt-bD-di2" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
+                                                    <customView identifier="row.section" id="RMt-bD-di2" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
                                                         <rect key="frame" x="1" y="19" width="477" height="19"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <subviews>
-                                                            <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CpY-yV-u1p">
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CpY-yV-u1p">
                                                                 <rect key="frame" x="0.0" y="1" width="477" height="17"/>
                                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="Hrf-bU-AhJ">
                                                                     <font key="font" metaFont="systemBold"/>
@@ -160,6 +160,9 @@
                                                             <constraint firstItem="1l6-Lz-CFJ" firstAttribute="leading" secondItem="V2b-6p-fqf" secondAttribute="leading" constant="3" id="o5H-sj-NPM"/>
                                                             <constraint firstAttribute="trailing" secondItem="1l6-Lz-CFJ" secondAttribute="trailing" constant="3" id="wPH-iY-GXV"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outlet property="leftMargin" destination="o5H-sj-NPM" id="ZeQ-zd-ojp"/>
+                                                        </connections>
                                                     </tableCellView>
                                                     <tableCellView identifier="view.signed" id="JaK-Bn-AVK" customClass="ConfigOptionCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="0.0" y="0.0" width="477" height="21"/>
@@ -205,6 +208,9 @@
                                                             <constraint firstItem="qvE-oh-VdH" firstAttribute="bottom" secondItem="jvD-UM-YbA" secondAttribute="bottom" id="mbm-Gi-cYe"/>
                                                             <constraint firstItem="qvE-oh-VdH" firstAttribute="leading" secondItem="JaK-Bn-AVK" secondAttribute="leading" constant="3" id="rdI-S8-5W4"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outlet property="leftMargin" destination="rdI-S8-5W4" id="f9z-SG-wec"/>
+                                                        </connections>
                                                     </tableCellView>
                                                     <tableCellView identifier="view.unsigned" id="e65-PG-vLV" customClass="ConfigOptionCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="63" width="477" height="21"/>
@@ -249,6 +255,9 @@
                                                             <constraint firstItem="tB8-Q8-GYL" firstAttribute="leading" secondItem="e65-PG-vLV" secondAttribute="leading" constant="3" id="oQb-6C-c15"/>
                                                             <constraint firstItem="qGd-cm-8AR" firstAttribute="leading" secondItem="tB8-Q8-GYL" secondAttribute="trailing" constant="3" id="xHp-Ss-Oq3"/>
                                                         </constraints>
+                                                        <connections>
+                                                            <outlet property="leftMargin" destination="oQb-6C-c15" id="HPO-F9-Wmk"/>
+                                                        </connections>
                                                     </tableCellView>
                                                     <tableCellView identifier="view.choice" id="JWl-XT-3dd" customClass="ConfigChoiceCellView" customModule="Coiffeur">
                                                         <rect key="frame" x="1" y="113" width="477" height="20"/>
@@ -276,6 +285,7 @@
                                                             <constraint firstAttribute="bottom" secondItem="bdv-fS-xTF" secondAttribute="bottom" constant="3" id="utF-D7-IRB"/>
                                                         </constraints>
                                                         <connections>
+                                                            <outlet property="leftMargin" destination="G7I-wQ-Sp7" id="9Wc-LV-9eR"/>
                                                             <outlet property="segmented" destination="bdv-fS-xTF" id="5fO-q0-p6a"/>
                                                         </connections>
                                                     </tableCellView>

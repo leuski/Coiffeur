@@ -20,14 +20,6 @@ class ConfigNodeLocation {
 
 extension ConfigNode {
 	
-//	class Location {
-//		var index = 0
-//		var count = 0
-//		init(_ index:Int, of count:Int) {
-//			self.index = index
-//			self.count = count
-//		}
-//	}
 	typealias Location = ConfigNodeLocation
 	
 	var path : [Location] {
@@ -218,9 +210,24 @@ extension ConfigSection {
 	{
 		mutableOrderedSetValueForKey("children").sortUsingDescriptors(Private.titleSortDescriptors)
 		var i = 0
-		for node in self.children {
-			(node as! ConfigNode).index = i++
-			(node as! ConfigNode).sortAndIndexChildren()
+		for child in self.children {
+			if let node = child as? ConfigNode {
+				node.index = i++
+				node.sortAndIndexChildren()
+				if let section = node as? ConfigSection {
+					var index = ""
+					var n = section
+					for var i = self.depth; i >= 0; --i {
+						index = "\(n.index+1).\(index)"
+						n = n.parent as! ConfigSection
+					}
+					let numberMargin = Int(floor(log10(Double(section.parent!.children.count)))) - Int(floor(log10(Double(section.index+1))))
+					for var i = 0; i < numberMargin; ++i {
+						index = "\u{2007}\(index)"
+					}
+					section.title = "\(index) \(section.title)"
+				}
+			}
 		}
 	}
 	

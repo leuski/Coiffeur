@@ -2,10 +2,77 @@
 /* Localization file */
 
 
-"Choose…" = "Choose…";
-"Format executable error code %d" = "Format executable error code %d";
-"Unknown document type “%@”" = "Unknown document type “%@”";
-
 "CoiffeurPreferences.label" = "Locations";
 "TextPresentationPreferences.label" = "Text";
 "ColorAndFontPreferences.label" = "Colors & Font";
+
+"CoiffeurPreferences.tooltip" = "Locations";
+"TextPresentationPreferences.tooltip" = "Text";
+"ColorAndFontPreferences.tooltip" = "Colors & Font";
+
+"Uncrustify Executable" = "Uncrustify Executable";
+"Clang-Format Executable" = "Clang-Format Executable";
+
+/* Error */
+"Failed to read the content of %@.%@ as UTF8 string" = "Failed to read the content of %@.%@ as UTF8 string";
+/* Error */
+"Cannot find %@.%@" = "Cannot find %@.%@";
+/* Error */
+"Cannot locate executable at %@. Using the default application" = "Cannot locate executable at %@. Using the default application";
+/* Error */
+"Format executable URL is not specified" = "Format executable URL is not specified";
+/* Error */
+"Failed to initialize coiffeur persistent store" = "Failed to initialize coiffeur persistent store";
+/* Error */
+"Failed to initialize coiffeur persistent store coordinator" = "Failed to initialize coiffeur persistent store coordinator";
+/* Error */
+"Failed to initialize coiffeur managed object model" = "Failed to initialize coiffeur managed object model";
+/* Error */
+"Unknown document type “%@”" = "Unknown document type “%@”";
+/* Error */
+"Unknown error while trying to read style from %@" = "Unknown error while trying to read style from %@";
+/* Error */
+"Unknown error while trying to write style to %@" = "Unknown error while trying to write style to %@";
+/* Error */
+"Unknown error" = "Unknown error";
+/* Error */
+"Unknown error while reading source file from %@" = "Unknown error while reading source file from %@";
+/* Error */
+"Failed to interpret the output of the format executable" = "Failed to interpret the output of the format executable";
+/* Error */
+"Format excutable error code %d: %@" = "Format excutable error code %d: %@";
+/* Error */
+"Format excutable error code %d" = "Format excutable error code %d";
+/* Error */
+"An error while running format executable: %@" = "An error while running format executable: %@";
+
+/*  */
+"Other" = "Other";
+/*  */
+"Choose…" = "Choose…";
+/*  */
+"Built-in %@" = "Built-in %@";
+
+/* Fragaria color MGSFragariaPrefsBackgroundColourWell */
+"Background" = "Background";
+/* Fragaria color MGSFragariaPrefsTextColourWell */
+"Plain Text" = "Plain Text";
+/* Fragaria color MGSFragariaPrefsCommentsColourWell */
+"Comments" = "Comments";
+/* Fragaria color MGSFragariaPrefsStringsColourWell */
+"Strings" = "Strings";
+/* Fragaria color MGSFragariaPrefsNumbersColourWell */
+"Numbers" = "Numbers";
+/* Fragaria color MGSFragariaPrefsAttributesColourWell */
+"Attributes" = "Attributes";
+/* Fragaria color MGSFragariaPrefsVariablesColourWell */
+"Variables" = "Variables";
+/* Fragaria color MGSFragariaPrefsKeywordsColourWell */
+"Keywords" = "Keywords";
+/* Fragaria color MGSFragariaPrefsInstructionsColourWell */
+"Instructions" = "Instructions";
+/* Fragaria color MGSFragariaPrefsCommandsColourWell */
+"Commands" = "Commands";
+/* Fragaria color MGSFragariaPrefsInvisibleCharactersColourWell */
+"Invisibles" = "Invisibles";
+

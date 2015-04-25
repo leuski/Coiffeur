@@ -90,7 +90,7 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 			let item = menu.insertItemWithTitle(
 				String(format:NSLocalizedString("Built-in %@", comment:""),
 					url.lastPathComponent!),
-				action: Selector("selectURL:"),
+				action: "selectURL:",
 				keyEquivalent: "", atIndex: 0)
 			item?.representedObject = [ "class" : ccc, "url" : url ]
 				as Dictionary<String, AnyObject>

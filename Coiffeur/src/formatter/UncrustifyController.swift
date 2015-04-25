@@ -26,7 +26,7 @@ class UncrustifyController : CoiffeurController {
     static var ExecutableURLUDKey = "UncrustifyExecutableURL"
 		static var ExecutableTitleUDKey = "Uncrustify Executable"
 
-    static var OptionsDocumentation : String? = nil
+    static var Options : String? = nil
   }
   
 	override var pageGuideColumn : Int {
@@ -41,14 +41,18 @@ class UncrustifyController : CoiffeurController {
 
 	var versionString : String? = nil
 
-	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
-  override class var documentType : String { return Private.DocumentType }
-	override class var currentExecutableName : String { return Private.ExecutableName }
-	override class var currentExecutableURLUDKey : String { return Private.ExecutableURLUDKey }
+	override class var localizedExecutableTitle : String {
+		return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
+  override class var documentType : String {
+		return Private.DocumentType }
+	override class var currentExecutableName : String {
+		return Private.ExecutableName }
+	override class var currentExecutableURLUDKey : String {
+		return Private.ExecutableURLUDKey }
 	
   override class var currentExecutableURL : NSURL? {
     didSet {
-      Private.OptionsDocumentation = nil
+      Private.Options = nil
     }
   }
   
@@ -65,15 +69,19 @@ class UncrustifyController : CoiffeurController {
     
     switch result {
     case .Success(let controller):
-      if Private.OptionsDocumentation == nil {
-        switch NSTask(controller.executableURL, arguments: [Private.ShowDocumentationArgument]).run() {
+      if Private.Options == nil {
+        switch NSTask(controller.executableURL,
+					arguments: [Private.ShowDocumentationArgument]).run()
+				{
         case .Failure(let error):
           return CoiffeurController.Result(error)
         case .Success(let text):
-          Private.OptionsDocumentation = text
+          Private.Options = text
         }
 
-				switch NSTask(controller.executableURL, arguments: [Private.VersionArgument]).run() {
+				switch NSTask(controller.executableURL,
+					arguments: [Private.VersionArgument]).run()
+				{
 				case .Failure(let error):
 					return CoiffeurController.Result(error)
 				case .Success(let text):
@@ -84,7 +92,7 @@ class UncrustifyController : CoiffeurController {
 				}
 			}
 			
-      if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
+      if let error = controller.readOptionsFromString(Private.Options!) {
         return CoiffeurController.Result(error)
       }
 			
@@ -114,9 +122,11 @@ class UncrustifyController : CoiffeurController {
 
 				currentComment = currentComment.trim()
 				if !currentComment.isEmpty {
-					if let range = currentComment.rangeOfCharacterFromSet(NSCharacterSet.newlineCharacterSet()) {
+					if let range = currentComment.rangeOfCharacterFromSet(
+						NSCharacterSet.newlineCharacterSet()) {
 					} else {
-						currentSection = ConfigSection.objectInContext(self.managedObjectContext, parent:self.root, title:currentComment)
+						currentSection = ConfigSection.objectInContext(
+							self.managedObjectContext, parent:self.root, title:currentComment)
 					}
 					currentComment = ""
 				}
@@ -133,11 +143,13 @@ class UncrustifyController : CoiffeurController {
 				
 				if let (key, value) = _keyValuePairFromString(keyValue) {
 
-					type = type.trim().stringByReplacingOccurrencesOfString("/", withString: ConfigNode.TypeSeparator)
+					type = type.trim().stringByReplacingOccurrencesOfString("/",
+						withString: ConfigNode.TypeSeparator)
 					currentComment = currentComment.trim()
 					var option = ConfigOption.objectInContext(self.managedObjectContext,
 						parent:currentSection,
-						title:currentComment.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())[0])
+						title:currentComment.componentsSeparatedByCharactersInSet(
+							NSCharacterSet.newlineCharacterSet())[0])
 					option.indexKey = key
 					option.stringValue = value
 					option.documentation = currentComment
@@ -156,7 +168,8 @@ class UncrustifyController : CoiffeurController {
 		return nil
   }
 		
-	private func _keyValuePairFromString(string:String) -> (key:String, value:String)?
+	private func _keyValuePairFromString(string:String)
+		-> (key:String, value:String)?
 	{
 		var line = string
 		
@@ -232,7 +245,7 @@ class UncrustifyController : CoiffeurController {
     var data=""
 		
 		if let version = self.versionString {
-			data += "\(Private.Comment) \(version)\(CoiffeurController.NewLine)"
+			data += "\(Private.Comment) \(version)\n"
 		}
 		
 		switch self.managedObjectContext.fetch(ConfigOption.self,
@@ -242,7 +255,7 @@ class UncrustifyController : CoiffeurController {
 			for option in allOptions {
 				if var value = option.stringValue {
 					value = value.stringByQuoting()
-					data += "\(option.indexKey) = \(value)\(CoiffeurController.NewLine)"
+					data += "\(option.indexKey) = \(value)\n"
 				}
 			}
 			

@@ -38,59 +38,19 @@ class CoiffeurView : NSViewController {
 	{
 		self.optionsView.expandItem(nil, expandChildren:true)
 
-		var foundNode = false
-		
-		var node : AnyObject?
-		for node = self.optionsController.arrangedObjects;
-			node?.childNodes??.count != nil && node!.childNodes!!.count > 0;
-			node = node!.childNodes!![0]
-		{
-			foundNode = true
+		if let node: AnyObject = self.optionsController.firstLeaf  {
+			self.optionsController.setSelectionIndexPath(node.indexPath)
 		}
 		
-		if foundNode && node != nil {
-			self.optionsController.setSelectionIndexPath(node!.indexPath)
-		}
-		
-		self._fillMenu()
-	}
-	
-  private func _allNodes() -> [AnyObject]
-  {
-    var array = [AnyObject]()
-    self._fillNodeArray(&array, atNode:self.optionsController.arrangedObjects)
-    return array
-  }
-  
-  private func _fillNodeArray(inout array:[AnyObject], atNode node:AnyObject)
-  {
-    if let nodes : [AnyObject] = node.childNodes {
-      for n in nodes {
-        array.append(n)
-        self._fillNodeArray(&array, atNode:n)
-      }
+		for node in self.optionsController.nodes {
+			if let section = node.representedObject as? ConfigSection {
+				var item = NSMenuItem()
+				item.title = section.title
+				item.indentationLevel  = section.depth - 1
+				item.representedObject = node
+				self.jumpMenu.menu!.addItem(item)
+			}
     }
-  }
-  
-  private func _fillMenu()
-  {
-    for var i = self.jumpMenu.numberOfItems - 1; i >= 1; --i {
-      self.jumpMenu.removeItemAtIndex(i)
-    }
-    
-		let sections = self._allNodes().filter {
-			$0.representedObject is ConfigSection }
-
-		for node in sections {
-      let section = node.representedObject as! ConfigSection
-			var item    = NSMenuItem()
-      item.title = section.title;
-      item.indentationLevel  = section.depth - 1;
-      item.representedObject = node;
-      self.jumpMenu.menu!.addItem(item)
-    }
-    
-    self.jumpMenu.preferredEdge = NSMaxYEdge;
   }
   
   @IBAction func jumpToSection(sender:AnyObject)
@@ -217,7 +177,14 @@ extension CoiffeurView : NSOutlineViewDelegate {
 				+ CGFloat(outlineView.levelForItem(item)))
 					* outlineView.indentationPerLevel+4.0
 			container.drawSeparator = theNode is ConfigSection
-				|| theNode.index == theNode.parent!.children.count-1
+//				|| theNode.index == theNode.parent!.children.count-1
+			if !container.drawSeparator {
+				let row = outlineView.rowForItem(item) + 1
+				if row < outlineView.numberOfRows {
+					container.drawSeparator =
+						outlineView.itemAtRow(row)?.representedObject is ConfigSection
+				}
+			}
 			return container
 		} else {
 			return nil

@@ -23,7 +23,7 @@ class Document : NSDocument {
     self.init()
     self.fileType = typeName
 
-    let result = self._modelControllerOfType(typeName)
+    let result = CoiffeurController.coiffeurWithType(typeName)
     switch result {
     case .Failure(let error):
       error.assignTo(outError)
@@ -46,17 +46,6 @@ class Document : NSDocument {
     }
   }
   
-  private func _modelControllerOfType(type :String) -> CoiffeurController.Result
-  {
-    for coiffeurClass in CoiffeurController.availableTypes  {
-      if type == coiffeurClass.documentType {
-        return coiffeurClass.createCoiffeur()
-      }
-    }
-    
-    return CoiffeurController.Result(Error("Unknown document type “%@”", type))
-  }
-  
   private func _ensureWeHaveModelOfType(typeName:String,
 		errorFormatKey:String) -> NSError?
   {
@@ -67,7 +56,7 @@ class Document : NSDocument {
       }
       return Error(errorFormatKey, typeName, documentType)
     } else {
-      let result = self._modelControllerOfType(typeName)
+      let result = CoiffeurController.coiffeurWithType(typeName)
       switch result {
       case .Failure(let error):
         return error

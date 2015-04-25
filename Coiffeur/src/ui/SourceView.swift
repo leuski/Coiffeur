@@ -11,8 +11,8 @@ import Cocoa
 class SourceView: NSViewController {
   
 	// model-related properties
-	var sourceString = ""
-	var language = Language.languageFromUserDefaults() {
+	dynamic var sourceString = ""
+	dynamic var language = Language.languageFromUserDefaults() {
 		didSet {
 			self.language.saveToUserDefaults()
 			let fragariaName = self.language.fragariaID
@@ -20,7 +20,7 @@ class SourceView: NSViewController {
 		}
 	}
 	
-	var fileURL : NSURL? {
+	dynamic var fileURL : NSURL? {
 		didSet {
 			if let url = self.fileURL {
 				NSUserDefaults.standardUserDefaults().setURL(url,
@@ -86,7 +86,7 @@ class SourceView: NSViewController {
 		set (relativeScrollLocation) {
 			var (textView, visRect, maxScrollLocation) = _scrollLocation()
 			visRect.origin.y = round(relativeScrollLocation * maxScrollLocation)
-			visRect.origin.x = 0;
+			visRect.origin.x = 0
 			textView.scrollRectToVisible(visRect)
 		}
 	}
@@ -117,7 +117,7 @@ class SourceView: NSViewController {
 		
 		//             NSLog("%f %f %f %f %f %ld", frameHeight, visRect.size.height,
 		//                                      visRect.origin.y, maxScrollLocation,
-		// relativeScrollLocation, textStorage.string.length);
+		// relativeScrollLocation, textStorage.string.length)
 		
 		return (textView:textView, visRect:visRect,
 			maxScrollLocaiton:maxScrollLocation)
@@ -169,7 +169,7 @@ class SourceView: NSViewController {
 			return []
 		}
 		
-		var lineRanges = [OverviewRegion]();
+		var lineRanges = [OverviewRegion]()
 		let saturation : CGFloat  = 0.5
 		let insertHue : CGFloat = 1.0 / 3.0
 		let deleteHue : CGFloat = 0.0 / 3.0
@@ -241,20 +241,20 @@ extension SourceView : NSPathControlDelegate {
 		var index = 0
 		for url in self.knownSampleURLs {
 			var item = NSMenuItem(title: url.path!.lastPathComponent,
-				action: Selector("openDocumentInView:"), keyEquivalent: "")
-			item.representedObject = url;
+				action: "openDocumentInView:", keyEquivalent: "")
+			item.representedObject = url
 			menu.insertItem(item, atIndex:index++)
 		}
 		
 		var item = NSMenuItem(title: NSLocalizedString("Choose…", comment:""),
-			action: Selector("openDocumentInView:"), keyEquivalent: "")
+			action: "openDocumentInView:", keyEquivalent: "")
 		menu.insertItem(item, atIndex:index++)
 	}
 	
 	func pathControl(pathControl: NSPathControl,
 		validateDrop info: NSDraggingInfo) -> NSDragOperation
 	{
-		var count = 0;
+		var count = 0
 		
 		info.enumerateDraggingItemsWithOptions(NSDraggingItemEnumerationOptions(),
 			forView:pathControl,
@@ -283,7 +283,7 @@ extension SourceView : NSPathControlDelegate {
 				(draggingItem: NSDraggingItem!, idx:Int,
 					stop: UnsafeMutablePointer<ObjCBool>) in
 				if let url = self._allowedURLForItem(draggingItem) {
-					theURL = url;
+					theURL = url
 					stop.memory = true
 				}
 		})

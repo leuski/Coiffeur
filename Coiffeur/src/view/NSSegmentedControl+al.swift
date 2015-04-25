@@ -29,7 +29,7 @@ extension NSSegmentedControl {
 			let attributes : [NSString : AnyObject] = [
 				NSFontFamilyAttribute: fontName,
 				NSFontSizeAttribute: fontSize
-			];
+			]
 			
 			var width = CGFloat(40.0)
 			var i     = 0
@@ -37,10 +37,10 @@ extension NSSegmentedControl {
 			for token in value {
 				let attributedString = NSAttributedString(string:token,
 					attributes:attributes)
-				let size = attributedString.size;
+				let size = attributedString.size
 				
 				if (width < size.width) {
-					width = size.width;
+					width = size.width
 				}
 				
 				setLabel(token, forSegment: i++)

@@ -28,26 +28,26 @@ extension String {
       
       if !in_arg {
         if is_space {
-          continue;
+          continue
         }
         
-        in_arg = true;
+        in_arg = true
         current_token = ""
       }
       
       if in_backslash {
-        in_backslash = false;
+        in_backslash = false
         current_token.append(ch)
       } else if ch == "\\" {
-        in_backslash = true;
+        in_backslash = true
       } else if ch == cur_quote {
-        cur_quote = null_char;
+        cur_quote = null_char
       } else if (ch == "'") || (ch == "\"") || (ch == "`") {
-        cur_quote = ch;
+        cur_quote = ch
       } else if cur_quote != null_char {
         current_token.append(ch)
       } else if (is_space) {
-        in_arg = false;
+        in_arg = false
         result.append(current_token)
       } else {
         current_token.append(ch)
@@ -168,52 +168,52 @@ extension String {
   {
     var numberOfLines = 0
     var index = self.startIndex
-    let lastCharacter = range.endIndex.predecessor();
+    let lastCharacter = range.endIndex.predecessor()
     var start : Int = 0
     var end : Int = 0
     
     for numberOfLines = 0; index < self.endIndex; numberOfLines++ {
-      let nextIndex = self.lineRangeForRange(index..<index).endIndex;
+      let nextIndex = self.lineRangeForRange(index..<index).endIndex
       
       if index <= range.startIndex && range.startIndex < nextIndex {
-        start = numberOfLines;
-        end = numberOfLines;
+        start = numberOfLines
+        end = numberOfLines
         
         if (lastCharacter < range.startIndex) {
-          break;
+          break
         }
       }
       
       if index <= lastCharacter && lastCharacter < nextIndex {
-        end = numberOfLines;
-        break;
+        end = numberOfLines
+        break
       }
       
-      index = nextIndex;
+      index = nextIndex
     }
-    return start...end;
+    return start...end
   }
   
   func lineCountForCharacterRange(range: Range<String.Index>) -> Int
   {
     if (range.endIndex == range.startIndex) {
-      return 0;
+      return 0
     }
     
     let lastCharacter = range.endIndex.predecessor()
-    var numberOfLines : Int = 0;
+    var numberOfLines : Int = 0
     
     for var index = range.startIndex; index < self.endIndex; numberOfLines++ {
-      let nextIndex = self.lineRangeForRange(index..<index).endIndex;
+      let nextIndex = self.lineRangeForRange(index..<index).endIndex
       
       if (index <= lastCharacter && lastCharacter < nextIndex) {
-        return numberOfLines;
+        return numberOfLines
       }
       
-      index = nextIndex;
+      index = nextIndex
     }
     
-    return 0;
+    return 0
   }
   
   func lineCount() -> Int

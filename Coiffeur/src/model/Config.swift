@@ -115,7 +115,7 @@ extension ConfigNode {
 		
 	}
 	
-	// this is a hack. As of Swift 1.2 the compiler complains that 
+	// HACK As of Swift 1.2 the compiler complains that
 	// it cannot override declarations in extensions. Working around...
 	func _setPredicate(value:NSPredicate?)
 	{
@@ -187,7 +187,7 @@ extension ConfigOption {
 extension ConfigSection {
 	private struct Private {
 		static let titleSortDescriptors = [NSSortDescriptor(key: "title",
-			ascending: true, selector: Selector("caseInsensitiveCompare:"))]
+			ascending: true, selector: "caseInsensitiveCompare:")]
     // we want to put "other..." subsection at the end of each section list.
     // we add a hidden character (non-breaking space) at the beginning
     // of the "other..." title, so sorting should sort titles in the order 

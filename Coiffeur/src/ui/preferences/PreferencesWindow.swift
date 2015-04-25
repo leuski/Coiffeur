@@ -201,7 +201,7 @@ extension PreferencesWindow : NSToolbarDelegate {
 		var item = NSToolbarItem(itemIdentifier: itemIdentifier)
 		if let pane = self.paneWithID(itemIdentifier) {
 			item.target = self
-			item.action = Selector("itemSelected:")
+			item.action = "itemSelected:"
 			item.label = pane.toolbarItemLabel
 			item.image = pane.toolbarItemImage
 			item.toolTip = pane.toolbarItemToolTip

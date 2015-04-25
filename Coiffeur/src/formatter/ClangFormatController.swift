@@ -168,7 +168,7 @@ class ClangFormatController : CoiffeurController {
     let quot = NSRegularExpression.ci_dmls_re_WithPattern("``(.*?)``")
     rst = quot.stringByReplacingMatchesInString(rst, withTemplate:"“$1”")
     
-    //      NSLog(@"%@", mutableRST);
+    //      NSLog(@"%@", mutableRST)
     return rst
   }
   
@@ -212,7 +212,7 @@ class ClangFormatController : CoiffeurController {
       
       //              NSString* trimmedLine = [line trim)
       //              if (trimmedLine.length == 0)
-      //                      line = trimmedLine;
+      //                      line = trimmedLine
       
       line = line.trim()
       
@@ -263,7 +263,7 @@ class ClangFormatController : CoiffeurController {
         
           let prefix = line.substringWithRange(match.rangeAtIndex(1))
           option.documentation +=
-						"\(prefix)``\(token)``\(CoiffeurController.NewLine)"
+						"\(prefix)``\(token)``\n"
           continue
         }
       
@@ -272,7 +272,7 @@ class ClangFormatController : CoiffeurController {
 						separatedBy:" ")
         }
       
-        option.documentation += line + CoiffeurController.NewLine
+        option.documentation += "\(line)\n"
       }
     }
     
@@ -303,7 +303,7 @@ class ClangFormatController : CoiffeurController {
 					}
 					option.stringValue = value
 				} else {
-          NSLog("Warning: unknown token %@ on line %@", key, line);
+          NSLog("Warning: unknown token %@ on line %@", key, line)
         }
       }
     }
@@ -315,7 +315,7 @@ class ClangFormatController : CoiffeurController {
   {
     var data = ""
     
-    data += "\(Private.SectionBegin)\(CoiffeurController.NewLine)"
+    data += "\(Private.SectionBegin)\n"
 		
 		switch self.managedObjectContext.fetch(ConfigOption.self,
 			sortDescriptors:[CoiffeurController.KeySortDescriptor])
@@ -328,14 +328,14 @@ class ClangFormatController : CoiffeurController {
 					} else {
 						value = value.stringByQuoting(quote: "'")
 					}
-					data += "\(option.indexKey): \(value)\(CoiffeurController.NewLine)"
+					data += "\(option.indexKey): \(value)\n"
 				}
 			}
 		case .Failure(let error):
 			return error
 		}
 		
-		data += "\(Private.SectionEnd)\(CoiffeurController.NewLine)"
+		data += "\(Private.SectionEnd)\n"
 		
     var error:NSError?
     if data.writeToURL(absoluteURL, atomically:true,

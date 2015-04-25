@@ -79,7 +79,7 @@ class MainWindowController : NSWindowController {
   
   override func validateMenuItem(anItem:NSMenuItem) -> Bool
   {
-    if anItem.action == Selector("changeLanguage:") {
+    if anItem.action == "changeLanguage:" {
       if let language = anItem.representedObject as? Language {
         anItem.state = (self.sourceView.language == language)
 					? NSOnState : NSOffState

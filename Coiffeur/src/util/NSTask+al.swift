@@ -61,8 +61,8 @@ extension NSTask {
 			if let string = String(data:outData, encoding: NSUTF8StringEncoding) {
 				return StringResult(string)
 			} else {
-				return StringResult(Error("Failed to interpret the output of the "
-					+ "format executable"))
+				return StringResult(
+					Error("Failed to interpret the output of the format executable"))
 			}
 		} else {
 			if let errText = String(data: errData, encoding: NSUTF8StringEncoding) {
@@ -84,8 +84,9 @@ extension NSTask {
 		ALExceptions.try({
 			result = self._run(input)
 		}, catch: { (ex:NSException?) in
-			result = StringResult(Error("An error while running format "
-				+ "executable: %@", ex?.reason ?? "unknown error"))
+			result = StringResult(
+				Error("An error while running format executable: %@",
+					ex?.reason ?? "unknown error"))
 		}, finally: {})
 		return result!
 	}
@@ -100,8 +101,8 @@ extension NSTask {
 			let result = self.run(input)
 			dispatch_async(dispatch_get_main_queue(), {
 				completionHandler(result)
-			});
-		});
+			})
+		})
 	}
 
 }

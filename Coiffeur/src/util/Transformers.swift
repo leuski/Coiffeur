@@ -12,7 +12,7 @@ class String2NumberTransformer : NSValueTransformer {
 
   override class func allowsReverseTransformation() -> Bool
   {
-    return true;
+    return true
   }
   
   override func transformedValue(value: AnyObject?) -> AnyObject?
@@ -54,8 +54,9 @@ class OnlyIntegers : NSNumberFormatter {
 	{
 		if string.isEmpty {
 			if err != nil {
-				err.memory = NSLocalizedString("Empty string is not a valid number. "
-					+ "Please provide a number", comment:"")
+				err.memory = NSLocalizedString(
+					"Empty string is not a valid number. Please provide a number",
+					comment:"")
 			}
 			return false
 		}

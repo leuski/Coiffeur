@@ -50,8 +50,6 @@
                         <menu key="menu" id="kuj-Va-yTp">
                             <items>
                                 <menuItem title="Jump to…" state="on" hidden="YES" id="AN7-A3-yzG"/>
-                                <menuItem title="Item 2" id="uHP-C4-wpv"/>
-                                <menuItem title="Item 3" id="t82-uH-zaP"/>
                             </items>
                         </menu>
                     </popUpButtonCell>

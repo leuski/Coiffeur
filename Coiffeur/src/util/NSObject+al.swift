@@ -35,7 +35,7 @@ extension NSObject {
 			change: [NSObject : AnyObject],
 			context: UnsafeMutablePointer<Void>)
 		{
-			if context != AssociatedKeys.Context { return }
+			if context != &AssociatedKeys.Context { return }
 			self.observer(object, change)
 			if !self.removeWhenChangedOnce { return }
 			if let t = self.target {
@@ -46,25 +46,25 @@ extension NSObject {
 		deinit {
 			if let t = self.target {
 				t.removeObserver(self, forKeyPath: self.keyPath,
-					context: AssociatedKeys.Context)
+					context: &AssociatedKeys.Context)
 			}
 		}
 	}
 
 	private struct AssociatedKeys {
-		private static let AOName = UnsafePointer<Void>(bitPattern: 57)
-		private static let Context = UnsafeMutablePointer<Void>(bitPattern: 57)
+		private static var AOName = 57
+		private static var Context = 57
 	}
 	
 	var al_observers: NSMutableDictionary {
 		get {
 			if let dict = objc_getAssociatedObject(self,
-				AssociatedKeys.AOName) as? NSMutableDictionary
+				&AssociatedKeys.AOName) as? NSMutableDictionary
 			{
 				return dict
 			}
 			let dict = NSMutableDictionary()
-			objc_setAssociatedObject(self, AssociatedKeys.AOName,
+			objc_setAssociatedObject(self, &AssociatedKeys.AOName,
 				dict, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
 			return dict
 		}
@@ -79,7 +79,7 @@ extension NSObject {
 		let observer = BlockObserverImplementation(observer, keyPath:keyPath,
 			removeWhenChangedOnce:removeWhenChangedOnce, token:token, target:self)
 		self.addObserver(observer, forKeyPath: keyPath, options: options,
-			context: AssociatedKeys.Context)
+			context: &AssociatedKeys.Context)
 		al_observers.setObject(observer, forKey: token)
 		return token
 	}
@@ -95,7 +95,7 @@ extension NSObject {
 	func removeObserverWithToken(token:ObserverToken)
 	{
 		if let dict = objc_getAssociatedObject(self,
-			AssociatedKeys.AOName) as? NSMutableDictionary
+			&AssociatedKeys.AOName) as? NSMutableDictionary
 		{
 			dict.removeObjectForKey(token)
 		}
@@ -104,7 +104,7 @@ extension NSObject {
 	func removeAllObservers()
 	{
 		if let dict = objc_getAssociatedObject(self,
-			AssociatedKeys.AOName) as? NSMutableDictionary
+			&AssociatedKeys.AOName) as? NSMutableDictionary
 		{
 			dict.removeAllObjects()
 		}

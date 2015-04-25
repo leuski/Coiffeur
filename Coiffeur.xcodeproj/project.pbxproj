@@ -16,6 +16,7 @@
 		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
 		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
 		620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 620668DF1ADB1B0D00F807B0 /* Locations.tiff */; };
+		6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */; };
 		621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */; };
 		621E6E871ADB7F5700225D3E /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E861ADB7F5700225D3E /* text.png */; };
 		6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */; };
@@ -120,6 +121,7 @@
 		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
 		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
 		620668DF1ADB1B0D00F807B0 /* Locations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Locations.tiff; sourceTree = "<group>"; };
+		6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTreeController+al.swift"; sourceTree = "<group>"; };
 		621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ProfileFontAndColor.icns; sourceTree = "<group>"; };
 		621E6E861ADB7F5700225D3E /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
 		6248C5311ADF6E1F005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TextPresentationPreferences.xib; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
 				62F9F1D61AD23C4A002B7F1B /* Transformers.swift */,
 				62B64F591AE4C7BB009C53EE /* NSObject+al.swift */,
+				6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -540,6 +543,7 @@
 				620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */,
 				620668D61ADAE63500F807B0 /* Preferences.swift in Sources */,
 				62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */,
+				6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */,
 				62F263281AD4DD30000B5DFE /* Error.swift in Sources */,
 				62F9F1C91AD22835002B7F1B /* String+al.swift in Sources */,
 			);

@@ -10,15 +10,26 @@ import Cocoa
 
 class AppDelegate : NSObject, NSApplicationDelegate {
   
-  let AboutFileName = "about"
-  let AboutFileNameExtension = "html"
-  let UserDefaultsFileNameExtension = "plist"
-  let UserDefaultsFileName   = "UserDefaults"
-  
+	private struct Private {
+		static private let AboutFileName = "about"
+		static private let AboutFileNameExtension = "html"
+		static private let UserDefaultsFileNameExtension = "plist"
+		static private let UserDefaultsFileName   = "UserDefaults"
+	}
+	
   @IBOutlet weak var languagesMenu : NSMenu!
   @IBOutlet weak var makeNewDocumentMenu : NSMenu!
   
-  override init()
+	var bundle : NSBundle {
+		return NSBundle.mainBundle()
+	}
+	
+	var aboutURL : NSURL? {
+		return self.bundle.URLForResource(Private.AboutFileName,
+			withExtension:Private.AboutFileNameExtension)
+	}
+
+	override init()
   {
     super.init()
     DocumentController() // load ours...
@@ -26,8 +37,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     MGSFragaria.initializeFramework()
     
     let bundle = NSBundle(forClass:self.dynamicType)
-    if let UDURL = bundle.URLForResource(UserDefaultsFileName,
-					withExtension:UserDefaultsFileNameExtension),
+    if let UDURL = bundle.URLForResource(Private.UserDefaultsFileName,
+					withExtension:Private.UserDefaultsFileNameExtension),
        let ud = NSDictionary(contentsOfURL:UDURL) as? [String:AnyObject]
     {
       NSUserDefaults.standardUserDefaults().registerDefaults(ud)
@@ -38,8 +49,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   {
     for l in Language.supportedLanguages {
       var item = NSMenuItem(title: l.displayName,
-				action: Selector("changeLanguage:"), keyEquivalent: "")
-      item.representedObject = l;
+				action: "changeLanguage:", keyEquivalent: "")
+      item.representedObject = l
       self.languagesMenu.addItem(item)
     }
     
@@ -47,11 +58,11 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     
     for aClass in CoiffeurController.availableTypes {
       var item = NSMenuItem(title: aClass.documentType,
-				action: Selector("openUntitledDocumentOfType:"), keyEquivalent: "")
+				action: "openUntitledDocumentOfType:", keyEquivalent: "")
       item.representedObject = aClass.documentType
       
       if (count < 2) {
-        item.keyEquivalent = "n";
+        item.keyEquivalent = "n"
         var mask = NSEventModifierFlags.CommandKeyMask
         
         if (count > 0) {
@@ -62,7 +73,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
       }
       
       self.makeNewDocumentMenu.addItem(item)
-      ++count;
+      ++count
     }
   }
   
@@ -87,16 +98,6 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     }
   }
   
-  var bundle : NSBundle
-  {
-  return NSBundle.mainBundle()
-  }
-  
-  var aboutURL : NSURL?
-  {
-    return self.bundle.URLForResource(AboutFileName,
-			withExtension:AboutFileNameExtension)
-  }
-  
+	
 }
 

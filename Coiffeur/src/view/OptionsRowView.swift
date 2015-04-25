@@ -61,12 +61,21 @@ class ConfigRowView : NSTableRowView {
 			let tf = self.textField
 			if self.interiorBackgroundStyle == .Dark {
 				tf.textColor = NSColor.selectedTextColor()
-				tf.font = NSFontManager.sharedFontManager().convertFont(
-					tf.font!, toHaveTrait: NSFontTraitMask.BoldFontMask)
+				
+				if self.window?.backingScaleFactor == 1 {
+					// light on dark looks bad on regular resolution screen,
+					// so we make the font bold to improve readability
+					tf.font = NSFontManager.sharedFontManager().convertFont(
+						tf.font!, toHaveTrait: NSFontTraitMask.BoldFontMask)
+				} else {
+					// on a retina screen the same text looks fine. no need to do bold.
+					tf.font = NSFontManager.sharedFontManager().convertFont(
+						tf.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
+				}
 			} else {
 				tf.textColor = NSColor.textColor()
 				tf.font = NSFontManager.sharedFontManager().convertFont(
-					self.textField.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
+					tf.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
 			}
 			
       self.backgroundColor.setFill()

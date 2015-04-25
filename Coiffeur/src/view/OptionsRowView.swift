@@ -33,6 +33,7 @@ class ConfigRowView : NSTableRowView {
 	@IBOutlet weak var leftMargin : NSLayoutConstraint!
 	@IBOutlet weak var textField : NSTextField!
 	
+	var drawSeparator = false
 	typealias Location = ConfigNode.Location
 	var locations = [Location]()
 	
@@ -74,12 +75,14 @@ class ConfigRowView : NSTableRowView {
     NSRectFill(NSMakeRect(CGFloat(0), CGFloat(0),
 			self.bounds.size.width, self.bounds.size.height))
    
-    if self.groupRowStyle {
+    if drawSeparator {
 			// draw the top border
       var path = NSBezierPath()
-      path.lineWidth = CGFloat(2)
-      path.appendBezierPathWithRect(NSMakeRect(-2, 0,
-				self.bounds.size.width+4, self.bounds.size.height+2))
+      path.lineWidth = CGFloat(1)
+			path.moveToPoint(NSMakePoint(CGFloat(0),
+				self.bounds.size.height-path.lineWidth+0.5))
+			path.lineToPoint(NSMakePoint(self.bounds.size.width,
+				self.bounds.size.height-path.lineWidth+0.5))
       NSColor.gridColor().set()
       path.stroke()
     }
@@ -87,8 +90,8 @@ class ConfigRowView : NSTableRowView {
 		// draw the colored lines using the section colors
     for var i = 0; i < min(1, locations.count - 1); ++i {
 			locations[i].color.setFill()
-			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(1),
-				CGFloat(3), self.bounds.size.height-2))
+			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(0),
+				CGFloat(3), self.bounds.size.height-1))
 		}
 		
 		// if we are a group, underline the title with the appropriate color
@@ -126,6 +129,6 @@ class ConfigRowView : NSTableRowView {
 		// paint
 		color.setFill()
 		NSRectFill(NSMakeRect(margin, CGFloat(0),
-			self.bounds.size.width-margin, self.bounds.size.height))
+			self.bounds.size.width-margin, self.bounds.size.height-1))
 	}
 }

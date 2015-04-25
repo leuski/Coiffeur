@@ -208,7 +208,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
   {
 		if let identifier = _rowViewIdentifierForItem(item),
 			 let theNode = item.representedObject as? ConfigNode,
-			 var container  = outlineView.makeViewWithIdentifier(identifier,
+			 var container = outlineView.makeViewWithIdentifier(identifier,
 				owner:self) as? ConfigRowView
 		{
 			container.locations = theNode.path
@@ -216,6 +216,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			container.leftMargin.constant = (1.5
 				+ CGFloat(outlineView.levelForItem(item)))
 					* outlineView.indentationPerLevel+4.0
+			container.drawSeparator = theNode is ConfigSection
+				|| theNode.index == theNode.parent!.children.count-1
 			return container
 		} else {
 			return nil

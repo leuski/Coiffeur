@@ -23,7 +23,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <splitView identifier="splitView.main" autosaveName="MainWindowSplitView" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HmO-H6-Zji">
+                    <splitView identifier="splitView.main" autosaveName="MainWindowSplitView" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HmO-H6-Zji">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <connections>
                             <outlet property="delegate" destination="-2" id="EyL-04-cbF"/>

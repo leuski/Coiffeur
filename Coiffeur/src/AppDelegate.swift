@@ -26,7 +26,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     MGSFragaria.initializeFramework()
     
     let bundle = NSBundle(forClass:self.dynamicType)
-    if let UDURL = bundle.URLForResource(UserDefaultsFileName, withExtension:UserDefaultsFileNameExtension),
+    if let UDURL = bundle.URLForResource(UserDefaultsFileName,
+					withExtension:UserDefaultsFileNameExtension),
        let ud = NSDictionary(contentsOfURL:UDURL) as? [String:AnyObject]
     {
       NSUserDefaults.standardUserDefaults().registerDefaults(ud)
@@ -36,7 +37,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(aNotification:NSNotification)
   {
     for l in Language.supportedLanguages {
-      var item = NSMenuItem(title: l.displayName, action: Selector("changeLanguage:"), keyEquivalent: "")
+      var item = NSMenuItem(title: l.displayName,
+				action: Selector("changeLanguage:"), keyEquivalent: "")
       item.representedObject = l;
       self.languagesMenu.addItem(item)
     }
@@ -44,7 +46,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     var count = 0
     
     for aClass in CoiffeurController.availableTypes {
-      var item = NSMenuItem(title: aClass.documentType, action: Selector("openUntitledDocumentOfType:"), keyEquivalent: "")
+      var item = NSMenuItem(title: aClass.documentType,
+				action: Selector("openUntitledDocumentOfType:"), keyEquivalent: "")
       item.representedObject = aClass.documentType
       
       if (count < 2) {
@@ -71,9 +74,12 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   @IBAction func openUntitledDocumentOfType(sender : AnyObject)
   {
     if let type = sender.representedObject as? String {
-      let controller = NSDocumentController.sharedDocumentController() as! DocumentController
+      let controller = NSDocumentController.sharedDocumentController()
+				as! DocumentController
       var error : NSError?
-      if nil == controller.openUntitledDocumentOfType(type, display:true, error:&error) {
+      if nil == controller.openUntitledDocumentOfType(type,
+				display:true, error:&error)
+			{
         if error != nil {
           NSApp.presentError(error!)
         }
@@ -88,7 +94,8 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   
   var aboutURL : NSURL?
   {
-    return self.bundle.URLForResource(AboutFileName, withExtension:AboutFileNameExtension)
+    return self.bundle.URLForResource(AboutFileName,
+			withExtension:AboutFileNameExtension)
   }
   
 }

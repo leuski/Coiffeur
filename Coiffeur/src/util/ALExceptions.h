@@ -13,5 +13,7 @@
  point when Swift figures out what to do with exceptions...
  */
 @interface ALExceptions : NSObject
-+ (void)try:(void(^)())try catch:(void(^)(NSException*))catch finally:(void(^)())finally;
++ (void)try:(void(^)())try
+			catch:(void(^)(NSException*))catch
+		finally:(void(^)())finally;
 @end

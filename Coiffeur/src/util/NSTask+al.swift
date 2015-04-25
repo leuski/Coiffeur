@@ -18,7 +18,8 @@ extension NSTask {
 		initializes the task with exetubale url, arguments, and working directory.
 		Sets the standard streams to pipes
 	*/
-	convenience init(_ url:NSURL, arguments:[String] = [], workingDirectory:String? = nil)
+	convenience init(_ url:NSURL, arguments:[String] = [],
+		workingDirectory:String? = nil)
 	{
 		self.init()
 		
@@ -35,7 +36,9 @@ extension NSTask {
 
 	private func _run(input:String?) -> StringResult
 	{
-		let writeHandle = input != nil ? self.standardInput.fileHandleForWriting : nil
+		let writeHandle = input != nil
+			? self.standardInput.fileHandleForWriting
+			: nil
 		
 		self.launch()
 		
@@ -58,11 +61,13 @@ extension NSTask {
 			if let string = String(data:outData, encoding: NSUTF8StringEncoding) {
 				return StringResult(string)
 			} else {
-				return StringResult(Error("Failed to interpret the output of the format executable"))
+				return StringResult(Error("Failed to interpret the output of the "
+					+ "format executable"))
 			}
 		} else {
 			if let errText = String(data: errData, encoding: NSUTF8StringEncoding) {
-				return StringResult(Error("Format excutable error code %d: %@", status, errText))
+				return StringResult(Error("Format excutable error code %d: %@",
+					status, errText))
 			} else {
 				return StringResult(Error("Format excutable error code %d", status))
 			}
@@ -79,8 +84,8 @@ extension NSTask {
 		ALExceptions.try({
 			result = self._run(input)
 		}, catch: { (ex:NSException?) in
-			result = StringResult(Error("An error while running format executable: %@",
-				ex?.reason ?? "unknown error"))
+			result = StringResult(Error("An error while running format "
+				+ "executable: %@", ex?.reason ?? "unknown error"))
 		}, finally: {})
 		return result!
 	}

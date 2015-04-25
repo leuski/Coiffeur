@@ -58,7 +58,8 @@ extension NSManagedObjectContext {
 		return nil
 	}
 
-	func fetch(entity:NSEntityDescription?, sortDescriptors:[AnyObject]? = nil, withPredicate predicate: NSPredicate? = nil) -> FetchResult<AnyObject>
+	func fetch(entity:NSEntityDescription?, sortDescriptors:[AnyObject]? = nil,
+		withPredicate predicate: NSPredicate? = nil) -> FetchResult<AnyObject>
 	{
 		if let theEntity = entity {
 			var fetchRequest = NSFetchRequest()
@@ -68,7 +69,9 @@ extension NSManagedObjectContext {
 			fetchRequest.sortDescriptors = sortDescriptors
 			
 			var fetchError : NSError?
-			if let result = self.executeFetchRequest(fetchRequest, error: &fetchError) {
+			if let result = self.executeFetchRequest(fetchRequest,
+				error: &fetchError)
+			{
 				return FetchResult<AnyObject>(result)
 			} else {
 				return FetchResult<AnyObject>(fetchError ?? Error("Unknown error"))
@@ -77,9 +80,13 @@ extension NSManagedObjectContext {
 		return FetchResult<AnyObject>([])
 	}
 
-	func fetch<T:NSManagedObject>(entityClass:T.Type, sortDescriptors:[AnyObject]? = nil, withPredicate predicate: NSPredicate? = nil) -> FetchResult<T>
+	func fetch<T:NSManagedObject>(entityClass:T.Type,
+		sortDescriptors:[AnyObject]? = nil,
+		withPredicate predicate: NSPredicate? = nil) -> FetchResult<T>
 	{
-		switch fetch(entity(entityClass), sortDescriptors:sortDescriptors, withPredicate:predicate) {
+		switch fetch(entity(entityClass), sortDescriptors:sortDescriptors,
+			withPredicate:predicate)
+		{
 		case .Success(let array):
 			return FetchResult<T>(array as! [T])
 		case .Failure(let error):
@@ -87,29 +94,42 @@ extension NSManagedObjectContext {
 		}
 	}
 
-	func fetch<T:NSManagedObject>(entityClass:T.Type, sortDescriptors:[AnyObject]? = nil, withFormat format: String, _ args: CVarArgType ...) -> FetchResult<T>
+	func fetch<T:NSManagedObject>(entityClass:T.Type,
+		sortDescriptors:[AnyObject]? = nil,
+		withFormat format: String, _ args: CVarArgType ...) -> FetchResult<T>
 	{
-		return fetch(entityClass, sortDescriptors:sortDescriptors, withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
+		return fetch(entityClass, sortDescriptors:sortDescriptors,
+			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 
-	func fetchSingle<T:NSManagedObject>(entityClass:T.Type, withPredicate predicate: NSPredicate? = nil, sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
+	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
+		withPredicate predicate: NSPredicate? = nil,
+		sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
 	{
-		switch fetch(entity(entityClass), withPredicate:predicate, sortDescriptors:sortDescriptors) {
+		switch fetch(entity(entityClass), withPredicate:predicate,
+			sortDescriptors:sortDescriptors)
+		{
 		case .Success(let array):
-			return array.isEmpty ? FetchSingleResult<T>() : FetchSingleResult<T>(array[0] as! T)
+			return array.isEmpty
+				? FetchSingleResult<T>()
+				: FetchSingleResult<T>(array[0] as! T)
 		case .Failure(let error):
 			return FetchSingleResult<T>(error:error)
 		}
 	}
 	
-	func fetchSingle<T:NSManagedObject>(entityClass:T.Type, sortDescriptors:[AnyObject]? = nil, withFormat format: String, _ args: CVarArgType ...) -> FetchSingleResult<T>
+	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
+		sortDescriptors:[AnyObject]? = nil, withFormat format: String,
+		_ args: CVarArgType ...) -> FetchSingleResult<T>
 	{
-		return fetchSingle(entityClass, sortDescriptors:sortDescriptors, withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
+		return fetchSingle(entityClass, sortDescriptors:sortDescriptors,
+			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 	
 	func insert<T:NSManagedObject>(entityClass:T.Type) -> T
 	{
-		return entityClass(entity:entity(entityClass)!, insertIntoManagedObjectContext:self)
+		return entityClass(entity:entity(entityClass)!,
+			insertIntoManagedObjectContext:self)
 	}
 
   func disableUndoRegistration()
@@ -138,7 +158,8 @@ extension NSManagedObjectContext {
 
 extension NSManagedObject {
 	
-	class func objectInContext(managedObjectContext: NSManagedObjectContext) -> Self
+	class func objectInContext(managedObjectContext: NSManagedObjectContext)
+		-> Self
   {
     return managedObjectContext.insert(self)
   }

@@ -13,12 +13,14 @@ class Error : NSError {
   
   init(localizedDescription:String)
   {
-    super.init(domain: Error.Domain, code: 0, userInfo: [NSLocalizedDescriptionKey:localizedDescription])
+    super.init(domain: Error.Domain, code: 0,
+			userInfo: [NSLocalizedDescriptionKey:localizedDescription])
   }
   
   convenience init(_ format:String, _ args: CVarArgType...)
   {
-    self.init(localizedDescription:String(format:NSLocalizedString(format, comment:""), arguments:args))
+    self.init(localizedDescription:String(
+			format:NSLocalizedString(format, comment:""), arguments:args))
   }
   
   required init(coder aDecoder: NSCoder) {

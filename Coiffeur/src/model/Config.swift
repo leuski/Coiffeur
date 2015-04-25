@@ -28,7 +28,8 @@ extension ConfigNode {
 		
 		while true {
 			if let parent = node.parent {
-				locations.insert(Location(node.index, of:parent.children.count), atIndex:0)
+				locations.insert(Location(node.index, of:parent.children.count),
+					atIndex:0)
 				node = parent
 			} else {
 				break
@@ -57,7 +58,8 @@ extension ConfigNode {
   
   var tokens : [String] {
     let t = self.type
-    return t.componentsSeparatedByString(ConfigNode.TypeSeparator).filter { !$0.isEmpty }
+    return t.componentsSeparatedByString(ConfigNode.TypeSeparator).filter {
+			!$0.isEmpty }
   }
 
 	var predicate : NSPredicate? {
@@ -90,12 +92,17 @@ extension ConfigNode {
 		set (value) { self.storedIndex = Int32(value) }
 	}
 	
-	class func objectInContext(managedObjectContext: NSManagedObjectContext, parent:ConfigNode? = nil, title:String = "") -> Self
+	class func objectInContext(managedObjectContext: NSManagedObjectContext,
+		parent:ConfigNode? = nil,
+		title:String = "") -> Self
   {
 		return _insertConfigNode(managedObjectContext, parent:parent, title:title)
   }
 	
-	private class func _insertConfigNode<T:ConfigNode>(managedObjectContext: NSManagedObjectContext, parent:ConfigNode?, title:String) -> T
+	private class func _insertConfigNode<T:ConfigNode>(
+		managedObjectContext: NSManagedObjectContext,
+		parent:ConfigNode?,
+		title:String) -> T
 	{
 		var node = super.objectInContext(managedObjectContext) as! T
 		node.parent = parent
@@ -154,12 +161,17 @@ extension ConfigOption {
     return NSSet(object:"storedType")
   }
 
-  override class func objectInContext(managedObjectContext: NSManagedObjectContext, parent:ConfigNode? = nil, title:String = "") -> Self
+  override class func objectInContext(
+		managedObjectContext: NSManagedObjectContext,
+		parent:ConfigNode? = nil,
+		title:String = "") -> Self
   {
 		return _insertConfigOption(managedObjectContext, parent:parent, title:title)
   }
 
-	private class func _insertConfigOption<T:ConfigOption>(managedObjectContext: NSManagedObjectContext, parent:ConfigNode?, title:String) -> T
+	private class func _insertConfigOption<T:ConfigOption>(
+		managedObjectContext: NSManagedObjectContext,
+		parent:ConfigNode?, title:String) -> T
 	{
 		var option = super.objectInContext(managedObjectContext) as! T
 		option.title = title
@@ -178,9 +190,10 @@ extension ConfigSection {
 			ascending: true, selector: Selector("caseInsensitiveCompare:"))]
     // we want to put "other..." subsection at the end of each section list.
     // we add a hidden character (non-breaking space) at the beginning
-    // of the "other..." title, so sorting should sort titles in the order we need
-    // you cannot use localized... message to sort the titles, this trick does not 
-    // work. It looks like localized...copare strips the space out.
+    // of the "other..." title, so sorting should sort titles in the order 
+		// we need.
+    // you cannot use localized... message to sort the titles, this trick 
+		// does not work. It looks like localized...compare strips the space out.
 	}
 	
 	// I want to cache filtered children, so I do not run the filter unnecessarily
@@ -208,24 +221,27 @@ extension ConfigSection {
 	
 	override func sortAndIndexChildren()
 	{
-		mutableOrderedSetValueForKey("children").sortUsingDescriptors(Private.titleSortDescriptors)
+		mutableOrderedSetValueForKey("children").sortUsingDescriptors(
+			Private.titleSortDescriptors)
 		var i = 0
 		for child in self.children {
 			if let node = child as? ConfigNode {
 				node.index = i++
 				node.sortAndIndexChildren()
 				if let section = node as? ConfigSection {
-					var index = ""
+					var indexString = ""
 					var n = section
 					for var i = self.depth; i >= 0; --i {
-						index = "\(n.index+1).\(index)"
+						indexString = "\(n.index+1).\(indexString)"
 						n = n.parent as! ConfigSection
 					}
-					let numberMargin = Int(floor(log10(Double(section.parent!.children.count)))) - Int(floor(log10(Double(section.index+1))))
+					let digitsInCount = _digitsIn(section.parent!.children.count)
+					let digitsInIndex = _digitsIn(section.index+1)
+					let numberMargin = digitsInCount - digitsInIndex
 					for var i = 0; i < numberMargin; ++i {
-						index = "\u{2007}\(index)"
+						indexString = "\u{2007}\(indexString)"
 					}
-					section.title = "\(index) \(section.title)"
+					section.title = "\(indexString) \(section.title)"
 				}
 			}
 		}
@@ -239,6 +255,11 @@ extension ConfigSection {
 			(node as! ConfigNode).predicate = value
 		}
 		didChangeValueForKey("filteredChildren")
+	}
+	
+	private func _digitsIn(x:Int) -> Int
+	{
+		return Int(floor(log10(Double(x))))
 	}
 }
 

@@ -29,6 +29,16 @@ class UncrustifyController : CoiffeurController {
     static var OptionsDocumentation : String? = nil
   }
   
+	override var pageGuideColumn : Int {
+		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
+			let int = value.toInt()
+		{
+			return int
+		}
+		
+		return super.pageGuideColumn
+	}
+
 	var versionString : String? = nil
 
 	override class var localizedExecutableTitle : String { return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
@@ -42,6 +52,13 @@ class UncrustifyController : CoiffeurController {
     }
   }
   
+	override class func contentsIsValidInString(string:String) -> Bool
+	{
+		let keyValue = NSRegularExpression.aml_re_WithPattern(
+			"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
+		return nil != keyValue.firstMatchInString(string)
+	}
+	
   override class func createCoiffeur() -> CoiffeurController.Result
   {
     var result = super.createCoiffeur()
@@ -218,7 +235,9 @@ class UncrustifyController : CoiffeurController {
 			data += "\(Private.Comment) \(version)\(CoiffeurController.NewLine)"
 		}
 		
-		switch self.managedObjectContext.fetch(ConfigOption.self, sortDescriptors:[CoiffeurController.KeySortDescriptor]) {
+		switch self.managedObjectContext.fetch(ConfigOption.self,
+			sortDescriptors:[CoiffeurController.KeySortDescriptor])
+		{
 		case .Success(var allOptions):
 			for option in allOptions {
 				if var value = option.stringValue {
@@ -232,16 +251,20 @@ class UncrustifyController : CoiffeurController {
 		}
 		
     var error:NSError?
-    if data.writeToURL(absoluteURL, atomically:true, encoding:NSUTF8StringEncoding, error:&error) {
+    if data.writeToURL(absoluteURL, atomically:true,
+			encoding:NSUTF8StringEncoding, error:&error)
+		{
       return nil
     }
     return error ?? super.writeValuesToURL(absoluteURL)
   }
   
-	override func format(arguments:Arguments, completionHandler: (_:StringResult) -> Void) -> Bool
+	override func format(arguments:Arguments,
+		completionHandler: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
-    let configPath = workingDirectory.stringByAppendingPathComponent(NSUUID().UUIDString)
+    let configPath = workingDirectory.stringByAppendingPathComponent(
+			NSUUID().UUIDString)
     
     if let error = self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!) {
       completionHandler(StringResult(error))
@@ -257,7 +280,9 @@ class UncrustifyController : CoiffeurController {
 			args.append(Private.FragmentFlag)
 		}
 		
-		NSTask(self.executableURL, arguments: args, workingDirectory: workingDirectory).runAsync(arguments.text) {
+		NSTask(self.executableURL, arguments: args,
+			workingDirectory: workingDirectory).runAsync(arguments.text)
+		{
 			(result:StringResult) -> Void in
 			NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
 			completionHandler(result)
@@ -265,22 +290,6 @@ class UncrustifyController : CoiffeurController {
     
     return true
   }
-  
-  override class func contentsIsValidInString(string:String) -> Bool
-  {
-    let keyValue = NSRegularExpression.aml_regularExpressionWithPattern("^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
-    
-    return nil != keyValue.firstMatchInString(string)
-  }
-  
-  override var pageGuideColumn : Int
-    {
-      if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue, let int = value.toInt() {
-        return int
-      }
-      
-      return super.pageGuideColumn
-  }
-  
+	
   
 }

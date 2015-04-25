@@ -23,7 +23,8 @@ class ConfigChoiceCellView : ConfigOptionCellView {
 extension ConfigNodeLocation {
 	var color : NSColor {
 		// section color
-		return NSColor(calibratedHue: CGFloat(index)/CGFloat(12), saturation: 0.7, brightness: 0.7, alpha: 1)
+		return NSColor(calibratedHue: CGFloat(index)/CGFloat(12),
+			saturation: 0.7, brightness: 0.7, alpha: 1)
 	}
 }
 
@@ -43,7 +44,8 @@ class ConfigRowView : NSTableRowView {
       var backgroundColor = self.backgroundColor
       if self.locations.count > 1 {
 				// if this is a subsection, add a splash of supersection color
-        backgroundColor = backgroundColor.blendedColorWithFraction(0.1, ofColor:locations.first!.color)!
+        backgroundColor = backgroundColor.blendedColorWithFraction(0.1,
+					ofColor:locations.first!.color)!
       }
 			// make it a bit darker
       backgroundColor = backgroundColor.shadowWithLevel(0.025)!
@@ -55,24 +57,29 @@ class ConfigRowView : NSTableRowView {
 
 		} else {
 			
+			let tf = self.textField
 			if self.interiorBackgroundStyle == .Dark {
-				self.textField.textColor = NSColor.selectedTextColor()
-				self.textField.font = NSFontManager.sharedFontManager().convertFont(self.textField.font!, toHaveTrait: NSFontTraitMask.BoldFontMask)
+				tf.textColor = NSColor.selectedTextColor()
+				tf.font = NSFontManager.sharedFontManager().convertFont(
+					tf.font!, toHaveTrait: NSFontTraitMask.BoldFontMask)
 			} else {
-				self.textField.textColor = NSColor.textColor()
-				self.textField.font = NSFontManager.sharedFontManager().convertFont(self.textField.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
+				tf.textColor = NSColor.textColor()
+				tf.font = NSFontManager.sharedFontManager().convertFont(
+					self.textField.font!, toNotHaveTrait: NSFontTraitMask.BoldFontMask)
 			}
 			
       self.backgroundColor.setFill()
     }
     
-    NSRectFill(NSMakeRect(CGFloat(0), CGFloat(0), self.bounds.size.width, self.bounds.size.height))
+    NSRectFill(NSMakeRect(CGFloat(0), CGFloat(0),
+			self.bounds.size.width, self.bounds.size.height))
    
     if self.groupRowStyle {
 			// draw the top border
       var path = NSBezierPath()
       path.lineWidth = CGFloat(2)
-      path.appendBezierPathWithRect(NSMakeRect(-2, 0, self.bounds.size.width+4, self.bounds.size.height+2))
+      path.appendBezierPathWithRect(NSMakeRect(-2, 0,
+				self.bounds.size.width+4, self.bounds.size.height+2))
       NSColor.gridColor().set()
       path.stroke()
     }
@@ -80,7 +87,8 @@ class ConfigRowView : NSTableRowView {
 		// draw the colored lines using the section colors
     for var i = 0; i < min(1, locations.count - 1); ++i {
 			locations[i].color.setFill()
-			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(0), CGFloat(1+1*i), self.bounds.size.height))
+			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(1),
+				CGFloat(3), self.bounds.size.height-2))
 		}
 		
 		// if we are a group, underline the title with the appropriate color
@@ -90,29 +98,34 @@ class ConfigRowView : NSTableRowView {
       let lineLength = 200
       let hOffset = 3 + 5*(locations.count-1)
       path.lineWidth = CGFloat(1)
-      path.moveToPoint(NSMakePoint(CGFloat(hOffset), self.bounds.size.height-path.lineWidth+0.5))
-      path.lineToPoint(NSMakePoint(CGFloat(lineLength - hOffset), self.bounds.size.height-path.lineWidth+0.5))
+      path.moveToPoint(NSMakePoint(CGFloat(hOffset),
+				self.bounds.size.height-path.lineWidth+0.5))
+      path.lineToPoint(NSMakePoint(CGFloat(lineLength - hOffset),
+				self.bounds.size.height-path.lineWidth+0.5))
       path.stroke()
     }
 	}
 	
 	override func drawSelectionInRect(dirtyRect: NSRect)
 	{
-		let margin = CGFloat(5)
+		let margin = CGFloat(7)
 		
 		// start with the regular selection color
 		var color = NSColor.selectedMenuItemColor()
 		// add a hint of the current sectio color
-    color = color.blendedColorWithFraction(0.25, ofColor:locations.first!.color)!
+    color = color.blendedColorWithFraction(0.25,
+			ofColor:locations.first!.color)!
 		if self.interiorBackgroundStyle == .Light {
 			// if we are out of focus, lighten the color
-			color = color.blendedColorWithFraction(0.9, ofColor:NSColor(calibratedWhite: 0.9, alpha: 1))!
+			color = color.blendedColorWithFraction(0.9,
+				ofColor:NSColor(calibratedWhite: 0.9, alpha: 1))!
 		}
 		// make sure it is not transparent
     color = color.colorWithAlphaComponent(1)
 
 		// paint
 		color.setFill()
-		NSRectFill(NSMakeRect(margin, CGFloat(0), self.bounds.size.width-margin, self.bounds.size.height))
+		NSRectFill(NSMakeRect(margin, CGFloat(0),
+			self.bounds.size.width-margin, self.bounds.size.height))
 	}
 }

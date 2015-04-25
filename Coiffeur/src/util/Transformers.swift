@@ -48,15 +48,17 @@ class OnlyIntegers : NSNumberFormatter {
 		self.allowsFloats = false
 	}
 
-	override func getObjectValue(obj: AutoreleasingUnsafeMutablePointer<AnyObject?>,
-		forString string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
+	override func getObjectValue(o: AutoreleasingUnsafeMutablePointer<AnyObject?>,
+		forString string: String,
+		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
 	{
 		if string.isEmpty {
-			if error != nil {
-				error.memory = NSLocalizedString("Empty string is not a valid number. Please provide a number", comment:"")
+			if err != nil {
+				err.memory = NSLocalizedString("Empty string is not a valid number. "
+					+ "Please provide a number", comment:"")
 			}
 			return false
 		}
-		return super.getObjectValue(obj, forString:string, errorDescription: error)
+		return super.getObjectValue(o, forString:string, errorDescription: err)
 	}
 }

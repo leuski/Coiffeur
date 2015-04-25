@@ -57,7 +57,8 @@ class Document : NSDocument {
     return CoiffeurController.Result(Error("Unknown document type “%@”", type))
   }
   
-  private func _ensureWeHaveModelOfType(typeName:String, errorFormatKey:String) -> NSError?
+  private func _ensureWeHaveModelOfType(typeName:String,
+		errorFormatKey:String) -> NSError?
   {
     if let model = self.model {
       let documentType = model.dynamicType.documentType
@@ -77,9 +78,12 @@ class Document : NSDocument {
     }
   }
   
-  override func readFromURL(absoluteURL: NSURL, ofType typeName: String, error outError: NSErrorPointer) -> Bool
+  override func readFromURL(absoluteURL: NSURL, ofType typeName: String,
+		error outError: NSErrorPointer) -> Bool
   {
-    if let error = self._ensureWeHaveModelOfType(typeName, errorFormatKey:"Cannot read content of document “%@” into document “%@”") {
+    if let error = self._ensureWeHaveModelOfType(typeName,
+			errorFormatKey:"Cannot read content of document “%@” into document “%@”")
+		{
       error.assignTo(outError)
       return false
     }
@@ -92,9 +96,12 @@ class Document : NSDocument {
     return true
   }
   
-  override func writeToURL(absoluteURL: NSURL, ofType typeName: String, error outError: NSErrorPointer) -> Bool
+  override func writeToURL(absoluteURL: NSURL, ofType typeName: String,
+		error outError: NSErrorPointer) -> Bool
   {
-    if let error = self._ensureWeHaveModelOfType(typeName, errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”") {
+    if let error = self._ensureWeHaveModelOfType(typeName,
+			errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”")
+		{
       error.assignTo(outError)
       return false
     }
@@ -117,13 +124,16 @@ class Document : NSDocument {
     self.addWindowController(MainWindowController())
   }
   
-//  override func canCloseDocumentWithDelegate(delegate: AnyObject, shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
+//  override func canCloseDocumentWithDelegate(delegate: AnyObject, 
+//		shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
 //  {
 //    self.model?.managedObjectContext.commitEditing()
-//    super.canCloseDocumentWithDelegate(delegate, shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
+//    super.canCloseDocumentWithDelegate(delegate, 
+//			shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
 //  }
 	
-  override func writableTypesForSaveOperation(saveOperation: NSSaveOperationType) -> [AnyObject]
+  override func writableTypesForSaveOperation(_: NSSaveOperationType)
+		-> [AnyObject]
   {
     if let m = self.model {
       return [m.dynamicType.documentType]

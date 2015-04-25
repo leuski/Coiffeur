@@ -78,7 +78,8 @@ class CoiffeurView : NSViewController {
       self.jumpMenu.removeItemAtIndex(i)
     }
     
-		let sections = self._allNodes().filter { $0.representedObject is ConfigSection }
+		let sections = self._allNodes().filter {
+			$0.representedObject is ConfigSection }
 
 		for node in sections {
       let section = node.representedObject as! ConfigSection
@@ -95,14 +96,16 @@ class CoiffeurView : NSViewController {
   @IBAction func jumpToSection(sender:AnyObject)
   {
     if let popup = sender as? NSPopUpButton {
-      self.optionsView.scrollItemToVisible(popup.selectedItem?.representedObject)
+      self.optionsView.scrollItemToVisible(
+				popup.selectedItem?.representedObject)
     }
   }
 }
 
 extension CoiffeurView : NSOutlineViewDelegate {
 	
-  func outlineView(outlineView:NSOutlineView, isGroupItem item:AnyObject) -> Bool
+  func outlineView(outlineView:NSOutlineView,
+		isGroupItem item:AnyObject) -> Bool
   {
     if let node = item.representedObject as? ConfigNode {
       return !node.leaf
@@ -128,9 +131,11 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			let tokens = node.tokens
 			if (tokens.count == 0) {
 				return "view.section"
-			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
+			} else if (tokens.count == 1
+					&& tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
 				return "view.signed"
-			} else if (tokens.count == 1 && tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
+			} else if (tokens.count == 1
+					&& tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
 				return "view.unsigned"
 			} else if (tokens.count == 1) {
 				return "view.string"
@@ -141,7 +146,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		return nil
 	}
 	
-	func outlineView(outlineView:NSOutlineView, viewForTableColumn tableColumn:NSTableColumn?, item:AnyObject) -> NSView?
+	func outlineView(outlineView:NSOutlineView,
+		viewForTableColumn tableColumn:NSTableColumn?, item:AnyObject) -> NSView?
   {
 		if let identifier = _cellViewIdentifierForItem(item),
 			 let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as! NSView?,
@@ -158,12 +164,15 @@ extension CoiffeurView : NSOutlineViewDelegate {
     return nil
   }
 	
-	private func _outlineView(outlineView: NSOutlineView, heightOfRowByIdentifier identifier: String) -> CGFloat
+	private func _outlineView(outlineView: NSOutlineView,
+		heightOfRowByIdentifier identifier: String) -> CGFloat
 	{
 		if let height = rowHeightCache[identifier] {
 			return height
 		}
-		if let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as? NSView {
+		if let view = outlineView.makeViewWithIdentifier(identifier,
+				owner:self) as? NSView
+		{
 			var height = view.frame.size.height
 			if height > 0 {
 				rowHeightCache[identifier] = height
@@ -174,8 +183,10 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	}
 	
 	// this is a very, very, very frequently called method. We need to make it
-	// as fast as possible. We cache the view height based on the cell view identifier
-  func outlineView(outlineView: NSOutlineView, heightOfRowByItem item: AnyObject) -> CGFloat
+	// as fast as possible. We cache the view height based on the cell 
+	// view identifier
+  func outlineView(outlineView: NSOutlineView,
+		heightOfRowByItem item: AnyObject) -> CGFloat
   {
 		if let identifier = _cellViewIdentifierForItem(item),
 			 let rowIdentifier = _rowViewIdentifierForItem(item)
@@ -186,20 +197,25 @@ extension CoiffeurView : NSOutlineViewDelegate {
     return 10
   }
   
-  func outlineView(outlineView: NSOutlineView, shouldSelectItem item: AnyObject) -> Bool
+  func outlineView(outlineView: NSOutlineView,
+		shouldSelectItem item: AnyObject) -> Bool
   {
     return !self.outlineView(outlineView, isGroupItem:item)
   }
   
-  func outlineView(outlineView: NSOutlineView, rowViewForItem item: AnyObject) -> NSTableRowView?
+  func outlineView(outlineView: NSOutlineView,
+		rowViewForItem item: AnyObject) -> NSTableRowView?
   {
 		if let identifier = _rowViewIdentifierForItem(item),
 			 let theNode = item.representedObject as? ConfigNode,
-			 var container  = outlineView.makeViewWithIdentifier(identifier, owner:self) as? ConfigRowView
+			 var container  = outlineView.makeViewWithIdentifier(identifier,
+				owner:self) as? ConfigRowView
 		{
 			container.locations = theNode.path
 			container.textField.stringValue = theNode.title
-			container.leftMargin.constant = (1.5 + CGFloat(outlineView.levelForItem(item))) * outlineView.indentationPerLevel+4.0
+			container.leftMargin.constant = (1.5
+				+ CGFloat(outlineView.levelForItem(item)))
+					* outlineView.indentationPerLevel+4.0
 			return container
 		} else {
 			return nil
@@ -210,7 +226,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	// from the model. 
 	// We do it asynchroniously, because node expansion
 	// can lead to more rows being added to the view.
-	func outlineView(outlineView: NSOutlineView, didAddRowView rowView: NSTableRowView, forRow row: Int)
+	func outlineView(outlineView: NSOutlineView,
+		didAddRowView rowView: NSTableRowView, forRow row: Int)
 	{
 		let item: AnyObject? = outlineView.itemAtRow(row)
 		if let section = item?.representedObject as? ConfigSection {
@@ -225,8 +242,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	// records the state of the node in the model
 	func outlineViewItemDidExpand(notification: NSNotification)
 	{
-		if var section = notification.userInfo!["NSObject" as NSString]!.representedObject
-			as? ConfigSection
+		if var section = notification.userInfo!["NSObject"
+			as NSString]!.representedObject as? ConfigSection
 		{
 			section.expanded = true
 		}
@@ -234,8 +251,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	
 	func outlineViewItemDidCollapse(notification: NSNotification)
 	{
-		if var section = notification.userInfo!["NSObject" as NSString]!.representedObject
-			as? ConfigSection
+		if var section = notification.userInfo!["NSObject"
+			as NSString]!.representedObject as? ConfigSection
 		{
 			section.expanded = false
 		}

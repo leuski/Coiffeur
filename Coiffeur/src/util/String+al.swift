@@ -67,15 +67,21 @@ extension String {
 			scheme: NSLinguisticTagSchemeTokenType,
 			options: NSLinguisticTaggerOptions.OmitWhitespace,
 			orthography: nil) {
-				(tag:String, tokenRange:Range<String.Index>, sentenceRange:Range<String.Index>, inout stop:Bool) -> () in
+				(tag:String,
+					tokenRange:Range<String.Index>,
+					sentenceRange:Range<String.Index>, inout stop:Bool) -> () in
 				result.append(self.substringWithRange(tokenRange))
 		}
 		return result
 	}
 	
 	var stringByCapitalizingFirstWord : String {
-		return self.substringToIndex(self.startIndex.successor()).capitalizedString +
-			self.substringFromIndex(self.startIndex.successor())
+		if self.isEmpty {
+			return self
+		}
+		let nextIndex = self.startIndex.successor()
+		return self.substringToIndex(nextIndex).capitalizedString +
+			self.substringFromIndex(nextIndex)
 	}
 	
 	private func _stringByQuoting(quote:Character) -> String
@@ -125,7 +131,8 @@ extension String {
   
   func trim() -> String
   {
-    return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    return self.stringByTrimmingCharactersInSet(
+			NSCharacterSet.whitespaceAndNewlineCharacterSet())
   }
   
   func stringByTrimmingPrefix(prefix:String) -> String
@@ -136,7 +143,8 @@ extension String {
     }
     let length = distance(prefix.startIndex, prefix.endIndex)
     while result.hasPrefix(prefix) {
-      result = result.substringFromIndex(advance(result.startIndex, length)).trim()
+			let nextIndex = advance(result.startIndex, length)
+      result = result.substringFromIndex(nextIndex).trim()
     }
     return result
   }
@@ -150,7 +158,8 @@ extension String {
 		let length = distance(suffix.startIndex, suffix.endIndex)
 		while result.hasSuffix(suffix) {
 			let resultLength = distance(result.startIndex, result.endIndex)
-			result = result.substringToIndex(advance(result.startIndex, resultLength-length)).trim()
+			let nextIndex = advance(result.startIndex, resultLength-length)
+			result = result.substringToIndex(nextIndex).trim()
 		}
 		return result
 	}
@@ -223,11 +232,13 @@ extension String {
     return self[start..<end]
   }
   
-  func stringByReplacingCharactersInRange(range:NSRange, withString replacement: String) -> String
+  func stringByReplacingCharactersInRange(range:NSRange,
+		withString replacement: String) -> String
   {
     let start = advance(self.startIndex, range.location)
     let end = advance(start, range.length)
-    return self.stringByReplacingCharactersInRange(start..<end, withString:replacement)
+    return self.stringByReplacingCharactersInRange(start..<end,
+			withString:replacement)
   }
   
   init?(data:NSData, encoding:NSStringEncoding)

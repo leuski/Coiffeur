@@ -12,9 +12,9 @@ class OverviewRegion : NSObject {
   private(set) var lineRange : NSRange
   private(set) var color : NSColor?
 
-  init(lineRange:NSRange, color:NSColor?)
+	init(firstLineIndex:Int, lineCount:Int, color:NSColor?)
   {
-    self.lineRange = lineRange
+    self.lineRange = NSMakeRange(firstLineIndex, lineCount)
     self.color = color
   }
 }

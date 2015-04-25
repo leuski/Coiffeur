@@ -26,7 +26,7 @@ class ClangFormatController : CoiffeurController {
     static var ExecutableURLUDKey = "ClangFormatExecutableURL"
 		static var ExecutableTitleUDKey = "Clang-Format Executable"
 		
-    static var OptionsDocumentation : String? = nil
+    static var Options : String? = nil
     static var DefaultValues : String? = nil
   }
   
@@ -41,11 +41,32 @@ class ClangFormatController : CoiffeurController {
 	
 	override class var currentExecutableURL : NSURL? {
 		didSet {
-			Private.OptionsDocumentation = nil
+			Private.Options = nil
 			Private.DefaultValues = nil
 		}
 	}
 
+	override var pageGuideColumn : Int
+  {
+		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
+			let int = value.toInt()
+		{
+			return int
+		}
+		
+		return super.pageGuideColumn
+	}
+
+	override class func contentsIsValidInString(string:String) -> Bool
+	{
+		let keyValue = NSRegularExpression.aml_re_WithPattern(
+			"^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]")
+		let section = NSRegularExpression.aml_re_WithPattern(
+			"^\(Private.SectionBegin)")
+		return nil != section.firstMatchInString(string)
+			&& nil != keyValue.firstMatchInString(string)
+	}
+	
 	override class func createCoiffeur() -> CoiffeurController.Result
   {
     let result = super.createCoiffeur()
@@ -54,15 +75,15 @@ class ClangFormatController : CoiffeurController {
     case .Failure:
       return result
     case .Success(let controller):
-      if Private.OptionsDocumentation == nil {
+      if Private.Options == nil {
         let bundle = NSBundle(forClass: self)
         if let docURL = bundle.URLForResource(Private.DocumentationFileName,
 					withExtension: Private.DocumentationFileExtension) {
           var error: NSError?
-          Private.OptionsDocumentation = String(contentsOfURL: docURL,
+          Private.Options = String(contentsOfURL: docURL,
 						encoding: NSUTF8StringEncoding,
 						error:&error)
-          if Private.OptionsDocumentation == nil {
+          if Private.Options == nil {
             return CoiffeurController.Result(Error(
 							"Failed to read the content of %@.%@ as UTF8 string",
 							Private.DocumentationFileName,
@@ -75,7 +96,7 @@ class ClangFormatController : CoiffeurController {
 						Private.DocumentationFileExtension))
         }
       }
-      if let error = controller.readOptionsFromString(Private.OptionsDocumentation!) {
+      if let error = controller.readOptionsFromString(Private.Options!) {
         return CoiffeurController.Result(error)
       }
       if Private.DefaultValues == nil {
@@ -105,7 +126,8 @@ class ClangFormatController : CoiffeurController {
     let par = "__PAR__"
     
     // preserve all spacing inside \code ... \endcode
-    let lif = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\\\code(.*?)\\\\endcode(\\s)")
+    let lif = NSRegularExpression.ci_dmls_re_WithPattern(
+			"\\\\code(.*?)\\\\endcode(\\s)")
     
     while true {
       let match = lif.firstMatchInString(rst)
@@ -117,7 +139,8 @@ class ClangFormatController : CoiffeurController {
       code = code.stringByReplacingOccurrencesOfString("\n", withString:nl)
       code = code.stringByReplacingOccurrencesOfString(" ", withString:sp)
       code += rst.substringWithRange(match!.rangeAtIndex(2))
-      rst = rst.stringByReplacingCharactersInRange(match!.rangeAtIndex(0), withString:code)
+      rst = rst.stringByReplacingCharactersInRange(match!.rangeAtIndex(0),
+				withString:code)
     }
     
     // preserve double nl, breaks before * and - (list items)
@@ -126,14 +149,14 @@ class ClangFormatController : CoiffeurController {
     rst = rst.stringByReplacingOccurrencesOfString("\n-", withString:"\(nl)-")
     
     // un-escape escaped characters
-    let esc = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\\\(.)")
+    let esc = NSRegularExpression.ci_dmls_re_WithPattern("\\\\(.)")
     
     rst = esc.stringByReplacingMatchesInString(rst, withTemplate:"$1")
     
     // wipe out remaining whitespaces as single space
     rst = rst.stringByReplacingOccurrencesOfString("\n", withString:" ")
     
-    let wsp = NSRegularExpression.ci_dmls_regularExpressionWithPattern("\\s\\s+")
+    let wsp = NSRegularExpression.ci_dmls_re_WithPattern("\\s\\s+")
     rst = wsp.stringByReplacingMatchesInString(rst, withTemplate:" ")
     
     // restore saved spacing
@@ -142,7 +165,7 @@ class ClangFormatController : CoiffeurController {
     rst = rst.stringByReplacingOccurrencesOfString(par, withString:"\n\n")
     
     // quote the emphasized words
-    let quot = NSRegularExpression.ci_dmls_regularExpressionWithPattern("``(.*?)``")
+    let quot = NSRegularExpression.ci_dmls_re_WithPattern("``(.*?)``")
     rst = quot.stringByReplacingMatchesInString(rst, withTemplate:"“$1”")
     
     //      NSLog(@"%@", mutableRST);
@@ -159,14 +182,17 @@ class ClangFormatController : CoiffeurController {
   
   override func readOptionsFromLineArray(lines: [String]) -> NSError?
   {
-		let section = ConfigSection.objectInContext(self.managedObjectContext, parent:self.root, title:"Options")
+		let section = ConfigSection.objectInContext(self.managedObjectContext,
+			parent:self.root, title:"Options")
 		
     var currentOption : ConfigOption?
     
     var in_doc = false
     
-    let head = NSRegularExpression.ci_regularExpressionWithPattern("^\\*\\*(.*?)\\*\\* \\(``(.*?)``\\)")
-    let item = NSRegularExpression.ci_regularExpressionWithPattern("^(\\s*\\* )``.*\\(in configuration: ``(.*?)``\\)")
+    let head = NSRegularExpression.ci_re_WithPattern(
+			"^\\*\\*(.*?)\\*\\* \\(``(.*?)``\\)")
+    let item = NSRegularExpression.ci_re_WithPattern(
+			"^(\\s*\\* )``.*\\(in configuration: ``(.*?)``\\)")
     
     var in_title = false
     
@@ -196,7 +222,8 @@ class ClangFormatController : CoiffeurController {
         
         self._closeOption(&currentOption)
         
-				var newOption = ConfigOption.objectInContext(self.managedObjectContext, parent:section)
+				var newOption = ConfigOption.objectInContext(self.managedObjectContext,
+					parent:section)
         newOption.indexKey   = line.substringWithRange(match.rangeAtIndex(1))
         in_title             = true
         let type             = line.substringWithRange(match.rangeAtIndex(2))
@@ -235,12 +262,14 @@ class ClangFormatController : CoiffeurController {
           }
         
           let prefix = line.substringWithRange(match.rangeAtIndex(1))
-          option.documentation = option.documentation.stringByAppendingString("\(prefix)``\(token)``\(CoiffeurController.NewLine)")
+          option.documentation +=
+						"\(prefix)``\(token)``\(CoiffeurController.NewLine)"
           continue
         }
       
         if in_title {
-          option.title = option.title.stringByAppendingString(line, separatedBy:" ")
+          option.title = option.title.stringByAppendingString(line,
+						separatedBy:" ")
         }
       
         option.documentation += line + CoiffeurController.NewLine
@@ -318,10 +347,12 @@ class ClangFormatController : CoiffeurController {
     return error ?? super.writeValuesToURL(absoluteURL)
   }
   
-	override func format(arguments:Arguments, completionHandler: (_:StringResult) -> Void) -> Bool
+	override func format(arguments:Arguments,
+		completionHandler: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
-    let configPath = workingDirectory.stringByAppendingPathComponent(Private.StyleFileName)
+    let configPath = workingDirectory.stringByAppendingPathComponent(
+			Private.StyleFileName)
     
     var localError : NSError?
     
@@ -348,22 +379,4 @@ class ClangFormatController : CoiffeurController {
     return true
   }
   
-  override class func contentsIsValidInString(string:String) -> Bool
-  {
-    let keyValue = NSRegularExpression.aml_regularExpressionWithPattern("^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]")
-    let section = NSRegularExpression.aml_regularExpressionWithPattern("^\(Private.SectionBegin)")
-    return nil != section.firstMatchInString(string)
-      && nil != keyValue.firstMatchInString(string)
-  }
-  
-  override var pageGuideColumn : Int
-  {
-    if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
-			let int = value.toInt()
-		{
-      return int
-    }
-    
-    return super.pageGuideColumn
-  }
 }

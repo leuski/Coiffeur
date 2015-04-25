@@ -26,22 +26,25 @@ extension NSUserDefaults {
 	}
 }
 
-class FragariaColorRecord : NSObject {
+class FragariaColor : NSObject {
 	let fragariaUDKey : String
 	let displayNameUDKey : String
 
-	var displayName : String { return NSLocalizedString(self.displayNameUDKey, comment: "") }
+	var displayName : String {
+		return NSLocalizedString(self.displayNameUDKey, comment: "") }
 	
 	var color : NSColor? {
 		get {
-			return NSUserDefaults.standardUserDefaults().archivedObjectForKey(self.fragariaUDKey)
+			let UD = NSUserDefaults.standardUserDefaults()
+			return UD.archivedObjectForKey(self.fragariaUDKey)
 		}
 		set (value) {
-			NSUserDefaults.standardUserDefaults().setArchivedObject(value, forKey: self.fragariaUDKey)
+			let UD = NSUserDefaults.standardUserDefaults()
+			UD.setArchivedObject(value, forKey: self.fragariaUDKey)
 		}
 	}
 	
-	init(fragariaKey : String, displayNameKey: String)
+	init(_ fragariaKey : String, _ displayNameKey: String)
 	{
 		self.fragariaUDKey = fragariaKey
 		self.displayNameUDKey = displayNameKey
@@ -50,30 +53,31 @@ class FragariaColorRecord : NSObject {
 
 class ColorAndFontPreferences : DefaultPreferencePane {
 
-	override var toolbarItemImage : NSImage? { return NSImage(named: "ProfileFontAndColor") }
+	override var toolbarItemImage : NSImage? {
+		return NSImage(named: "ProfileFontAndColor") }
 	
 	let colors = [
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsBackgroundColourWell, displayNameKey: "Background"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsTextColourWell, displayNameKey: "Plain Text"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsCommentsColourWell, displayNameKey: "Comments"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsStringsColourWell, displayNameKey: "Strings"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsNumbersColourWell, displayNameKey: "Numbers"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsAttributesColourWell, displayNameKey: "Attributes"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsVariablesColourWell, displayNameKey: "Variables"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsKeywordsColourWell, displayNameKey: "Keywords"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsInstructionsColourWell, displayNameKey: "Instructions"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsCommandsColourWell, displayNameKey: "Commands"),
-		FragariaColorRecord(fragariaKey: MGSFragariaPrefsInvisibleCharactersColourWell, displayNameKey: "Invisibles")
+		FragariaColor(MGSFragariaPrefsBackgroundColourWell, "Background"),
+		FragariaColor(MGSFragariaPrefsTextColourWell, "Plain Text"),
+		FragariaColor(MGSFragariaPrefsCommentsColourWell, "Comments"),
+		FragariaColor(MGSFragariaPrefsStringsColourWell, "Strings"),
+		FragariaColor(MGSFragariaPrefsNumbersColourWell, "Numbers"),
+		FragariaColor(MGSFragariaPrefsAttributesColourWell, "Attributes"),
+		FragariaColor(MGSFragariaPrefsVariablesColourWell, "Variables"),
+		FragariaColor(MGSFragariaPrefsKeywordsColourWell, "Keywords"),
+		FragariaColor(MGSFragariaPrefsInstructionsColourWell, "Instructions"),
+		FragariaColor(MGSFragariaPrefsCommandsColourWell, "Commands"),
+		FragariaColor(MGSFragariaPrefsInvisibleCharactersColourWell, "Invisibles")
 	]
-	
-	let backgroundColor = FragariaColorRecord(fragariaKey: MGSFragariaPrefsBackgroundColourWell, displayNameKey: "Background")
 	
 	dynamic var font : NSFont? {
 		get {
-			return NSUserDefaults.standardUserDefaults().archivedObjectForKey(MGSFragariaPrefsTextFont)
+			let UD = NSUserDefaults.standardUserDefaults()
+			return UD.archivedObjectForKey(MGSFragariaPrefsTextFont)
 		}
 		set (value) {
-			NSUserDefaults.standardUserDefaults().setArchivedObject(value, forKey: MGSFragariaPrefsTextFont)
+			let UD = NSUserDefaults.standardUserDefaults()
+			UD.setArchivedObject(value, forKey: MGSFragariaPrefsTextFont)
 		}
 	}
 	
@@ -96,7 +100,8 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 
 	@IBAction func modifyFont(sender: AnyObject?)
 	{
-		NSFontManager.sharedFontManager().setSelectedFont(self.font!, isMultiple: false)
+		NSFontManager.sharedFontManager().setSelectedFont(self.font!,
+			isMultiple: false)
 		NSFontManager.sharedFontManager().orderFrontFontPanel(sender)
 	}
 }

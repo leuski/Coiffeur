@@ -10,7 +10,9 @@
 
 @implementation ALExceptions
 
-+ (void)try:(void(^)())try catch:(void(^)(NSException*))catch finally:(void(^)())finally
++ (void)try:(void(^)())try
+			catch:(void(^)(NSException*))catch
+		finally:(void(^)())finally
 {
   @try {
     if (try) try();

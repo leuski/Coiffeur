@@ -18,7 +18,8 @@ class Language : NSObject {
     static var supportedLanguages: [Language] = Language._supportedLanguages()
   }
 
-  class var supportedLanguages : [Language] { return LanguagePrivate.supportedLanguages }
+  class var supportedLanguages : [Language] {
+		return LanguagePrivate.supportedLanguages }
 	class var supportedLanguageUTIs : [String] {
 		var types = Set<String>()
 		for  l in Language.supportedLanguages {
@@ -33,13 +34,17 @@ class Language : NSObject {
   private(set) var clangFormatID : String?
   private(set) var UTIs : [ String ] = []
   var defaultExtension : String? {
-    return UTIs.isEmpty ? nil : NSWorkspace.sharedWorkspace().preferredFilenameExtensionForType(UTIs[0])
+    return UTIs.isEmpty
+			? nil
+			: NSWorkspace.sharedWorkspace().preferredFilenameExtensionForType(UTIs[0])
   }
   
   private class func _supportedLanguages() -> [Language]
   {
     let bundle = NSBundle(forClass: self)
-    if let url = bundle.URLForResource(FileName, withExtension: FileNameExtension) {
+    if let url = bundle.URLForResource(FileName,
+			withExtension: FileNameExtension)
+		{
       if let dictionaries = NSArray(contentsOfURL: url) {
         var result = [Language]()
         for d in dictionaries {
@@ -63,7 +68,8 @@ class Language : NSObject {
   
   class func languageFromUserDefaults() -> Language
   {
-    if let uti = NSUserDefaults.standardUserDefaults().stringForKey(UserDefaultsKey) {
+		let UD = NSUserDefaults.standardUserDefaults()
+    if let uti = UD.stringForKey(UserDefaultsKey) {
       if let language = Language.languageWithUTI(uti) {
         return language
       }
@@ -80,7 +86,8 @@ class Language : NSObject {
   func saveToUserDefaults()
   {
     if !UTIs.isEmpty {
-      NSUserDefaults.standardUserDefaults().setValue(UTIs[0], forKey: Language.UserDefaultsKey)
+      NSUserDefaults.standardUserDefaults().setValue(UTIs[0],
+				forKey: Language.UserDefaultsKey)
     }
   }
 }

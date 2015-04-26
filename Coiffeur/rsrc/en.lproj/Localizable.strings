@@ -47,7 +47,7 @@
 "An error while running format executable: %@" = "An error while running format executable: %@";
 
 /*  */
-"Other" = "Other";
+"Other %@" = "Other %@";
 /*  */
 "Choose…" = "Choose…";
 /*  */

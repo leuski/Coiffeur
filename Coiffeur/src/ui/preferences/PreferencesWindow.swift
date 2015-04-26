@@ -8,13 +8,17 @@
 
 import Cocoa
 
+// base protocol for a preferecne pane.
 @objc protocol PreferencePaneViewController {
 	var view : NSView { get set }
 	func commitEditing() -> Bool
 }
+
+// NSViewController satisfies it
 extension NSViewController : PreferencePaneViewController {
 }
 
+// a preference is the base plus these methods/properties
 protocol PreferencePane : class, PreferencePaneViewController {
 	var toolbarIdentifier : String { get }
 	var toolbarItemLabel : String { get }
@@ -23,6 +27,7 @@ protocol PreferencePane : class, PreferencePaneViewController {
 	var initialKeyView : NSView? { get }
 }
 
+// a default implementation to support the basic fuctionality
 class DefaultPreferencePane : NSViewController, PreferencePane {
 	
 	@IBOutlet var initialKeyView : NSView?
@@ -60,9 +65,10 @@ class DefaultPreferencePane : NSViewController, PreferencePane {
 	override var nibName : String? {
 		return self._unqualifiedClassName
 	}
-
 }
 
+// the preferences window class. Manages a collection of panes and a
+// toolbar to switch among them
 class PreferencesWindow : NSWindowController {
 	
 	@IBOutlet weak var containerView: NSView!
@@ -150,7 +156,8 @@ class PreferencesWindow : NSWindowController {
 		self.panes = panes
   }
 
-	override func windowDidLoad() {
+	override func windowDidLoad()
+	{
 		if !panes.isEmpty {
 			self.selectedPane = self.paneWithID(
 				NSUserDefaults.standardUserDefaults().stringForKey(selectedPaneUDKey))
@@ -158,15 +165,15 @@ class PreferencesWindow : NSWindowController {
 		}
 	}
 
-	override func showWindow(sender: AnyObject?) {
+	override func showWindow(sender: AnyObject?)
+	{
 		self.window!.makeKeyAndOrderFront(sender)
 	}
 	
 	func paneWithID(paneIdentifier:String?) -> Pane?
 	{
 		if let identifier = paneIdentifier {
-			let list = self.panes.filter { $0.toolbarIdentifier == identifier }
-			return list.isEmpty ? nil : list[0]
+			return (self.panes.filter { $0.toolbarIdentifier == identifier }).first
 		} else {
 			return nil
 		}
@@ -187,7 +194,8 @@ class PreferencesWindow : NSWindowController {
 }
 
 extension PreferencesWindow : NSWindowDelegate {
-	func windowShouldClose(sender: AnyObject) -> Bool {
+	func windowShouldClose(sender: AnyObject) -> Bool
+	{
 		return self.selectedPane == nil || self.selectedPane!.commitEditing()
 	}
 }

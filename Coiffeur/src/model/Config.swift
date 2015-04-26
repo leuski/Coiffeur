@@ -39,8 +39,7 @@ extension ConfigNode {
 	}
 	
   class var TypeSeparator : String { return "," }
-  class var TitleKey : String { return "title" }
-  
+	
 	class func keyPathsForValuesAffectingFilteredChildrenCount() -> NSSet
 	{
 		return NSSet(object:"filteredChildren")

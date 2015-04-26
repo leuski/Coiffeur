@@ -32,7 +32,6 @@
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
-		626185281AC351CC0095CCD2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 626185201AC351CC0095CCD2 /* main.m */; };
 		626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 626185331AC35CA30095CCD2 /* Document.xcdatamodeld */; };
 		626185731AC3B7040095CCD2 /* MGSFragaria.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 626185721AC3B7040095CCD2 /* MGSFragaria.framework */; };
 		626185751AC3B7410095CCD2 /* MGSFragaria.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 626185721AC3B7040095CCD2 /* MGSFragaria.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -134,7 +133,6 @@
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6261851A1AC351CC0095CCD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		626185201AC351CC0095CCD2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6261852B1AC3524B0095CCD2 /* uncrustify */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = uncrustify; sourceTree = "<group>"; };
 		626185341AC35CA30095CCD2 /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
 		626185721AC3B7040095CCD2 /* MGSFragaria.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGSFragaria.framework; path = "3rd_party/Fragaria-master/build/Release/MGSFragaria.framework"; sourceTree = "<group>"; };
@@ -218,13 +216,13 @@
 			children = (
 				620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */,
 				6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */,
+				620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */,
+				6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */,
 				620668D51ADAE63500F807B0 /* Preferences.swift */,
 				620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */,
 				6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */,
 				620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */,
 				6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */,
-				620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */,
-				6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */,
 			);
 			path = preferences;
 			sourceTree = "<group>";
@@ -258,7 +256,6 @@
 				6275AEB71AD4734600671D12 /* Document.swift */,
 				6275AEB11AD451A600671D12 /* DocumentController.swift */,
 				62F9F1DC1AD24272002B7F1B /* formatter */,
-				626185201AC351CC0095CCD2 /* main.m */,
 				626185321AC35CA30095CCD2 /* model */,
 				620668BF1ADAD3BF00F807B0 /* ui */,
 				62F9F1C71AD22835002B7F1B /* util */,
@@ -270,10 +267,10 @@
 		626185321AC35CA30095CCD2 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				62F9F1BE1AD1A7EC002B7F1B /* Config.swift */,
 				62F9F1CA1AD2284A002B7F1B /* CoreData.swift */,
 				626185331AC35CA30095CCD2 /* Document.xcdatamodeld */,
 				626185351AC35CA30095CCD2 /* generated */,
-				62F9F1BE1AD1A7EC002B7F1B /* Config.swift */,
 				62F9F1C21AD1CB92002B7F1B /* Language.swift */,
 			);
 			path = model;
@@ -357,12 +354,12 @@
 				6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */,
 				6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */,
 				62F263271AD4DD30000B5DFE /* Error.swift */,
-				6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */,
-				62F9F1C81AD22835002B7F1B /* String+al.swift */,
-				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
-				62F9F1D61AD23C4A002B7F1B /* Transformers.swift */,
 				62B64F591AE4C7BB009C53EE /* NSObject+al.swift */,
+				6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */,
+				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
 				6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */,
+				62F9F1C81AD22835002B7F1B /* String+al.swift */,
+				62F9F1D61AD23C4A002B7F1B /* Transformers.swift */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -519,7 +516,6 @@
 				62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */,
 				620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */,
 				620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */,
-				626185281AC351CC0095CCD2 /* main.m in Sources */,
 				6248C5481AE1FAEB005ED75A /* NSTask+al.swift in Sources */,
 				620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */,
 				6275AEBD1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m in Sources */,

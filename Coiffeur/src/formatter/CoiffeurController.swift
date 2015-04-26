@@ -110,7 +110,7 @@ class CoiffeurController : NSObject {
 	var root : ConfigRoot? {
 		switch self.managedObjectContext.fetch(ConfigRoot.self) {
 		case .Success(let array):
-			return array.isEmpty ? nil : array[0]
+			return array.first
 		case .Failure(let error):
 			return nil
 		}
@@ -207,9 +207,8 @@ class CoiffeurController : NSObject {
 		var result = false
 		
 		if let del = self.delegate {
-			let arguments = del.coiffeurControllerArguments(self)
-			
-			result = self.format(arguments, completionHandler: {
+			let arguments = del.coiffeurControllerArguments(self)			
+			result = self.format(arguments) {
 				(result:StringResult) in
 				switch (result) {
 				case .Failure(let err):
@@ -217,7 +216,7 @@ class CoiffeurController : NSObject {
 				case .Success(let text):
 					del.coiffeurController(self, setText:text)
 				}
-			})
+			}
 		}
 		return result
 	}
@@ -296,7 +295,7 @@ class CoiffeurController : NSObject {
 			withFormat:"indexKey = %@", key)
 		{
 		case .Success(let value):
-			return value.isEmpty ? nil : value[0]
+			return value.first
 		case .Failure:
 			return nil
 		}
@@ -431,10 +430,11 @@ class CoiffeurController : NSObject {
 				continue
 			}
 			
-			let Other = NSLocalizedString("Other", comment:"")
+			let Other = String(format:NSLocalizedString("Other %@", comment:""),
+				section.title.lowercaseString)
 			var subsection = ConfigSection.objectInContext(self.managedObjectContext,
 				parent:section,
-				title:"\u{200B}\(Other) \(section.title.lowercaseString)")
+				title:"\u{200B}\(Other)")
 			
 			for option in index {
 				option.parent = subsection

@@ -54,7 +54,7 @@ class FragariaColor : NSObject {
 class ColorAndFontPreferences : DefaultPreferencePane {
 
 	override var toolbarItemImage : NSImage? {
-		return NSImage(named: "ProfileFontAndColor") }
+		return NSImage(named: "FontAndColors") }
 	
 	let colors = [
 		FragariaColor(MGSFragariaPrefsBackgroundColourWell, "Background"),

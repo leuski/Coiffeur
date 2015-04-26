@@ -15,10 +15,7 @@
 		620668D61ADAE63500F807B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D51ADAE63500F807B0 /* Preferences.swift */; };
 		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
 		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
-		620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 620668DF1ADB1B0D00F807B0 /* Locations.tiff */; };
 		6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */; };
-		621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */; };
-		621E6E871ADB7F5700225D3E /* text.png in Resources */ = {isa = PBXBuildFile; fileRef = 621E6E861ADB7F5700225D3E /* text.png */; };
 		6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */; };
 		6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */; };
 		6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */; };
@@ -120,10 +117,7 @@
 		620668D51ADAE63500F807B0 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
 		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
-		620668DF1ADB1B0D00F807B0 /* Locations.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Locations.tiff; sourceTree = "<group>"; };
 		6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTreeController+al.swift"; sourceTree = "<group>"; };
-		621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = ProfileFontAndColor.icns; sourceTree = "<group>"; };
-		621E6E861ADB7F5700225D3E /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
 		6248C5311ADF6E1F005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TextPresentationPreferences.xib; sourceTree = "<group>"; };
 		6248C5341ADF6E25005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PreferencesWindow.xib; sourceTree = "<group>"; };
 		6248C5371ADF6E2B005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurPreferences.xib; sourceTree = "<group>"; };
@@ -238,8 +232,6 @@
 		626185121AC351CC0095CCD2 /* rsrc */ = {
 			isa = PBXGroup;
 			children = (
-				621E6E861ADB7F5700225D3E /* text.png */,
-				620668DF1ADB1B0D00F807B0 /* Locations.tiff */,
 				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
 				625934BC1ACCE4ED00E2CC03 /* samples */,
 				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
@@ -254,7 +246,6 @@
 				626185191AC351CC0095CCD2 /* Images.xcassets */,
 				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
 				626185171AC351CC0095CCD2 /* MainMenu.xib */,
-				621E6E841ADB7ACE00225D3E /* ProfileFontAndColor.icns */,
 			);
 			path = rsrc;
 			sourceTree = "<group>";
@@ -471,7 +462,6 @@
 			files = (
 				6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */,
 				6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */,
-				621E6E851ADB7ACE00225D3E /* ProfileFontAndColor.icns in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
 				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
 				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
@@ -487,8 +477,6 @@
 				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
 				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
 				6248C5391ADF6E31005ED75A /* ColorAndFontPreferences.xib in Resources */,
-				621E6E871ADB7F5700225D3E /* text.png in Resources */,
-				620668E01ADB1B0D00F807B0 /* Locations.tiff in Resources */,
 				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
 				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
 			);

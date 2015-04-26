@@ -3,11 +3,11 @@
 
 
 "CoiffeurPreferences.label" = "Locations";
-"TextPresentationPreferences.label" = "Text";
+"TextPresentationPreferences.label" = "Source Code";
 "ColorAndFontPreferences.label" = "Colors & Font";
 
 "CoiffeurPreferences.tooltip" = "Locations";
-"TextPresentationPreferences.tooltip" = "Text";
+"TextPresentationPreferences.tooltip" = "Source Code";
 "ColorAndFontPreferences.tooltip" = "Colors & Font";
 
 "Uncrustify Executable" = "Uncrustify Executable";

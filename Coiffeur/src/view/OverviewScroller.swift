@@ -9,8 +9,8 @@
 import Cocoa
 
 class OverviewRegion : NSObject {
-  private(set) var lineRange : NSRange
-  private(set) var color : NSColor?
+  let lineRange : NSRange
+  let color : NSColor?
 
 	init(firstLineIndex:Int, lineCount:Int, color:NSColor?)
   {

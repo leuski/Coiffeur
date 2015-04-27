@@ -10,16 +10,16 @@ import Cocoa
 
 class Language : NSObject {
     
-  private class var FileName : String { return "languages" }
-  private class var FileNameExtension : String { return "plist" }
-  private class var UserDefaultsKey : String { return "Language" }
-
-  private struct LanguagePrivate {
-    static var supportedLanguages: [Language] = Language._supportedLanguages()
+  private struct Private {
+    private static let supportedLanguages = Language._supportedLanguages()
+		private static let FileName = "languages"
+		private static let FileNameExtension = "plist"
+		private static let UserDefaultsKey = "Language"
   }
 
   class var supportedLanguages : [Language] {
-		return LanguagePrivate.supportedLanguages }
+		return Private.supportedLanguages }
+	
 	class var supportedLanguageUTIs : [String] {
 		var types = Set<String>()
 		for  l in Language.supportedLanguages {
@@ -31,9 +31,10 @@ class Language : NSObject {
   private(set) var uncrustifyID = ""
   private(set) var displayName = ""
   private(set) var fragariaID = ""
-  private(set) var clangFormatID : String?
-  private(set) var UTIs : [ String ] = []
-  var defaultExtension : String? {
+	private(set) var UTIs = [String]()
+	private(set) var clangFormatID : String?
+
+	var defaultExtension : String? {
     return UTIs.isEmpty
 			? nil
 			: NSWorkspace.sharedWorkspace().preferredFilenameExtensionForType(UTIs[0])
@@ -42,8 +43,8 @@ class Language : NSObject {
   private class func _supportedLanguages() -> [Language]
   {
     let bundle = NSBundle(forClass: self)
-    if let url = bundle.URLForResource(FileName,
-			withExtension: FileNameExtension)
+    if let url = bundle.URLForResource(Private.FileName,
+			withExtension: Private.FileNameExtension)
 		{
       if let dictionaries = NSArray(contentsOfURL: url) {
         var result = [Language]()
@@ -69,7 +70,7 @@ class Language : NSObject {
   class func languageFromUserDefaults() -> Language
   {
 		let UD = NSUserDefaults.standardUserDefaults()
-    if let uti = UD.stringForKey(UserDefaultsKey) {
+    if let uti = UD.stringForKey(Private.UserDefaultsKey) {
       if let language = Language.languageWithUTI(uti) {
         return language
       }
@@ -87,7 +88,7 @@ class Language : NSObject {
   {
     if !UTIs.isEmpty {
       NSUserDefaults.standardUserDefaults().setValue(UTIs[0],
-				forKey: Language.UserDefaultsKey)
+				forKey: Private.UserDefaultsKey)
     }
   }
 }

@@ -28,12 +28,10 @@
 		6248C54A1AE2076D005ED75A /* NSRegularExpression+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */; };
 		6248C54E1AE2D1F7005ED75A /* ConfigNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */; };
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
-		625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; };
 		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
 		626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 626185331AC35CA30095CCD2 /* Document.xcdatamodeld */; };
-		626185731AC3B7040095CCD2 /* MGSFragaria.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 626185721AC3B7040095CCD2 /* MGSFragaria.framework */; };
 		626185751AC3B7410095CCD2 /* MGSFragaria.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 626185721AC3B7040095CCD2 /* MGSFragaria.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6261852B1AC3524B0095CCD2 /* uncrustify */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		626185931AC51C780095CCD2 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185921AC51C780095CCD2 /* languages.plist */; };
@@ -73,6 +71,76 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6217C8D71B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = DiffMatchPatch;
+		};
+		6217C8D91B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D5BC0AF128CA8E200B8F5FF;
+			remoteInfo = DiffMatchPatchTest;
+		};
+		6217C8DB1B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D96F3A212AFC68900C3E5C0;
+			remoteInfo = speedtest;
+		};
+		6217C8DD1B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D03488E135F75460051FE16;
+			remoteInfo = "mode-test";
+		};
+		6217C8E61B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB648E2A11FB385700AEF7BD;
+			remoteInfo = "Fragaria Doc";
+		};
+		6217C8E81B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
+			remoteInfo = "Fragaria GC";
+		};
+		6217C8EA1B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ABCA4DAF16137FC000E4849B;
+			remoteInfo = Fragaria;
+		};
+		6217C8EC1B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB69B62B118B745700903D1D;
+			remoteInfo = MGSFragaria;
+		};
+		6217C8EE1B0587B800377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = AB69B62A118B745700903D1D;
+			remoteInfo = MGSFragaria;
+		};
+		6217C8F01B0587B800377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = DiffMatchPatch;
+		};
 		62D1C2FA1AC34C7500B7F996 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62D1C2D51AC34C7500B7F996 /* Project object */;
@@ -117,6 +185,8 @@
 		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
 		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
 		6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTreeController+al.swift"; sourceTree = "<group>"; };
+		6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DiffMatchPatch.xcodeproj; path = "3rdParty/google-diff-match-patch-Objective-C/DiffMatchPatch.xcodeproj"; sourceTree = "<group>"; };
+		6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Fragaria.xcodeproj; path = 3rdParty/Fragaria/Fragaria.xcodeproj; sourceTree = "<group>"; };
 		6248C5311ADF6E1F005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TextPresentationPreferences.xib; sourceTree = "<group>"; };
 		6248C5341ADF6E25005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PreferencesWindow.xib; sourceTree = "<group>"; };
 		6248C5371ADF6E2B005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurPreferences.xib; sourceTree = "<group>"; };
@@ -182,8 +252,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				625934C11ACE1FB900E2CC03 /* DiffMatchPatch.framework in Frameworks */,
-				626185731AC3B7040095CCD2 /* MGSFragaria.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,6 +293,28 @@
 				6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */,
 			);
 			path = preferences;
+			sourceTree = "<group>";
+		};
+		6217C8D11B05877D00377B14 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */,
+				6217C8DA1B05877D00377B14 /* DiffMatchPatchTest.xctest */,
+				6217C8DC1B05877D00377B14 /* speedtest */,
+				6217C8DE1B05877D00377B14 /* mode-test */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6217C8E01B05879300377B14 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6217C8E71B05879300377B14 /* Fragaria Doc.app */,
+				6217C8E91B05879300377B14 /* Fragaria GC.app */,
+				6217C8EB1B05879300377B14 /* Fragaria.app */,
+				6217C8ED1B05879300377B14 /* MGSFragaria.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		626185121AC351CC0095CCD2 /* rsrc */ = {
@@ -290,6 +380,8 @@
 		62D1C2D41AC34C7500B7F996 = {
 			isa = PBXGroup;
 			children = (
+				6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */,
+				6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */,
 				625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */,
 				626185721AC3B7040095CCD2 /* MGSFragaria.framework */,
 				62D1C2DF1AC34C7500B7F996 /* Coiffeur */,
@@ -390,6 +482,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				6217C8EF1B0587B800377B14 /* PBXTargetDependency */,
+				6217C8F11B0587B800377B14 /* PBXTargetDependency */,
 			);
 			name = Coiffeur;
 			productName = Coiffeur;
@@ -444,6 +538,16 @@
 			mainGroup = 62D1C2D41AC34C7500B7F996;
 			productRefGroup = 62D1C2DE1AC34C7500B7F996 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6217C8D11B05877D00377B14 /* Products */;
+					ProjectRef = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+				},
+				{
+					ProductGroup = 6217C8E01B05879300377B14 /* Products */;
+					ProjectRef = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				62D1C2DC1AC34C7500B7F996 /* Coiffeur */,
@@ -451,6 +555,65 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DiffMatchPatch.framework;
+			remoteRef = 6217C8D71B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DA1B05877D00377B14 /* DiffMatchPatchTest.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DiffMatchPatchTest.xctest;
+			remoteRef = 6217C8D91B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DC1B05877D00377B14 /* speedtest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = speedtest;
+			remoteRef = 6217C8DB1B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DE1B05877D00377B14 /* mode-test */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "mode-test";
+			remoteRef = 6217C8DD1B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8E71B05879300377B14 /* Fragaria Doc.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Fragaria Doc.app";
+			remoteRef = 6217C8E61B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8E91B05879300377B14 /* Fragaria GC.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Fragaria GC.app";
+			remoteRef = 6217C8E81B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8EB1B05879300377B14 /* Fragaria.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Fragaria.app;
+			remoteRef = 6217C8EA1B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8ED1B05879300377B14 /* MGSFragaria.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MGSFragaria.framework;
+			remoteRef = 6217C8EC1B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		62D1C2DB1AC34C7500B7F996 /* Resources */ = {
@@ -544,6 +707,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6217C8EF1B0587B800377B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MGSFragaria;
+			targetProxy = 6217C8EE1B0587B800377B14 /* PBXContainerItemProxy */;
+		};
+		6217C8F11B0587B800377B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DiffMatchPatch;
+			targetProxy = 6217C8F01B0587B800377B14 /* PBXContainerItemProxy */;
+		};
 		62D1C2FB1AC34C7500B7F996 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 62D1C2DC1AC34C7500B7F996 /* Coiffeur */;

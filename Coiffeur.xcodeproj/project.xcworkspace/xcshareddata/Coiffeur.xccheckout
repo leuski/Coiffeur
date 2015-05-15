@@ -10,6 +10,10 @@
 	<string>Coiffeur</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
+		<key>150A68F5D81F7D884442B46FF5668B805BE44A33</key>
+		<string>https://github.com/mugginsoft/Fragaria</string>
+		<key>49DD1687C2E460201FEA3DF664D2461AC1813951</key>
+		<string>https://github.com/JanX2/google-diff-match-patch-Objective-C</string>
 		<key>7978856028899E12089952A66E578C3ECBBB927A</key>
 		<string>svn.home.leuski.net:Coiffeur.git</string>
 	</dict>
@@ -17,6 +21,10 @@
 	<string>Coiffeur.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
+		<key>150A68F5D81F7D884442B46FF5668B805BE44A33</key>
+		<string>../..3rdParty/Fragaria/</string>
+		<key>49DD1687C2E460201FEA3DF664D2461AC1813951</key>
+		<string>../..3rdParty/google-diff-match-patch-Objective-C/</string>
 		<key>7978856028899E12089952A66E578C3ECBBB927A</key>
 		<string>../..</string>
 	</dict>
@@ -35,6 +43,22 @@
 			<string>7978856028899E12089952A66E578C3ECBBB927A</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Coiffeur</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>150A68F5D81F7D884442B46FF5668B805BE44A33</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Fragaria</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>49DD1687C2E460201FEA3DF664D2461AC1813951</string>
+			<key>IDESourceControlWCCName</key>
+			<string>google-diff-match-patch-Objective-C</string>
 		</dict>
 	</array>
 </dict>

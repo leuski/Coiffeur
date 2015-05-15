@@ -3,4 +3,4 @@
 url=https://github.com/leuski/google-diff-match-patch-Objective-C.git
 [submodule "3rdParty/Fragaria"]
 	path = 3rdParty/Fragaria
-	url = https://github.com/mugginsoft/Fragaria
+url=https://github.com/leuski/Fragaria.git

@@ -16,6 +16,10 @@
 		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
 		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
 		6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */; };
+		6217C8FC1B05A1F700377B14 /* MGSFragaria.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6217C8ED1B05879300377B14 /* MGSFragaria.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6217C8FD1B05A20000377B14 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6217C8FF1B05A28B00377B14 /* MGSFragaria.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6217C8ED1B05879300377B14 /* MGSFragaria.framework */; };
+		6217C9001B05A28E00377B14 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */; };
 		6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */; };
 		6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */; };
 		6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */; };
@@ -28,11 +32,9 @@
 		6248C54A1AE2076D005ED75A /* NSRegularExpression+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */; };
 		6248C54E1AE2D1F7005ED75A /* ConfigNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */; };
 		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
-		625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
 		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
 		626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 626185331AC35CA30095CCD2 /* Document.xcdatamodeld */; };
-		626185751AC3B7410095CCD2 /* MGSFragaria.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 626185721AC3B7040095CCD2 /* MGSFragaria.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6261852B1AC3524B0095CCD2 /* uncrustify */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		626185931AC51C780095CCD2 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185921AC51C780095CCD2 /* languages.plist */; };
 		626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185941AC52CA20095CCD2 /* UserDefaults.plist */; };
@@ -157,8 +159,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				625934C21ACE251300E2CC03 /* DiffMatchPatch.framework in CopyFiles */,
-				626185751AC3B7410095CCD2 /* MGSFragaria.framework in CopyFiles */,
+				6217C8FC1B05A1F700377B14 /* MGSFragaria.framework in CopyFiles */,
+				6217C8FD1B05A20000377B14 /* DiffMatchPatch.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +254,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6217C8FF1B05A28B00377B14 /* MGSFragaria.framework in Frameworks */,
+				6217C9001B05A28E00377B14 /* DiffMatchPatch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,9 +887,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/3rd_party/Fragaria-master/build/Release",
-					"$(PROJECT_DIR)/3rd_party/google-diff-match-patch-Objective-C-master/build/Release",
+					"3rdParty/google-diff-match-patch-Objective-C/build/Release",
+					3rdParty/Fragaria/build/Release,
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -902,9 +905,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/3rd_party/Fragaria-master/build/Release",
-					"$(PROJECT_DIR)/3rd_party/google-diff-match-patch-Objective-C-master/build/Release",
+					"3rdParty/google-diff-match-patch-Objective-C/build/Release",
+					3rdParty/Fragaria/build/Release,
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

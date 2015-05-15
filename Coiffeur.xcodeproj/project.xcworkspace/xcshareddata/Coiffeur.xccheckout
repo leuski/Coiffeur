@@ -22,9 +22,9 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>150A68F5D81F7D884442B46FF5668B805BE44A33</key>
-		<string>../..3rdParty/Fragaria/</string>
+		<string>../..3rdParty/Fragaria</string>
 		<key>49DD1687C2E460201FEA3DF664D2461AC1813951</key>
-		<string>../..3rdParty/google-diff-match-patch-Objective-C/</string>
+		<string>../..3rdParty/google-diff-match-patch-Objective-C</string>
 		<key>7978856028899E12089952A66E578C3ECBBB927A</key>
 		<string>../..</string>
 	</dict>

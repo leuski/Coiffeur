@@ -1,9 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-//  SyntaxDefinitions.plist
-//  Coiffeur
-//
 //  Copyright (c) 2015 Anton Leuski. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 //
-//  Fragaria syntax definitions catalog file to find the actual definition in the objectivecpp.
--->
-<plist version="1.0">
-<array>
-	<dict>
-		<key>name</key>
-		<string>Objective-C++</string>
-		<key>file</key>
-		<string>objectivecpp</string>
-		<key>extensions</key>
-		<string>mm M</string>
-	</dict>
-</array>
-</plist>
+//	This software uses
+//	- Fragaria framework by Mugginsoft. Licensed under Apache License, v. 2.0
+//	- Diff, Match, and Patch framework by Jan Weiß. Licensed under Apache License, v. 2.0
+// 	- Coiffeur icon by Freepik from www.flaticon.com and it is licensed under Creative Commons BY 3.0.

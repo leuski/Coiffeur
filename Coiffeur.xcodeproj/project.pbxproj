@@ -201,13 +201,11 @@
 		6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+al.swift"; sourceTree = "<group>"; };
 		6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigNode.swift; sourceTree = "<group>"; };
 		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
-		625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiffMatchPatch.framework; path = "3rd_party/google-diff-match-patch-Objective-C-master/build/Release/DiffMatchPatch.framework"; sourceTree = "<group>"; };
 		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6261851A1AC351CC0095CCD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6261852B1AC3524B0095CCD2 /* uncrustify */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = uncrustify; sourceTree = "<group>"; };
 		626185341AC35CA30095CCD2 /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
-		626185721AC3B7040095CCD2 /* MGSFragaria.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MGSFragaria.framework; path = "3rd_party/Fragaria-master/build/Release/MGSFragaria.framework"; sourceTree = "<group>"; };
 		626185921AC51C780095CCD2 /* languages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = languages.plist; sourceTree = "<group>"; };
 		626185941AC52CA20095CCD2 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
 		6275AEAF1AD44BE400671D12 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -386,8 +384,6 @@
 			children = (
 				6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */,
 				6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */,
-				625934C01ACE1FB900E2CC03 /* DiffMatchPatch.framework */,
-				626185721AC3B7040095CCD2 /* MGSFragaria.framework */,
 				62D1C2DF1AC34C7500B7F996 /* Coiffeur */,
 				62D1C2FC1AC34C7500B7F996 /* CoiffeurTests */,
 				62D1C2DE1AC34C7500B7F996 /* Products */,
@@ -887,8 +883,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"3rdParty/google-diff-match-patch-Objective-C/build/Release",
-					3rdParty/Fragaria/build/Release,
+					"3rdParty/google-diff-match-patch-Objective-C/build/$(CONFIGURATION)",
+					"3rdParty/Fragaria/build/$(CONFIGURATION)",
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -905,8 +901,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"3rdParty/google-diff-match-patch-Objective-C/build/Release",
-					3rdParty/Fragaria/build/Release,
+					"3rdParty/google-diff-match-patch-Objective-C/build/$(CONFIGURATION)",
+					"3rdParty/Fragaria/build/$(CONFIGURATION)",
 				);
 				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";

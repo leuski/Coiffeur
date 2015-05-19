@@ -7,29 +7,29 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>DB67B876-199A-43DA-BA2A-4420174A5DB3</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Coiffeur</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>150A68F5D81F7D884442B46FF5668B805BE44A33</key>
-		<string>https://github.com/mugginsoft/Fragaria</string>
+		<string>https://github.com/leuski/Fragaria.git</string>
 		<key>49DD1687C2E460201FEA3DF664D2461AC1813951</key>
-		<string>https://github.com/JanX2/google-diff-match-patch-Objective-C</string>
+		<string>https://github.com/leuski/google-diff-match-patch-Objective-C.git</string>
 		<key>7978856028899E12089952A66E578C3ECBBB927A</key>
-		<string>svn.home.leuski.net:Coiffeur.git</string>
+		<string>www.leuski.net:Coiffeur</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Coiffeur.xcodeproj</string>
+	<string>Coiffeur.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>150A68F5D81F7D884442B46FF5668B805BE44A33</key>
-		<string>../..3rdParty/Fragaria</string>
+		<string>../..3rdParty/Fragaria/</string>
 		<key>49DD1687C2E460201FEA3DF664D2461AC1813951</key>
-		<string>../..3rdParty/google-diff-match-patch-Objective-C</string>
+		<string>../..3rdParty/google-diff-match-patch-Objective-C/</string>
 		<key>7978856028899E12089952A66E578C3ECBBB927A</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>svn.home.leuski.net:Coiffeur.git</string>
+	<string>www.leuski.net:Coiffeur</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>

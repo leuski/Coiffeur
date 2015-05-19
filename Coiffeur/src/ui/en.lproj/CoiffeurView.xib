@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="CoiffeurView" customModule="Coiffeur" customModuleProvider="target">
@@ -57,7 +57,7 @@
                         <action selector="jumpToSection:" target="-2" id="KyU-1C-9zg"/>
                     </connections>
                 </popUpButton>
-                <splitView dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="eEA-X1-PdY">
+                <splitView identifier="splitView.overview-detail" autosaveName="splitView.overview-detail" dividerStyle="thin" translatesAutoresizingMaskIntoConstraints="NO" id="eEA-X1-PdY">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="751"/>
                     <subviews>
                         <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="23" horizontalPageScroll="10" verticalLineScroll="23" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="wpp-Ki-cff">
@@ -87,11 +87,11 @@
                                                 </textFieldCell>
                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                 <prototypeCellViews>
-                                                    <customView identifier="row.option" id="ehB-SY-d4v" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
+                                                    <customView identifier="row.option" horizontalHuggingPriority="248" id="ehB-SY-d4v" customClass="ConfigRowView" customModule="Coiffeur" customModuleProvider="target">
                                                         <rect key="frame" x="1" y="1" width="477" height="17"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <subviews>
-                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="69f-yx-URr">
+                                                            <textField verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="69f-yx-URr">
                                                                 <rect key="frame" x="0.0" y="2" width="477" height="14"/>
                                                                 <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="left" title="Label" usesSingleLineMode="YES" id="alv-B7-oq1">
                                                                     <font key="font" metaFont="smallSystem"/>
@@ -101,8 +101,8 @@
                                                             </textField>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="69f-yx-URr" secondAttribute="trailing" constant="2" id="lQF-2H-oNs"/>
-                                                            <constraint firstItem="69f-yx-URr" firstAttribute="leading" secondItem="ehB-SY-d4v" secondAttribute="leading" constant="2" id="njO-cw-Z8t"/>
+                                                            <constraint firstAttribute="trailing" secondItem="69f-yx-URr" secondAttribute="trailing" priority="999" constant="2" id="lQF-2H-oNs"/>
+                                                            <constraint firstItem="69f-yx-URr" firstAttribute="leading" secondItem="ehB-SY-d4v" secondAttribute="leading" priority="999" constant="2" id="njO-cw-Z8t"/>
                                                             <constraint firstItem="69f-yx-URr" firstAttribute="top" secondItem="ehB-SY-d4v" secondAttribute="top" constant="1" id="zfd-o8-yko"/>
                                                         </constraints>
                                                         <connections>
@@ -114,7 +114,7 @@
                                                         <rect key="frame" x="1" y="20" width="477" height="19"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         <subviews>
-                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CpY-yV-u1p">
+                                                            <textField verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CpY-yV-u1p">
                                                                 <rect key="frame" x="0.0" y="1" width="477" height="17"/>
                                                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="Hrf-bU-AhJ">
                                                                     <font key="font" metaFont="systemBold"/>

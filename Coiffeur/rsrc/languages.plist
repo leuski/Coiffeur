@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+//  languages.plist
+//  Coiffeur
+//
+//  Copyright (c) 2015 Anton Leuski. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+//  This file contains the language description information for languages supported by Coiffeur.
+//  The set is motivated by the Uncustriy-supported languages.
+-->
+<plist version="1.0">
+<array>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>public.c-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>C</string>
+		<key>displayName</key>
+		<string>C</string>
+		<key>fragariaID</key>
+		<string>C</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>public.c-plus-plus-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>CPP</string>
+		<key>displayName</key>
+		<string>C++</string>
+		<key>fragariaID</key>
+		<string>C++</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>com.microsoft.csharp-source</string>
+			<string>com.microsoft.c-sharp</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>CS</string>
+		<key>displayName</key>
+		<string>C#</string>
+		<key>fragariaID</key>
+		<string>C#</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>net.leuski.d-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>D</string>
+		<key>displayName</key>
+		<string>D</string>
+		<key>fragariaID</key>
+		<string>D</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>com.netscape.javascript-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>ECMA</string>
+		<key>displayName</key>
+		<string>ECMA Script</string>
+		<key>fragariaID</key>
+		<string>JavaScript</string>
+		<key>clangFormatID</key>
+		<string>JavaScript</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>com.sun.java-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>JAVA</string>
+		<key>displayName</key>
+		<string>Java</string>
+		<key>fragariaID</key>
+		<string>Java</string>
+		<key>clangFormatID</key>
+		<string>Java</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>public.objective-c-source</string>
+			<string>public.c-header</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>OC</string>
+		<key>displayName</key>
+		<string>Objective-C</string>
+		<key>fragariaID</key>
+		<string>Objective-C</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>public.objective-c-plus-plus-source</string>
+			<string>public.c-plus-plus-header</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>OC+</string>
+		<key>displayName</key>
+		<string>Objective-C++</string>
+		<key>fragariaID</key>
+		<string>Objective-C++</string>
+		<key>clangFormatID</key>
+		<string>Cpp</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>net.leuski.pawn-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>PAWN</string>
+		<key>displayName</key>
+		<string>Pawn</string>
+	</dict>
+	<dict>
+		<key>UTIs</key>
+		<array>
+			<string>net.leuski.vala-source</string>
+		</array>
+		<key>uncrustifyID</key>
+		<string>VALA</string>
+		<key>displayName</key>
+		<string>Vala</string>
+	</dict>
+	
+	
+</array>
+</plist>

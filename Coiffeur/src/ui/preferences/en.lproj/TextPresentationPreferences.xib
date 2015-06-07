@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TextPresentationPreferences" customModule="Coiffeur" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="c22-O7-iKe" id="ef4-7T-ect"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe">
+            <rect key="frame" x="0.0" y="5" width="750" height="130"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="9sj-CZ-O5H">
+                    <rect key="frame" x="200" y="0.0" width="350" height="130"/>
+                    <subviews>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Bad-mb-AMr">
+                            <rect key="frame" x="75" y="70" width="257" height="18"/>
+                            <buttonCell key="cell" type="check" title="Inivisible Characters" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="uFk-iq-n7V">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <binding destination="ewd-1F-cuX" name="value" keyPath="values.FragariaShowInvisibleCharacters" id="5WL-cV-IJc"/>
+                            </connections>
+                        </button>
+                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y8T-1l-2j6">
+                            <rect key="frame" x="93" y="20" width="100" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="TxR-0r-s9t"/>
+                                <constraint firstAttribute="width" constant="100" id="tam-Qp-qsJ"/>
+                            </constraints>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="right" drawsBackground="YES" id="S9S-AC-5lm">
+                                <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" minimumIntegerDigits="0" maximumIntegerDigits="42" id="wIG-HD-nNE"/>
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                            <connections>
+                                <binding destination="ewd-1F-cuX" name="enabled" keyPath="values.CoiffeurOverwritePageGuide" id="k7W-MF-pWc"/>
+                                <binding destination="ewd-1F-cuX" name="value" keyPath="values.CoiffeurOverwritePageGuideValue" id="Njc-MV-pj3"/>
+                            </connections>
+                        </textField>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="Eem-7A-I2V">
+                            <rect key="frame" x="75" y="48" width="257" height="18"/>
+                            <buttonCell key="cell" type="check" title="Page Guide at Column" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="q2R-Hm-bWQ">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <binding destination="ewd-1F-cuX" name="value" keyPath="values.CoiffeurOverwritePageGuide" id="VwA-zi-h8c"/>
+                            </connections>
+                        </button>
+                        <button translatesAutoresizingMaskIntoConstraints="NO" id="5J0-ZS-jwY">
+                            <rect key="frame" x="75" y="92" width="257" height="18"/>
+                            <buttonCell key="cell" type="check" title="Line Numbers" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kGr-HV-ah9">
+                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                <font key="font" metaFont="system"/>
+                            </buttonCell>
+                            <connections>
+                                <binding destination="ewd-1F-cuX" name="value" keyPath="values.FragariaShowLineNumberGutter" id="5Xf-Ip-2OE"/>
+                            </connections>
+                        </button>
+                        <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xpK-B1-sea">
+                            <rect key="frame" x="194" y="18" width="19" height="27"/>
+                            <stepperCell key="cell" continuous="YES" alignment="left" maxValue="200" valueWraps="YES" id="KVe-nA-s9q"/>
+                            <connections>
+                                <binding destination="ewd-1F-cuX" name="enabled" keyPath="values.CoiffeurOverwritePageGuide" id="7E0-PC-LBW"/>
+                                <binding destination="ewd-1F-cuX" name="value" keyPath="values.CoiffeurOverwritePageGuideValue" id="2Zk-fG-OG3"/>
+                            </connections>
+                        </stepper>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MNq-89-5CJ">
+                            <rect key="frame" x="18" y="93" width="53" height="17"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="17" id="DHU-VH-7pE"/>
+                                <constraint firstAttribute="width" constant="49" id="szf-gW-Jok"/>
+                            </constraints>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Show" id="nB5-8L-BlM">
+                                <font key="font" metaFont="system"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="5J0-ZS-jwY" firstAttribute="leading" secondItem="MNq-89-5CJ" secondAttribute="trailing" constant="8" id="3X1-4l-zFq"/>
+                        <constraint firstItem="xpK-B1-sea" firstAttribute="leading" secondItem="y8T-1l-2j6" secondAttribute="trailing" constant="4" id="6or-do-h3A"/>
+                        <constraint firstItem="Bad-mb-AMr" firstAttribute="trailing" secondItem="5J0-ZS-jwY" secondAttribute="trailing" id="7IL-0Z-aVo"/>
+                        <constraint firstAttribute="width" constant="350" id="84t-UV-1lw"/>
+                        <constraint firstItem="Bad-mb-AMr" firstAttribute="top" secondItem="5J0-ZS-jwY" secondAttribute="bottom" constant="8" id="8Su-K2-AzA"/>
+                        <constraint firstAttribute="trailing" secondItem="5J0-ZS-jwY" secondAttribute="trailing" constant="20" id="8aq-C1-ebk"/>
+                        <constraint firstItem="MNq-89-5CJ" firstAttribute="leading" secondItem="9sj-CZ-O5H" secondAttribute="leading" constant="20" id="9p4-1O-CJr"/>
+                        <constraint firstItem="MNq-89-5CJ" firstAttribute="baseline" secondItem="5J0-ZS-jwY" secondAttribute="baseline" id="DLL-jX-d7j"/>
+                        <constraint firstItem="Eem-7A-I2V" firstAttribute="top" secondItem="Bad-mb-AMr" secondAttribute="bottom" constant="8" id="Est-r2-7ec"/>
+                        <constraint firstItem="xpK-B1-sea" firstAttribute="centerY" secondItem="y8T-1l-2j6" secondAttribute="centerY" constant="-1" id="KZ0-F4-dk8"/>
+                        <constraint firstItem="Bad-mb-AMr" firstAttribute="trailing" secondItem="Eem-7A-I2V" secondAttribute="trailing" id="W2t-hR-R6r"/>
+                        <constraint firstItem="Bad-mb-AMr" firstAttribute="leading" secondItem="5J0-ZS-jwY" secondAttribute="leading" id="eo3-Cd-nm5"/>
+                        <constraint firstItem="Eem-7A-I2V" firstAttribute="leading" secondItem="y8T-1l-2j6" secondAttribute="leading" constant="-16" id="jqv-Dg-tw1"/>
+                        <constraint firstItem="y8T-1l-2j6" firstAttribute="top" secondItem="Eem-7A-I2V" secondAttribute="bottom" constant="8" id="miK-El-A3t"/>
+                        <constraint firstItem="MNq-89-5CJ" firstAttribute="top" secondItem="9sj-CZ-O5H" secondAttribute="top" constant="20" id="tdu-tt-7Gp"/>
+                        <constraint firstItem="Bad-mb-AMr" firstAttribute="leading" secondItem="Eem-7A-I2V" secondAttribute="leading" id="uU5-w9-4ld"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="9sj-CZ-O5H" secondAttribute="centerX" id="EUr-8l-0gE"/>
+                <constraint firstAttribute="bottom" secondItem="9sj-CZ-O5H" secondAttribute="bottom" id="G2T-NB-kM4"/>
+                <constraint firstItem="9sj-CZ-O5H" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="MNu-zv-gRi"/>
+            </constraints>
+            <point key="canvasLocation" x="508" y="460"/>
+        </customView>
+        <userDefaultsController representsSharedInstance="YES" id="ewd-1F-cuX"/>
+    </objects>
+</document>

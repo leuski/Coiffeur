@@ -1,0 +1,996 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		620668CB1ADAD3BF00F807B0 /* CoiffeurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */; };
+		620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C21ADAD3BF00F807B0 /* MainWindowController.swift */; };
+		620668CF1ADAD3BF00F807B0 /* CoiffeurPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */; };
+		620668D11ADAD3BF00F807B0 /* PreferencesWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */; };
+		620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668C91ADAD3BF00F807B0 /* SourceView.swift */; };
+		620668D61ADAE63500F807B0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D51ADAE63500F807B0 /* Preferences.swift */; };
+		620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */; };
+		620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */; };
+		6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */; };
+		6217C8FC1B05A1F700377B14 /* MGSFragaria.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6217C8ED1B05879300377B14 /* MGSFragaria.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6217C8FD1B05A20000377B14 /* DiffMatchPatch.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6217C8FF1B05A28B00377B14 /* MGSFragaria.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6217C8ED1B05879300377B14 /* MGSFragaria.framework */; };
+		6217C9001B05A28E00377B14 /* DiffMatchPatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */; };
+		6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */; };
+		6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */; };
+		6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */; };
+		6248C5391ADF6E31005ED75A /* ColorAndFontPreferences.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */; };
+		6248C53C1ADF6E3C005ED75A /* SourceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C53E1ADF6E3C005ED75A /* SourceView.xib */; };
+		6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5411ADF6E41005ED75A /* MainWindowController.xib */; };
+		6248C5421ADF6E46005ED75A /* CoiffeurView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6248C5441ADF6E46005ED75A /* CoiffeurView.xib */; };
+		6248C5461AE0CF40005ED75A /* OptionsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C5451AE0CF40005ED75A /* OptionsRowView.swift */; };
+		6248C5481AE1FAEB005ED75A /* NSTask+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C5471AE1FAEB005ED75A /* NSTask+al.swift */; };
+		6248C54A1AE2076D005ED75A /* NSRegularExpression+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */; };
+		6248C54E1AE2D1F7005ED75A /* ConfigNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */; };
+		625934BD1ACCE4ED00E2CC03 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 625934BC1ACCE4ED00E2CC03 /* samples */; };
+		626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 626185171AC351CC0095CCD2 /* MainMenu.xib */; };
+		626185241AC351CC0095CCD2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 626185191AC351CC0095CCD2 /* Images.xcassets */; };
+		626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 626185331AC35CA30095CCD2 /* Document.xcdatamodeld */; };
+		6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6261852B1AC3524B0095CCD2 /* uncrustify */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		626185931AC51C780095CCD2 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185921AC51C780095CCD2 /* languages.plist */; };
+		626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 626185941AC52CA20095CCD2 /* UserDefaults.plist */; };
+		6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEAF1AD44BE400671D12 /* AppDelegate.swift */; };
+		6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB11AD451A600671D12 /* DocumentController.swift */; };
+		6275AEB81AD4734600671D12 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB71AD4734600671D12 /* Document.swift */; };
+		6275AEBD1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */; };
+		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
+		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
+		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		62B64F5A1AE4C7BB009C53EE /* NSObject+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B64F591AE4C7BB009C53EE /* NSObject+al.swift */; };
+		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
+		62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 62EC8A231AD354F00068E9AD /* ALExceptions.m */; };
+		62F263281AD4DD30000B5DFE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F263271AD4DD30000B5DFE /* Error.swift */; };
+		62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */; };
+		62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */; };
+		62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A71ACF7E08002B7F1B /* scissors-512.png */; };
+		62F9F1AA1ACF808D002B7F1B /* about.html in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1A91ACF808D002B7F1B /* about.html */; };
+		62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */; };
+		62F9F1B71AD1A7A7002B7F1B /* ConfigSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1B61AD1A7A7002B7F1B /* ConfigSection.swift */; };
+		62F9F1B91AD1A7A7002B7F1B /* ConfigOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1B81AD1A7A7002B7F1B /* ConfigOption.swift */; };
+		62F9F1BB1AD1A7A7002B7F1B /* ConfigRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1BA1AD1A7A7002B7F1B /* ConfigRoot.swift */; };
+		62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1BE1AD1A7EC002B7F1B /* Config.swift */; };
+		62F9F1C31AD1CB92002B7F1B /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1C21AD1CB92002B7F1B /* Language.swift */; };
+		62F9F1C91AD22835002B7F1B /* String+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1C81AD22835002B7F1B /* String+al.swift */; };
+		62F9F1CB1AD2284A002B7F1B /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1CA1AD2284A002B7F1B /* CoreData.swift */; };
+		62F9F1CD1AD22873002B7F1B /* BorderlessTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1CC1AD22873002B7F1B /* BorderlessTextView.swift */; };
+		62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1D01AD22B5C002B7F1B /* OverviewScroller.swift */; };
+		62F9F1D31AD23127002B7F1B /* NSSegmentedControl+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1D21AD23127002B7F1B /* NSSegmentedControl+al.swift */; };
+		62F9F1D51AD23B26002B7F1B /* OutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1D41AD23B26002B7F1B /* OutlineView.swift */; };
+		62F9F1D71AD23C4A002B7F1B /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1D61AD23C4A002B7F1B /* Transformers.swift */; };
+		62F9F1DB1AD23F80002B7F1B /* PathControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1DA1AD23F80002B7F1B /* PathControl.swift */; };
+		62F9F1DE1AD2429B002B7F1B /* CoiffeurController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1DD1AD2429B002B7F1B /* CoiffeurController.swift */; };
+		62F9F1E01AD242B5002B7F1B /* ClangFormatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1DF1AD242B5002B7F1B /* ClangFormatController.swift */; };
+		62F9F1E21AD242C5002B7F1B /* UncrustifyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F9F1E11AD242C5002B7F1B /* UncrustifyController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6217C8D71B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = DiffMatchPatch;
+		};
+		6217C8D91B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D5BC0AF128CA8E200B8F5FF;
+			remoteInfo = DiffMatchPatchTest;
+		};
+		6217C8DB1B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D96F3A212AFC68900C3E5C0;
+			remoteInfo = speedtest;
+		};
+		6217C8DD1B05877D00377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D03488E135F75460051FE16;
+			remoteInfo = "mode-test";
+		};
+		6217C8E61B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB648E2A11FB385700AEF7BD;
+			remoteInfo = "Fragaria Doc";
+		};
+		6217C8E81B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
+			remoteInfo = "Fragaria GC";
+		};
+		6217C8EA1B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = ABCA4DAF16137FC000E4849B;
+			remoteInfo = Fragaria;
+		};
+		6217C8EC1B05879300377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB69B62B118B745700903D1D;
+			remoteInfo = MGSFragaria;
+		};
+		6217C8EE1B0587B800377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = AB69B62A118B745700903D1D;
+			remoteInfo = MGSFragaria;
+		};
+		6217C8F01B0587B800377B14 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = DiffMatchPatch;
+		};
+		62D1C2FA1AC34C7500B7F996 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62D1C2D51AC34C7500B7F996 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 62D1C2DC1AC34C7500B7F996;
+			remoteInfo = Coiffeur;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		626185741AC3B7330095CCD2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6217C8FC1B05A1F700377B14 /* MGSFragaria.framework in CopyFiles */,
+				6217C8FD1B05A20000377B14 /* DiffMatchPatch.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		626185791AC3C1030095CCD2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				6261857A1AC3C10E0095CCD2 /* uncrustify in CopyFiles */,
+				62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurView.swift; sourceTree = "<group>"; };
+		620668C21ADAD3BF00F807B0 /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurPreferences.swift; sourceTree = "<group>"; };
+		620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindow.swift; sourceTree = "<group>"; };
+		620668C91ADAD3BF00F807B0 /* SourceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
+		620668D51ADAE63500F807B0 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextPresentationPreferences.swift; sourceTree = "<group>"; };
+		620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAndFontPreferences.swift; sourceTree = "<group>"; };
+		6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTreeController+al.swift"; sourceTree = "<group>"; };
+		6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DiffMatchPatch.xcodeproj; path = "3rdParty/google-diff-match-patch-Objective-C/DiffMatchPatch.xcodeproj"; sourceTree = "<group>"; };
+		6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Fragaria.xcodeproj; path = 3rdParty/Fragaria/Fragaria.xcodeproj; sourceTree = "<group>"; };
+		6248C5311ADF6E1F005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TextPresentationPreferences.xib; sourceTree = "<group>"; };
+		6248C5341ADF6E25005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PreferencesWindow.xib; sourceTree = "<group>"; };
+		6248C5371ADF6E2B005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurPreferences.xib; sourceTree = "<group>"; };
+		6248C53A1ADF6E31005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ColorAndFontPreferences.xib; sourceTree = "<group>"; };
+		6248C53D1ADF6E3C005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SourceView.xib; sourceTree = "<group>"; };
+		6248C5401ADF6E41005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindowController.xib; sourceTree = "<group>"; };
+		6248C5431ADF6E46005ED75A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CoiffeurView.xib; sourceTree = "<group>"; };
+		6248C5451AE0CF40005ED75A /* OptionsRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsRowView.swift; sourceTree = "<group>"; };
+		6248C5471AE1FAEB005ED75A /* NSTask+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+al.swift"; sourceTree = "<group>"; };
+		6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSRegularExpression+al.swift"; sourceTree = "<group>"; };
+		6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigNode.swift; sourceTree = "<group>"; };
+		625934BC1ACCE4ED00E2CC03 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
+		626185181AC351CC0095CCD2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		626185191AC351CC0095CCD2 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		6261851A1AC351CC0095CCD2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6261852B1AC3524B0095CCD2 /* uncrustify */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = uncrustify; sourceTree = "<group>"; };
+		626185341AC35CA30095CCD2 /* Document.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Document.xcdatamodel; sourceTree = "<group>"; };
+		626185921AC51C780095CCD2 /* languages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = languages.plist; sourceTree = "<group>"; };
+		626185941AC52CA20095CCD2 /* UserDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserDefaults.plist; sourceTree = "<group>"; };
+		6275AEAF1AD44BE400671D12 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6275AEB11AD451A600671D12 /* DocumentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentController.swift; sourceTree = "<group>"; };
+		6275AEB71AD4734600671D12 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiffMatchPatch+ALSwiftEnum.h"; sourceTree = "<group>"; };
+		6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DiffMatchPatch+ALSwiftEnum.m"; sourceTree = "<group>"; };
+		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
+		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
+		62B64F591AE4C7BB009C53EE /* NSObject+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+al.swift"; sourceTree = "<group>"; };
+		62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coiffeur.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoiffeurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		62D1C2FE1AC34C7500B7F996 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoiffeurTests.m; sourceTree = "<group>"; };
+		62EC8A221AD354F00068E9AD /* ALExceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALExceptions.h; sourceTree = "<group>"; };
+		62EC8A231AD354F00068E9AD /* ALExceptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALExceptions.m; sourceTree = "<group>"; };
+		62F263271AD4DD30000B5DFE /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SyntaxDefinitions.plist; sourceTree = "<group>"; };
+		62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Syntax Definitions"; sourceTree = "<group>"; };
+		62F9F1A71ACF7E08002B7F1B /* scissors-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scissors-512.png"; sourceTree = "<group>"; };
+		62F9F1A91ACF808D002B7F1B /* about.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = about.html; sourceTree = "<group>"; };
+		62F9F1AE1ACF92D5002B7F1B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		62F9F1B31AD1A76B002B7F1B /* Coiffeur-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Coiffeur-Bridging-Header.h"; sourceTree = "<group>"; };
+		62F9F1B61AD1A7A7002B7F1B /* ConfigSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigSection.swift; sourceTree = "<group>"; };
+		62F9F1B81AD1A7A7002B7F1B /* ConfigOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigOption.swift; sourceTree = "<group>"; };
+		62F9F1BA1AD1A7A7002B7F1B /* ConfigRoot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigRoot.swift; sourceTree = "<group>"; };
+		62F9F1BE1AD1A7EC002B7F1B /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		62F9F1C21AD1CB92002B7F1B /* Language.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		62F9F1C81AD22835002B7F1B /* String+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+al.swift"; sourceTree = "<group>"; };
+		62F9F1CA1AD2284A002B7F1B /* CoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
+		62F9F1CC1AD22873002B7F1B /* BorderlessTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderlessTextView.swift; sourceTree = "<group>"; };
+		62F9F1D01AD22B5C002B7F1B /* OverviewScroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewScroller.swift; sourceTree = "<group>"; };
+		62F9F1D21AD23127002B7F1B /* NSSegmentedControl+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSSegmentedControl+al.swift"; sourceTree = "<group>"; };
+		62F9F1D41AD23B26002B7F1B /* OutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OutlineView.swift; sourceTree = "<group>"; };
+		62F9F1D61AD23C4A002B7F1B /* Transformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
+		62F9F1DA1AD23F80002B7F1B /* PathControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathControl.swift; sourceTree = "<group>"; };
+		62F9F1DD1AD2429B002B7F1B /* CoiffeurController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoiffeurController.swift; sourceTree = "<group>"; };
+		62F9F1DF1AD242B5002B7F1B /* ClangFormatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClangFormatController.swift; sourceTree = "<group>"; };
+		62F9F1E11AD242C5002B7F1B /* UncrustifyController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UncrustifyController.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		62D1C2DA1AC34C7500B7F996 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6217C8FF1B05A28B00377B14 /* MGSFragaria.framework in Frameworks */,
+				6217C9001B05A28E00377B14 /* DiffMatchPatch.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62D1C2F61AC34C7500B7F996 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		620668BF1ADAD3BF00F807B0 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				620668C01ADAD3BF00F807B0 /* CoiffeurView.swift */,
+				6248C5441ADF6E46005ED75A /* CoiffeurView.xib */,
+				620668C21ADAD3BF00F807B0 /* MainWindowController.swift */,
+				6248C5411ADF6E41005ED75A /* MainWindowController.xib */,
+				620668C41ADAD3BF00F807B0 /* preferences */,
+				620668C91ADAD3BF00F807B0 /* SourceView.swift */,
+				6248C53E1ADF6E3C005ED75A /* SourceView.xib */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		620668C41ADAD3BF00F807B0 /* preferences */ = {
+			isa = PBXGroup;
+			children = (
+				620668C51ADAD3BF00F807B0 /* CoiffeurPreferences.swift */,
+				6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */,
+				620668DB1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift */,
+				6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */,
+				620668D51ADAE63500F807B0 /* Preferences.swift */,
+				620668C71ADAD3BF00F807B0 /* PreferencesWindow.swift */,
+				6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */,
+				620668D71ADAF0D800F807B0 /* TextPresentationPreferences.swift */,
+				6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */,
+			);
+			path = preferences;
+			sourceTree = "<group>";
+		};
+		6217C8D11B05877D00377B14 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */,
+				6217C8DA1B05877D00377B14 /* DiffMatchPatchTest.xctest */,
+				6217C8DC1B05877D00377B14 /* speedtest */,
+				6217C8DE1B05877D00377B14 /* mode-test */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6217C8E01B05879300377B14 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6217C8E71B05879300377B14 /* Fragaria Doc.app */,
+				6217C8E91B05879300377B14 /* Fragaria GC.app */,
+				6217C8EB1B05879300377B14 /* Fragaria.app */,
+				6217C8ED1B05879300377B14 /* MGSFragaria.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		626185121AC351CC0095CCD2 /* rsrc */ = {
+			isa = PBXGroup;
+			children = (
+				62B0C36D1AC7DE3A00A91E0C /* clang-format */,
+				625934BC1ACCE4ED00E2CC03 /* samples */,
+				62F9F1A51ACF74D3002B7F1B /* Syntax Definitions */,
+				6261852B1AC3524B0095CCD2 /* uncrustify */,
+				62F9F1A91ACF808D002B7F1B /* about.html */,
+				6261851A1AC351CC0095CCD2 /* Info.plist */,
+				626185921AC51C780095CCD2 /* languages.plist */,
+				62F9F1A31ACF74C7002B7F1B /* SyntaxDefinitions.plist */,
+				626185941AC52CA20095CCD2 /* UserDefaults.plist */,
+				62F9F1A71ACF7E08002B7F1B /* scissors-512.png */,
+				62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */,
+				626185191AC351CC0095CCD2 /* Images.xcassets */,
+				62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */,
+				626185171AC351CC0095CCD2 /* MainMenu.xib */,
+			);
+			path = rsrc;
+			sourceTree = "<group>";
+		};
+		6261851B1AC351CC0095CCD2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6275AEAF1AD44BE400671D12 /* AppDelegate.swift */,
+				62F9F1B31AD1A76B002B7F1B /* Coiffeur-Bridging-Header.h */,
+				6275AEB71AD4734600671D12 /* Document.swift */,
+				6275AEB11AD451A600671D12 /* DocumentController.swift */,
+				62F9F1DC1AD24272002B7F1B /* formatter */,
+				626185321AC35CA30095CCD2 /* model */,
+				620668BF1ADAD3BF00F807B0 /* ui */,
+				62F9F1C71AD22835002B7F1B /* util */,
+				62F9F1C61AD22806002B7F1B /* view */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		626185321AC35CA30095CCD2 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				62F9F1BE1AD1A7EC002B7F1B /* Config.swift */,
+				62F9F1CA1AD2284A002B7F1B /* CoreData.swift */,
+				626185331AC35CA30095CCD2 /* Document.xcdatamodeld */,
+				626185351AC35CA30095CCD2 /* generated */,
+				62F9F1C21AD1CB92002B7F1B /* Language.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		626185351AC35CA30095CCD2 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				6248C54D1AE2D1F7005ED75A /* ConfigNode.swift */,
+				62F9F1BA1AD1A7A7002B7F1B /* ConfigRoot.swift */,
+				62F9F1B81AD1A7A7002B7F1B /* ConfigOption.swift */,
+				62F9F1B61AD1A7A7002B7F1B /* ConfigSection.swift */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
+		62D1C2D41AC34C7500B7F996 = {
+			isa = PBXGroup;
+			children = (
+				6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */,
+				6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */,
+				62D1C2DF1AC34C7500B7F996 /* Coiffeur */,
+				62D1C2FC1AC34C7500B7F996 /* CoiffeurTests */,
+				62D1C2DE1AC34C7500B7F996 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		62D1C2DE1AC34C7500B7F996 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */,
+				62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		62D1C2DF1AC34C7500B7F996 /* Coiffeur */ = {
+			isa = PBXGroup;
+			children = (
+				626185121AC351CC0095CCD2 /* rsrc */,
+				6261851B1AC351CC0095CCD2 /* src */,
+			);
+			path = Coiffeur;
+			sourceTree = "<group>";
+		};
+		62D1C2FC1AC34C7500B7F996 /* CoiffeurTests */ = {
+			isa = PBXGroup;
+			children = (
+				62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */,
+				62D1C2FD1AC34C7500B7F996 /* Supporting Files */,
+			);
+			path = CoiffeurTests;
+			sourceTree = "<group>";
+		};
+		62D1C2FD1AC34C7500B7F996 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				62D1C2FE1AC34C7500B7F996 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		62F9F1C61AD22806002B7F1B /* view */ = {
+			isa = PBXGroup;
+			children = (
+				62F9F1CC1AD22873002B7F1B /* BorderlessTextView.swift */,
+				62F9F1D21AD23127002B7F1B /* NSSegmentedControl+al.swift */,
+				6248C5451AE0CF40005ED75A /* OptionsRowView.swift */,
+				62F9F1D41AD23B26002B7F1B /* OutlineView.swift */,
+				62F9F1D01AD22B5C002B7F1B /* OverviewScroller.swift */,
+				62F9F1DA1AD23F80002B7F1B /* PathControl.swift */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		62F9F1C71AD22835002B7F1B /* util */ = {
+			isa = PBXGroup;
+			children = (
+				62EC8A221AD354F00068E9AD /* ALExceptions.h */,
+				62EC8A231AD354F00068E9AD /* ALExceptions.m */,
+				6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */,
+				6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */,
+				62F263271AD4DD30000B5DFE /* Error.swift */,
+				62B64F591AE4C7BB009C53EE /* NSObject+al.swift */,
+				6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */,
+				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
+				6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */,
+				62F9F1C81AD22835002B7F1B /* String+al.swift */,
+				62F9F1D61AD23C4A002B7F1B /* Transformers.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		62F9F1DC1AD24272002B7F1B /* formatter */ = {
+			isa = PBXGroup;
+			children = (
+				62F9F1DD1AD2429B002B7F1B /* CoiffeurController.swift */,
+				62F9F1DF1AD242B5002B7F1B /* ClangFormatController.swift */,
+				62F9F1E11AD242C5002B7F1B /* UncrustifyController.swift */,
+			);
+			path = formatter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		62D1C2DC1AC34C7500B7F996 /* Coiffeur */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62D1C3031AC34C7500B7F996 /* Build configuration list for PBXNativeTarget "Coiffeur" */;
+			buildPhases = (
+				62D1C2D91AC34C7500B7F996 /* Sources */,
+				62D1C2DA1AC34C7500B7F996 /* Frameworks */,
+				62D1C2DB1AC34C7500B7F996 /* Resources */,
+				626185741AC3B7330095CCD2 /* CopyFiles */,
+				626185791AC3C1030095CCD2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6217C8EF1B0587B800377B14 /* PBXTargetDependency */,
+				6217C8F11B0587B800377B14 /* PBXTargetDependency */,
+			);
+			name = Coiffeur;
+			productName = Coiffeur;
+			productReference = 62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */;
+			productType = "com.apple.product-type.application";
+		};
+		62D1C2F81AC34C7500B7F996 /* CoiffeurTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62D1C3061AC34C7500B7F996 /* Build configuration list for PBXNativeTarget "CoiffeurTests" */;
+			buildPhases = (
+				62D1C2F51AC34C7500B7F996 /* Sources */,
+				62D1C2F61AC34C7500B7F996 /* Frameworks */,
+				62D1C2F71AC34C7500B7F996 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				62D1C2FB1AC34C7500B7F996 /* PBXTargetDependency */,
+			);
+			name = CoiffeurTests;
+			productName = CoiffeurTests;
+			productReference = 62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		62D1C2D51AC34C7500B7F996 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = AL;
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = "Anton Leuski";
+				TargetAttributes = {
+					62D1C2DC1AC34C7500B7F996 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+					62D1C2F81AC34C7500B7F996 = {
+						CreatedOnToolsVersion = 6.2;
+						TestTargetID = 62D1C2DC1AC34C7500B7F996;
+					};
+				};
+			};
+			buildConfigurationList = 62D1C2D81AC34C7500B7F996 /* Build configuration list for PBXProject "Coiffeur" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 62D1C2D41AC34C7500B7F996;
+			productRefGroup = 62D1C2DE1AC34C7500B7F996 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 6217C8D11B05877D00377B14 /* Products */;
+					ProjectRef = 6217C8D01B05877D00377B14 /* DiffMatchPatch.xcodeproj */;
+				},
+				{
+					ProductGroup = 6217C8E01B05879300377B14 /* Products */;
+					ProjectRef = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				62D1C2DC1AC34C7500B7F996 /* Coiffeur */,
+				62D1C2F81AC34C7500B7F996 /* CoiffeurTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		6217C8D81B05877D00377B14 /* DiffMatchPatch.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = DiffMatchPatch.framework;
+			remoteRef = 6217C8D71B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DA1B05877D00377B14 /* DiffMatchPatchTest.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DiffMatchPatchTest.xctest;
+			remoteRef = 6217C8D91B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DC1B05877D00377B14 /* speedtest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = speedtest;
+			remoteRef = 6217C8DB1B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8DE1B05877D00377B14 /* mode-test */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "mode-test";
+			remoteRef = 6217C8DD1B05877D00377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8E71B05879300377B14 /* Fragaria Doc.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Fragaria Doc.app";
+			remoteRef = 6217C8E61B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8E91B05879300377B14 /* Fragaria GC.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Fragaria GC.app";
+			remoteRef = 6217C8E81B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8EB1B05879300377B14 /* Fragaria.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Fragaria.app;
+			remoteRef = 6217C8EA1B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6217C8ED1B05879300377B14 /* MGSFragaria.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MGSFragaria.framework;
+			remoteRef = 6217C8EC1B05879300377B14 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		62D1C2DB1AC34C7500B7F996 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */,
+				6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */,
+				626185931AC51C780095CCD2 /* languages.plist in Resources */,
+				62F9F1AA1ACF808D002B7F1B /* about.html in Resources */,
+				626185231AC351CC0095CCD2 /* MainMenu.xib in Resources */,
+				625934BD1ACCE4ED00E2CC03 /* samples in Resources */,
+				6248C5361ADF6E2B005ED75A /* CoiffeurPreferences.xib in Resources */,
+				626185241AC351CC0095CCD2 /* Images.xcassets in Resources */,
+				62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */,
+				62F9F1A81ACF7E08002B7F1B /* scissors-512.png in Resources */,
+				6248C53C1ADF6E3C005ED75A /* SourceView.xib in Resources */,
+				6248C5301ADF6E1F005ED75A /* TextPresentationPreferences.xib in Resources */,
+				6248C5421ADF6E46005ED75A /* CoiffeurView.xib in Resources */,
+				62F9F1A61ACF74D3002B7F1B /* Syntax Definitions in Resources */,
+				62F9F1A41ACF74C7002B7F1B /* SyntaxDefinitions.plist in Resources */,
+				62F9F1AD1ACF92D5002B7F1B /* Localizable.strings in Resources */,
+				6248C5391ADF6E31005ED75A /* ColorAndFontPreferences.xib in Resources */,
+				626185951AC52CA20095CCD2 /* UserDefaults.plist in Resources */,
+				62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62D1C2F71AC34C7500B7F996 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		62D1C2D91AC34C7500B7F996 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62F9F1CD1AD22873002B7F1B /* BorderlessTextView.swift in Sources */,
+				62F9F1BB1AD1A7A7002B7F1B /* ConfigRoot.swift in Sources */,
+				62F9F1DB1AD23F80002B7F1B /* PathControl.swift in Sources */,
+				62F9F1E01AD242B5002B7F1B /* ClangFormatController.swift in Sources */,
+				6275AEB01AD44BE400671D12 /* AppDelegate.swift in Sources */,
+				62F9F1B71AD1A7A7002B7F1B /* ConfigSection.swift in Sources */,
+				6248C5461AE0CF40005ED75A /* OptionsRowView.swift in Sources */,
+				62F9F1DE1AD2429B002B7F1B /* CoiffeurController.swift in Sources */,
+				62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */,
+				6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */,
+				6248C54A1AE2076D005ED75A /* NSRegularExpression+al.swift in Sources */,
+				620668CF1ADAD3BF00F807B0 /* CoiffeurPreferences.swift in Sources */,
+				620668D11ADAD3BF00F807B0 /* PreferencesWindow.swift in Sources */,
+				62F9F1CB1AD2284A002B7F1B /* CoreData.swift in Sources */,
+				62F9F1E21AD242C5002B7F1B /* UncrustifyController.swift in Sources */,
+				6275AEB81AD4734600671D12 /* Document.swift in Sources */,
+				62F9F1D51AD23B26002B7F1B /* OutlineView.swift in Sources */,
+				62F9F1B91AD1A7A7002B7F1B /* ConfigOption.swift in Sources */,
+				62B64F5A1AE4C7BB009C53EE /* NSObject+al.swift in Sources */,
+				62F9F1D31AD23127002B7F1B /* NSSegmentedControl+al.swift in Sources */,
+				62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */,
+				620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */,
+				620668CD1ADAD3BF00F807B0 /* MainWindowController.swift in Sources */,
+				6248C5481AE1FAEB005ED75A /* NSTask+al.swift in Sources */,
+				620668D31ADAD3BF00F807B0 /* SourceView.swift in Sources */,
+				6275AEBD1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m in Sources */,
+				626185361AC35CA30095CCD2 /* Document.xcdatamodeld in Sources */,
+				6248C54E1AE2D1F7005ED75A /* ConfigNode.swift in Sources */,
+				62F9F1C31AD1CB92002B7F1B /* Language.swift in Sources */,
+				620668CB1ADAD3BF00F807B0 /* CoiffeurView.swift in Sources */,
+				62F9F1D71AD23C4A002B7F1B /* Transformers.swift in Sources */,
+				620668D81ADAF0D800F807B0 /* TextPresentationPreferences.swift in Sources */,
+				620668D61ADAE63500F807B0 /* Preferences.swift in Sources */,
+				62F9F1D11AD22B5C002B7F1B /* OverviewScroller.swift in Sources */,
+				6210563F1AEC1EDC00D17964 /* NSTreeController+al.swift in Sources */,
+				62F263281AD4DD30000B5DFE /* Error.swift in Sources */,
+				62F9F1C91AD22835002B7F1B /* String+al.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62D1C2F51AC34C7500B7F996 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6217C8EF1B0587B800377B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MGSFragaria;
+			targetProxy = 6217C8EE1B0587B800377B14 /* PBXContainerItemProxy */;
+		};
+		6217C8F11B0587B800377B14 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = DiffMatchPatch;
+			targetProxy = 6217C8F01B0587B800377B14 /* PBXContainerItemProxy */;
+		};
+		62D1C2FB1AC34C7500B7F996 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 62D1C2DC1AC34C7500B7F996 /* Coiffeur */;
+			targetProxy = 62D1C2FA1AC34C7500B7F996 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6248C5321ADF6E1F005ED75A /* TextPresentationPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5311ADF6E1F005ED75A /* en */,
+			);
+			name = TextPresentationPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C5351ADF6E25005ED75A /* PreferencesWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5341ADF6E25005ED75A /* en */,
+			);
+			name = PreferencesWindow.xib;
+			sourceTree = "<group>";
+		};
+		6248C5381ADF6E2B005ED75A /* CoiffeurPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5371ADF6E2B005ED75A /* en */,
+			);
+			name = CoiffeurPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C53B1ADF6E31005ED75A /* ColorAndFontPreferences.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C53A1ADF6E31005ED75A /* en */,
+			);
+			name = ColorAndFontPreferences.xib;
+			sourceTree = "<group>";
+		};
+		6248C53E1ADF6E3C005ED75A /* SourceView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C53D1ADF6E3C005ED75A /* en */,
+			);
+			name = SourceView.xib;
+			sourceTree = "<group>";
+		};
+		6248C5411ADF6E41005ED75A /* MainWindowController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5401ADF6E41005ED75A /* en */,
+			);
+			name = MainWindowController.xib;
+			sourceTree = "<group>";
+		};
+		6248C5441ADF6E46005ED75A /* CoiffeurView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6248C5431ADF6E46005ED75A /* en */,
+			);
+			name = CoiffeurView.xib;
+			sourceTree = "<group>";
+		};
+		626185171AC351CC0095CCD2 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				626185181AC351CC0095CCD2 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		62F9F1AF1ACF92D5002B7F1B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				62F9F1AE1ACF92D5002B7F1B /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		62D1C3011AC34C7500B7F996 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		62D1C3021AC34C7500B7F996 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		62D1C3041AC34C7500B7F996 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"3rdParty/google-diff-match-patch-Objective-C/build/$(CONFIGURATION)",
+					"3rdParty/Fragaria/build/$(CONFIGURATION)",
+				);
+				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Coiffeur/src/Coiffeur-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		62D1C3051AC34C7500B7F996 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"3rdParty/google-diff-match-patch-Objective-C/build/$(CONFIGURATION)",
+					"3rdParty/Fragaria/build/$(CONFIGURATION)",
+				);
+				INFOPLIST_FILE = Coiffeur/rsrc/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Coiffeur/src/Coiffeur-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		62D1C3071AC34C7500B7F996 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CoiffeurTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coiffeur.app/Contents/MacOS/Coiffeur";
+			};
+			name = Debug;
+		};
+		62D1C3081AC34C7500B7F996 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CoiffeurTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coiffeur.app/Contents/MacOS/Coiffeur";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		62D1C2D81AC34C7500B7F996 /* Build configuration list for PBXProject "Coiffeur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62D1C3011AC34C7500B7F996 /* Debug */,
+				62D1C3021AC34C7500B7F996 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		62D1C3031AC34C7500B7F996 /* Build configuration list for PBXNativeTarget "Coiffeur" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62D1C3041AC34C7500B7F996 /* Debug */,
+				62D1C3051AC34C7500B7F996 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		62D1C3061AC34C7500B7F996 /* Build configuration list for PBXNativeTarget "CoiffeurTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62D1C3071AC34C7500B7F996 /* Debug */,
+				62D1C3081AC34C7500B7F996 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		626185331AC35CA30095CCD2 /* Document.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				626185341AC35CA30095CCD2 /* Document.xcdatamodel */,
+			);
+			currentVersion = 626185341AC35CA30095CCD2 /* Document.xcdatamodel */;
+			path = Document.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 62D1C2D51AC34C7500B7F996 /* Project object */;
+}

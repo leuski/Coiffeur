@@ -1,0 +1,6 @@
+[submodule "3rdParty/google-diff-match-patch-Objective-C"]
+	path = 3rdParty/google-diff-match-patch-Objective-C
+url=https://github.com/leuski/google-diff-match-patch-Objective-C.git
+[submodule "3rdParty/Fragaria"]
+	path = 3rdParty/Fragaria
+url=https://github.com/leuski/Fragaria.git

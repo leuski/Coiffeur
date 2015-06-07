@@ -6,9 +6,9 @@ Coiffeur is a style sheets editor for both [uncrustify](http://uncrustify.source
 
 ![screenshot](images/screenshot.png)
 
-You change the style sheet parameters and you immediately see the changes reflected in a sample source code file. 
+You change the style sheet parameters and observe the changes reflected in the sample source code file. 
 
-On this screesnot you see the changes after I toggled from **remove** to **add** in the **Add or remove space in 'template <' vs 'template<'.** option. Coiffeur runs **uncrustiy** in the background, displayes the newly formatted document, and highlights where the changes have been made. 
+On this screenshot you see the changes after I toggled from **remove** to **add** in the **Add or remove space in 'template <' vs 'template<'.** option. Coiffeur runs **uncrustify** in the background, displays the newly formatted document, and highlights where the changes have been made. 
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Mac OS X 10.9+.
 
 ## Suggested Use
 
-Use Coiffeur with the excellent XCode [BBUncrustifyPlugin](https://github.com/benoitsan/BBUncrustifyPlugin-Xcode).
+Use Coiffeur with the excellent Xcode [BBUncrustifyPlugin](https://github.com/benoitsan/BBUncrustifyPlugin-Xcode).
 
 ## Dependencies
 

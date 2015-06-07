@@ -1,6 +1,6 @@
 # Coiffeur
 
-![Coiffeur icon](Coiffeur/rsrc/scissors-512.png =128x)
+![Coiffeur icon](images/scissors-128.png)
 
 Coiffeur is a style sheets editor for both [uncrustify](http://uncrustify.sourceforge.net) and [clang-format](http://clang.llvm.org/docs/ClangFormat.html).   
 

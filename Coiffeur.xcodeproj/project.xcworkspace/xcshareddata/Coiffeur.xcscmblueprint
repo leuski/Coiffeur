@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "87FA4685FBD525DB98DC3BA96C1FC1C92F00817F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "87FA4685FBD525DB98DC3BA96C1FC1C92F00817F" : 0,
+    "150A68F5D81F7D884442B46FF5668B805BE44A33" : 0,
+    "49DD1687C2E460201FEA3DF664D2461AC1813951" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "DB67B876-199A-43DA-BA2A-4420174A5DB3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "87FA4685FBD525DB98DC3BA96C1FC1C92F00817F" : "Coiffeur",
+    "150A68F5D81F7D884442B46FF5668B805BE44A33" : "Coiffeur3rdParty\/Fragaria",
+    "49DD1687C2E460201FEA3DF664D2461AC1813951" : "Coiffeur3rdParty\/google-diff-match-patch-Objective-C"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Coiffeur",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Coiffeur.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mugginsoft\/Fragaria",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "150A68F5D81F7D884442B46FF5668B805BE44A33"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/JanX2\/google-diff-match-patch-Objective-C",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "49DD1687C2E460201FEA3DF664D2461AC1813951"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn.home.leuski.net:Coiffeur.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "87FA4685FBD525DB98DC3BA96C1FC1C92F00817F"
+    }
+  ]
+}

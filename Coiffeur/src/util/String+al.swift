@@ -35,7 +35,7 @@ extension String {
     var cur_quote : Character = null_char
     var current_token : String = ""
     
-    for ch in self {
+    for ch in self.characters {
       
       let is_space = ch == " " || ch == "\t" || ch == "\n" || ch == "\r"
       
@@ -103,7 +103,7 @@ extension String {
 		var result = ""
 		result.append(quote)
 		
-		for ch in self {
+		for ch in self.characters {
 			switch ch {
 			case quote, "\\", "\"", "'", "`", " ", "\t", "\r", "\n":
 				result.append(bs)
@@ -119,12 +119,12 @@ extension String {
 	
 	func stringByQuoting(quote:Character = "\"") -> String
 	{
-		var set = NSMutableCharacterSet(charactersInString: String(quote))
+		let set = NSMutableCharacterSet(charactersInString: String(quote))
 		set.addCharactersInString("\\\"'` \t\r\n")
 
 		if self.isEmpty {
 			return _stringByQuoting(quote)
-		} else if let range = self.rangeOfCharacterFromSet(set) {
+		} else if let _ = self.rangeOfCharacterFromSet(set) {
 			return _stringByQuoting(quote)
 		} else {
 			return self
@@ -154,9 +154,9 @@ extension String {
     if prefix.isEmpty {
       return result
     }
-    let length = distance(prefix.startIndex, prefix.endIndex)
+    let length = prefix.startIndex.distanceTo(prefix.endIndex)
     while result.hasPrefix(prefix) {
-			let nextIndex = advance(result.startIndex, length)
+			let nextIndex = result.startIndex.advancedBy(length)
       result = result.substringFromIndex(nextIndex).trim()
     }
     return result
@@ -168,10 +168,10 @@ extension String {
 		if suffix.isEmpty {
 			return result
 		}
-		let length = distance(suffix.startIndex, suffix.endIndex)
+		let length = suffix.startIndex.distanceTo(suffix.endIndex)
 		while result.hasSuffix(suffix) {
-			let resultLength = distance(result.startIndex, result.endIndex)
-			let nextIndex = advance(result.startIndex, resultLength-length)
+			let resultLength = result.startIndex.distanceTo(result.endIndex)
+			let nextIndex = result.startIndex.advancedBy(resultLength-length)
 			result = result.substringToIndex(nextIndex).trim()
 		}
 		return result
@@ -240,16 +240,16 @@ extension String {
   
   func substringWithRange(range:NSRange) -> String
   {
-    let start = advance(self.startIndex, range.location)
-    let end = advance(start, range.length)
+    let start = self.startIndex.advancedBy(range.location)
+    let end = start.advancedBy(range.length)
     return self[start..<end]
   }
   
   func stringByReplacingCharactersInRange(range:NSRange,
 		withString replacement: String) -> String
   {
-    let start = advance(self.startIndex, range.location)
-    let end = advance(start, range.length)
+    let start = self.startIndex.advancedBy(range.location)
+    let end = start.advancedBy(range.length)
     return self.stringByReplacingCharactersInRange(start..<end,
 			withString:replacement)
   }

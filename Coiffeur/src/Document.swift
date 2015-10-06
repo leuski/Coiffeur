@@ -31,19 +31,11 @@ class Document : NSDocument {
     super.init()
   }
   
-  convenience init?(type typeName: String, error outError: NSErrorPointer)
+  convenience init(type typeName: String) throws
   {
     self.init()
     self.fileType = typeName
-
-    let result = CoiffeurController.coiffeurWithType(typeName)
-    switch result {
-    case .Failure(let error):
-      error.assignTo(outError)
-      return nil
-    case .Success(let controller):
-      self.model = controller
-    }
+    self.model = try CoiffeurController.coiffeurWithType(typeName)
   }
   
   override var undoManager : NSUndoManager? {
@@ -60,60 +52,32 @@ class Document : NSDocument {
   }
   
   private func _ensureWeHaveModelOfType(typeName:String,
-		errorFormatKey:String) -> NSError?
+		errorFormatKey:String) throws
   {
     if let model = self.model {
       let documentType = model.dynamicType.documentType
-      if typeName == documentType {
-        return nil
+      if typeName != documentType {
+				throw Error(errorFormatKey, typeName, documentType)
       }
-      return Error(errorFormatKey, typeName, documentType)
     } else {
-      let result = CoiffeurController.coiffeurWithType(typeName)
-      switch result {
-      case .Failure(let error):
-        return error
-      case .Success(let controller):
-        self.model = controller
-        return nil
-      }
+      self.model = try CoiffeurController.coiffeurWithType(typeName)
     }
   }
   
-  override func readFromURL(absoluteURL: NSURL, ofType typeName: String,
-		error outError: NSErrorPointer) -> Bool
+  override func readFromURL(absoluteURL: NSURL, ofType typeName: String) throws
   {
-    if let error = self._ensureWeHaveModelOfType(typeName,
+    try self._ensureWeHaveModelOfType(typeName,
 			errorFormatKey:"Cannot read content of document “%@” into document “%@”")
-		{
-      error.assignTo(outError)
-      return false
-    }
-    
-    if let error = self.model!.readValuesFromURL(absoluteURL) {
-      error.assignTo(outError)
-      return false
-    }
-    
-    return true
+
+    try self.model!.readValuesFromURL(absoluteURL)
   }
   
-  override func writeToURL(absoluteURL: NSURL, ofType typeName: String,
-		error outError: NSErrorPointer) -> Bool
+  override func writeToURL(absoluteURL: NSURL, ofType typeName: String) throws
   {
-    if let error = self._ensureWeHaveModelOfType(typeName,
+    try self._ensureWeHaveModelOfType(typeName,
 			errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”")
-		{
-      error.assignTo(outError)
-      return false
-    }
-    
-    if let error = self.model!.writeValuesToURL(absoluteURL) {
-      error.assignTo(outError)
-      return false
-    }
-    
-    return true
+		
+    try self.model!.writeValuesToURL(absoluteURL)
   }
   
   override class func autosavesInPlace() -> Bool
@@ -135,7 +99,7 @@ class Document : NSDocument {
 //  }
 	
   override func writableTypesForSaveOperation(_: NSSaveOperationType)
-		-> [AnyObject]
+		-> [String]
   {
     if let m = self.model {
       return [m.dynamicType.documentType]

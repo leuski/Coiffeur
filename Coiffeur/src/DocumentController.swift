@@ -24,54 +24,37 @@ import Cocoa
 class DocumentController : NSDocumentController {
   
   override func beginOpenPanel(openPanel: NSOpenPanel,
-		forTypes inTypes: [AnyObject], completionHandler: (Int) -> Void)
+		forTypes inTypes: [String]?, completionHandler: (Int) -> Void)
   {
     openPanel.showsHiddenFiles = true
     super.beginOpenPanel(openPanel, forTypes:inTypes,
 			completionHandler:completionHandler)
   }
-  
-  override func typeForContentsOfURL(url: NSURL,
-		error outError: NSErrorPointer) -> String?
+	
+	private func _classForType(type:String) throws -> CoiffeurController.Type
+	{
+		for aClass in CoiffeurController.availableTypes {
+			if type == aClass.documentType {
+				return aClass
+			}
+		}
+		throw Error("Unknown type \(type)")
+	}
+	
+  override func typeForContentsOfURL(url: NSURL) throws -> String
   {
-    let result = super.typeForContentsOfURL(url, error:outError)
-    if let type = result {
-      for aClass in CoiffeurController.availableTypes {
-        if type != aClass.documentType {
-          continue
-        }
-        if let data = String(contentsOfURL:url,
-							encoding:NSUTF8StringEncoding, error:outError)
-				{
-          for c in CoiffeurController.availableTypes {
-            if c.contentsIsValidInString(data) {
-              return c.documentType
-            }
-          }
-        } else {
-          break
-        }
-        return nil
-      }
-    }
-    return result
-  }
-  
-  func openUntitledDocumentOfType(type:String, display displayDocument:Bool,
-		error outError: NSErrorPointer) -> AnyObject?
-  {
-    let result: AnyObject? = self.makeUntitledDocumentOfType(type,
-			error:outError)
-    if let document = result as? NSDocument {
-      self.addDocument(document)
-      
-      if displayDocument {
-        document.makeWindowControllers()
-        document.showWindows()
-      }
-    }
-    
-    return result
+    let type = try super.typeForContentsOfURL(url)
+		try _classForType(type)
+		
+		let data = try String(contentsOfURL:url, encoding:NSUTF8StringEncoding)
+
+		for c in CoiffeurController.availableTypes {
+			if c.contentsIsValidInString(data) {
+				return c.documentType
+			}
+		}
+
+		throw Error("Unknown data at URL \(url)")
   }
   
 }

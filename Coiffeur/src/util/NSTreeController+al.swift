@@ -71,7 +71,7 @@ extension NSTreeController {
 		
 		func filter(includeElement: (AnyObject) -> Bool) -> [AnyObject]
 		{
-			return Swift.filter(self, includeElement)
+			return self.filter(includeElement)
 		}
 		
 	}

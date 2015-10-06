@@ -116,7 +116,7 @@ extension ConfigNode {
 		parent:ConfigNode?,
 		title:String) -> T
 	{
-		var node = super.objectInContext(managedObjectContext) as! T
+		let node = super.objectInContext(managedObjectContext) as! T
 		node.parent = parent
 		node.title = title
 		return node
@@ -185,7 +185,7 @@ extension ConfigOption {
 		managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode?, title:String) -> T
 	{
-		var option = super.objectInContext(managedObjectContext) as! T
+		let option = super.objectInContext(managedObjectContext) as! T
 		option.title = title
 		option.parent = parent
 		option.documentation = ""

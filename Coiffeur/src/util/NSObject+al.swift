@@ -43,13 +43,13 @@ extension NSObject {
 			self.removeWhenChangedOnce = removeWhenChangedOnce
 		}
 
-		override func observeValueForKeyPath(keyPath: String,
-			ofObject object: AnyObject,
-			change: [NSObject : AnyObject],
+		override func observeValueForKeyPath(keyPath: String?,
+			ofObject object: AnyObject?,
+			change: [String : AnyObject]?,
 			context: UnsafeMutablePointer<Void>)
 		{
 			if context != &AssociatedKeys.Context { return }
-			self.observer(object, change)
+			self.observer(object!, change!)
 			if !self.removeWhenChangedOnce { return }
 			if let t = self.target {
 				t.al_observers.removeObjectForKey(self.token)
@@ -78,7 +78,7 @@ extension NSObject {
 			}
 			let dict = NSMutableDictionary()
 			objc_setAssociatedObject(self, &AssociatedKeys.AOName,
-				dict, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+				dict, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 			return dict
 		}
 	}

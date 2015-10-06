@@ -54,10 +54,10 @@ class MainWindowController : NSWindowController {
 		self.sourceView.addObserverForKeyPath("sourceString",
 			options: .Initial, observer:uncrustify)
 		
-		self.addObserverForKeyPath("document", options: .New | .Initial | .Old) {
+		self.addObserverForKeyPath("document", options: [.New, .Initial, .Old]) {
 			(_, change:[NSObject : AnyObject]) in
 
-			if let oldDocument = change[NSKeyValueChangeOldKey] as? Document {
+			if let _ = change[NSKeyValueChangeOldKey] as? Document {
 				if self.styleView != nil {
 					self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
 					self.styleView = nil
@@ -76,7 +76,7 @@ class MainWindowController : NSWindowController {
 		}
 	}
 	
-	@IBAction func uncrustify(_ sender : AnyObject? = nil)
+	@IBAction func uncrustify(sender : AnyObject? = nil)
 	{
 		if let m = (self.document as? Document)?.model {
 			m.format()
@@ -119,9 +119,7 @@ extension MainWindowController : NSWindowDelegate
 		defaultFrame newFrame: NSRect) -> NSRect
 	{
 		var frame = newFrame
-		if (self.window!.collectionBehavior
-			& (NSWindowCollectionBehavior.FullScreenPrimary
-					| NSWindowCollectionBehavior.FullScreenAuxiliary)).rawValue == 0
+		if (self.window!.collectionBehavior.intersect((NSWindowCollectionBehavior.FullScreenPrimary.union(NSWindowCollectionBehavior.FullScreenAuxiliary)))).rawValue == 0
 		{
 			frame.size.width = min(frame.size.width, 1200)
 		}

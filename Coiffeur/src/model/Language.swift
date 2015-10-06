@@ -62,7 +62,7 @@ class Language : NSObject {
       if let dictionaries = NSArray(contentsOfURL: url) {
         var result = [Language]()
         for d in dictionaries {
-          result.append(Language(dictionary:d as! [NSObject : AnyObject]))
+          result.append(Language(dictionary:d as! [String : AnyObject]))
         }
         return result
       }
@@ -73,7 +73,7 @@ class Language : NSObject {
   class func languageWithUTI(uti:String) -> Language?
   {
     for l in self.supportedLanguages {
-      if let index = find(l.UTIs, uti) {
+      if let _ = l.UTIs.indexOf(uti) {
         return l
       }
     }
@@ -91,7 +91,7 @@ class Language : NSObject {
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
   
-  private init(dictionary:[NSObject : AnyObject])
+  private init(dictionary:[String : AnyObject])
   {
     super.init()
     setValuesForKeysWithDictionary(dictionary)

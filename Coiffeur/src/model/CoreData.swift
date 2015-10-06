@@ -21,42 +21,6 @@
 
 import CoreData
 
-enum FetchResult<T:AnyObject> {
-	case Success([T])
-	case Failure(NSError)
-	init(_ error:NSError)
-	{
-		self = .Failure(error)
-	}
-	
-	init(_ value:[T])
-	{
-		self = .Success(value)
-	}
-}
-
-// I get a compiler error if I try to use this type as of Swift 1.2
-enum FetchSingleResult<T:AnyObject> {
-	case None
-	case Success(T)
-	case Failure(NSError)
-	
-	init()
-	{
-		self = .None
-	}
-	
-	init(error:NSError)
-	{
-		self = .Failure(error)
-	}
-	
-	init(_ value:T)
-	{
-		self = .Success(value)
-	}
-}
-
 extension NSManagedObjectContext {
   
 	func entity<T:NSManagedObject>(entityClass:T.Type) -> NSEntityDescription?
@@ -65,83 +29,64 @@ extension NSManagedObjectContext {
 		let className = NSStringFromClass(entityClass)
 		for entity in mom.entities {
 			if className == entity.managedObjectClassName {
-				return entity as? NSEntityDescription
+				return entity
 			}
 		}
 		return nil
 	}
 
-	func fetch(entity:NSEntityDescription?, sortDescriptors:[AnyObject]? = nil,
-		withPredicate predicate: NSPredicate? = nil) -> FetchResult<AnyObject>
+	func fetch(entity:NSEntityDescription?, sortDescriptors:[NSSortDescriptor]? = nil,
+		withPredicate predicate: NSPredicate? = nil) throws -> [AnyObject]
 	{
 		if let theEntity = entity {
-			var fetchRequest = NSFetchRequest()
+			let fetchRequest = NSFetchRequest()
 			
 			fetchRequest.entity = theEntity
 			fetchRequest.predicate = predicate
 			fetchRequest.sortDescriptors = sortDescriptors
 			
-			var fetchError : NSError?
-			if let result = self.executeFetchRequest(fetchRequest,
-				error: &fetchError)
-			{
-				return FetchResult<AnyObject>(result)
-			} else {
-				return FetchResult<AnyObject>(fetchError ?? Error("Unknown error"))
-			}
+			return try self.executeFetchRequest(fetchRequest)
 		}
-		return FetchResult<AnyObject>([])
+		return []
 	}
 
 	func fetch<T:NSManagedObject>(entityClass:T.Type,
-		sortDescriptors:[AnyObject]? = nil,
-		withPredicate predicate: NSPredicate? = nil) -> FetchResult<T>
+		sortDescriptors:[NSSortDescriptor]? = nil,
+		withPredicate predicate: NSPredicate? = nil) throws -> [T]
 	{
-		switch fetch(entity(entityClass), sortDescriptors:sortDescriptors,
-			withPredicate:predicate)
-		{
-		case .Success(let array):
-			return FetchResult<T>(array as! [T])
-		case .Failure(let error):
-			return FetchResult<T>(error)
-		}
+		return (try fetch(entity(entityClass), sortDescriptors:sortDescriptors,
+			withPredicate:predicate)) as! [T]
 	}
 
 	func fetch<T:NSManagedObject>(entityClass:T.Type,
-		sortDescriptors:[AnyObject]? = nil,
-		withFormat format: String, _ args: CVarArgType ...) -> FetchResult<T>
+		sortDescriptors:[NSSortDescriptor]? = nil,
+		withFormat format: String, _ args: CVarArgType ...) throws -> [T]
 	{
-		return fetch(entityClass, sortDescriptors:sortDescriptors,
+		return try fetch(entityClass, sortDescriptors:sortDescriptors,
 			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 
 	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
 		withPredicate predicate: NSPredicate? = nil,
-		sortDescriptors:[AnyObject]? = nil) -> FetchSingleResult<T>
+		sortDescriptors:[NSSortDescriptor]? = nil) throws -> T?
 	{
-		switch fetch(entity(entityClass), withPredicate:predicate,
+		let array = try fetch(entity(entityClass), withPredicate:predicate,
 			sortDescriptors:sortDescriptors)
-		{
-		case .Success(let array):
-			return array.isEmpty
-				? FetchSingleResult<T>()
-				: FetchSingleResult<T>(array[0] as! T)
-		case .Failure(let error):
-			return FetchSingleResult<T>(error:error)
-		}
+
+		return array.isEmpty ? nil : (array[0] as? T)
 	}
 	
 	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
-		sortDescriptors:[AnyObject]? = nil, withFormat format: String,
-		_ args: CVarArgType ...) -> FetchSingleResult<T>
+		sortDescriptors:[NSSortDescriptor]? = nil, withFormat format: String,
+		_ args: CVarArgType ...) throws -> T?
 	{
-		return fetchSingle(entityClass, sortDescriptors:sortDescriptors,
+		return try fetchSingle(entityClass, sortDescriptors:sortDescriptors,
 			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 	
 	func insert<T:NSManagedObject>(entityClass:T.Type) -> T
 	{
-		return entityClass(entity:entity(entityClass)!,
+		return entityClass.init(entity:entity(entityClass)!,
 			insertIntoManagedObjectContext:self)
 	}
 
@@ -210,11 +155,11 @@ extension NSManagedObjectModel {
 	{
 		if moduleName.isEmpty { return self }
 		
-		var momCopy = NSManagedObjectModel()
+		let momCopy = NSManagedObjectModel()
 		var entityCache : Dictionary<String, NSEntityDescription> = [:]
 		var newEntities : [NSEntityDescription] = []
 
-		for e in self.entities as! [NSEntityDescription] {
+		for e in self.entities {
 			newEntities.append(e.copyWithModuleName(moduleName, cache:&entityCache))
 		}
 		
@@ -237,7 +182,7 @@ extension NSEntityDescription {
 			return existingEntity
 		}
 		
-		var newEntity = copy() as! NSEntityDescription
+		let newEntity = copy() as! NSEntityDescription
 		cache[entityName] = newEntity
 		
 		if newEntity.managedObjectClassName == NSManagedObject.className() {
@@ -248,12 +193,8 @@ extension NSEntityDescription {
 		}
 		var newSubEntities : [NSEntityDescription] = []
 		
-		if let oldSubentities = newEntity.subentities {
-			for e in oldSubentities {
-				if let se = e as? NSEntityDescription {
-					newSubEntities.append(se.copyWithModuleName(moduleName, cache:&cache))
-				}
-			}
+		for e in newEntity.subentities {
+			newSubEntities.append(e.copyWithModuleName(moduleName, cache:&cache))
 		}
 		
 		newEntity.subentities = newSubEntities

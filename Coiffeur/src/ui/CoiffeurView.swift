@@ -57,7 +57,7 @@ class CoiffeurView : NSViewController {
 		
 		for node in self.optionsController.nodes {
 			if let section = node.representedObject as? ConfigSection {
-				var item = NSMenuItem()
+				let item = NSMenuItem()
 				item.title = section.title
 				item.indentationLevel  = section.depth - 1
 				item.representedObject = node
@@ -123,7 +123,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		viewForTableColumn tableColumn:NSTableColumn?, item:AnyObject) -> NSView?
   {
 		if let identifier = _cellViewIdentifierForItem(item),
-			 let view = outlineView.makeViewWithIdentifier(identifier, owner:self) as! NSView?,
+			 let view = outlineView.makeViewWithIdentifier(identifier, owner:self) ,
 			 let node = item.representedObject as? ConfigNode
 		{
 			if let v = view as? ConfigChoiceCellView, let segmented = v.segmented {
@@ -144,9 +144,9 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			return height
 		}
 		if let view = outlineView.makeViewWithIdentifier(identifier,
-				owner:self) as? NSView
+				owner:self)
 		{
-			var height = view.frame.size.height
+			let height = view.frame.size.height
 			if height > 0 {
 				rowHeightCache[identifier] = height
 				return height
@@ -181,7 +181,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
   {
 		if let identifier = _rowViewIdentifierForItem(item),
 			 let theNode = item.representedObject as? ConfigNode,
-			 var container = outlineView.makeViewWithIdentifier(identifier,
+			 let container = outlineView.makeViewWithIdentifier(identifier,
 				owner:self) as? ConfigRowView
 		{
 			container.locations = theNode.path
@@ -224,7 +224,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	// records the state of the node in the model
 	func outlineViewItemDidExpand(notification: NSNotification)
 	{
-		if var section = notification.userInfo!["NSObject"
+		if let section = notification.userInfo!["NSObject"
 			as NSString]!.representedObject as? ConfigSection
 		{
 			section.expanded = true
@@ -233,7 +233,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 	
 	func outlineViewItemDidCollapse(notification: NSNotification)
 	{
-		if var section = notification.userInfo!["NSObject"
+		if let section = notification.userInfo!["NSObject"
 			as NSString]!.representedObject as? ConfigSection
 		{
 			section.expanded = false

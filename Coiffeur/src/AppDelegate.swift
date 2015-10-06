@@ -45,7 +45,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
 	override init()
   {
     super.init()
-    DocumentController() // load ours...
+    let _ = DocumentController() // load ours...
     
     MGSFragaria.initializeFramework()
     
@@ -61,7 +61,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(aNotification:NSNotification)
   {
     for l in Language.supportedLanguages {
-      var item = NSMenuItem(title: l.displayName,
+      let item = NSMenuItem(title: l.displayName,
 				action: "changeLanguage:", keyEquivalent: "")
       item.representedObject = l
       self.languagesMenu.addItem(item)
@@ -70,7 +70,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     var count = 0
     
     for aClass in CoiffeurController.availableTypes {
-      var item = NSMenuItem(title: aClass.documentType,
+      let item = NSMenuItem(title: aClass.documentType,
 				action: "openUntitledDocumentOfType:", keyEquivalent: "")
       item.representedObject = aClass.documentType
       
@@ -79,7 +79,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
         var mask = NSEventModifierFlags.CommandKeyMask
         
         if (count > 0) {
-          mask |= NSEventModifierFlags.AlternateKeyMask
+          mask = mask.union(NSEventModifierFlags.AlternateKeyMask)
         }
         
         item.keyEquivalentModifierMask = Int(mask.rawValue)
@@ -98,16 +98,15 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   @IBAction func openUntitledDocumentOfType(sender : AnyObject)
   {
     if let type = sender.representedObject as? String {
-      let controller = NSDocumentController.sharedDocumentController()
-				as! DocumentController
-      var error : NSError?
-      if nil == controller.openUntitledDocumentOfType(type,
-				display:true, error:&error)
-			{
-        if error != nil {
-          NSApp.presentError(error!)
-        }
-      }
+			do {
+				let controller = NSDocumentController.sharedDocumentController()
+				let document = try controller.makeUntitledDocumentOfType(type)
+				controller.addDocument(document)
+				document.makeWindowControllers()
+				document.showWindows()
+			} catch let err as NSError {
+				NSApp.presentError(err)
+			}
     }
   }
   

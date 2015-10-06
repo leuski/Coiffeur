@@ -36,7 +36,7 @@ class Error : NSError {
 			format:NSLocalizedString(format, comment:""), arguments:args))
   }
   
-  required init(coder aDecoder: NSCoder) {
+  required init?(coder aDecoder: NSCoder) {
     super.init(coder:aDecoder)
   }
 }

@@ -38,8 +38,7 @@ class SourceView: NSViewController {
 			if let url = self.fileURL {
 				NSUserDefaults.standardUserDefaults().setURL(url,
 					forKey: Private.LastSourceURLUDKey)
-				if let uti = NSWorkspace.sharedWorkspace().typeOfFile(url.path!,
-						error:nil),
+				if let uti = try? NSWorkspace.sharedWorkspace().typeOfFile(url.path!),
 					 let lang = Language.languageWithUTI(uti)
 				{
 					self.language = lang
@@ -219,8 +218,8 @@ class SourceView: NSViewController {
 							value:deleteColor, range:NSMakeRange(offset-1, 1))
 					}
 				} else {
-					let length = distance(diff.text.startIndex, diff.text.endIndex)
-					let nextIndex = advance(index, length)
+					let length = diff.text.startIndex.distanceTo(diff.text.endIndex)
+					let nextIndex = index.advancedBy(length)
 					let range = index..<nextIndex
 					index = nextIndex
 					let lineSpan   = textStorage.string.lineCountForCharacterRange(range)
@@ -253,13 +252,13 @@ extension SourceView : NSPathControlDelegate {
 		
 		var index = 0
 		for url in self.knownSampleURLs {
-			var item = NSMenuItem(title: url.path!.lastPathComponent,
+			let item = NSMenuItem(title: url.lastPathComponent!,
 				action: "openDocumentInView:", keyEquivalent: "")
 			item.representedObject = url
 			menu.insertItem(item, atIndex:index++)
 		}
 		
-		var item = NSMenuItem(title: NSLocalizedString("Choose…", comment:""),
+		let item = NSMenuItem(title: NSLocalizedString("Choose…", comment:""),
 			action: "openDocumentInView:", keyEquivalent: "")
 		menu.insertItem(item, atIndex:index++)
 	}
@@ -276,7 +275,7 @@ extension SourceView : NSPathControlDelegate {
 			usingBlock: {
 				(draggingItem: NSDraggingItem!, idx:Int,
 					stop: UnsafeMutablePointer<ObjCBool>) in
-				if let url = self._allowedURLForItem(draggingItem) {
+				if let _ = self._allowedURLForItem(draggingItem) {
 					++count
 				}
 		})
@@ -302,7 +301,7 @@ extension SourceView : NSPathControlDelegate {
 		})
 		
 		if let url = theURL {
-			self.loadSourceFromURL(url)
+			self.tryLoadSourceFromURL(url)
 			return true
 		}
 		return false
@@ -310,11 +309,11 @@ extension SourceView : NSPathControlDelegate {
 	
 	private func _allowedURLForItem(draggingItem: NSDraggingItem) -> NSURL?
 	{
-		let DC: AnyObject = NSDocumentController.sharedDocumentController()
+		let DC = NSDocumentController.sharedDocumentController()
 		if let url  = draggingItem.item as? NSURL,
-			 let type = DC.typeForContentsOfURL(url, error: nil)
+			 let type = try? DC.typeForContentsOfURL(url)
 		{
-			if contains(self.allowedFileTypes, type) {
+			if self.allowedFileTypes.contains(type) {
 				return url
 			}
 		}
@@ -332,29 +331,31 @@ extension SourceView {
 		static let ObjectiveCPPExtension = "mm"
 	}
 	
-	func loadSourceFromURL(url:NSURL) -> NSError?
+	func loadSourceFromURL(url:NSURL) throws
 	{
-		var error:NSError?
-		if let source = String(contentsOfURL:url,
-			encoding:NSUTF8StringEncoding, error:&error)
-		{
-			self.sourceString = source
-			self.fileURL = url
-			return nil
-		} else {
-			return error
-				?? Error("Unknown error while reading source file from %@", url)
+		let source = try String(contentsOfURL:url, encoding:NSUTF8StringEncoding)
+		self.sourceString = source
+		self.fileURL = url
+	}
+
+	func tryLoadSourceFromURL(url:NSURL) -> Bool
+	{
+		do {
+			try loadSourceFromURL(url)
+			return true
+		} catch _ {
+			return false
 		}
 	}
 	
 	@IBAction func openDocumentInView(sender : AnyObject)
 	{
 		if let url = sender.representedObject as? NSURL {
-			self.loadSourceFromURL(url)
+			tryLoadSourceFromURL(url)
 			return
 		}
 		
-		var op = NSOpenPanel()
+		let op = NSOpenPanel()
 		
 		if self.allowedFileTypes.count > 0 {
 			op.allowedFileTypes = self.allowedFileTypes
@@ -362,10 +363,10 @@ extension SourceView {
 		
 		op.allowsOtherFileTypes = false
 		
-		op.beginSheetModalForWindow(self.view.window!, completionHandler:{
-			(result:NSModalResponse) in
+		op.beginSheetModalForWindow(self.view.window!, completionHandler:
+		{ (result:NSModalResponse) in
 			if (result == NSFileHandlingPanelOKButton) {
-				self.loadSourceFromURL(op.URL!)
+				self.tryLoadSourceFromURL(op.URL!)
 			}
 		})
 	}
@@ -379,7 +380,7 @@ extension SourceView {
 	{
 		let UD = NSUserDefaults.standardUserDefaults()
 		if let lastURL = UD.URLForKey(Private.LastSourceURLUDKey) {
-			if nil == self.loadSourceFromURL(lastURL) {
+			if self.tryLoadSourceFromURL(lastURL) {
 				return
 			}
 		}
@@ -388,7 +389,7 @@ extension SourceView {
 			withExtension:Private.ObjectiveCPPExtension,
 			subdirectory:Private.SamplesFolderName)!
 		
-		if let error = self.loadSourceFromURL(url) {
+		if !self.tryLoadSourceFromURL(url) {
 			NSException(name: "No Source",
 				reason: "Failed to load the sample source file",
 				userInfo: nil).raise()
@@ -401,11 +402,11 @@ extension SourceView {
 		let baseURL = resourcesURL.URLByAppendingPathComponent(
 			Private.SamplesFolderName)
 		let fm = NSFileManager.defaultManager()
-		
-		if let urls = fm.contentsOfDirectoryAtURL(baseURL,
+		// TODO
+		if let urls = try? fm.contentsOfDirectoryAtURL(baseURL,
 			includingPropertiesForKeys:nil,
-			options:NSDirectoryEnumerationOptions.SkipsHiddenFiles, error:nil) {
-				return urls as! [NSURL]
+			options:NSDirectoryEnumerationOptions.SkipsHiddenFiles) {
+				return urls 
 		}
 		return []
 	}

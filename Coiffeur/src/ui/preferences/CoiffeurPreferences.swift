@@ -35,9 +35,9 @@ class CoiffeurControllerClass : NSObject {
 		return controllerClass.contentsIsValidInString(string)
 	}
 	
-	func createCoiffeur() -> CoiffeurController.Result
+	func createCoiffeur() throws -> CoiffeurController
 	{
-		return controllerClass.createCoiffeur()
+		return try controllerClass.createCoiffeur()
 	}
 	
   class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet

@@ -43,19 +43,6 @@ class CoiffeurController : NSObject {
 		}
 	}
 	
-	enum Result {
-		case Success(CoiffeurController)
-		case Failure(NSError)
-		init(_ controller:CoiffeurController)
-		{
-			self = .Success(controller)
-		}
-		init(_ error:NSError)
-		{
-			self = .Failure(error)
-		}
-	}
-	
 	enum OptionType : Swift.String {
 		case Signed = "signed"
 		case Unsigned = "unsigned"
@@ -121,10 +108,9 @@ class CoiffeurController : NSObject {
 	let executableURL : NSURL
 	
 	var root : ConfigRoot? {
-		switch self.managedObjectContext.fetch(ConfigRoot.self) {
-		case .Success(let array):
-			return array.first
-		case .Failure(let error):
+		do {
+			return try self.managedObjectContext.fetchSingle(ConfigRoot.self)
+		} catch _ {
 			return nil
 		}
 	}
@@ -132,60 +118,49 @@ class CoiffeurController : NSObject {
 	var pageGuideColumn : Int { return 0 }
 	weak var delegate : CoiffeurControllerDelegate?
 	
-	class func findExecutableURL() -> URLResult
+	class func findExecutableURL() throws -> NSURL
 	{
 		if let url = self.currentExecutableURL {
-			return URLResult(url)
+			return url
 		}
-		return URLResult(Error("Format executable URL is not specified"))
+		throw Error("Format executable URL is not specified")
 	}
 	
-	class func createCoiffeur() -> CoiffeurController.Result
+	class func createCoiffeur() throws -> CoiffeurController
 	{
-		switch self.findExecutableURL() {
-		case .Failure(let error):
-			return CoiffeurController.Result(error)
-		case .Success(let url):
-			let bundels = [NSBundle(forClass: CoiffeurController.self)]
-			if let originalModel
-				= NSManagedObjectModel.mergedModelFromBundles(bundels)
-			{
-				let mom = originalModel.copyForModuleWithClass(ConfigNode)
-				let concurrency
-					= NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType
-				var moc = NSManagedObjectContext(concurrencyType: concurrency)
-				moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(
-					managedObjectModel: mom)
-				if let psc = moc.persistentStoreCoordinator {
-					var error: NSError?
-					if nil == psc.addPersistentStoreWithType(NSInMemoryStoreType,
-						configuration: nil, URL: nil, options: nil, error: &error)
-					{
-						return CoiffeurController.Result(error
-							?? Error("Failed to initialize coiffeur persistent store"))
-					}
-				} else {
-					return CoiffeurController.Result(
-						Error("Failed to initialize coiffeur persistent store coordinator"))
-				}
-				moc.undoManager = NSUndoManager()
-				return CoiffeurController.Result(self(executableURL:url,
-					managedObjectModel:mom, managedObjectContext:moc))
+		let url = try self.findExecutableURL()
+
+		let bundles = [NSBundle(forClass: CoiffeurController.self)]
+		if let originalModel = NSManagedObjectModel.mergedModelFromBundles(bundles)
+		{
+			let mom = originalModel.copyForModuleWithClass(ConfigNode)
+			let concurrency
+				= NSManagedObjectContextConcurrencyType.MainQueueConcurrencyType
+			let moc = NSManagedObjectContext(concurrencyType: concurrency)
+			moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(
+				managedObjectModel: mom)
+			if let psc = moc.persistentStoreCoordinator {
+				try psc.addPersistentStoreWithType(NSInMemoryStoreType,
+										configuration: nil, URL: nil, options: nil)
 			} else {
-				return CoiffeurController.Result(
-					Error("Failed to initialize coiffeur managed object model"))
+				throw Error("Failed to initialize coiffeur persistent store coordinator")
 			}
+			moc.undoManager = NSUndoManager()
+			return self.init(executableURL:url,
+				managedObjectModel:mom, managedObjectContext:moc)
+		} else {
+			throw Error("Failed to initialize coiffeur managed object model")
 		}
 	}
 	
-	class func coiffeurWithType(type: String) -> CoiffeurController.Result
+	class func coiffeurWithType(type: String) throws -> CoiffeurController
 	{
 		for coiffeurClass in CoiffeurController.availableTypes  {
 			if type == coiffeurClass.documentType {
-				return coiffeurClass.createCoiffeur()
+				return try coiffeurClass.createCoiffeur()
 			}
 		}
-		return CoiffeurController.Result(Error("Unknown document type “%@”", type))
+		throw Error("Unknown document type “%@”", type)
 	}
 	
 	class func contentsIsValidInString(string:String) -> Bool
@@ -240,76 +215,55 @@ class CoiffeurController : NSObject {
 		return false
 	}
 	
-	func readOptionsFromLineArray(lines:[String]) -> NSError?
+	func readOptionsFromLineArray(lines:[String]) throws
 	{
-		return nil
 	}
 	
-	func readValuesFromLineArray(lines:[String]) -> NSError?
+	func readValuesFromLineArray(lines:[String]) throws
 	{
-		return nil
 	}
 	
-	func readOptionsFromString(text:String) -> NSError?
+	func readOptionsFromString(text:String) throws
 	{
 		let lines = text.componentsSeparatedByString("\n")
+
 		self.managedObjectContext.disableUndoRegistration()
-		
+		defer { self.managedObjectContext.enableUndoRegistration() }
+
 		ConfigRoot.objectInContext(self.managedObjectContext, parent:nil)
 		
-		let result = self.readOptionsFromLineArray(lines)
+		try self.readOptionsFromLineArray(lines)
 		_clusterOptions()
-		
-		self.managedObjectContext.enableUndoRegistration()
-		
-		return result
 	}
 	
-	func readValuesFromString(text:String) -> NSError?
+	func readValuesFromString(text:String) throws
 	{
 		let lines = text.componentsSeparatedByString("\n")
+
 		self.managedObjectContext.disableUndoRegistration()
+		defer { self.managedObjectContext.enableUndoRegistration() }
 		
-		let result = self.readValuesFromLineArray(lines)
-		
-		self.managedObjectContext.enableUndoRegistration()
-		
-		return result
+		try self.readValuesFromLineArray(lines)
 	}
 	
-	func readValuesFromURL(absoluteURL:NSURL) -> NSError?
+	func readValuesFromURL(absoluteURL:NSURL) throws
 	{
-		var error:NSError?
-		if let data = String(contentsOfURL:absoluteURL,
-			encoding:NSUTF8StringEncoding, error:&error)
-		{
-			return self.readValuesFromString(data)
-		}
-		return error ?? Error("Unknown error while trying to read style from %@",
-			absoluteURL)
+		let data = try String(contentsOfURL:absoluteURL,
+			encoding:NSUTF8StringEncoding)
+		try self.readValuesFromString(data)
 	}
 	
-	func writeValuesToURL(absoluteURL:NSURL) -> NSError?
+	func writeValuesToURL(absoluteURL:NSURL) throws
 	{
-		return Error("Unknown error while trying to write style to %@", absoluteURL)
+		throw Error("Unknown error while trying to write style to %@", absoluteURL)
 	}
 	
 	func optionWithKey(key:String) -> ConfigOption?
 	{
-// TODO: crashes compiler in Swift 1.2
-//		switch self.managedObjectContext.fetchSingle(ConfigOption.self, 
-//			withFormat:"indexKey = %@", key) {
-//		case .Success(let value):
-//			return value
-//		default:
-//			return nil
-//		}
-		switch self.managedObjectContext.fetch(ConfigOption.self,
-			withFormat:"indexKey = %@", key)
-		{
-		case .Success(let value):
-			return value.first
-		case .Failure:
+		do {
+			return try self.managedObjectContext.fetchSingle(ConfigOption.self,
+				withFormat:"indexKey = %@", key)
+		} catch _ {
 			return nil
 		}
 	}
@@ -340,7 +294,7 @@ class CoiffeurController : NSObject {
 	private func _splitTokens(title:String, boundary:Int, stem:Bool = false)
 		-> (head:[String], tail:[String])
 	{
-		var tokens = title.componentsSeparatedByString(" ")
+		let tokens = title.componentsSeparatedByString(" ")
 		var head = [String]()
 		var tail = [String]()
 		for token in tokens  {
@@ -372,7 +326,7 @@ class CoiffeurController : NSObject {
 			if !(child is ConfigSection) {
 				continue
 			}
-			var section = child as! ConfigSection
+			let section = child as! ConfigSection
 			
 			var index = [String:[ConfigOption]]()
 			
@@ -402,7 +356,7 @@ class CoiffeurController : NSObject {
 					continue
 				}
 				
-				var subsection = ConfigSection.objectInContext(
+				let subsection = ConfigSection.objectInContext(
 					self.managedObjectContext,
 					parent:section, title:"\(key) …")
 				
@@ -426,7 +380,7 @@ class CoiffeurController : NSObject {
 			if !(child is ConfigSection) {
 				continue
 			}
-			var section = child as! ConfigSection
+			let section = child as! ConfigSection
 			
 			var index = [ConfigOption]()
 			var foundSubSection = false
@@ -445,7 +399,7 @@ class CoiffeurController : NSObject {
 			
 			let Other = String(format:NSLocalizedString("Other %@", comment:""),
 				section.title.lowercaseString)
-			var subsection = ConfigSection.objectInContext(self.managedObjectContext,
+			let subsection = ConfigSection.objectInContext(self.managedObjectContext,
 				parent:section,
 				title:"\u{200B}\(Other)")
 			

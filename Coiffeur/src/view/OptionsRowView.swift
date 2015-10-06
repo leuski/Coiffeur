@@ -23,7 +23,7 @@ import Cocoa
 
 class ConfigCellView : NSTableCellView {
   // prevent the state restoration mechanism to save/restore this view properties
-  override class func restorableStateKeyPaths() -> [AnyObject] { return [] }
+  override class func restorableStateKeyPaths() -> [String] { return [] }
 }
 
 class ConfigOptionCellView : ConfigCellView {
@@ -45,7 +45,7 @@ extension ConfigNodeLocation {
 
 class ConfigRowView : NSTableRowView {
   // prevent the state restoration mechanism to save/restore this view properties
-  override class func restorableStateKeyPaths() -> [AnyObject] { return [] }
+  override class func restorableStateKeyPaths() -> [String] { return [] }
 
 	@IBOutlet weak var leftMargin : NSLayoutConstraint!
 	@IBOutlet weak var textField : NSTextField!
@@ -103,7 +103,7 @@ class ConfigRowView : NSTableRowView {
    
     if drawSeparator {
 			// draw the top border
-      var path = NSBezierPath()
+      let path = NSBezierPath()
       path.lineWidth = CGFloat(1)
 			path.moveToPoint(NSMakePoint(CGFloat(0),
 				self.bounds.size.height-path.lineWidth+0.5))
@@ -123,7 +123,7 @@ class ConfigRowView : NSTableRowView {
 		// if we are a group, underline the title with the appropriate color
     if self.groupRowStyle && locations.count == 1 {
       locations.last!.color.set()
-      var path = NSBezierPath()
+      let path = NSBezierPath()
       let lineLength = 200
       let hOffset = 3 + 5*(locations.count-1)
       path.lineWidth = CGFloat(1)

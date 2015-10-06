@@ -31,7 +31,7 @@ class String2NumberTransformer : NSValueTransformer {
   override func transformedValue(value: AnyObject?) -> AnyObject?
   {
     if let string = value as? String {
-			if let number = string.toInt() {
+			if let number = Int(string) {
 				return number
 			}
       return 0
@@ -56,7 +56,7 @@ class OnlyIntegers : NSNumberFormatter {
 		self.allowsFloats = false
 	}
 	
-	required init(coder aDecoder: NSCoder) {
+	required init?(coder aDecoder: NSCoder) {
 		super.init(coder:aDecoder)
 		self.allowsFloats = false
 	}

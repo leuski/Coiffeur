@@ -47,10 +47,10 @@ extension NSTask {
 		self.standardError = NSPipe()
 	}
 
-	private func _run(input:String?) -> StringResult
+	private func _runThrowsNSException(input:String?) -> StringResult
 	{
 		let writeHandle = input != nil
-			? self.standardInput.fileHandleForWriting
+			? self.standardInput!.fileHandleForWriting
 			: nil
 		
 		self.launch()
@@ -60,10 +60,10 @@ extension NSTask {
 			writeHandle.closeFile()
 		}
 		
-		let outHandle = self.standardOutput.fileHandleForReading
+		let outHandle = self.standardOutput!.fileHandleForReading
 		let outData = outHandle.readDataToEndOfFile()
 		
-		let errHandle = self.standardError.fileHandleForReading
+		let errHandle = self.standardError!.fileHandleForReading
 		let errData = errHandle.readDataToEndOfFile()
 		
 		self.waitUntilExit()
@@ -87,31 +87,39 @@ extension NSTask {
 		}
 	}
 
-	/**
-		Runs the task synchroniously with the given string as the standard input.
-		@return Returns a string from stadard output or an error
-	*/
-	func run(_ input:String? = nil) -> StringResult
+	private func _run(input:String? = nil) -> StringResult
 	{
 		var result : StringResult?
-		ALExceptions.try({
-			result = self._run(input)
-		}, catch: { (ex:NSException?) in
+		ALExceptions.`try`({
+			result = self._runThrowsNSException(input)
+		}, `catch`: { (ex:NSException?) in
 			result = StringResult(
 				Error("An error while running format executable: %@",
 					ex?.reason ?? "unknown error"))
 		}, finally: {})
 		return result!
 	}
+
+	/**
+		Runs the task synchroniously with the given string as the standard input.
+		@return Returns a string from stadard output or an error
+	*/
+	func run(input:String? = nil) throws -> String
+	{
+		switch _run(input) {
+		 case .Success(let s): return s
+		 case .Failure(let e): throw e
+		}
+	}
 	
 	/**
 		Runs the task asynchroniously with the given string as the standard input.
 		Calls the provided block with the string from stadard output or an error
 	*/
-	func runAsync(_ input:String? = nil, completionHandler:(_:StringResult)->Void)
+	func runAsync(input:String? = nil, completionHandler:(_:StringResult)->Void)
 	{
 		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
-			let result = self.run(input)
+			let result = self._run(input)
 			dispatch_async(dispatch_get_main_queue(), {
 				completionHandler(result)
 			})

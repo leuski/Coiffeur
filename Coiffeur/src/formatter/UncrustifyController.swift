@@ -44,7 +44,7 @@ class UncrustifyController : CoiffeurController {
   
 	override var pageGuideColumn : Int {
 		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
-			let int = value.toInt()
+			let int = Int(value)
 		{
 			return int
 		}
@@ -76,47 +76,26 @@ class UncrustifyController : CoiffeurController {
 		return nil != keyValue.firstMatchInString(string)
 	}
 	
-  override class func createCoiffeur() -> CoiffeurController.Result
+  override class func createCoiffeur() throws -> CoiffeurController
   {
-    var result = super.createCoiffeur()
+    let controller = try super.createCoiffeur()
     
-    switch result {
-    case .Success(let controller):
-      if Private.Options == nil {
-        switch NSTask(controller.executableURL,
-					arguments: [Private.ShowDocumentationArgument]).run()
-				{
-        case .Failure(let error):
-          return CoiffeurController.Result(error)
-        case .Success(let text):
-          Private.Options = text
-        }
+		if Private.Options == nil {
+			Private.Options = try NSTask(controller.executableURL,
+				arguments: [Private.ShowDocumentationArgument]).run()
 
-				switch NSTask(controller.executableURL,
+			if let c = controller as? UncrustifyController {
+				c.versionString = try NSTask(controller.executableURL,
 					arguments: [Private.VersionArgument]).run()
-				{
-				case .Failure(let error):
-					return CoiffeurController.Result(error)
-				case .Success(let text):
-					if var c = controller as? UncrustifyController {
-						c.versionString = text
-						result = CoiffeurController.Result(c)
-					}
-				}
 			}
-			
-      if let error = controller.readOptionsFromString(Private.Options!) {
-        return CoiffeurController.Result(error)
-      }
-			
-		default:
-			break
 		}
 		
-		return result
+		try controller.readOptionsFromString(Private.Options!)
+		
+		return controller
   }
   
-  override func readOptionsFromLineArray(lines:[String]) -> NSError?
+  override func readOptionsFromLineArray(lines:[String]) throws
   {
     var count = 0
     var currentSection : ConfigSection?
@@ -135,7 +114,7 @@ class UncrustifyController : CoiffeurController {
 
 				currentComment = currentComment.trim()
 				if !currentComment.isEmpty {
-					if let range = currentComment.rangeOfCharacterFromSet(
+					if let _ = currentComment.rangeOfCharacterFromSet(
 						NSCharacterSet.newlineCharacterSet()) {
 					} else {
 						currentSection = ConfigSection.objectInContext(
@@ -159,7 +138,7 @@ class UncrustifyController : CoiffeurController {
 					type = type.trim().stringByReplacingOccurrencesOfString("/",
 						withString: ConfigNode.TypeSeparator)
 					currentComment = currentComment.trim()
-					var option = ConfigOption.objectInContext(self.managedObjectContext,
+					let option = ConfigOption.objectInContext(self.managedObjectContext,
 						parent:currentSection,
 						title:currentComment.componentsSeparatedByCharactersInSet(
 							NSCharacterSet.newlineCharacterSet())[0])
@@ -177,8 +156,6 @@ class UncrustifyController : CoiffeurController {
 			}
 			
     }
-
-		return nil
   }
 		
 	private func _keyValuePairFromString(string:String)
@@ -227,10 +204,10 @@ class UncrustifyController : CoiffeurController {
 
 	}
 	
-  override func readValuesFromLineArray(lines:[String]) -> NSError?
+  override func readValuesFromLineArray(lines:[String]) throws
   {
     for aline in lines {
-      var line = aline.trim()
+      let line = aline.trim()
 			
       if line.isEmpty {
         continue
@@ -249,11 +226,9 @@ class UncrustifyController : CoiffeurController {
 			}
 			
     }
-    
-    return nil
   }
   
-  override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
+  override func writeValuesToURL(absoluteURL:NSURL) throws
   {
     var data=""
 		
@@ -261,43 +236,35 @@ class UncrustifyController : CoiffeurController {
 			data += "\(Private.Comment) \(version)\n"
 		}
 		
-		switch self.managedObjectContext.fetch(ConfigOption.self,
+		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
 			sortDescriptors:[CoiffeurController.KeySortDescriptor])
-		{
-		case .Success(var allOptions):
-			for option in allOptions {
-				if var value = option.stringValue {
-					value = value.stringByQuoting()
-					data += "\(option.indexKey) = \(value)\n"
-				}
+
+		for option in allOptions {
+			if var value = option.stringValue {
+				value = value.stringByQuoting()
+				data += "\(option.indexKey) = \(value)\n"
 			}
-			
-		case .Failure(let error):
-			return error
 		}
 		
-    var error:NSError?
-    if data.writeToURL(absoluteURL, atomically:true,
-			encoding:NSUTF8StringEncoding, error:&error)
-		{
-      return nil
-    }
-    return error ?? super.writeValuesToURL(absoluteURL)
+		try data.writeToURL(absoluteURL, atomically:true,
+					encoding:NSUTF8StringEncoding)
   }
   
 	override func format(arguments:Arguments,
 		completionHandler: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
-    let configPath = workingDirectory.stringByAppendingPathComponent(
+    let configURL = NSURL(fileURLWithPath: workingDirectory).URLByAppendingPathComponent(
 			NSUUID().UUIDString)
-    
-    if let error = self.writeValuesToURL(NSURL(fileURLWithPath:configPath)!) {
+		
+		do {
+			try self.writeValuesToURL(configURL)
+		} catch let error as NSError {
       completionHandler(StringResult(error))
       return false
     }
     
-    var args = [Private.QuietFlag, Private.ConfigPathFlag, configPath]
+    var args = [Private.QuietFlag, Private.ConfigPathFlag, configURL.path!]
     
 		args.append(Private.LanguageFlag)
 		args.append(arguments.language.uncrustifyID)
@@ -310,7 +277,7 @@ class UncrustifyController : CoiffeurController {
 			workingDirectory: workingDirectory).runAsync(arguments.text)
 		{
 			(result:StringResult) -> Void in
-			NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
+			let _ = try? NSFileManager.defaultManager().removeItemAtURL(configURL)
 			completionHandler(result)
     }
     

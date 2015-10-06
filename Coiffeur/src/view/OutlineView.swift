@@ -32,8 +32,7 @@ class OutlineView : NSOutlineView {
 	
 	override func keyDown(theEvent: NSEvent)
 	{
-		let mods = theEvent.modifierFlags & (.ShiftKeyMask | .AlternateKeyMask
-			| .CommandKeyMask | .ControlKeyMask)
+		let mods = theEvent.modifierFlags.intersect((NSEventModifierFlags.ShiftKeyMask.union(.AlternateKeyMask).union(.CommandKeyMask).union(.ControlKeyMask)))
 		
 		if Int(theEvent.keyCode) == kVK_RightArrow {
 			if mods == .CommandKeyMask {
@@ -41,7 +40,7 @@ class OutlineView : NSOutlineView {
 					expandChildren: true)
 				return
 			}
-			if mods == .CommandKeyMask | .AlternateKeyMask {
+			if mods == NSEventModifierFlags.CommandKeyMask.union(.AlternateKeyMask) {
 				expandItem(nil, expandChildren: true)
 				return
 			}
@@ -51,7 +50,7 @@ class OutlineView : NSOutlineView {
 					collapseChildren: true)
 				return
 			}
-			if mods == .CommandKeyMask | .AlternateKeyMask {
+			if mods == NSEventModifierFlags.CommandKeyMask.union(.AlternateKeyMask) {
 				collapseItem(nil, collapseChildren: true)
 				return
 			}

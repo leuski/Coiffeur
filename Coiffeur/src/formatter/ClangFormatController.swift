@@ -62,7 +62,7 @@ class ClangFormatController : CoiffeurController {
 	override var pageGuideColumn : Int
   {
 		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
-			let int = value.toInt()
+			let int = Int(value)
 		{
 			return int
 		}
@@ -80,52 +80,35 @@ class ClangFormatController : CoiffeurController {
 			&& nil != keyValue.firstMatchInString(string)
 	}
 	
-	override class func createCoiffeur() -> CoiffeurController.Result
+	override class func createCoiffeur() throws -> CoiffeurController
   {
-    let result = super.createCoiffeur()
+    let controller = try super.createCoiffeur()
 
-    switch result {
-    case .Failure:
-      return result
-    case .Success(let controller):
-      if Private.Options == nil {
-        let bundle = NSBundle(forClass: self)
-        if let docURL = bundle.URLForResource(Private.DocumentationFileName,
-					withExtension: Private.DocumentationFileExtension) {
-          var error: NSError?
-          Private.Options = String(contentsOfURL: docURL,
-						encoding: NSUTF8StringEncoding,
-						error:&error)
-          if Private.Options == nil {
-            return CoiffeurController.Result(Error(
-							"Failed to read the content of %@.%@ as UTF8 string",
-							Private.DocumentationFileName,
-							Private.DocumentationFileExtension))
-          }
-        } else {
-          return CoiffeurController.Result(Error(
-						"Cannot find %@.%@",
-						Private.DocumentationFileName,
-						Private.DocumentationFileExtension))
-        }
-      }
-      if let error = controller.readOptionsFromString(Private.Options!) {
-        return CoiffeurController.Result(error)
-      }
-      if Private.DefaultValues == nil {
-				switch NSTask(controller.executableURL,
-					arguments: [Private.ShowDefaultConfigArgument]).run() {
-        case .Failure(let error):
-          return CoiffeurController.Result(error)
-        case .Success(let text):
-          Private.DefaultValues = text
-        }
-      }
-      if let error = controller.readValuesFromString(Private.DefaultValues!) {
-        return CoiffeurController.Result(error)
-      }
-      return result
-    }
+		if Private.Options == nil {
+			let bundle = NSBundle(forClass: self)
+			if let docURL = bundle.URLForResource(Private.DocumentationFileName,
+				withExtension: Private.DocumentationFileExtension)
+			{
+				Private.Options = try String(contentsOfURL: docURL,
+					encoding: NSUTF8StringEncoding)
+			} else {
+				throw Error(
+					"Cannot find %@.%@",
+					Private.DocumentationFileName,
+					Private.DocumentationFileExtension)
+			}
+		}
+
+		try controller.readOptionsFromString(Private.Options!)
+
+		if Private.DefaultValues == nil {
+			Private.DefaultValues = try NSTask(controller.executableURL,
+				arguments: [Private.ShowDefaultConfigArgument]).run()
+		}
+	
+		try controller.readValuesFromString(Private.DefaultValues!)
+
+		return controller
   }
   
   private class func _cleanUpRST(string:String) -> String
@@ -193,7 +176,7 @@ class ClangFormatController : CoiffeurController {
     }
   }
   
-  override func readOptionsFromLineArray(lines: [String]) -> NSError?
+  override func readOptionsFromLineArray(lines: [String]) throws
   {
 		let section = ConfigSection.objectInContext(self.managedObjectContext,
 			parent:self.root, title:"Options")
@@ -228,14 +211,12 @@ class ClangFormatController : CoiffeurController {
       //                      line = trimmedLine
       
       line = line.trim()
-      
-      var match : NSTextCheckingResult?
-      
+			
       if let match = head.firstMatchInString(line) {
         
         self._closeOption(&currentOption)
         
-				var newOption = ConfigOption.objectInContext(self.managedObjectContext,
+				let newOption = ConfigOption.objectInContext(self.managedObjectContext,
 					parent:section)
         newOption.indexKey   = line.substringWithRange(match.rangeAtIndex(1))
         in_title             = true
@@ -290,11 +271,9 @@ class ClangFormatController : CoiffeurController {
     }
     
     self._closeOption(&currentOption)
-    
-    return nil
   }
   
-  override func readValuesFromLineArray(lines:[String]) -> NSError?
+  override func readValuesFromLineArray(lines:[String]) throws
   {
     for aLine in lines {
       var line = aLine
@@ -320,63 +299,51 @@ class ClangFormatController : CoiffeurController {
         }
       }
     }
-    
-    return nil
   }
   
-  override func writeValuesToURL(absoluteURL:NSURL) -> NSError?
+  override func writeValuesToURL(absoluteURL:NSURL) throws
   {
     var data = ""
     
     data += "\(Private.SectionBegin)\n"
 		
-		switch self.managedObjectContext.fetch(ConfigOption.self,
+		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
 			sortDescriptors:[CoiffeurController.KeySortDescriptor])
-		{
-		case .Success(var allOptions):
-			for option in allOptions {
-				if var value = option.stringValue {
-					if option.type == OptionType.StringList.rawValue {
-						value = "[\(value)]"
-					} else {
-						value = value.stringByQuoting(quote: "'")
-					}
-					data += "\(option.indexKey): \(value)\n"
+
+		for option in allOptions {
+			if var value = option.stringValue {
+				if option.type == OptionType.StringList.rawValue {
+					value = "[\(value)]"
+				} else {
+					value = value.stringByQuoting("'")
 				}
+				data += "\(option.indexKey): \(value)\n"
 			}
-		case .Failure(let error):
-			return error
 		}
 		
 		data += "\(Private.SectionEnd)\n"
 		
-    var error:NSError?
-    if data.writeToURL(absoluteURL, atomically:true,
-			encoding:NSUTF8StringEncoding,
-			error:&error)
-		{
-      return nil
-    }
-    return error ?? super.writeValuesToURL(absoluteURL)
+		try data.writeToURL(absoluteURL, atomically:true,
+					encoding:NSUTF8StringEncoding)
   }
   
 	override func format(arguments:Arguments,
 		completionHandler: (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
-    let configPath = workingDirectory.stringByAppendingPathComponent(
+    let configURL = NSURL(fileURLWithPath: workingDirectory).URLByAppendingPathComponent(
 			Private.StyleFileName)
-    
-    var localError : NSError?
-    
-    if let error = self.writeValuesToURL(NSURL(fileURLWithPath: configPath)!) {
+		
+		do {
+			try self.writeValuesToURL(configURL)
+		} catch let error as NSError {
       completionHandler(StringResult(error))
       return false
     }
     
     var args = [Private.StyleFlag]
     
-		if let clangFormatID = arguments.language.clangFormatID,
+		if let _ = arguments.language.clangFormatID,
 			let ext = arguments.language.defaultExtension
 		{
 			args.append(String(format:Private.SourceFileNameFormat, ext))
@@ -385,7 +352,7 @@ class ClangFormatController : CoiffeurController {
 		NSTask(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text) {
 				(result:StringResult) in
-				NSFileManager.defaultManager().removeItemAtPath(configPath, error:nil)
+        let _ = try? NSFileManager.defaultManager().removeItemAtURL(configURL)
 				completionHandler(result)
 		}
 		

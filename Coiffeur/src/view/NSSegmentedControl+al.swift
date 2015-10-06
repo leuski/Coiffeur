@@ -39,7 +39,7 @@ extension NSSegmentedControl {
 			let fontName = font.familyName!
 			let fontSize : NSNumber = font.xHeight
 			
-			let attributes : [NSString : AnyObject] = [
+			let attributes : [String : AnyObject] = [
 				NSFontFamilyAttribute: fontName,
 				NSFontSizeAttribute: fontSize
 			]
@@ -48,9 +48,8 @@ extension NSSegmentedControl {
 			var i     = 0
 			
 			for token in value {
-				let attributedString = NSAttributedString(string:token,
-					attributes:attributes)
-				let size = attributedString.size
+				let attributedString = NSAttributedString(string:token, attributes:attributes)
+				let size = attributedString.size()
 				
 				if (width < size.width) {
 					width = size.width

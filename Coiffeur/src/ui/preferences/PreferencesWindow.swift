@@ -124,9 +124,9 @@ class PreferencesWindow : NSWindowController {
 				let childView = currentPane.view
 				childView.translatesAutoresizingMaskIntoConstraints = false
 
-				var childDesiredFrame = childView.frame
+				let childDesiredFrame = childView.frame
 
-				var containerFrame = w.contentView.frame
+				var containerFrame = w.contentView!.frame
 				w.contentView = childView
 				w.recalculateKeyViewLoop()
 				if (w.firstResponder == self.window) {
@@ -192,14 +192,14 @@ class PreferencesWindow : NSWindowController {
 		}
 	}
 
-	func selectPane(#index : Int)
+	func selectPane(index index : Int)
 	{
 		if index >= self.panes.startIndex && index < self.panes.endIndex {
 			self.selectedPane = self.panes[index]
 		}
 	}
 	
-	func selectPane(#identifier : String)
+	func selectPane(identifier identifier : String)
 	{
 		self.selectedPane = self.paneWithID(identifier)
 	}
@@ -219,7 +219,7 @@ extension PreferencesWindow : NSToolbarDelegate {
 		itemForItemIdentifier itemIdentifier: String,
 		willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
 	{
-		var item = NSToolbarItem(itemIdentifier: itemIdentifier)
+		let item = NSToolbarItem(itemIdentifier: itemIdentifier)
 		if let pane = self.paneWithID(itemIdentifier) {
 			item.target = self
 			item.action = "itemSelected:"
@@ -230,17 +230,17 @@ extension PreferencesWindow : NSToolbarDelegate {
 		return item
 	}
 	
-	func toolbarAllowedItemIdentifiers(toolbar: NSToolbar) -> [AnyObject]
+	func toolbarAllowedItemIdentifiers(toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}
 	
-	func toolbarDefaultItemIdentifiers(toolbar: NSToolbar) -> [AnyObject]
+	func toolbarDefaultItemIdentifiers(toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}
 	
-	func toolbarSelectableItemIdentifiers(toolbar: NSToolbar) -> [AnyObject]
+	func toolbarSelectableItemIdentifiers(toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}

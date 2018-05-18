@@ -130,8 +130,8 @@ class UncrustifyController : CoiffeurController {
 
 			} else if let range = line.range(of: Private.Comment) {
 				
-				let keyValue = line.substring(to: range.lowerBound)
-				var type = line.substring(from: range.upperBound)
+        let keyValue = String(line[line.startIndex..<range.lowerBound])
+				var type = String(line[range.upperBound...])
 				
 				if let (key, value) = _keyValuePairFromString(keyValue) {
 
@@ -164,7 +164,7 @@ class UncrustifyController : CoiffeurController {
 		var line = string
 		
 		if let range = line.range(of: Private.Comment) {
-			line = line.substring(to: range.lowerBound)
+			line = String(line[line.startIndex..<range.lowerBound])
 		}
 		
 		if let range = line.range(of: "=") {

@@ -24,8 +24,8 @@ import Cocoa
 class SourceView: NSViewController {
   
 	// model-related properties
-	dynamic var sourceString = ""
-	dynamic var language = Language.languageFromUserDefaults() {
+	@objc dynamic var sourceString = ""
+	@objc dynamic var language = Language.languageFromUserDefaults() {
 		didSet {
 			self.language.saveToUserDefaults()
 			let fragariaName = self.language.fragariaID
@@ -33,12 +33,12 @@ class SourceView: NSViewController {
 		}
 	}
 	
-	dynamic var fileURL : URL? {
+	@objc dynamic var fileURL : URL? {
 		didSet {
 			if let url = self.fileURL {
 				UserDefaults.standard.set(url,
 					forKey: Private.LastSourceURLUDKey)
-				if let uti = try? NSWorkspace.shared().type(ofFile: url.path),
+				if let uti = try? NSWorkspace.shared.type(ofFile: url.path),
 					 let lang = Language.languageWithUTI(uti)
 				{
 					self.language = lang
@@ -135,7 +135,7 @@ class SourceView: NSViewController {
 			maxScrollLocaiton:maxScrollLocation)
 	}
 	
-	override init?(nibName nibNameOrNil: String? = "SourceView",
+  override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "SourceView"),
 		bundle nibBundleOrNil: Bundle? = nil)
 	{
 		self.diffMatchPatch = DiffMatchPatch()
@@ -166,7 +166,7 @@ class SourceView: NSViewController {
 		
 		let       scrollView       = textView.enclosingScrollView!
 		scrollView.verticalScroller = OverviewScroller(frame:NSMakeRect(0,0,0,0))
-		scrollView.verticalScroller!.scrollerStyle = NSScrollerStyle.legacy
+		scrollView.verticalScroller!.scrollerStyle = NSScroller.Style.legacy
 	}
 	
 	fileprivate func _showDiffs(_ diffs:NSMutableArray, intensity:CGFloat)
@@ -174,7 +174,7 @@ class SourceView: NSViewController {
 	{
 		let textStorage = self.fragaria.textView().textStorage!
 		
-		textStorage.removeAttribute(NSBackgroundColorAttributeName,
+		textStorage.removeAttribute(NSAttributedStringKey.backgroundColor,
 			range:NSMakeRange(0, textStorage.length))
 		
 		if intensity == 0 {
@@ -211,10 +211,10 @@ class SourceView: NSViewController {
 					lineRanges.append(OverviewRegion(firstLineIndex: lineCount,
 						lineCount: 0, color: deleteColor1))
 					if offset < textStorage.length {
-						textStorage.addAttribute(NSBackgroundColorAttributeName,
+						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
 							value:deleteColor, range:NSMakeRange(offset, 1))
 					} else if offset > 0 {
-						textStorage.addAttribute(NSBackgroundColorAttributeName,
+						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
 							value:deleteColor, range:NSMakeRange(offset-1, 1))
 					}
 				} else {
@@ -227,7 +227,7 @@ class SourceView: NSViewController {
 					if diff.diffOperation == .insert {
 						lineRanges.append(OverviewRegion(firstLineIndex: lineCount,
 							lineCount: lineSpan, color: insertColor1))
-						textStorage.addAttribute(NSBackgroundColorAttributeName,
+						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
 							value:insertColor, range:NSMakeRange(offset, length))
 					}
 					
@@ -311,7 +311,7 @@ extension SourceView : NSPathControlDelegate {
 	
 	fileprivate func _allowedURLForItem(_ draggingItem: NSDraggingItem) -> URL?
 	{
-		let DC = NSDocumentController.shared()
+		let DC = NSDocumentController.shared
 		if let url  = draggingItem.item as? URL,
 			 let type = try? DC.typeForContents(of: url)
 		{
@@ -367,8 +367,8 @@ extension SourceView {
 		op.allowsOtherFileTypes = false
 		
 		op.beginSheetModal(for: self.view.window!, completionHandler:
-		{ (result:NSModalResponse) in
-			if (result == NSFileHandlingPanelOKButton) {
+		{ (result:NSApplication.ModalResponse) in
+			if (result.rawValue == NSFileHandlingPanelOKButton) {
 				self.tryLoadSourceFromURL(op.url!)
 			}
 		})

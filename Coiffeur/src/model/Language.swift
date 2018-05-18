@@ -50,7 +50,7 @@ class Language : NSObject {
 	var defaultExtension : String? {
     return UTIs.isEmpty
 			? nil
-			: NSWorkspace.shared().preferredFilenameExtension(forType: UTIs[0])
+			: NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
   }
   
   fileprivate class func _supportedLanguages() -> [Language]

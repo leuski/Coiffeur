@@ -80,7 +80,7 @@ class Document : NSDocument {
     try self.model!.writeValuesToURL(absoluteURL)
   }
   
-  override class func autosavesInPlace() -> Bool
+  override class var autosavesInPlace: Bool
   {
     return true
   }
@@ -98,7 +98,7 @@ class Document : NSDocument {
 //			shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
 //  }
 	
-  override func writableTypes(for _: NSSaveOperationType)
+  override func writableTypes(for _: NSDocument.SaveOperationType)
 		-> [String]
   {
     if let m = self.model {

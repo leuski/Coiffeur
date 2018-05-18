@@ -71,7 +71,7 @@ class CoiffeurPreferences : DefaultPreferencePane {
 	@IBOutlet weak var constraint: NSLayoutConstraint!
 	
 	override var toolbarItemImage : NSImage? {
-		return NSImage(named: "Locations") }
+		return NSImage(named: NSImage.Name(rawValue: "Locations")) }
 	
 	let formatters = CoiffeurController.availableTypes.map {
 		CoiffeurControllerClass($0) }
@@ -110,7 +110,7 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 		}
 	}
 	
-	func selectURL(_ sender:AnyObject)
+	@objc func selectURL(_ sender:AnyObject)
 	{
 		if let d = sender.representedObject as? Dictionary<String, AnyObject> {
 			(d["class"] as! CoiffeurControllerClass).currentExecutableURL

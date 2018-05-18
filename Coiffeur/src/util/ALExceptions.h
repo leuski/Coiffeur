@@ -26,7 +26,7 @@
  point when Swift figures out what to do with exceptions...
  */
 @interface ALExceptions : NSObject
-+ (void)try:(void(^)())try
++ (void)try:(void(^)(void))try
 			catch:(void(^)(NSException*))catch
-		finally:(void(^)())finally;
+    finally:(void(^)(void))finally;
 @end

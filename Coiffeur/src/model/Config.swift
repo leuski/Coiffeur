@@ -63,10 +63,10 @@ extension ConfigNode {
 		return NSSet(object:"storedIndex")
 	}
 
-  var leaf : Bool { return false }
-  var documentation : String { return "" }
-  var type : String { return "" }
-  var name : String { return "" }
+  @objc var leaf : Bool { return false }
+  @objc var documentation : String { return "" }
+  @objc var type : String { return "" }
+  @objc var name : String { return "" }
   
   var tokens : [String] {
     let t = self.type
@@ -79,11 +79,11 @@ extension ConfigNode {
 		set (value) { self._setPredicate(value) }
 	}
 	
-	var filteredChildrenCount : Int {
+	@objc var filteredChildrenCount : Int {
 		return 0
 	}
 	
-	var filteredChildren : NSArray {
+	@objc var filteredChildren : NSArray {
 		return []
 	}
 	
@@ -104,7 +104,7 @@ extension ConfigNode {
 		set (value) { self.storedIndex = Int32(value) }
 	}
 	
-  @discardableResult
+  @objc @discardableResult
 	class func objectInContext(_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode? = nil,
 		title:String = "") -> Self
@@ -123,17 +123,17 @@ extension ConfigNode {
 		return node
 	}
 	
-	func sortAndIndexChildren()
+	@objc func sortAndIndexChildren()
 	{
 		
 	}
 	
 	// HACK As of Swift 1.2 the compiler complains that
 	// it cannot override declarations in extensions. Working around...
-	func _setPredicate(_ value:NSPredicate?)
+	@objc func _setPredicate(_ value:NSPredicate?)
 	{
 	}
-	func _getPredicate() -> NSPredicate?
+	@objc func _getPredicate() -> NSPredicate?
 	{
 		return self.parent?.predicate
 	}

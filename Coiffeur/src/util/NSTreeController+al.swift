@@ -66,7 +66,7 @@ extension NSTreeController {
 		
 		func makeIterator() -> Iterator
 		{
-			return NodeGenerator(self.owner.arrangedObjects as! NSTreeNode)
+			return NodeGenerator(self.owner.arrangedObjects )
 		}
 		
 		func filter(_ includeElement: (NSTreeNode) -> Bool) -> [NSTreeNode]

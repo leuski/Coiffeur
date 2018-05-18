@@ -23,7 +23,7 @@ import Cocoa
 
 class ConfigCellView : NSTableCellView {
   // prevent the state restoration mechanism to save/restore this view properties
-  override class func restorableStateKeyPaths() -> [String] { return [] }
+  override class var restorableStateKeyPaths: [String] { return [] }
 }
 
 class ConfigOptionCellView : ConfigCellView {
@@ -45,7 +45,7 @@ extension ConfigNodeLocation {
 
 class ConfigRowView : NSTableRowView {
   // prevent the state restoration mechanism to save/restore this view properties
-  override class func restorableStateKeyPaths() -> [String] { return [] }
+  override class var restorableStateKeyPaths: [String] { return [] }
 
 	@IBOutlet weak var leftMargin : NSLayoutConstraint!
 	@IBOutlet weak var textField : NSTextField!
@@ -82,24 +82,24 @@ class ConfigRowView : NSTableRowView {
 				if self.window?.backingScaleFactor == 1 {
 					// light on dark looks bad on regular resolution screen,
 					// so we make the font bold to improve readability
-					tf?.font = NSFontManager.shared().convert(
+					tf?.font = NSFontManager.shared.convert(
 						(tf?.font!)!, toHaveTrait: NSFontTraitMask.boldFontMask)
 				} else {
 					// on a retina screen the same text looks fine. no need to do bold.
-					tf?.font = NSFontManager.shared().convert(
+					tf?.font = NSFontManager.shared.convert(
 						(tf?.font!)!, toNotHaveTrait: NSFontTraitMask.boldFontMask)
 				}
 			} else {
 				tf?.textColor = NSColor.textColor
-				tf?.font = NSFontManager.shared().convert(
+				tf?.font = NSFontManager.shared.convert(
 					(tf?.font!)!, toNotHaveTrait: NSFontTraitMask.boldFontMask)
 			}
 			
       self.backgroundColor.setFill()
     }
     
-    NSRectFill(NSMakeRect(CGFloat(0), CGFloat(0),
-			self.bounds.size.width, self.bounds.size.height))
+    NSMakeRect(CGFloat(0), CGFloat(0),
+			self.bounds.size.width, self.bounds.size.height).fill()
    
     if drawSeparator {
 			// draw the top border
@@ -116,8 +116,8 @@ class ConfigRowView : NSTableRowView {
 		// draw the colored lines using the section colors
     for i in 0 ..< min(1, locations.count - 1) {
 			locations[i].color.setFill()
-			NSRectFill(NSMakeRect(CGFloat(3 + i*5), CGFloat(0),
-				CGFloat(3), self.bounds.size.height-1))
+			NSMakeRect(CGFloat(3 + i*5), CGFloat(0),
+				CGFloat(3), self.bounds.size.height-1).fill()
 		}
 		
 		// if we are a group, underline the title with the appropriate color
@@ -154,7 +154,7 @@ class ConfigRowView : NSTableRowView {
 
 		// paint
 		color.setFill()
-		NSRectFill(NSMakeRect(margin, CGFloat(0),
-			self.bounds.size.width-margin, self.bounds.size.height-1))
+		NSMakeRect(margin, CGFloat(0),
+			self.bounds.size.width-margin, self.bounds.size.height-1).fill()
 	}
 }

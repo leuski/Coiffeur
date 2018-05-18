@@ -32,25 +32,25 @@ class OutlineView : NSOutlineView {
 	
 	override func keyDown(with theEvent: NSEvent)
 	{
-		let mods = theEvent.modifierFlags.intersection((NSEventModifierFlags.shift.union(.option).union(.command).union(.control)))
+		let mods = theEvent.modifierFlags.intersection((NSEvent.ModifierFlags.shift.union(NSEvent.ModifierFlags.option).union(NSEvent.ModifierFlags.command).union(NSEvent.ModifierFlags.control)))
 		
 		if Int(theEvent.keyCode) == kVK_RightArrow {
-			if mods == .command {
+			if mods == NSEvent.ModifierFlags.command {
 				expandItem(parent(forItem: item(atRow: selectedRow)),
 					expandChildren: true)
 				return
 			}
-			if mods == NSEventModifierFlags.command.union(.option) {
+			if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
 				expandItem(nil, expandChildren: true)
 				return
 			}
 		} else if Int(theEvent.keyCode) == kVK_LeftArrow {
-			if mods == .command {
+			if mods == NSEvent.ModifierFlags.command {
 				collapseItem(parent(forItem: item(atRow: selectedRow)),
 					collapseChildren: true)
 				return
 			}
-			if mods == NSEventModifierFlags.command.union(.option) {
+			if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
 				collapseItem(nil, collapseChildren: true)
 				return
 			}

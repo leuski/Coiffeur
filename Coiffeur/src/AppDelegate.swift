@@ -76,13 +76,13 @@ class AppDelegate : NSObject, NSApplicationDelegate {
       
       if (count < 2) {
         item.keyEquivalent = "n"
-        var mask = NSEventModifierFlags.command
+        var mask = NSEvent.ModifierFlags.command
         
         if (count > 0) {
-          mask = mask.union(NSEventModifierFlags.option)
+          mask = mask.union(NSEvent.ModifierFlags.option)
         }
         
-        item.keyEquivalentModifierMask = NSEventModifierFlags(rawValue: UInt(Int(mask.rawValue)))
+        item.keyEquivalentModifierMask = NSEvent.ModifierFlags(rawValue: UInt(Int(mask.rawValue)))
       }
       
       self.makeNewDocumentMenu.addItem(item)
@@ -99,7 +99,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   {
     if let type = sender.representedObject as? String {
 			do {
-				let controller = NSDocumentController.shared()
+				let controller = NSDocumentController.shared
 				let document = try controller.makeUntitledDocument(ofType: type)
 				controller.addDocument(document)
 				document.makeWindowControllers()

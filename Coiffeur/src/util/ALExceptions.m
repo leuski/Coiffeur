@@ -23,9 +23,9 @@
 
 @implementation ALExceptions
 
-+ (void)try:(void(^)())try
++ (void)try:(void(^)(void))try
 			catch:(void(^)(NSException*))catch
-		finally:(void(^)())finally
+		finally:(void(^)(void))finally
 {
   @try {
     if (try) try();

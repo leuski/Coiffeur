@@ -131,11 +131,11 @@ class ClangFormatController : CoiffeurController {
         break
       }
       
-      var code = rst.substringWithRange(match!.rangeAt(1))
+      var code = rst.substringWithRange(match!.range(at: 1))
       code = code.replacingOccurrences(of: "\n", with:nl)
       code = code.replacingOccurrences(of: " ", with:sp)
-      code += rst.substringWithRange(match!.rangeAt(2))
-      rst = rst.stringByReplacingCharactersInRange(match!.rangeAt(0),
+      code += rst.substringWithRange(match!.range(at: 2))
+      rst = rst.stringByReplacingCharactersInRange(match!.range(at: 0),
 				withString:code)
     }
     
@@ -218,9 +218,9 @@ class ClangFormatController : CoiffeurController {
         
 				let newOption = ConfigOption.objectInContext(self.managedObjectContext,
 					parent:section)
-        newOption.indexKey   = line.substringWithRange(match.rangeAt(1))
+        newOption.indexKey   = line.substringWithRange(match.range(at: 1))
         in_title             = true
-        let type             = line.substringWithRange(match.rangeAt(2))
+        let type             = line.substringWithRange(match.range(at: 2))
         
         if type == "bool" {
           newOption.type = "false,true"
@@ -248,14 +248,14 @@ class ClangFormatController : CoiffeurController {
       if let option = currentOption {
       
         if let match = item.firstMatchInString(line) {
-          let token = line.substringWithRange(match.rangeAt(2))
+          let token = line.substringWithRange(match.range(at: 2))
         
           if !token.isEmpty {
             option.type = option.type.stringByAppendingString(token,
 							separatedBy: ConfigNode.TypeSeparator)
           }
         
-          let prefix = line.substringWithRange(match.rangeAt(1))
+          let prefix = line.substringWithRange(match.range(at: 1))
           option.documentation +=
 						"\(prefix)``\(token)``\n"
           continue
@@ -284,9 +284,9 @@ class ClangFormatController : CoiffeurController {
       }
       
 			if let range = line.range(of: ":") {
-        let key = line.substring(to: range.lowerBound).trim()
+        let key = String(line[line.startIndex..<range.lowerBound]).trim()
         if let option = self.optionWithKey(key) {
-					var value = line.substring(from: range.upperBound).trim()
+					var value = String(line[range.upperBound...]).trim()
 					if option.type == OptionType.StringList.rawValue {
 						value = value.stringByTrimmingPrefix("[")
 						value = value.stringByTrimmingSuffix("]")

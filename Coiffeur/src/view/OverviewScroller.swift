@@ -83,7 +83,7 @@ class OverviewScroller : NSScroller {
         
         if NSIntersectsRect(slotRect, regionRect) {
           color.setFill()
-          NSRectFill(regionRect)
+          regionRect.fill()
         }
       }
     }

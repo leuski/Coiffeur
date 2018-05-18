@@ -39,9 +39,9 @@ extension NSSegmentedControl {
 			let fontName = font.familyName!
       let fontSize : NSNumber = NSNumber(value: Double(font.xHeight))
 			
-			let attributes : [String : AnyObject] = [
-				NSFontFamilyAttribute: fontName as AnyObject,
-				NSFontSizeAttribute: fontSize
+			let attributes : [NSAttributedStringKey : Any] = [
+        NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.family.rawValue): fontName,
+				NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.size.rawValue): fontSize
 			]
 			
 			var width = CGFloat(40.0)

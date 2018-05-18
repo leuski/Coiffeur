@@ -35,7 +35,7 @@ class Preferences : PreferencesWindow {
 	
 	convenience init(panes:[Pane])
 	{
-		self.init(windowNibName:"PreferencesWindow")
+		self.init(windowNibName:NSNib.Name(rawValue: "PreferencesWindow"))
 		self.panes = panes
 	}
 

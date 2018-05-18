@@ -183,7 +183,7 @@ class CoiffeurController : NSObject {
 		NotificationCenter.default.removeObserver(self)
 	}
 	
-	func modelDidChange(_:AnyObject?)
+	@objc func modelDidChange(_:AnyObject?)
 	{
 		self.format()
 	}

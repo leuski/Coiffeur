@@ -67,7 +67,7 @@ class FragariaColor : NSObject {
 class ColorAndFontPreferences : DefaultPreferencePane {
 
 	override var toolbarItemImage : NSImage? {
-		return NSImage(named: "FontAndColors") }
+		return NSImage(named: NSImage.Name(rawValue: "FontAndColors")) }
 	
 	let colors = [
 		FragariaColor(MGSFragariaPrefsBackgroundColourWell, "Background"),
@@ -83,7 +83,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		FragariaColor(MGSFragariaPrefsInvisibleCharactersColourWell, "Invisibles")
 	]
 	
-	dynamic var font : NSFont? {
+	@objc dynamic var font : NSFont? {
 		get {
 			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(MGSFragariaPrefsTextFont)
@@ -108,13 +108,13 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 	
 	override func changeFont(_ sender: Any?)
 	{
-		self.font = NSFontManager.shared().convert(self.font!)
+		self.font = NSFontManager.shared.convert(self.font!)
 	}
 
 	@IBAction func modifyFont(_ sender: AnyObject?)
 	{
-		NSFontManager.shared().setSelectedFont(self.font!,
+		NSFontManager.shared.setSelectedFont(self.font!,
 			isMultiple: false)
-		NSFontManager.shared().orderFrontFontPanel(sender)
+		NSFontManager.shared.orderFrontFontPanel(sender)
 	}
 }

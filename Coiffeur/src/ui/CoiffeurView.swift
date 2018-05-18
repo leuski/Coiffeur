@@ -29,7 +29,7 @@ class CoiffeurView : NSViewController {
 	
 	fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
 	
-	override init?(nibName nibNameOrNil: String? = "CoiffeurView",
+  override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "CoiffeurView"),
 		bundle nibBundleOrNil: Bundle? = nil)
   {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -123,7 +123,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		viewFor tableColumn:NSTableColumn?, item:Any) -> NSView?
   {
 		if let identifier = _cellViewIdentifierForItem(item as AnyObject),
-			 let view = outlineView.make(withIdentifier: identifier, owner:self) ,
+			 let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner:self) ,
 			 let node = (item as AnyObject).representedObject as? ConfigNode
 		{
 			if let v = view as? ConfigChoiceCellView, let segmented = v.segmented {
@@ -143,7 +143,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		if let height = rowHeightCache[identifier] {
 			return height
 		}
-		if let view = outlineView.make(withIdentifier: identifier,
+		if let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
 				owner:self)
 		{
 			let height = view.frame.size.height
@@ -181,7 +181,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
   {
 		if let identifier = _rowViewIdentifierForItem(item as AnyObject),
 			 let theNode = (item as AnyObject).representedObject as? ConfigNode,
-			 let container = outlineView.make(withIdentifier: identifier,
+			 let container = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
 				owner:self) as? ConfigRowView
 		{
 			container.locations = theNode.path

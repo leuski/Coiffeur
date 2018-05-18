@@ -39,7 +39,7 @@ class MainWindowController : NSWindowController {
   
   convenience init()
   {
-    self.init(windowNibName:"MainWindowController")
+    self.init(windowNibName:NSNib.Name(rawValue: "MainWindowController"))
   }
 	
   override func windowDidLoad()
@@ -95,7 +95,7 @@ class MainWindowController : NSWindowController {
     if anItem.action == #selector(MainWindowController.changeLanguage(_:)) {
       if let language = anItem.representedObject as? Language {
         anItem.state = (self.sourceView.language == language)
-					? NSOnState : NSOffState
+					? .on : .off
       }
     }
     
@@ -119,7 +119,7 @@ extension MainWindowController : NSWindowDelegate
 		defaultFrame newFrame: NSRect) -> NSRect
 	{
 		var frame = newFrame
-		if (self.window!.collectionBehavior.intersection((NSWindowCollectionBehavior.fullScreenPrimary.union(NSWindowCollectionBehavior.fullScreenAuxiliary)))).rawValue == 0
+		if (self.window!.collectionBehavior.intersection((NSWindow.CollectionBehavior.fullScreenPrimary.union(NSWindow.CollectionBehavior.fullScreenAuxiliary)))).rawValue == 0
 		{
 			frame.size.width = min(frame.size.width, 1200)
 		}

@@ -144,7 +144,7 @@ extension NSManagedObjectModel {
 		let moduleName : String
 		let className = clazz.className()
 		if let range = className.range(of: ".") {
-			moduleName = "\(className.substring(to: range.lowerBound))."
+			moduleName = "\(className[className.startIndex..<range.lowerBound])."
 		} else {
 			moduleName = ""
 		}

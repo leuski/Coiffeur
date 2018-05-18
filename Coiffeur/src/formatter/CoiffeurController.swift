@@ -105,7 +105,7 @@ class CoiffeurController : NSObject {
 	let managedObjectModel : NSManagedObjectModel
 	let executableURL : URL
 	
-	var root : ConfigRoot? {
+	@objc var root : ConfigRoot? {
 		do {
 			return try self.managedObjectContext.fetchSingle(ConfigRoot.self)
 		} catch _ {
@@ -131,7 +131,7 @@ class CoiffeurController : NSObject {
 		let bundles = [Bundle(for: CoiffeurController.self)]
 		if let originalModel = NSManagedObjectModel.mergedModel(from: bundles)
 		{
-			let mom = originalModel.copyForModuleWithClass(ConfigNode.self)
+			let mom = originalModel //.copyForModuleWithClass(ConfigNode.self)
 			let concurrency
 				= NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType
 			let moc = NSManagedObjectContext(concurrencyType: concurrency)

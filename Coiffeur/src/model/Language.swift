@@ -41,11 +41,11 @@ class Language : NSObject {
 		return [String](types)
 	}
 
-  fileprivate(set) var uncrustifyID = ""
-  fileprivate(set) var displayName = ""
-  fileprivate(set) var fragariaID = ""
-	fileprivate(set) var UTIs = [String]()
-	fileprivate(set) var clangFormatID : String?
+  @objc fileprivate(set) var uncrustifyID = ""
+  @objc fileprivate(set) var displayName = ""
+  @objc fileprivate(set) var fragariaID = ""
+	@objc fileprivate(set) var UTIs = [String]()
+	@objc fileprivate(set) var clangFormatID : String?
 
 	var defaultExtension : String? {
     return UTIs.isEmpty

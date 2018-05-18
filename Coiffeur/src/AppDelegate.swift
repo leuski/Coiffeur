@@ -33,11 +33,11 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   @IBOutlet weak var languagesMenu : NSMenu!
   @IBOutlet weak var makeNewDocumentMenu : NSMenu!
   
-	var bundle : Bundle {
+	@objc var bundle : Bundle {
 		return Bundle.main
 	}
 	
-	var aboutURL : URL? {
+	@objc var aboutURL : URL? {
 		return self.bundle.url(forResource: Private.AboutFileName,
 			withExtension:Private.AboutFileNameExtension)
 	}

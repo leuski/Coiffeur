@@ -43,10 +43,10 @@ class FragariaColor : NSObject {
 	let fragariaUDKey : String
 	let displayNameUDKey : String
 
-	var displayName : String {
+	@objc var displayName : String {
 		return NSLocalizedString(self.displayNameUDKey, comment: "") }
 	
-	var color : NSColor? {
+	@objc var color : NSColor? {
 		get {
 			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(self.fragariaUDKey)
@@ -69,7 +69,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 	override var toolbarItemImage : NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "FontAndColors")) }
 	
-	let colors = [
+	@objc let colors = [
 		FragariaColor(MGSFragariaPrefsBackgroundColourWell, "Background"),
 		FragariaColor(MGSFragariaPrefsTextColourWell, "Plain Text"),
 		FragariaColor(MGSFragariaPrefsCommentsColourWell, "Comments"),
@@ -94,12 +94,12 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		}
 	}
 	
-	class func keyPathsForValuesAffectingFontName() -> NSSet
+	@objc class func keyPathsForValuesAffectingFontName() -> NSSet
 	{
 		return NSSet(object: "font")
 	}
 	
-	var fontName : String {
+	@objc dynamic var fontName : String {
 		if let f = self.font {
 			return "\(f.displayName!) \(f.pointSize) pts"
 		}

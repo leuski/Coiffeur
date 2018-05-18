@@ -70,7 +70,7 @@ class DefaultPreferencePane : NSViewController, PreferencePane {
 		if let range = name.range(of: ".", options: NSString.CompareOptions(),
 			range: name.startIndex..<name.endIndex, locale: nil)
 		{
-			return String(name[range.upperBound])
+			return String(name[range.upperBound...])
 		}
 		return name
 	}

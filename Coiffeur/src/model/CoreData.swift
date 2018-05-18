@@ -124,83 +124,83 @@ extension NSManagedObject {
 	
 }
 
-extension NSManagedObjectModel {
-
-	// HACK: Swift classes are namespaced. So when editing CoreData model
-	// we need to specify a fully-qualified class name for model classes.
-	// As of XCode 6.3, CoreData source generation fails when the class name
-	// contains a period.
-	// Moreover, if you decide to import the model into a different target,
-	// things will break as the original module name is hardcoded in the
-	// model file.
-	// Moreover, if you create a test case in the original project,
-	// the test case will have a different target name and, hence, a different 
-	// module name. And, the model will break.
-	//
-	// Here we assume that the model file contains unqualified class names and
-	// we add the module name.
-	func copyForModuleWithClass(_ clazz:NSObject.Type) -> NSManagedObjectModel
-	{
-		let moduleName : String
-		let className = clazz.className()
-		if let range = className.range(of: ".") {
-			moduleName = "\(className[className.startIndex..<range.lowerBound])."
-		} else {
-			moduleName = ""
-		}
-		return copyForModuleWithName(moduleName)
-	}
-	
-	func copyForModuleWithName(_ moduleName: String) -> NSManagedObjectModel
-	{
-		if moduleName.isEmpty { return self }
-		
-		let momCopy = NSManagedObjectModel()
-		var entityCache : Dictionary<String, NSEntityDescription> = [:]
-		var newEntities : [NSEntityDescription] = []
-
-		for e in self.entities {
-			newEntities.append(e.copyWithModuleName(moduleName, cache:&entityCache))
-		}
-		
-		momCopy.entities = newEntities
-		return momCopy
-	}
-}
-
-extension NSEntityDescription {
-	
-	typealias Cache = Dictionary<String, NSEntityDescription>
-	
-	func copyWithModuleName(_ moduleName: String, cache:inout Cache)
-		-> NSEntityDescription
-	{
-		if moduleName.isEmpty { return self }
-		
-		let entityName = self.name!
-		if let existingEntity = cache[entityName] {
-			return existingEntity
-		}
-		
-		let newEntity = copy() as! NSEntityDescription
-		cache[entityName] = newEntity
-		
-		if newEntity.managedObjectClassName == NSManagedObject.className() {
-			newEntity.managedObjectClassName = self.managedObjectClassName
-		} else {
-			newEntity.managedObjectClassName
-				= "\(moduleName)\(self.managedObjectClassName)"
-		}
-		var newSubEntities : [NSEntityDescription] = []
-		
-		for e in newEntity.subentities {
-			newSubEntities.append(e.copyWithModuleName(moduleName, cache:&cache))
-		}
-		
-		newEntity.subentities = newSubEntities
-		return newEntity
-	}
-}
-
+//extension NSManagedObjectModel {
+//
+//  // HACK: Swift classes are namespaced. So when editing CoreData model
+//  // we need to specify a fully-qualified class name for model classes.
+//  // As of XCode 6.3, CoreData source generation fails when the class name
+//  // contains a period.
+//  // Moreover, if you decide to import the model into a different target,
+//  // things will break as the original module name is hardcoded in the
+//  // model file.
+//  // Moreover, if you create a test case in the original project,
+//  // the test case will have a different target name and, hence, a different 
+//  // module name. And, the model will break.
+//  //
+//  // Here we assume that the model file contains unqualified class names and
+//  // we add the module name.
+//  func copyForModuleWithClass(_ clazz:NSObject.Type) -> NSManagedObjectModel
+//  {
+//    let moduleName : String
+//    let className = clazz.className()
+//    if let range = className.range(of: ".") {
+//      moduleName = "\(className[className.startIndex..<range.lowerBound])."
+//    } else {
+//      moduleName = ""
+//    }
+//    return copyForModuleWithName(moduleName)
+//  }
+//  
+//  func copyForModuleWithName(_ moduleName: String) -> NSManagedObjectModel
+//  {
+//    if moduleName.isEmpty { return self }
+//    
+//    let momCopy = NSManagedObjectModel()
+//    var entityCache : Dictionary<String, NSEntityDescription> = [:]
+//    var newEntities : [NSEntityDescription] = []
+//
+//    for e in self.entities {
+//      newEntities.append(e.copyWithModuleName(moduleName, cache:&entityCache))
+//    }
+//    
+//    momCopy.entities = newEntities
+//    return momCopy
+//  }
+//}
+//
+//extension NSEntityDescription {
+//  
+//  typealias Cache = Dictionary<String, NSEntityDescription>
+//  
+//  func copyWithModuleName(_ moduleName: String, cache:inout Cache)
+//    -> NSEntityDescription
+//  {
+//    if moduleName.isEmpty { return self }
+//    
+//    let entityName = self.name!
+//    if let existingEntity = cache[entityName] {
+//      return existingEntity
+//    }
+//    
+//    let newEntity = copy() as! NSEntityDescription
+//    cache[entityName] = newEntity
+//    
+//    if newEntity.managedObjectClassName == NSManagedObject.className() {
+//      newEntity.managedObjectClassName = self.managedObjectClassName
+//    } else {
+//      newEntity.managedObjectClassName
+//        = "\(moduleName)\(self.managedObjectClassName)"
+//    }
+//    var newSubEntities : [NSEntityDescription] = []
+//    
+//    for e in newEntity.subentities {
+//      newSubEntities.append(e.copyWithModuleName(moduleName, cache:&cache))
+//    }
+//    
+//    newEntity.subentities = newSubEntities
+//    return newEntity
+//  }
+//}
+//
 
  

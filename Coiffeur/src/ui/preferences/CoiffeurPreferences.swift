@@ -22,7 +22,7 @@
 import Foundation
 
 class CoiffeurControllerClass : NSObject {
-	let controllerClass : CoiffeurController.Type
+	@objc let controllerClass : CoiffeurController.Type
 	var documentType : String { return controllerClass.documentType }
 	
 	init(_ type:CoiffeurController.Type)
@@ -40,12 +40,12 @@ class CoiffeurControllerClass : NSObject {
 		return try controllerClass.createCoiffeur()
 	}
 	
-  class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
+  @objc class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
   {
     return NSSet(object:"controllerClass.currentExecutableURL")
   }
   
-	var currentExecutableURL : URL? {
+	@objc dynamic var currentExecutableURL : URL? {
 		get {
 			return controllerClass.currentExecutableURL
 		}
@@ -60,7 +60,7 @@ class CoiffeurControllerClass : NSObject {
 		return controllerClass.defaultExecutableURL
 	}
 	
-	var executableDisplayName : String {
+	@objc var executableDisplayName : String {
 		return controllerClass.localizedExecutableTitle
 	}
 }
@@ -73,7 +73,7 @@ class CoiffeurPreferences : DefaultPreferencePane {
 	override var toolbarItemImage : NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "Locations")) }
 	
-	let formatters = CoiffeurController.availableTypes.map {
+	@objc let formatters = CoiffeurController.availableTypes.map {
 		CoiffeurControllerClass($0) }
 	
 	override func viewDidLoad() {

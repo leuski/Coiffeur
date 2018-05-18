@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="ConfigNode" representedClassName="ConfigNode" isAbstract="YES" syncable="YES">
-        <attribute name="storedIndex" transient="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E202" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="ConfigNode" representedClassName=".ConfigNode" isAbstract="YES" syncable="YES">
+        <attribute name="storedIndex" transient="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="title" transient="YES" attributeType="String" syncable="YES"/>
         <relationship name="children" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ConfigNode" inverseName="parent" inverseEntity="ConfigNode" syncable="YES"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ConfigNode" inverseName="children" inverseEntity="ConfigNode" syncable="YES"/>
     </entity>
-    <entity name="ConfigOption" representedClassName="ConfigOption" parentEntity="ConfigNode" syncable="YES">
+    <entity name="ConfigOption" representedClassName=".ConfigOption" parentEntity="ConfigNode" syncable="YES">
         <attribute name="indexKey" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="storedDetails" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="storedType" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="stringValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ConfigRoot" representedClassName="ConfigRoot" parentEntity="ConfigSection" syncable="YES">
+    <entity name="ConfigRoot" representedClassName=".ConfigRoot" parentEntity="ConfigSection" syncable="YES">
         <attribute name="storedPredicate" optional="YES" transient="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
-    <entity name="ConfigSection" representedClassName="ConfigSection" parentEntity="ConfigNode" syncable="YES">
-        <attribute name="expanded" transient="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+    <entity name="ConfigSection" representedClassName=".ConfigSection" parentEntity="ConfigNode" syncable="YES">
+        <attribute name="expanded" transient="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="storedFilteredChildren" optional="YES" transient="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
     <elements>

@@ -30,7 +30,7 @@ class Error : NSError {
 			userInfo: [NSLocalizedDescriptionKey:localizedDescription])
   }
   
-  convenience init(_ format:String, _ args: CVarArgType...)
+  convenience init(_ format:String, _ args: CVarArg...)
   {
     self.init(localizedDescription:String(
 			format:NSLocalizedString(format, comment:""), arguments:args))
@@ -42,10 +42,10 @@ class Error : NSError {
 }
 
 extension NSError {
-  func assignTo(outError:NSErrorPointer)
+  func assignTo(_ outError:NSErrorPointer?)
   {
     if outError != nil {
-      outError.memory = self
+      outError??.pointee = self
     }
   }
 }
@@ -65,27 +65,27 @@ extension NSError {
 //}
 
 enum StringResult {
-  case Success(String)
-  case Failure(NSError)
+  case success(String)
+  case failure(NSError)
 	init(_ value:String)
 	{
-		self = .Success(value)
+		self = .success(value)
 	}
 	init(_ error:NSError)
 	{
-		self = .Failure(error)
+		self = .failure(error)
 	}
 }
 
 enum URLResult {
-  case Success(NSURL)
-  case Failure(NSError)
-	init(_ value:NSURL)
+  case success(URL)
+  case failure(NSError)
+	init(_ value:URL)
 	{
-		self = .Success(value)
+		self = .success(value)
 	}
 	init(_ error:NSError)
 	{
-		self = .Failure(error)
+		self = .failure(error)
 	}
 }

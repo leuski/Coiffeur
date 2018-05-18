@@ -55,8 +55,8 @@ class OverviewScroller : NSScroller {
       fatalError("init(coder:) has not been implemented")
   }
   
-  override func drawKnobSlotInRect(slotRect: NSRect, highlight flag: Bool) {
-    super.drawKnobSlotInRect(slotRect, highlight: flag)
+  override func drawKnobSlot(in slotRect: NSRect, highlight flag: Bool) {
+    super.drawKnobSlot(in: slotRect, highlight: flag)
     
     if self.regions.isEmpty {
       return

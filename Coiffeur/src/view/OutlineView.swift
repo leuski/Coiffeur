@@ -24,50 +24,50 @@ import Carbon
 
 class OutlineView : NSOutlineView {
   // to enable NSStepper in the outline view cells
-  override func validateProposedFirstResponder(responder: NSResponder,
-		forEvent event: NSEvent?) -> Bool
+  override func validateProposedFirstResponder(_ responder: NSResponder,
+		for event: NSEvent?) -> Bool
 	{
     return true
   }
 	
-	override func keyDown(theEvent: NSEvent)
+	override func keyDown(with theEvent: NSEvent)
 	{
-		let mods = theEvent.modifierFlags.intersect((NSEventModifierFlags.ShiftKeyMask.union(.AlternateKeyMask).union(.CommandKeyMask).union(.ControlKeyMask)))
+		let mods = theEvent.modifierFlags.intersection((NSEventModifierFlags.shift.union(.option).union(.command).union(.control)))
 		
 		if Int(theEvent.keyCode) == kVK_RightArrow {
-			if mods == .CommandKeyMask {
-				expandItem(parentForItem(itemAtRow(selectedRow)),
+			if mods == .command {
+				expandItem(parent(forItem: item(atRow: selectedRow)),
 					expandChildren: true)
 				return
 			}
-			if mods == NSEventModifierFlags.CommandKeyMask.union(.AlternateKeyMask) {
+			if mods == NSEventModifierFlags.command.union(.option) {
 				expandItem(nil, expandChildren: true)
 				return
 			}
 		} else if Int(theEvent.keyCode) == kVK_LeftArrow {
-			if mods == .CommandKeyMask {
-				collapseItem(parentForItem(itemAtRow(selectedRow)),
+			if mods == .command {
+				collapseItem(parent(forItem: item(atRow: selectedRow)),
 					collapseChildren: true)
 				return
 			}
-			if mods == NSEventModifierFlags.CommandKeyMask.union(.AlternateKeyMask) {
+			if mods == NSEventModifierFlags.command.union(.option) {
 				collapseItem(nil, collapseChildren: true)
 				return
 			}
 		}
-		super.keyDown(theEvent)
+		super.keyDown(with: theEvent)
 	}
   
-  func scrollItemToVisible(item: AnyObject?)
+  func scrollItemToVisible(_ item: Any?)
   {
-    let row = self.rowForItem(item)
-    let rowFrame = self.frameOfCellAtColumn(0, row: row)
+    let row = self.row(forItem: item)
+    let rowFrame = self.frameOfCell(atColumn: 0, row: row)
     var visRect = self.visibleRect
     visRect.origin.y = rowFrame.origin.y - 1.0
 		// +1 because of the row frame? separator?, otherwise
     // it's going to scroll a bit, once you move the selection
 
-    self.scrollRectToVisible(visRect)
+    self.scrollToVisible(visRect)
   }
 }
 

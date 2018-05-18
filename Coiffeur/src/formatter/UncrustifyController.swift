@@ -23,7 +23,7 @@ import Foundation
 
 class UncrustifyController : CoiffeurController {
   
-  private struct Private {
+  fileprivate struct Private {
 		static var VersionArgument = "--version"
     static var ShowDocumentationArgument = "--update-config-with-doc"
     static var ShowDefaultConfigArgument = "--update-config"
@@ -63,13 +63,13 @@ class UncrustifyController : CoiffeurController {
 	override class var currentExecutableURLUDKey : String {
 		return Private.ExecutableURLUDKey }
 	
-  override class var currentExecutableURL : NSURL? {
+  override class var currentExecutableURL : URL? {
     didSet {
       Private.Options = nil
     }
   }
   
-	override class func contentsIsValidInString(string:String) -> Bool
+	override class func contentsIsValidInString(_ string:String) -> Bool
 	{
 		let keyValue = NSRegularExpression.aml_re_WithPattern(
 			"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
@@ -81,11 +81,11 @@ class UncrustifyController : CoiffeurController {
     let controller = try super.createCoiffeur()
     
 		if Private.Options == nil {
-			Private.Options = try NSTask(controller.executableURL,
+			Private.Options = try Process(controller.executableURL,
 				arguments: [Private.ShowDocumentationArgument]).run()
 
 			if let c = controller as? UncrustifyController {
-				c.versionString = try NSTask(controller.executableURL,
+				c.versionString = try Process(controller.executableURL,
 					arguments: [Private.VersionArgument]).run()
 			}
 		}
@@ -95,14 +95,14 @@ class UncrustifyController : CoiffeurController {
 		return controller
   }
   
-  override func readOptionsFromLineArray(lines:[String]) throws
+  override func readOptionsFromLineArray(_ lines:[String]) throws
   {
     var count = 0
     var currentSection : ConfigSection?
 		var currentComment : String = ""
     
     for  aline in lines {
-      ++count
+      count += 1
       
       if count == 1 {
         continue
@@ -114,8 +114,8 @@ class UncrustifyController : CoiffeurController {
 
 				currentComment = currentComment.trim()
 				if !currentComment.isEmpty {
-					if let _ = currentComment.rangeOfCharacterFromSet(
-						NSCharacterSet.newlineCharacterSet()) {
+					if let _ = currentComment.rangeOfCharacter(
+						from: CharacterSet.newlines) {
 					} else {
 						currentSection = ConfigSection.objectInContext(
 							self.managedObjectContext, parent:self.root, title:currentComment)
@@ -128,20 +128,20 @@ class UncrustifyController : CoiffeurController {
 				line = line.stringByTrimmingPrefix(Private.Comment)
 				currentComment += "\(line)\n"
 
-			} else if let range = line.rangeOfString(Private.Comment) {
+			} else if let range = line.range(of: Private.Comment) {
 				
-				let keyValue = line.substringToIndex(range.startIndex)
-				var type = line.substringFromIndex(range.endIndex)
+				let keyValue = line.substring(to: range.lowerBound)
+				var type = line.substring(from: range.upperBound)
 				
 				if let (key, value) = _keyValuePairFromString(keyValue) {
 
-					type = type.trim().stringByReplacingOccurrencesOfString("/",
-						withString: ConfigNode.TypeSeparator)
+					type = type.trim().replacingOccurrences(of: "/",
+						with: ConfigNode.TypeSeparator)
 					currentComment = currentComment.trim()
 					let option = ConfigOption.objectInContext(self.managedObjectContext,
 						parent:currentSection,
-						title:currentComment.componentsSeparatedByCharactersInSet(
-							NSCharacterSet.newlineCharacterSet())[0])
+						title:currentComment.components(
+							separatedBy: CharacterSet.newlines)[0])
 					option.indexKey = key
 					option.stringValue = value
 					option.documentation = currentComment
@@ -158,21 +158,21 @@ class UncrustifyController : CoiffeurController {
     }
   }
 		
-	private func _keyValuePairFromString(string:String)
+	fileprivate func _keyValuePairFromString(_ string:String)
 		-> (key:String, value:String)?
 	{
 		var line = string
 		
-		if let range = line.rangeOfString(Private.Comment) {
-			line = line.substringToIndex(range.startIndex)
+		if let range = line.range(of: Private.Comment) {
+			line = line.substring(to: range.lowerBound)
 		}
 		
-		if let range = line.rangeOfString("=") {
-			line = line.stringByReplacingCharactersInRange(range, withString: " ")
+		if let range = line.range(of: "=") {
+			line = line.replacingCharacters(in: range, with: " ")
 		}
 		
-		while let range = line.rangeOfString(",") {
-			line = line.stringByReplacingCharactersInRange(range, withString: " ")
+		while let range = line.range(of: ",") {
+			line = line.replacingCharacters(in: range, with: " ")
 		}
 		
 		let tokens = line.commandLineComponents
@@ -204,7 +204,7 @@ class UncrustifyController : CoiffeurController {
 
 	}
 	
-  override func readValuesFromLineArray(lines:[String]) throws
+  override func readValuesFromLineArray(_ lines:[String]) throws
   {
     for aline in lines {
       let line = aline.trim()
@@ -228,7 +228,7 @@ class UncrustifyController : CoiffeurController {
     }
   }
   
-  override func writeValuesToURL(absoluteURL:NSURL) throws
+  override func writeValuesToURL(_ absoluteURL:URL) throws
   {
     var data=""
 		
@@ -246,16 +246,16 @@ class UncrustifyController : CoiffeurController {
 			}
 		}
 		
-		try data.writeToURL(absoluteURL, atomically:true,
-					encoding:NSUTF8StringEncoding)
+		try data.write(to: absoluteURL, atomically:true,
+					encoding:String.Encoding.utf8)
   }
   
-	override func format(arguments:Arguments,
-		completionHandler: (_:StringResult) -> Void) -> Bool
+	override func format(_ arguments:Arguments,
+		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
-    let configURL = NSURL(fileURLWithPath: workingDirectory).URLByAppendingPathComponent(
-			NSUUID().UUIDString)
+    let configURL = URL(fileURLWithPath: workingDirectory).appendingPathComponent(
+			UUID().uuidString)
 		
 		do {
 			try self.writeValuesToURL(configURL)
@@ -264,7 +264,7 @@ class UncrustifyController : CoiffeurController {
       return false
     }
     
-    var args = [Private.QuietFlag, Private.ConfigPathFlag, configURL.path!]
+    var args = [Private.QuietFlag, Private.ConfigPathFlag, configURL.path]
     
 		args.append(Private.LanguageFlag)
 		args.append(arguments.language.uncrustifyID)
@@ -273,11 +273,11 @@ class UncrustifyController : CoiffeurController {
 			args.append(Private.FragmentFlag)
 		}
 		
-		NSTask(self.executableURL, arguments: args,
+		Process(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text)
 		{
 			(result:StringResult) -> Void in
-			let _ = try? NSFileManager.defaultManager().removeItemAtURL(configURL)
+			let _ = try? FileManager.default.removeItem(at: configURL)
 			completionHandler(result)
     }
     

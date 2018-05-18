@@ -76,14 +76,14 @@ extension String {
 	
 	var words : [String] {
 		var result = [String]()
-		self.enumerateLinguisticTagsInRange(self.startIndex..<self.endIndex,
+		self.enumerateLinguisticTags(in: self.startIndex..<self.endIndex,
 			scheme: NSLinguisticTagSchemeTokenType,
-			options: NSLinguisticTaggerOptions.OmitWhitespace,
+			options: NSLinguisticTagger.Options.omitWhitespace,
 			orthography: nil) {
 				(tag:String,
 					tokenRange:Range<String.Index>,
-					sentenceRange:Range<String.Index>, inout stop:Bool) -> () in
-				result.append(self.substringWithRange(tokenRange))
+					sentenceRange:Range<String.Index>, stop:inout Bool) -> () in
+				result.append(self.substring(with: tokenRange))
 		}
 		return result
 	}
@@ -92,12 +92,12 @@ extension String {
 		if self.isEmpty {
 			return self
 		}
-		let nextIndex = self.startIndex.successor()
-		return self.substringToIndex(nextIndex).capitalizedString +
-			self.substringFromIndex(nextIndex)
+		let nextIndex = self.characters.index(after: self.startIndex)
+		return self.substring(to: nextIndex).capitalized +
+			self.substring(from: nextIndex)
 	}
 	
-	private func _stringByQuoting(quote:Character) -> String
+	fileprivate func _stringByQuoting(_ quote:Character) -> String
 	{
 		let bs : Character = "\\"
 		var result = ""
@@ -117,21 +117,21 @@ extension String {
 		return result
 	}
 	
-	func stringByQuoting(quote:Character = "\"") -> String
+	func stringByQuoting(_ quote:Character = "\"") -> String
 	{
-		let set = NSMutableCharacterSet(charactersInString: String(quote))
-		set.addCharactersInString("\\\"'` \t\r\n")
+		let set = NSMutableCharacterSet(charactersIn: String(quote))
+		set.addCharacters(in: "\\\"'` \t\r\n")
 
 		if self.isEmpty {
 			return _stringByQuoting(quote)
-		} else if let _ = self.rangeOfCharacterFromSet(set) {
+		} else if let _ = self.rangeOfCharacter(from: set as CharacterSet) {
 			return _stringByQuoting(quote)
 		} else {
 			return self
 		}
 	}
 	
-  func stringByAppendingString(s:String, separatedBy delimiter:String) -> String
+  func stringByAppendingString(_ s:String, separatedBy delimiter:String) -> String
   {
     var result = self
     
@@ -144,55 +144,55 @@ extension String {
   
   func trim() -> String
   {
-    return self.stringByTrimmingCharactersInSet(
-			NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    return self.trimmingCharacters(
+			in: CharacterSet.whitespacesAndNewlines)
   }
   
-  func stringByTrimmingPrefix(prefix:String) -> String
+  func stringByTrimmingPrefix(_ prefix:String) -> String
   {
     var result = self.trim()
     if prefix.isEmpty {
       return result
     }
-    let length = prefix.startIndex.distanceTo(prefix.endIndex)
+    let length = prefix.characters.distance(from: prefix.startIndex, to: prefix.endIndex)
     while result.hasPrefix(prefix) {
-			let nextIndex = result.startIndex.advancedBy(length)
-      result = result.substringFromIndex(nextIndex).trim()
+			let nextIndex = result.characters.index(result.startIndex, offsetBy: length)
+      result = result.substring(from: nextIndex).trim()
     }
     return result
   }
   
-	func stringByTrimmingSuffix(suffix:String) -> String
+	func stringByTrimmingSuffix(_ suffix:String) -> String
 	{
 		var result = self.trim()
 		if suffix.isEmpty {
 			return result
 		}
-		let length = suffix.startIndex.distanceTo(suffix.endIndex)
+		let length = suffix.characters.distance(from: suffix.startIndex, to: suffix.endIndex)
 		while result.hasSuffix(suffix) {
-			let resultLength = result.startIndex.distanceTo(result.endIndex)
-			let nextIndex = result.startIndex.advancedBy(resultLength-length)
-			result = result.substringToIndex(nextIndex).trim()
+			let resultLength = result.characters.distance(from: result.startIndex, to: result.endIndex)
+			let nextIndex = result.characters.index(result.startIndex, offsetBy: resultLength-length)
+			result = result.substring(to: nextIndex).trim()
 		}
 		return result
 	}
 
-	func lineRangeForCharacterRange(range: Range<String.Index>) -> Range<Int>
+	func lineRangeForCharacterRange(_ range: Range<String.Index>) -> CountableClosedRange<Int>
   {
     var numberOfLines = 0
     var index = self.startIndex
-    let lastCharacter = range.endIndex.predecessor()
+    let lastCharacter = self.index(before: range.upperBound)
     var start : Int = 0
     var end : Int = 0
     
-    for numberOfLines = 0; index < self.endIndex; numberOfLines++ {
-      let nextIndex = self.lineRangeForRange(index..<index).endIndex
+    while index < self.endIndex {
+      let nextIndex = self.lineRange(for: index..<index).upperBound
       
-      if index <= range.startIndex && range.startIndex < nextIndex {
+      if index <= range.lowerBound && range.lowerBound < nextIndex {
         start = numberOfLines
         end = numberOfLines
         
-        if (lastCharacter < range.startIndex) {
+        if (lastCharacter < range.lowerBound) {
           break
         }
       }
@@ -203,27 +203,30 @@ extension String {
       }
       
       index = nextIndex
+      numberOfLines += 1
     }
     return start...end
   }
   
-  func lineCountForCharacterRange(range: Range<String.Index>) -> Int
+  func lineCountForCharacterRange(_ range: Range<String.Index>) -> Int
   {
-    if (range.endIndex == range.startIndex) {
+    if (range.upperBound == range.lowerBound) {
       return 0
     }
     
-    let lastCharacter = range.endIndex.predecessor()
+    let lastCharacter = self.index(before: range.upperBound)
     var numberOfLines : Int = 0
+    var index = range.lowerBound
     
-    for var index = range.startIndex; index < self.endIndex; numberOfLines++ {
-      let nextIndex = self.lineRangeForRange(index..<index).endIndex
+    while index < self.endIndex {
+      let nextIndex = self.lineRange(for: index..<index).upperBound
       
       if (index <= lastCharacter && lastCharacter < nextIndex) {
         return numberOfLines
       }
       
       index = nextIndex
+      numberOfLines += 1
     }
     
     return 0
@@ -238,26 +241,26 @@ extension String {
     return NSMakeRange(0, (self as NSString).length)
   }
   
-  func substringWithRange(range:NSRange) -> String
+  func substringWithRange(_ range:NSRange) -> String
   {
-    let start = self.startIndex.advancedBy(range.location)
-    let end = start.advancedBy(range.length)
+    let start = self.characters.index(self.startIndex, offsetBy: range.location)
+    let end = self.characters.index(start, offsetBy: range.length)
     return self[start..<end]
   }
   
-  func stringByReplacingCharactersInRange(range:NSRange,
+  func stringByReplacingCharactersInRange(_ range:NSRange,
 		withString replacement: String) -> String
   {
-    let start = self.startIndex.advancedBy(range.location)
-    let end = start.advancedBy(range.length)
-    return self.stringByReplacingCharactersInRange(start..<end,
-			withString:replacement)
+    let start = self.characters.index(self.startIndex, offsetBy: range.location)
+    let end = self.characters.index(start, offsetBy: range.length)
+    return self.replacingCharacters(in: start..<end,
+			with:replacement)
   }
   
-  init?(data:NSData, encoding:NSStringEncoding)
+  init?(data:Data, encoding:String.Encoding)
   {
-    var buffer = [UInt8](count:data.length, repeatedValue:0)
-    data.getBytes(&buffer, length:data.length)
+    var buffer = [UInt8](repeating: 0, count: data.count)
+    (data as NSData).getBytes(&buffer, length:data.count)
     self.init(bytes:buffer, encoding:encoding)
   }
 }

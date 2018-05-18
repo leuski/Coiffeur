@@ -52,21 +52,21 @@ class MainWindowController : NSWindowController {
 		let uncrustify : BlockObserver = { _, _ in self.uncrustify() }
 		self.sourceView.addObserverForKeyPath("language", observer:uncrustify)
 		self.sourceView.addObserverForKeyPath("sourceString",
-			options: .Initial, observer:uncrustify)
+			options: .initial, observer:uncrustify)
 		
-		self.addObserverForKeyPath("document", options: [.New, .Initial, .Old]) {
-			(_, change:[NSObject : AnyObject]) in
+		self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
+			(_, change:[AnyHashable: Any]) in
 
-			if let _ = change[NSKeyValueChangeOldKey] as? Document {
+			if let _ = change[NSKeyValueChangeKey.oldKey] as? Document {
 				if self.styleView != nil {
 					self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
 					self.styleView = nil
 				}
 			}
 			
-			if let newDocument = change[NSKeyValueChangeNewKey] as? Document  {
+			if let newDocument = change[NSKeyValueChangeKey.newKey] as? Document  {
 				self.styleView = CoiffeurView()
-				self.splitView.subviews.insert(self.styleView.view, atIndex: 0)
+				self.splitView.subviews.insert(self.styleView.view, at: 0)
 				self.window?.initialFirstResponder = self.styleView.optionsView
 				self.styleView.representedObject = newDocument.model!
 				newDocument.model!.delegate = self.sourceView
@@ -76,23 +76,23 @@ class MainWindowController : NSWindowController {
 		}
 	}
 	
-	@IBAction func uncrustify(sender : AnyObject? = nil)
+	@IBAction func uncrustify(_ sender : AnyObject? = nil)
 	{
 		if let m = (self.document as? Document)?.model {
 			m.format()
 		}
 	}
 	
-  @IBAction func changeLanguage(anItem:NSMenuItem)
+  @IBAction func changeLanguage(_ anItem:NSMenuItem)
   {
     if let language = anItem.representedObject as? Language {
       self.sourceView.language = language
     }
   }
   
-  override func validateMenuItem(anItem:NSMenuItem) -> Bool
+  override func validateMenuItem(_ anItem:NSMenuItem) -> Bool
   {
-    if anItem.action == "changeLanguage:" {
+    if anItem.action == #selector(MainWindowController.changeLanguage(_:)) {
       if let language = anItem.representedObject as? Language {
         anItem.state = (self.sourceView.language == language)
 					? NSOnState : NSOffState
@@ -105,7 +105,7 @@ class MainWindowController : NSWindowController {
 
 extension MainWindowController : NSWindowDelegate
 {
-	func windowWillClose(notification:NSNotification)
+	func windowWillClose(_ notification:Notification)
 	{
 		self.removeAllObservers()
 		self.sourceView.removeAllObservers()
@@ -115,11 +115,11 @@ extension MainWindowController : NSWindowDelegate
 		self.styleView = nil
 	}
 	
-	func windowWillUseStandardFrame(window: NSWindow,
+	func windowWillUseStandardFrame(_ window: NSWindow,
 		defaultFrame newFrame: NSRect) -> NSRect
 	{
 		var frame = newFrame
-		if (self.window!.collectionBehavior.intersect((NSWindowCollectionBehavior.FullScreenPrimary.union(NSWindowCollectionBehavior.FullScreenAuxiliary)))).rawValue == 0
+		if (self.window!.collectionBehavior.intersection((NSWindowCollectionBehavior.fullScreenPrimary.union(NSWindowCollectionBehavior.fullScreenAuxiliary)))).rawValue == 0
 		{
 			frame.size.width = min(frame.size.width, 1200)
 		}
@@ -129,14 +129,14 @@ extension MainWindowController : NSWindowDelegate
 
 extension MainWindowController : NSSplitViewDelegate
 {
-  func splitView(splitView: NSSplitView,
+  func splitView(_ splitView: NSSplitView,
 		constrainMaxCoordinate proposedMax: CGFloat,
 		ofSubviewAt dividerIndex: Int) -> CGFloat
   {
     return self.splitView.frame.size.width - 370
   }
   
-  func splitView(splitView: NSSplitView,
+  func splitView(_ splitView: NSSplitView,
 		constrainMinCoordinate proposedMin: CGFloat,
 		ofSubviewAt dividerIndex: Int) -> CGFloat
   {

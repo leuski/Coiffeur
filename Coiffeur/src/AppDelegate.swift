@@ -23,22 +23,22 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate : NSObject, NSApplicationDelegate {
   
-	private struct Private {
-		static private let AboutFileName = "about"
-		static private let AboutFileNameExtension = "html"
-		static private let UserDefaultsFileNameExtension = "plist"
-		static private let UserDefaultsFileName   = "UserDefaults"
+	fileprivate struct Private {
+		static fileprivate let AboutFileName = "about"
+		static fileprivate let AboutFileNameExtension = "html"
+		static fileprivate let UserDefaultsFileNameExtension = "plist"
+		static fileprivate let UserDefaultsFileName   = "UserDefaults"
 	}
 	
   @IBOutlet weak var languagesMenu : NSMenu!
   @IBOutlet weak var makeNewDocumentMenu : NSMenu!
   
-	var bundle : NSBundle {
-		return NSBundle.mainBundle()
+	var bundle : Bundle {
+		return Bundle.main
 	}
 	
-	var aboutURL : NSURL? {
-		return self.bundle.URLForResource(Private.AboutFileName,
+	var aboutURL : URL? {
+		return self.bundle.url(forResource: Private.AboutFileName,
 			withExtension:Private.AboutFileNameExtension)
 	}
 
@@ -49,20 +49,20 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     
     MGSFragaria.initializeFramework()
     
-    let bundle = NSBundle(forClass:self.dynamicType)
-    if let UDURL = bundle.URLForResource(Private.UserDefaultsFileName,
+    let bundle = Bundle(for:type(of: self))
+    if let UDURL = bundle.url(forResource: Private.UserDefaultsFileName,
 					withExtension:Private.UserDefaultsFileNameExtension),
-       let ud = NSDictionary(contentsOfURL:UDURL) as? [String:AnyObject]
+       let ud = NSDictionary(contentsOf:UDURL) as? [String:AnyObject]
     {
-      NSUserDefaults.standardUserDefaults().registerDefaults(ud)
+      UserDefaults.standard.register(defaults: ud)
     }
   }
   
-  func applicationDidFinishLaunching(aNotification:NSNotification)
+  func applicationDidFinishLaunching(_ aNotification:Notification)
   {
     for l in Language.supportedLanguages {
       let item = NSMenuItem(title: l.displayName,
-				action: "changeLanguage:", keyEquivalent: "")
+				action: #selector(MainWindowController.changeLanguage(_:)), keyEquivalent: "")
       item.representedObject = l
       self.languagesMenu.addItem(item)
     }
@@ -71,36 +71,36 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     
     for aClass in CoiffeurController.availableTypes {
       let item = NSMenuItem(title: aClass.documentType,
-				action: "openUntitledDocumentOfType:", keyEquivalent: "")
+				action: #selector(AppDelegate.openUntitledDocumentOfType(_:)), keyEquivalent: "")
       item.representedObject = aClass.documentType
       
       if (count < 2) {
         item.keyEquivalent = "n"
-        var mask = NSEventModifierFlags.CommandKeyMask
+        var mask = NSEventModifierFlags.command
         
         if (count > 0) {
-          mask = mask.union(NSEventModifierFlags.AlternateKeyMask)
+          mask = mask.union(NSEventModifierFlags.option)
         }
         
-        item.keyEquivalentModifierMask = Int(mask.rawValue)
+        item.keyEquivalentModifierMask = NSEventModifierFlags(rawValue: UInt(Int(mask.rawValue)))
       }
       
       self.makeNewDocumentMenu.addItem(item)
-      ++count
+      count += 1
     }
   }
   
-  func applicationWillTerminate(aNotification:NSNotification)
+  func applicationWillTerminate(_ aNotification:Notification)
   {
     // Insert code here to tear down your application
   }
   
-  @IBAction func openUntitledDocumentOfType(sender : AnyObject)
+  @IBAction func openUntitledDocumentOfType(_ sender : AnyObject)
   {
     if let type = sender.representedObject as? String {
 			do {
-				let controller = NSDocumentController.sharedDocumentController()
-				let document = try controller.makeUntitledDocumentOfType(type)
+				let controller = NSDocumentController.shared()
+				let document = try controller.makeUntitledDocument(ofType: type)
 				controller.addDocument(document)
 				document.makeWindowControllers()
 				document.showWindows()

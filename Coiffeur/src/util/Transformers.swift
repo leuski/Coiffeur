@@ -21,14 +21,14 @@
 
 import Foundation
 
-class String2NumberTransformer : NSValueTransformer {
+class String2NumberTransformer : ValueTransformer {
 
   override class func allowsReverseTransformation() -> Bool
   {
     return true
   }
   
-  override func transformedValue(value: AnyObject?) -> AnyObject?
+  override func transformedValue(_ value: Any?) -> Any?
   {
     if let string = value as? String {
 			if let number = Int(string) {
@@ -39,7 +39,7 @@ class String2NumberTransformer : NSValueTransformer {
     return nil
   }
 
-  override func reverseTransformedValue(value: AnyObject?) -> AnyObject?
+  override func reverseTransformedValue(_ value: Any?) -> Any?
   {
     if let number = value as? NSNumber {
       return number.stringValue
@@ -48,7 +48,7 @@ class String2NumberTransformer : NSValueTransformer {
   }
 }
 
-class OnlyIntegers : NSNumberFormatter {
+class OnlyIntegers : NumberFormatter {
 	
 	override init()
 	{
@@ -61,18 +61,18 @@ class OnlyIntegers : NSNumberFormatter {
 		self.allowsFloats = false
 	}
 
-	override func getObjectValue(o: AutoreleasingUnsafeMutablePointer<AnyObject?>,
-		forString string: String,
-		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>) -> Bool
+	override func getObjectValue(_ o: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
+		for string: String,
+		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
 	{
 		if string.isEmpty {
 			if err != nil {
-				err.memory = NSLocalizedString(
+				err?.pointee = NSLocalizedString(
 					"Empty string is not a valid number. Please provide a number",
-					comment:"")
+					comment:"") as NSString
 			}
 			return false
 		}
-		return super.getObjectValue(o, forString:string, errorDescription: err)
+		return super.getObjectValue(o, for:string, errorDescription: err)
 	}
 }

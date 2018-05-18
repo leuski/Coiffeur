@@ -61,16 +61,16 @@ class DefaultPreferencePane : NSViewController, PreferencePane {
 	}
 	var toolbarItemImage : NSImage? { return nil }
 	
-	private var _referenceClassName : String {
+	fileprivate var _referenceClassName : String {
 		return self._unqualifiedClassName
 	}
 	
-	private var _unqualifiedClassName: String {
-		let name = self.dynamicType.className()
-		if let range = name.rangeOfString(".", options: NSStringCompareOptions(),
+	fileprivate var _unqualifiedClassName: String {
+		let name = type(of: self).className()
+		if let range = name.range(of: ".", options: NSString.CompareOptions(),
 			range: name.startIndex..<name.endIndex, locale: nil)
 		{
-			return name.substringFromIndex(range.endIndex)
+			return name.substring(from: range.upperBound)
 		}
 		return name
 	}
@@ -118,7 +118,7 @@ class PreferencesWindow : NSWindowController {
 			if let currentPane = self.storedSelectedPane {
 				w.toolbar?.selectedItemIdentifier = currentPane.toolbarIdentifier
 				w.title = currentPane.toolbarItemLabel
-				NSUserDefaults.standardUserDefaults().setObject(
+				UserDefaults.standard.set(
 					currentPane.toolbarIdentifier, forKey: selectedPaneUDKey)
 
 				let childView = currentPane.view
@@ -134,20 +134,20 @@ class PreferencesWindow : NSWindowController {
 				}
 				
 				containerFrame.size.height = childDesiredFrame.size.height
-				let desiredWindowFrame = w.frameRectForContentRect(containerFrame)
+				let desiredWindowFrame = w.frameRect(forContentRect: containerFrame)
 				var currentWindowFrame = w.frame
 				currentWindowFrame.origin.y += currentWindowFrame.size.height
 					- desiredWindowFrame.size.height
 				currentWindowFrame.size.height = desiredWindowFrame.size.height
 				
-				w.setFrame(currentWindowFrame, display: true, animate: w.visible)
+				w.setFrame(currentWindowFrame, display: true, animate: w.isVisible)
 			}
 			
 		}
 	}
 
-	private var storedSelectedPane : Pane?
-	private let selectedPaneUDKey = "selectedPaneUDKey"
+	fileprivate var storedSelectedPane : Pane?
+	fileprivate let selectedPaneUDKey = "selectedPaneUDKey"
 	
 	var toolbarItemIdentifiers : [String] {
 		return self.panes.map { $0.toolbarIdentifier }
@@ -173,17 +173,17 @@ class PreferencesWindow : NSWindowController {
 	{
 		if !panes.isEmpty {
 			self.selectedPane = self.paneWithID(
-				NSUserDefaults.standardUserDefaults().stringForKey(selectedPaneUDKey))
+				UserDefaults.standard.string(forKey: selectedPaneUDKey))
 				?? self.panes[0]
 		}
 	}
 
-	override func showWindow(sender: AnyObject?)
+	override func showWindow(_ sender: Any?)
 	{
 		self.window!.makeKeyAndOrderFront(sender)
 	}
 	
-	func paneWithID(paneIdentifier:String?) -> Pane?
+	func paneWithID(_ paneIdentifier:String?) -> Pane?
 	{
 		if let identifier = paneIdentifier {
 			return (self.panes.filter { $0.toolbarIdentifier == identifier }).first
@@ -192,14 +192,14 @@ class PreferencesWindow : NSWindowController {
 		}
 	}
 
-	func selectPane(index index : Int)
+	func selectPane(index : Int)
 	{
 		if index >= self.panes.startIndex && index < self.panes.endIndex {
 			self.selectedPane = self.panes[index]
 		}
 	}
 	
-	func selectPane(identifier identifier : String)
+	func selectPane(identifier : String)
 	{
 		self.selectedPane = self.paneWithID(identifier)
 	}
@@ -207,7 +207,7 @@ class PreferencesWindow : NSWindowController {
 }
 
 extension PreferencesWindow : NSWindowDelegate {
-	func windowShouldClose(sender: AnyObject) -> Bool
+	func windowShouldClose(_ sender: Any) -> Bool
 	{
 		return self.selectedPane == nil || self.selectedPane!.commitEditing()
 	}
@@ -215,14 +215,14 @@ extension PreferencesWindow : NSWindowDelegate {
 
 extension PreferencesWindow : NSToolbarDelegate {
 	
-	func toolbar(toolbar: NSToolbar,
+	func toolbar(_ toolbar: NSToolbar,
 		itemForItemIdentifier itemIdentifier: String,
 		willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem?
 	{
 		let item = NSToolbarItem(itemIdentifier: itemIdentifier)
 		if let pane = self.paneWithID(itemIdentifier) {
 			item.target = self
-			item.action = "itemSelected:"
+			item.action = #selector(PreferencesWindow.itemSelected(_:))
 			item.label = pane.toolbarItemLabel
 			item.image = pane.toolbarItemImage
 			item.toolTip = pane.toolbarItemToolTip
@@ -230,22 +230,22 @@ extension PreferencesWindow : NSToolbarDelegate {
 		return item
 	}
 	
-	func toolbarAllowedItemIdentifiers(toolbar: NSToolbar) -> [String]
+	func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}
 	
-	func toolbarDefaultItemIdentifiers(toolbar: NSToolbar) -> [String]
+	func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}
 	
-	func toolbarSelectableItemIdentifiers(toolbar: NSToolbar) -> [String]
+	func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [String]
 	{
 		return self.toolbarItemIdentifiers
 	}
 	
-	func itemSelected(toolbarItem:AnyObject)
+	func itemSelected(_ toolbarItem:AnyObject)
 	{
 		self.selectedPane = self.paneWithID(toolbarItem.itemIdentifier)
 	}

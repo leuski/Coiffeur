@@ -23,11 +23,11 @@ import Cocoa
 
 class Language : NSObject {
     
-  private struct Private {
-    private static let supportedLanguages = Language._supportedLanguages()
-		private static let FileName = "languages"
-		private static let FileNameExtension = "plist"
-		private static let UserDefaultsKey = "Language"
+  fileprivate struct Private {
+    fileprivate static let supportedLanguages = Language._supportedLanguages()
+		fileprivate static let FileName = "languages"
+		fileprivate static let FileNameExtension = "plist"
+		fileprivate static let UserDefaultsKey = "Language"
   }
 
   class var supportedLanguages : [Language] {
@@ -36,30 +36,30 @@ class Language : NSObject {
 	class var supportedLanguageUTIs : [String] {
 		var types = Set<String>()
 		for  l in Language.supportedLanguages {
-			types.unionInPlace(l.UTIs)
+			types.formUnion(l.UTIs)
 		}
 		return [String](types)
 	}
 
-  private(set) var uncrustifyID = ""
-  private(set) var displayName = ""
-  private(set) var fragariaID = ""
-	private(set) var UTIs = [String]()
-	private(set) var clangFormatID : String?
+  fileprivate(set) var uncrustifyID = ""
+  fileprivate(set) var displayName = ""
+  fileprivate(set) var fragariaID = ""
+	fileprivate(set) var UTIs = [String]()
+	fileprivate(set) var clangFormatID : String?
 
 	var defaultExtension : String? {
     return UTIs.isEmpty
 			? nil
-			: NSWorkspace.sharedWorkspace().preferredFilenameExtensionForType(UTIs[0])
+			: NSWorkspace.shared().preferredFilenameExtension(forType: UTIs[0])
   }
   
-  private class func _supportedLanguages() -> [Language]
+  fileprivate class func _supportedLanguages() -> [Language]
   {
-    let bundle = NSBundle(forClass: self)
-    if let url = bundle.URLForResource(Private.FileName,
+    let bundle = Bundle(for: self)
+    if let url = bundle.url(forResource: Private.FileName,
 			withExtension: Private.FileNameExtension)
 		{
-      if let dictionaries = NSArray(contentsOfURL: url) {
+      if let dictionaries = NSArray(contentsOf: url) {
         var result = [Language]()
         for d in dictionaries {
           result.append(Language(dictionary:d as! [String : AnyObject]))
@@ -70,10 +70,10 @@ class Language : NSObject {
     return []
   }
 
-  class func languageWithUTI(uti:String) -> Language?
+  class func languageWithUTI(_ uti:String) -> Language?
   {
     for l in self.supportedLanguages {
-      if let _ = l.UTIs.indexOf(uti) {
+      if let _ = l.UTIs.index(of: uti) {
         return l
       }
     }
@@ -82,8 +82,8 @@ class Language : NSObject {
   
   class func languageFromUserDefaults() -> Language
   {
-		let UD = NSUserDefaults.standardUserDefaults()
-    if let uti = UD.stringForKey(Private.UserDefaultsKey) {
+		let UD = UserDefaults.standard
+    if let uti = UD.string(forKey: Private.UserDefaultsKey) {
       if let language = Language.languageWithUTI(uti) {
         return language
       }
@@ -91,16 +91,16 @@ class Language : NSObject {
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
   
-  private init(dictionary:[String : AnyObject])
+  fileprivate init(dictionary:[String : AnyObject])
   {
     super.init()
-    setValuesForKeysWithDictionary(dictionary)
+    setValuesForKeys(dictionary)
   }
   
   func saveToUserDefaults()
   {
     if !UTIs.isEmpty {
-      NSUserDefaults.standardUserDefaults().setValue(UTIs[0],
+      UserDefaults.standard.setValue(UTIs[0],
 				forKey: Private.UserDefaultsKey)
     }
   }

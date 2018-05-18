@@ -25,60 +25,60 @@ import Foundation
 setup and exceute a task with arguments, working  directory, and input passed 
 to the task standard input. 
 */
-extension NSTask {
+extension Process {
 	
 	/**
 		initializes the task with exetubale url, arguments, and working directory.
 		Sets the standard streams to pipes
 	*/
-	convenience init(_ url:NSURL, arguments:[String] = [],
+	convenience init(_ url:URL, arguments:[String] = [],
 		workingDirectory:String? = nil)
 	{
 		self.init()
 		
-		self.launchPath = url.path!
+		self.launchPath = url.path
 		self.arguments = arguments
 		if workingDirectory != nil {
 			self.currentDirectoryPath = workingDirectory!
 		}
 		
-		self.standardOutput = NSPipe()
-		self.standardInput = NSPipe()
-		self.standardError = NSPipe()
+		self.standardOutput = Pipe()
+		self.standardInput = Pipe()
+		self.standardError = Pipe()
 	}
 
-	private func _runThrowsNSException(input:String?) -> StringResult
+	fileprivate func _runThrowsNSException(_ input:String?) -> StringResult
 	{
 		let writeHandle = input != nil
-			? self.standardInput!.fileHandleForWriting
+			? (self.standardInput! as AnyObject).fileHandleForWriting
 			: nil
 		
 		self.launch()
 		
 		if writeHandle != nil {
-			writeHandle.writeData(input!.dataUsingEncoding(NSUTF8StringEncoding)!)
-			writeHandle.closeFile()
+			writeHandle?.write(input!.data(using: String.Encoding.utf8)!)
+			writeHandle?.closeFile()
 		}
 		
-		let outHandle = self.standardOutput!.fileHandleForReading
-		let outData = outHandle.readDataToEndOfFile()
+		let outHandle = (self.standardOutput! as AnyObject).fileHandleForReading
+		let outData = outHandle?.readDataToEndOfFile()
 		
-		let errHandle = self.standardError!.fileHandleForReading
-		let errData = errHandle.readDataToEndOfFile()
+		let errHandle = (self.standardError! as AnyObject).fileHandleForReading
+		let errData = errHandle?.readDataToEndOfFile()
 		
 		self.waitUntilExit()
 		
 		let status = self.terminationStatus
 		
 		if status == 0 {
-			if let string = String(data:outData, encoding: NSUTF8StringEncoding) {
+			if let string = String(data:outData!, encoding: String.Encoding.utf8) {
 				return StringResult(string)
 			} else {
 				return StringResult(
 					Error("Failed to interpret the output of the format executable"))
 			}
 		} else {
-			if let errText = String(data: errData, encoding: NSUTF8StringEncoding) {
+			if let errText = String(data: errData!, encoding: String.Encoding.utf8) {
 				return StringResult(Error("Format excutable error code %d: %@",
 					status, errText))
 			} else {
@@ -87,12 +87,12 @@ extension NSTask {
 		}
 	}
 
-	private func _run(input:String? = nil) -> StringResult
+	fileprivate func _run(_ input:String? = nil) -> StringResult
 	{
 		var result : StringResult?
 		ALExceptions.`try`({
 			result = self._runThrowsNSException(input)
-		}, `catch`: { (ex:NSException?) in
+		}, catch: { (ex:NSException?) in
 			result = StringResult(
 				Error("An error while running format executable: %@",
 					ex?.reason ?? "unknown error"))
@@ -104,11 +104,11 @@ extension NSTask {
 		Runs the task synchroniously with the given string as the standard input.
 		@return Returns a string from stadard output or an error
 	*/
-	func run(input:String? = nil) throws -> String
+	func run(_ input:String? = nil) throws -> String
 	{
 		switch _run(input) {
-		 case .Success(let s): return s
-		 case .Failure(let e): throw e
+		 case .success(let s): return s
+		 case .failure(let e): throw e
 		}
 	}
 	
@@ -116,11 +116,11 @@ extension NSTask {
 		Runs the task asynchroniously with the given string as the standard input.
 		Calls the provided block with the string from stadard output or an error
 	*/
-	func runAsync(input:String? = nil, completionHandler:(_:StringResult)->Void)
+	func runAsync(_ input:String? = nil, completionHandler:@escaping (_:StringResult)->Void)
 	{
-		dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), {
+		DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async(execute: {
 			let result = self._run(input)
-			dispatch_async(dispatch_get_main_queue(), {
+			DispatchQueue.main.async(execute: {
 				completionHandler(result)
 			})
 		})

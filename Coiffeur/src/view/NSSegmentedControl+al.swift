@@ -26,8 +26,8 @@ extension NSSegmentedControl {
 	var labels : [String] {
 		get {
 			var value = [String]()
-			for var i = 0; i < self.segmentCount; ++i {
-				value.append(labelForSegment(i)!)
+			for i in 0 ..< self.segmentCount {
+				value.append(label(forSegment: i)!)
 			}
 			return value
 		}
@@ -37,10 +37,10 @@ extension NSSegmentedControl {
 			
 			let font       = self.font!
 			let fontName = font.familyName!
-			let fontSize : NSNumber = font.xHeight
+      let fontSize : NSNumber = NSNumber(value: Double(font.xHeight))
 			
 			let attributes : [String : AnyObject] = [
-				NSFontFamilyAttribute: fontName,
+				NSFontFamilyAttribute: fontName as AnyObject,
 				NSFontSizeAttribute: fontSize
 			]
 			
@@ -55,10 +55,11 @@ extension NSSegmentedControl {
 					width = size.width
 				}
 				
-				setLabel(token, forSegment: i++)
+				setLabel(token, forSegment: i)
+        i += 1
 			}
 			
-			for var j = 0; j < self.segmentCount; ++j {
+			for j in 0 ..< self.segmentCount {
 				setWidth(width+12, forSegment: j)
 			}
 		}

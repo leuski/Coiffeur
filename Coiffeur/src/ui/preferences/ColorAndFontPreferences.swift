@@ -21,20 +21,20 @@
 
 import Cocoa
 
-extension NSUserDefaults {
-	func archivedObjectForKey<T:AnyObject>(key: String) -> T?
+extension UserDefaults {
+	func archivedObjectForKey<T:AnyObject>(_ key: String) -> T?
 	{
-		if let data = self.dataForKey(key) {
-			return NSUnarchiver.unarchiveObjectWithData(data) as? T
+		if let data = self.data(forKey: key) {
+			return NSUnarchiver.unarchiveObject(with: data) as? T
 		}
 		return nil
 	}
-	func setArchivedObject<T:AnyObject>(value:T?, forKey key: String)
+	func setArchivedObject<T:AnyObject>(_ value:T?, forKey key: String)
 	{
 		if value != nil {
-			self.setObject(NSArchiver.archivedDataWithRootObject(value!), forKey: key)
+			self.set(NSArchiver.archivedData(withRootObject: value!), forKey: key)
 		} else {
-			self.removeObjectForKey(key)
+			self.removeObject(forKey: key)
 		}
 	}
 }
@@ -48,11 +48,11 @@ class FragariaColor : NSObject {
 	
 	var color : NSColor? {
 		get {
-			let UD = NSUserDefaults.standardUserDefaults()
+			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(self.fragariaUDKey)
 		}
 		set (value) {
-			let UD = NSUserDefaults.standardUserDefaults()
+			let UD = UserDefaults.standard
 			UD.setArchivedObject(value, forKey: self.fragariaUDKey)
 		}
 	}
@@ -85,11 +85,11 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 	
 	dynamic var font : NSFont? {
 		get {
-			let UD = NSUserDefaults.standardUserDefaults()
+			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(MGSFragariaPrefsTextFont)
 		}
 		set (value) {
-			let UD = NSUserDefaults.standardUserDefaults()
+			let UD = UserDefaults.standard
 			UD.setArchivedObject(value, forKey: MGSFragariaPrefsTextFont)
 		}
 	}
@@ -106,15 +106,15 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		return ""
 	}
 	
-	override func changeFont(sender: AnyObject?)
+	override func changeFont(_ sender: Any?)
 	{
-		self.font = NSFontManager.sharedFontManager().convertFont(self.font!)
+		self.font = NSFontManager.shared().convert(self.font!)
 	}
 
-	@IBAction func modifyFont(sender: AnyObject?)
+	@IBAction func modifyFont(_ sender: AnyObject?)
 	{
-		NSFontManager.sharedFontManager().setSelectedFont(self.font!,
+		NSFontManager.shared().setSelectedFont(self.font!,
 			isMultiple: false)
-		NSFontManager.sharedFontManager().orderFrontFontPanel(sender)
+		NSFontManager.shared().orderFrontFontPanel(sender)
 	}
 }

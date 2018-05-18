@@ -30,7 +30,7 @@ class CoiffeurControllerClass : NSObject {
 		controllerClass = type
 	}
 	
-	func contentsIsValidInString(string:String) -> Bool
+	func contentsIsValidInString(_ string:String) -> Bool
 	{
 		return controllerClass.contentsIsValidInString(string)
 	}
@@ -45,18 +45,18 @@ class CoiffeurControllerClass : NSObject {
     return NSSet(object:"controllerClass.currentExecutableURL")
   }
   
-	var currentExecutableURL : NSURL? {
+	var currentExecutableURL : URL? {
 		get {
 			return controllerClass.currentExecutableURL
 		}
 		set (value) {
-      willChangeValueForKey("currentExecutableURL")
+      willChangeValue(forKey: "currentExecutableURL")
 			controllerClass.currentExecutableURL = value
-      didChangeValueForKey("currentExecutableURL")
+      didChangeValue(forKey: "currentExecutableURL")
 		}
 	}
 	
-	var defaultExecutableURL : NSURL? {
+	var defaultExecutableURL : URL? {
 		return controllerClass.defaultExecutableURL
 	}
 	
@@ -86,7 +86,7 @@ class CoiffeurPreferences : DefaultPreferencePane {
 }
 
 extension CoiffeurPreferences : NSTableViewDelegate {
-	func tableView(tableView: NSTableView,
+	func tableView(_ tableView: NSTableView,
 		rowViewForRow row: Int) -> NSTableRowView?
 	{
 		return TransparentTableRowView()
@@ -94,27 +94,27 @@ extension CoiffeurPreferences : NSTableViewDelegate {
 }
 
 extension CoiffeurPreferences : NSPathControlDelegate {
-	func pathControl(pathControl: NSPathControl, willPopUpMenu menu: NSMenu)
+	func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
 	{
 		if let tcv = pathControl.superview as? NSTableCellView,
 			let ccc = tcv.objectValue as? CoiffeurControllerClass,
 			let url = ccc.defaultExecutableURL
 		{
-			let item = menu.insertItemWithTitle(
-				String(format:NSLocalizedString("Built-in %@", comment:""),
-					url.lastPathComponent!),
-				action: "selectURL:",
-				keyEquivalent: "", atIndex: 0)
-			item?.representedObject = [ "class" : ccc, "url" : url ]
+			let item = menu.insertItem(
+				withTitle: String(format:NSLocalizedString("Built-in %@", comment:""),
+					url.lastPathComponent),
+				action: #selector(CoiffeurPreferences.selectURL(_:)),
+				keyEquivalent: "", at: 0)
+			item.representedObject = [ "class" : ccc, "url" : url ]
 				as Dictionary<String, AnyObject>
 		}
 	}
 	
-	func selectURL(sender:AnyObject)
+	func selectURL(_ sender:AnyObject)
 	{
 		if let d = sender.representedObject as? Dictionary<String, AnyObject> {
 			(d["class"] as! CoiffeurControllerClass).currentExecutableURL
-				= (d["url"] as! NSURL)
+				= (d["url"] as! URL)
 		}
 	}
 }
@@ -126,22 +126,22 @@ class TransparentTableView : NSTableView {
 		self.enclosingScrollView!.drawsBackground = false
 	}
 	
-	override var opaque : Bool {
+	override var isOpaque : Bool {
 		return false
 	}
 	
-	override func drawBackgroundInClipRect(clipRect : NSRect)
+	override func drawBackground(inClipRect clipRect : NSRect)
 	{
 	// don't draw a background rect
 	}
 }
 
 class TransparentTableRowView : NSTableRowView {
-	override func drawBackgroundInRect(dirtyRect: NSRect)
+	override func drawBackground(in dirtyRect: NSRect)
 	{
 		
 	}
-	override var opaque : Bool {
+	override var isOpaque : Bool {
 			return false
 	}
 }

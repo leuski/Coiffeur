@@ -23,27 +23,27 @@ import Cocoa
 
 extension NSTreeController {
 	
-	struct DepthFirstView : SequenceType {
+	struct DepthFirstView : Sequence {
 
-		struct NodeGenerator: GeneratorType {
+		struct NodeGenerator: IteratorProtocol {
 			
-			var stack = [IndexingGenerator<[AnyObject]>]()
+			var stack = [IndexingIterator<[NSTreeNode]>]()
 			
-			init(_ root:AnyObject)
+			init(_ root: NSTreeNode)
 			{
-				if let array = root.childNodes as [AnyObject]? {
-					stack.append(array.generate())
+				if let array = root.children {
+					stack.append(array.makeIterator())
 				}
 			}
 			
-			mutating func next() -> AnyObject?
+			mutating func next() -> NSTreeNode?
 			{
 				while !stack.isEmpty {
 					var last = stack.last!
-					if let x: AnyObject = last.next() {
+					if let x: NSTreeNode = last.next() {
 						stack[stack.count-1] = last
-						if let array = x.childNodes as [AnyObject]? {
-							stack.append(array.generate())
+						if let array = x.children {
+							stack.append(array.makeIterator())
 						}
 						return x
 					} else {
@@ -55,7 +55,7 @@ extension NSTreeController {
 			
 		}
 
-		typealias Generator = NodeGenerator
+		typealias Iterator = NodeGenerator
 		
 		let owner: NSTreeController
 		
@@ -64,12 +64,12 @@ extension NSTreeController {
 			self.owner = owner
 		}
 		
-		func generate() -> Generator
+		func makeIterator() -> Iterator
 		{
-			return NodeGenerator(self.owner.arrangedObjects)
+			return NodeGenerator(self.owner.arrangedObjects as! NSTreeNode)
 		}
 		
-		func filter(includeElement: (AnyObject) -> Bool) -> [AnyObject]
+		func filter(_ includeElement: (NSTreeNode) -> Bool) -> [NSTreeNode]
 		{
 			return self.filter(includeElement)
 		}
@@ -80,30 +80,13 @@ extension NSTreeController {
 		return DepthFirstView(self)
 	}
 	
-	var firstLeaf: AnyObject? {
+	var firstLeaf: NSTreeNode? {
 		for node in self.nodes {
-			if isLeaf(node) {
+			if node.isLeaf {
 				return node
 			}
 		}
 		return nil
 	}
 	
-	func isLeaf(node:AnyObject) -> Bool
-	{
-		if let treeNode = node as? NSTreeNode,
-			 let keyPath = self.leafKeyPathForNode(treeNode),
-			 let flag = node.valueForKeyPath(keyPath) as? NSNumber
-		{
-			return flag.boolValue
-		}
-
-		if let keyPath = self.leafKeyPath,
-			 let flag = node.valueForKeyPath(keyPath) as? NSNumber
-		{
-			return flag.boolValue
-		}
-			
-		return node.childNodes??.count == nil || node.childNodes!!.count == 0
-	}
 }

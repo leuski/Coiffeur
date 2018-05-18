@@ -42,7 +42,7 @@ extension ConfigNode {
 		while true {
 			if let parent = node.parent {
 				locations.insert(Location(node.index, of:parent.children.count),
-					atIndex:0)
+					at:0)
 				node = parent
 			} else {
 				break
@@ -70,7 +70,7 @@ extension ConfigNode {
   
   var tokens : [String] {
     let t = self.type
-    return t.componentsSeparatedByString(ConfigNode.TypeSeparator).filter {
+    return t.components(separatedBy: ConfigNode.TypeSeparator).filter {
 			!$0.isEmpty }
   }
 
@@ -104,15 +104,16 @@ extension ConfigNode {
 		set (value) { self.storedIndex = Int32(value) }
 	}
 	
-	class func objectInContext(managedObjectContext: NSManagedObjectContext,
+  @discardableResult
+	class func objectInContext(_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode? = nil,
 		title:String = "") -> Self
   {
 		return _insertConfigNode(managedObjectContext, parent:parent, title:title)
   }
 	
-	private class func _insertConfigNode<T:ConfigNode>(
-		managedObjectContext: NSManagedObjectContext,
+	fileprivate class func _insertConfigNode<T:ConfigNode>(
+		_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode?,
 		title:String) -> T
 	{
@@ -129,7 +130,7 @@ extension ConfigNode {
 	
 	// HACK As of Swift 1.2 the compiler complains that
 	// it cannot override declarations in extensions. Working around...
-	func _setPredicate(value:NSPredicate?)
+	func _setPredicate(_ value:NSPredicate?)
 	{
 	}
 	func _getPredicate() -> NSPredicate?
@@ -174,15 +175,15 @@ extension ConfigOption {
   }
 
   override class func objectInContext(
-		managedObjectContext: NSManagedObjectContext,
+		_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode? = nil,
 		title:String = "") -> Self
   {
 		return _insertConfigOption(managedObjectContext, parent:parent, title:title)
   }
 
-	private class func _insertConfigOption<T:ConfigOption>(
-		managedObjectContext: NSManagedObjectContext,
+	fileprivate class func _insertConfigOption<T:ConfigOption>(
+		_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode?, title:String) -> T
 	{
 		let option = super.objectInContext(managedObjectContext) as! T
@@ -197,9 +198,9 @@ extension ConfigOption {
 }
 
 extension ConfigSection {
-	private struct Private {
+	fileprivate struct Private {
 		static let titleSortDescriptors = [NSSortDescriptor(key: "title",
-			ascending: true, selector: "caseInsensitiveCompare:")]
+			ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
     // we want to put "other..." subsection at the end of each section list.
     // we add a hidden character (non-breaking space) at the beginning
     // of the "other..." title, so sorting should sort titles in the order 
@@ -211,9 +212,9 @@ extension ConfigSection {
 	// I want to cache filtered children, so I do not run the filter unnecessarily
 	// the cache goes into storedFilteredChildren
 	// I need to reset the cache every time the predicate is updated 
-	private var _filteredChildren : NSOrderedSet {
+	fileprivate var _filteredChildren : NSOrderedSet {
 		if let p = self.predicate {
-			return self.children.filteredOrderedSetUsingPredicate(p)
+			return self.children.filtered(using: p)
 		} else {
 			return self.children
 		}
@@ -233,24 +234,25 @@ extension ConfigSection {
 	
 	override func sortAndIndexChildren()
 	{
-		mutableOrderedSetValueForKey("children").sortUsingDescriptors(
-			Private.titleSortDescriptors)
+		mutableOrderedSetValue(forKey: "children").sort(
+			using: Private.titleSortDescriptors)
 		var i = 0
 		for child in self.children {
 			if let node = child as? ConfigNode {
-				node.index = i++
+				node.index = i
+        i += 1
 				node.sortAndIndexChildren()
 				if let section = node as? ConfigSection {
 					var indexString = ""
 					var n = section
-					for var i = self.depth; i >= 0; --i {
+					for _ in 0...self.depth {
 						indexString = "\(n.index+1).\(indexString)"
 						n = n.parent as! ConfigSection
 					}
 					let digitsInCount = _digitsIn(section.parent!.children.count)
 					let digitsInIndex = _digitsIn(section.index+1)
 					let numberMargin = digitsInCount - digitsInIndex
-					for var i = 0; i < numberMargin; ++i {
+					for _ in 0 ..< numberMargin {
 						indexString = "\u{2007}\(indexString)"
 					}
 					section.title = "\(indexString) \(section.title)"
@@ -259,17 +261,17 @@ extension ConfigSection {
 		}
 	}
 	
-	override func _setPredicate(value:NSPredicate?)
+	override func _setPredicate(_ value:NSPredicate?)
 	{
-		willChangeValueForKey("filteredChildren")
+		willChangeValue(forKey: "filteredChildren")
 		self.storedFilteredChildren = nil
 		for node in self.children {
 			(node as! ConfigNode).predicate = value
 		}
-		didChangeValueForKey("filteredChildren")
+		didChangeValue(forKey: "filteredChildren")
 	}
 	
-	private func _digitsIn(x:Int) -> Int
+	fileprivate func _digitsIn(_ x:Int) -> Int
 	{
 		return Int(floor(log10(Double(x))))
 	}
@@ -281,7 +283,7 @@ extension ConfigRoot {
     return NSSet(object:"storedPredicate")
   }
 
-	override func _setPredicate(value:NSPredicate?)
+	override func _setPredicate(_ value:NSPredicate?)
 	{
 		self.storedPredicate = value
 		super._setPredicate(value)

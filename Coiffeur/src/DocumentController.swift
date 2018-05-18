@@ -23,15 +23,16 @@ import Cocoa
 
 class DocumentController : NSDocumentController {
   
-  override func beginOpenPanel(openPanel: NSOpenPanel,
-		forTypes inTypes: [String]?, completionHandler: (Int) -> Void)
+  override func beginOpenPanel(_ openPanel: NSOpenPanel,
+		forTypes inTypes: [String]?, completionHandler: @escaping (Int) -> Void)
   {
     openPanel.showsHiddenFiles = true
     super.beginOpenPanel(openPanel, forTypes:inTypes,
 			completionHandler:completionHandler)
   }
 	
-	private func _classForType(type:String) throws -> CoiffeurController.Type
+  @discardableResult
+	fileprivate func _classForType(_ type:String) throws -> CoiffeurController.Type
 	{
 		for aClass in CoiffeurController.availableTypes {
 			if type == aClass.documentType {
@@ -41,12 +42,12 @@ class DocumentController : NSDocumentController {
 		throw Error("Unknown type \(type)")
 	}
 	
-  override func typeForContentsOfURL(url: NSURL) throws -> String
+  override func typeForContents(of url: URL) throws -> String
   {
-    let type = try super.typeForContentsOfURL(url)
+    let type = try super.typeForContents(of: url)
 		try _classForType(type)
 		
-		let data = try String(contentsOfURL:url, encoding:NSUTF8StringEncoding)
+		let data = try String(contentsOf:url, encoding:String.Encoding.utf8)
 
 		for c in CoiffeurController.availableTypes {
 			if c.contentsIsValidInString(data) {

@@ -38,7 +38,7 @@ class Document : NSDocument {
     self.model = try CoiffeurController.coiffeurWithType(typeName)
   }
   
-  override var undoManager : NSUndoManager? {
+  override var undoManager : UndoManager? {
     get {
       if let model = self.model {
         return model.managedObjectContext.undoManager
@@ -51,11 +51,11 @@ class Document : NSDocument {
     }
   }
   
-  private func _ensureWeHaveModelOfType(typeName:String,
+  fileprivate func _ensureWeHaveModelOfType(_ typeName:String,
 		errorFormatKey:String) throws
   {
     if let model = self.model {
-      let documentType = model.dynamicType.documentType
+      let documentType = type(of: model).documentType
       if typeName != documentType {
 				throw Error(errorFormatKey, typeName, documentType)
       }
@@ -64,7 +64,7 @@ class Document : NSDocument {
     }
   }
   
-  override func readFromURL(absoluteURL: NSURL, ofType typeName: String) throws
+  override func read(from absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
 			errorFormatKey:"Cannot read content of document “%@” into document “%@”")
@@ -72,7 +72,7 @@ class Document : NSDocument {
     try self.model!.readValuesFromURL(absoluteURL)
   }
   
-  override func writeToURL(absoluteURL: NSURL, ofType typeName: String) throws
+  override func write(to absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
 			errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”")
@@ -98,11 +98,11 @@ class Document : NSDocument {
 //			shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
 //  }
 	
-  override func writableTypesForSaveOperation(_: NSSaveOperationType)
+  override func writableTypes(for _: NSSaveOperationType)
 		-> [String]
   {
     if let m = self.model {
-      return [m.dynamicType.documentType]
+      return [type(of: m).documentType]
     } else {
       return []
     }

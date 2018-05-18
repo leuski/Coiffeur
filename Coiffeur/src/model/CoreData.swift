@@ -23,7 +23,7 @@ import CoreData
 
 extension NSManagedObjectContext {
   
-	func entity<T:NSManagedObject>(entityClass:T.Type) -> NSEntityDescription?
+	func entity<T:NSManagedObject>(_ entityClass:T.Type) -> NSEntityDescription?
 	{
 		let mom = self.persistentStoreCoordinator!.managedObjectModel
 		let className = NSStringFromClass(entityClass)
@@ -35,22 +35,22 @@ extension NSManagedObjectContext {
 		return nil
 	}
 
-	func fetch(entity:NSEntityDescription?, sortDescriptors:[NSSortDescriptor]? = nil,
+	func fetch(_ entity:NSEntityDescription?, sortDescriptors:[NSSortDescriptor]? = nil,
 		withPredicate predicate: NSPredicate? = nil) throws -> [AnyObject]
 	{
 		if let theEntity = entity {
-			let fetchRequest = NSFetchRequest()
+			let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
 			
 			fetchRequest.entity = theEntity
 			fetchRequest.predicate = predicate
 			fetchRequest.sortDescriptors = sortDescriptors
 			
-			return try self.executeFetchRequest(fetchRequest)
+			return try self.fetch(fetchRequest)
 		}
 		return []
 	}
 
-	func fetch<T:NSManagedObject>(entityClass:T.Type,
+	func fetch<T:NSManagedObject>(_ entityClass:T.Type,
 		sortDescriptors:[NSSortDescriptor]? = nil,
 		withPredicate predicate: NSPredicate? = nil) throws -> [T]
 	{
@@ -58,36 +58,36 @@ extension NSManagedObjectContext {
 			withPredicate:predicate)) as! [T]
 	}
 
-	func fetch<T:NSManagedObject>(entityClass:T.Type,
+	func fetch<T:NSManagedObject>(_ entityClass:T.Type,
 		sortDescriptors:[NSSortDescriptor]? = nil,
-		withFormat format: String, _ args: CVarArgType ...) throws -> [T]
+		withFormat format: String, _ args: CVarArg ...) throws -> [T]
 	{
 		return try fetch(entityClass, sortDescriptors:sortDescriptors,
 			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 
-	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
-		withPredicate predicate: NSPredicate? = nil,
-		sortDescriptors:[NSSortDescriptor]? = nil) throws -> T?
+	func fetchSingle<T:NSManagedObject>(_ entityClass:T.Type,
+	                 sortDescriptors:[NSSortDescriptor]? = nil,
+	                 withPredicate predicate: NSPredicate? = nil) throws -> T?
 	{
-		let array = try fetch(entity(entityClass), withPredicate:predicate,
-			sortDescriptors:sortDescriptors)
+		let array = try fetch(entity(entityClass),
+			sortDescriptors:sortDescriptors, withPredicate:predicate)
 
 		return array.isEmpty ? nil : (array[0] as? T)
 	}
 	
-	func fetchSingle<T:NSManagedObject>(entityClass:T.Type,
+	func fetchSingle<T:NSManagedObject>(_ entityClass:T.Type,
 		sortDescriptors:[NSSortDescriptor]? = nil, withFormat format: String,
-		_ args: CVarArgType ...) throws -> T?
+		_ args: CVarArg ...) throws -> T?
 	{
 		return try fetchSingle(entityClass, sortDescriptors:sortDescriptors,
 			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
 	
-	func insert<T:NSManagedObject>(entityClass:T.Type) -> T
+	func insert<T:NSManagedObject>(_ entityClass:T.Type) -> T
 	{
 		return entityClass.init(entity:entity(entityClass)!,
-			insertIntoManagedObjectContext:self)
+			insertInto:self)
 	}
 
   func disableUndoRegistration()
@@ -102,7 +102,7 @@ extension NSManagedObjectContext {
     self.undoManager?.enableUndoRegistration()
   }
   
-  func beginActionWithName(name:String)
+  func beginActionWithName(_ name:String)
   {
     self.undoManager?.beginUndoGrouping()
     self.undoManager?.setActionName(name)
@@ -116,7 +116,7 @@ extension NSManagedObjectContext {
 
 extension NSManagedObject {
 	
-	class func objectInContext(managedObjectContext: NSManagedObjectContext)
+	class func objectInContext(_ managedObjectContext: NSManagedObjectContext)
 		-> Self
   {
     return managedObjectContext.insert(self)
@@ -139,19 +139,19 @@ extension NSManagedObjectModel {
 	//
 	// Here we assume that the model file contains unqualified class names and
 	// we add the module name.
-	func copyForModuleWithClass(clazz:NSObject.Type) -> NSManagedObjectModel
+	func copyForModuleWithClass(_ clazz:NSObject.Type) -> NSManagedObjectModel
 	{
 		let moduleName : String
 		let className = clazz.className()
-		if let range = className.rangeOfString(".") {
-			moduleName = "\(className.substringToIndex(range.startIndex))."
+		if let range = className.range(of: ".") {
+			moduleName = "\(className.substring(to: range.lowerBound))."
 		} else {
 			moduleName = ""
 		}
 		return copyForModuleWithName(moduleName)
 	}
 	
-	func copyForModuleWithName(moduleName: String) -> NSManagedObjectModel
+	func copyForModuleWithName(_ moduleName: String) -> NSManagedObjectModel
 	{
 		if moduleName.isEmpty { return self }
 		
@@ -172,7 +172,7 @@ extension NSEntityDescription {
 	
 	typealias Cache = Dictionary<String, NSEntityDescription>
 	
-	func copyWithModuleName(moduleName: String, inout cache:Cache)
+	func copyWithModuleName(_ moduleName: String, cache:inout Cache)
 		-> NSEntityDescription
 	{
 		if moduleName.isEmpty { return self }

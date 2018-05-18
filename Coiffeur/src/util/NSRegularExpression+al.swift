@@ -25,35 +25,35 @@ import Foundation
 	Simplifies parsing by shortening the argument list
  */
 extension NSRegularExpression {
-	class func ci_dmls_re_WithPattern(pattern: String) -> NSRegularExpression
+	class func ci_dmls_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
 		return try! NSRegularExpression(pattern: pattern,
-			options: [NSRegularExpressionOptions.CaseInsensitive, NSRegularExpressionOptions.DotMatchesLineSeparators])
+			options: [NSRegularExpression.Options.caseInsensitive, NSRegularExpression.Options.dotMatchesLineSeparators])
 	}
 	
-	class func ci_re_WithPattern(pattern: String) -> NSRegularExpression
+	class func ci_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
 		return try! NSRegularExpression(pattern: pattern,
-			options: NSRegularExpressionOptions.CaseInsensitive)
+			options: NSRegularExpression.Options.caseInsensitive)
 	}
 	
-	class func aml_re_WithPattern(pattern: String) -> NSRegularExpression
+	class func aml_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
 		return try! NSRegularExpression(pattern: pattern,
-			options: NSRegularExpressionOptions.AnchorsMatchLines)
+			options: NSRegularExpression.Options.anchorsMatchLines)
 	}
 	
-	func firstMatchInString(string:String) -> NSTextCheckingResult?
+	func firstMatchInString(_ string:String) -> NSTextCheckingResult?
 	{
-		return firstMatchInString(string,
-			options: NSMatchingOptions(), range: string.nsRange)
+		return firstMatch(in: string,
+			options: NSRegularExpression.MatchingOptions(), range: string.nsRange)
 	}
 	
-	func stringByReplacingMatchesInString(string: String,
+	func stringByReplacingMatchesInString(_ string: String,
 		withTemplate template: String) -> String
 	{
-		return self.stringByReplacingMatchesInString(string,
-			options:NSMatchingOptions(), range:string.nsRange, withTemplate: template)
+		return self.stringByReplacingMatches(in: string,
+			options:NSRegularExpression.MatchingOptions(), range:string.nsRange, withTemplate: template)
 	}
 }
 

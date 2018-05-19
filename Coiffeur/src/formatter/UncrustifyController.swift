@@ -114,7 +114,7 @@ class UncrustifyController: CoiffeurController {
 
         currentComment = currentComment.trim()
         if !currentComment.isEmpty {
-          if let _ = currentComment.rangeOfCharacter(
+          if nil != currentComment.rangeOfCharacter(
             from: CharacterSet.newlines) {
           } else {
             currentSection = ConfigSection.objectInContext(
@@ -187,21 +187,14 @@ class UncrustifyController: CoiffeurController {
     }
 
     let head = tokens[0]
-
-    if head == "type" {
-    } else if head == "define" {
-    } else if head == "macro-open" {
-    } else if head == "macro-close" {
-    } else if head == "macro-else" {
-    } else if head == "set" {
-    } else if head == "include" {
-    } else if head == "file_ext" {
-    } else {
+    switch head {
+    case "type", "define", "macro-open", "macro-close",
+         "macro-else", "set", "include", "file_ext":
+      break
+    default:
       return (key:head, value:tokens[1])
     }
-
     return nil
-
   }
 
   override func readValuesFromLineArray(_ lines: [String]) throws
@@ -273,12 +266,13 @@ class UncrustifyController: CoiffeurController {
       args.append(Private.FragmentFlag)
     }
 
-    Process(self.executableURL, arguments: args,
-            workingDirectory: workingDirectory).runAsync(arguments.text)
-            {
-              (result: StringResult) -> Void in
-              let _ = try? FileManager.default.removeItem(at: configURL)
-              completionHandler(result)
+    Process(
+      self.executableURL, arguments: args, workingDirectory: workingDirectory)
+      .runAsync(arguments.text)
+    {
+      (result: StringResult) -> Void in
+      try? FileManager.default.removeItem(at: configURL)
+      completionHandler(result)
     }
 
     return true

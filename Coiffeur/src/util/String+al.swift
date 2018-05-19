@@ -35,9 +35,10 @@ extension String {
     var curQuote: Character = nullChar
     var currentToken: String = ""
 
-    for ch in self {
+    for character in self {
 
-      let isSpace = ch == " " || ch == "\t" || ch == "\n" || ch == "\r"
+      let isSpace = character == " "
+        || character == "\t" || character == "\n" || character == "\r"
 
       if !isArg {
         if isSpace {
@@ -50,20 +51,20 @@ extension String {
 
       if isBackslash {
         isBackslash = false
-        currentToken.append(ch)
-      } else if ch == "\\" {
+        currentToken.append(character)
+      } else if character == "\\" {
         isBackslash = true
-      } else if ch == curQuote {
+      } else if character == curQuote {
         curQuote = nullChar
-      } else if (ch == "'") || (ch == "\"") || (ch == "`") {
-        curQuote = ch
+      } else if (character == "'") || (character == "\"") || (character == "`") {
+        curQuote = character
       } else if curQuote != nullChar {
-        currentToken.append(ch)
-      } else if (isSpace) {
+        currentToken.append(character)
+      } else if isSpace {
         isArg = false
         result.append(currentToken)
       } else {
-        currentToken.append(ch)
+        currentToken.append(character)
       }
     }
 
@@ -76,14 +77,14 @@ extension String {
 
   var words: [String] {
     var result = [String]()
-    self.enumerateLinguisticTags(in: self.startIndex..<self.endIndex,
-                                 scheme: NSLinguisticTagScheme.tokenType.rawValue,
-                                 options: NSLinguisticTagger.Options.omitWhitespace,
-                                 orthography: nil) {
-                                  (tag: String,
-                                  tokenRange: Range<String.Index>,
-                                  sentenceRange: Range<String.Index>, stop:inout Bool) -> () in
-                                  result.append(String(self[tokenRange]))
+    self.enumerateLinguisticTags(
+      in: self.startIndex..<self.endIndex,
+      scheme: NSLinguisticTagScheme.tokenType.rawValue,
+      options: NSLinguisticTagger.Options.omitWhitespace,
+      orthography: nil)
+    {
+      (_, tokenRange: Range<String.Index>, _, _) in
+      result.append(String(self[tokenRange]))
     }
     return result
   }
@@ -98,17 +99,17 @@ extension String {
 
   fileprivate func _stringByQuoting(_ quote: Character) -> String
   {
-    let bs: Character = "\\"
+    let backSpace: Character = "\\"
     var result = ""
     result.append(quote)
 
-    for ch in self {
-      switch ch {
+    for character in self {
+      switch character {
       case quote, "\\", "\"", "'", "`", " ", "\t", "\r", "\n":
-        result.append(bs)
-        fallthrough
+        result.append(backSpace)
+        result.append(character)
       default:
-        result.append(ch)
+        result.append(character)
       }
     }
 
@@ -123,7 +124,7 @@ extension String {
 
     if self.isEmpty {
       return _stringByQuoting(quote)
-    } else if let _ = self.rangeOfCharacter(from: set as CharacterSet) {
+    } else if nil != self.rangeOfCharacter(from: set as CharacterSet) {
       return _stringByQuoting(quote)
     } else {
       return self
@@ -191,7 +192,7 @@ extension String {
         start = numberOfLines
         end = numberOfLines
 
-        if (lastCharacter < range.lowerBound) {
+        if lastCharacter < range.lowerBound {
           break
         }
       }
@@ -209,7 +210,7 @@ extension String {
 
   func lineCountForCharacterRange(_ range: Range<String.Index>) -> Int
   {
-    if (range.upperBound == range.lowerBound) {
+    if range.upperBound == range.lowerBound {
       return 0
     }
 
@@ -220,7 +221,7 @@ extension String {
     while index < self.endIndex {
       let nextIndex = self.lineRange(for: index..<index).upperBound
 
-      if (index <= lastCharacter && lastCharacter < nextIndex) {
+      if index <= lastCharacter && lastCharacter < nextIndex {
         return numberOfLines
       }
 
@@ -237,7 +238,7 @@ extension String {
   }
 
   var nsRange: NSRange {
-    return NSMakeRange(0, (self as NSString).length)
+    return NSRange(location: 0, length: (self as NSString).length)
   }
 
   func substringWithRange(_ range: NSRange) -> String

@@ -27,12 +27,7 @@ extension NSManagedObjectContext {
   {
     let mom = self.persistentStoreCoordinator!.managedObjectModel
     let className = NSStringFromClass(entityClass)
-    for entity in mom.entities {
-      if className == entity.managedObjectClassName {
-        return entity
-      }
-    }
-    return nil
+    return mom.entities.first { $0.managedObjectClassName == className }
   }
 
   func fetch(_ entity: NSEntityDescription?, sortDescriptors: [NSSortDescriptor]? = nil,

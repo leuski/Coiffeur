@@ -51,7 +51,7 @@ extension NSSegmentedControl {
         let attributedString = NSAttributedString(string: token, attributes: attributes)
         let size = attributedString.size()
 
-        if (width < size.width) {
+        if width < size.width {
           width = size.width
         }
 

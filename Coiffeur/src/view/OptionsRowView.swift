@@ -74,50 +74,22 @@ class ConfigRowView: NSTableRowView {
       backgroundColor.setFill()
 
     } else {
-
-      let tf = self.textField
-      if self.interiorBackgroundStyle == .dark {
-        tf?.textColor = NSColor.selectedTextColor
-
-        if self.window?.backingScaleFactor == 1 {
-          // light on dark looks bad on regular resolution screen,
-          // so we make the font bold to improve readability
-          tf?.font = NSFontManager.shared.convert(
-            (tf?.font!)!, toHaveTrait: NSFontTraitMask.boldFontMask)
-        } else {
-          // on a retina screen the same text looks fine. no need to do bold.
-          tf?.font = NSFontManager.shared.convert(
-            (tf?.font!)!, toNotHaveTrait: NSFontTraitMask.boldFontMask)
-        }
-      } else {
-        tf?.textColor = NSColor.textColor
-        tf?.font = NSFontManager.shared.convert(
-          (tf?.font!)!, toNotHaveTrait: NSFontTraitMask.boldFontMask)
-      }
-
+      _adjustTextFieldFont()
       self.backgroundColor.setFill()
     }
 
-    NSMakeRect(CGFloat(0), CGFloat(0),
-               self.bounds.size.width, self.bounds.size.height).fill()
+    NSRect(x: CGFloat(0), y: CGFloat(0),
+           width: self.bounds.size.width, height: self.bounds.size.height).fill()
 
     if drawSeparator {
-      // draw the top border
-      let path = NSBezierPath()
-      path.lineWidth = CGFloat(1)
-      path.move(to: NSMakePoint(CGFloat(0),
-                                self.bounds.size.height-path.lineWidth+0.5))
-      path.line(to: NSMakePoint(self.bounds.size.width,
-                                self.bounds.size.height-path.lineWidth+0.5))
-      NSColor.gridColor.set()
-      path.stroke()
+      _separatorPath().stroke()
     }
 
     // draw the colored lines using the section colors
     for index in 0 ..< min(1, locations.count - 1) {
       locations[index].color.setFill()
-      NSMakeRect(CGFloat(3 + index*5), CGFloat(0),
-                 CGFloat(3), self.bounds.size.height-1).fill()
+      NSRect(x: CGFloat(3 + index*5), y: CGFloat(0),
+             width: CGFloat(3), height: self.bounds.size.height-1).fill()
     }
 
     // if we are a group, underline the title with the appropriate color
@@ -127,12 +99,50 @@ class ConfigRowView: NSTableRowView {
       let lineLength = 200
       let hOffset = 3 + 5*(locations.count-1)
       path.lineWidth = CGFloat(1)
-      path.move(to: NSMakePoint(CGFloat(hOffset),
-                                self.bounds.size.height-path.lineWidth+0.5))
-      path.line(to: NSMakePoint(CGFloat(lineLength - hOffset),
-                                self.bounds.size.height-path.lineWidth+0.5))
+      path.move(to: NSPoint(x: CGFloat(hOffset),
+                            y: self.bounds.size.height-path.lineWidth+0.5))
+      path.line(to: NSPoint(x: CGFloat(lineLength - hOffset),
+                            y: self.bounds.size.height-path.lineWidth+0.5))
       path.stroke()
     }
+  }
+
+  private func _adjustTextFieldFont() {
+    guard
+      let textField = textField,
+      let textFieldFont = textField.font
+      else { return }
+
+    if self.interiorBackgroundStyle == .dark {
+      textField.textColor = .selectedTextColor
+
+      if self.window?.backingScaleFactor == 1 {
+        // light on dark looks bad on regular resolution screen,
+        // so we make the font bold to improve readability
+        textField.font = NSFontManager.shared.convert(
+          textFieldFont, toHaveTrait: .boldFontMask)
+      } else {
+        // on a retina screen the same text looks fine. no need to do bold.
+        textField.font = NSFontManager.shared.convert(
+          textFieldFont, toNotHaveTrait: .boldFontMask)
+      }
+    } else {
+      textField.textColor = NSColor.textColor
+      textField.font = NSFontManager.shared.convert(
+        textFieldFont, toNotHaveTrait: .boldFontMask)
+    }
+  }
+
+  private func _separatorPath() -> NSBezierPath {
+    // draw the top border
+    let path = NSBezierPath()
+    path.lineWidth = CGFloat(1)
+    path.move(to: NSPoint(x: CGFloat(0),
+                          y: self.bounds.size.height-path.lineWidth+0.5))
+    path.line(to: NSPoint(x: self.bounds.size.width,
+                          y: self.bounds.size.height-path.lineWidth+0.5))
+    NSColor.gridColor.set()
+    return path
   }
 
   override func drawSelection(in dirtyRect: NSRect)
@@ -154,7 +164,10 @@ class ConfigRowView: NSTableRowView {
 
     // paint
     color.setFill()
-    NSMakeRect(margin, CGFloat(0),
-               self.bounds.size.width-margin, self.bounds.size.height-1).fill()
+    NSRect(
+      x: margin, y: CGFloat(0),
+      width: bounds.size.width-margin,
+      height: bounds.size.height-1)
+      .fill()
   }
 }

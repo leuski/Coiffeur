@@ -70,22 +70,17 @@ class Language: NSObject {
     return []
   }
 
-  class func languageWithUTI(_ uti: String) -> Language?
-  {
-    for language in self.supportedLanguages {
-      if let _ = language.UTIs.index(of: uti) {
-        return language
-      }
-    }
-    return nil
+  class func languageWithUTI(_ uti: String) -> Language? {
+    return supportedLanguages.first { $0.UTIs.contains(uti) }
   }
 
   class func languageFromUserDefaults() -> Language
   {
-    if let uti = UserDefaults.standard.string(forKey: Private.UserDefaultsKey) {
-      if let language = Language.languageWithUTI(uti) {
+    if
+      let uti = UserDefaults.standard.string(forKey: Private.UserDefaultsKey),
+      let language = Language.languageWithUTI(uti)
+    {
         return language
-      }
     }
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }

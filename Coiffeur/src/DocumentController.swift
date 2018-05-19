@@ -34,10 +34,10 @@ class DocumentController: NSDocumentController {
   @discardableResult
   fileprivate func _classForType(_ type: String) throws -> CoiffeurController.Type
   {
-    for aClass in CoiffeurController.availableTypes {
-      if type == aClass.documentType {
-        return aClass
-      }
+    for aClass in CoiffeurController.availableTypes
+      where type == aClass.documentType
+    {
+      return aClass
     }
     throw Error("Unknown type \(type)")
   }

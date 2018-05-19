@@ -158,7 +158,7 @@ extension ConfigOption {
   }
 
   override var name: String {
-    get { return self.indexKey }
+    return self.indexKey
   }
 
   class func keyPathsForValuesAffectingDocumentation() -> NSSet
@@ -203,8 +203,10 @@ extension ConfigOption {
 
 extension ConfigSection {
   fileprivate struct Private {
-    static let titleSortDescriptors = [NSSortDescriptor(key: "title",
-                                                        ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+    static let titleSortDescriptors = [
+      NSSortDescriptor(
+        key: "title", ascending: true,
+        selector: #selector(NSString.caseInsensitiveCompare(_:)))]
     // we want to put "other..." subsection at the end of each section list.
     // we add a hidden character (non-breaking space) at the beginning
     // of the "other..." title, so sorting should sort titles in the order

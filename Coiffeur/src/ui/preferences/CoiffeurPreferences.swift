@@ -97,7 +97,8 @@ extension CoiffeurPreferences: NSTableViewDelegate {
 extension CoiffeurPreferences: NSPathControlDelegate {
   func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
   {
-    if let tcv = pathControl.superview as? NSTableCellView,
+    if
+      let tcv = pathControl.superview as? NSTableCellView,
       let ccc = tcv.objectValue as? CoiffeurControllerClass,
       let url = ccc.defaultExecutableURL
     {
@@ -106,15 +107,15 @@ extension CoiffeurPreferences: NSPathControlDelegate {
                           url.lastPathComponent),
         action: #selector(CoiffeurPreferences.selectURL(_:)),
         keyEquivalent: "", at: 0)
-      item.representedObject = [ "class" : ccc, "url" : url ]
-        as Dictionary<String, AnyObject>
+      item.representedObject = [ "class": ccc, "url": url ]
+        as [String: AnyObject]
     }
   }
 
   @objc func selectURL(_ sender: AnyObject)
   {
     if
-      let dictionary = sender.representedObject as? Dictionary<String, AnyObject>,
+      let dictionary = sender.representedObject as? [String: AnyObject],
       let theClass = dictionary["class"] as? CoiffeurControllerClass
     {
       theClass.currentExecutableURL = dictionary["url"] as? URL

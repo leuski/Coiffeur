@@ -162,10 +162,12 @@ class SourceView: NSViewController {
     let textView: NSTextView = self.fragaria.textView()
     textView.isEditable = false
     textView.textContainer!.widthTracksTextView = false
-    textView.textContainer!.containerSize = NSMakeSize(CGFloat.greatestFiniteMagnitude, CGFloat.greatestFiniteMagnitude)
+    textView.textContainer!.containerSize = NSSize(
+      width: CGFloat.greatestFiniteMagnitude,
+      height: CGFloat.greatestFiniteMagnitude)
 
     let       scrollView       = textView.enclosingScrollView!
-    scrollView.verticalScroller = OverviewScroller(frame: NSMakeRect(0,0,0,0))
+    scrollView.verticalScroller = OverviewScroller(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     scrollView.verticalScroller!.scrollerStyle = NSScroller.Style.legacy
   }
 
@@ -174,8 +176,8 @@ class SourceView: NSViewController {
   {
     let textStorage = self.fragaria.textView().textStorage!
 
-    textStorage.removeAttribute(NSAttributedStringKey.backgroundColor,
-                                range: NSMakeRange(0, textStorage.length))
+    textStorage.removeAttribute(
+      .backgroundColor, range: NSRange(location: 0, length: textStorage.length))
 
     if intensity == 0 {
       return []
@@ -211,11 +213,13 @@ class SourceView: NSViewController {
           lineRanges.append(OverviewRegion(firstLineIndex: lineCount,
                                            lineCount: 0, color: deleteColor1))
           if offset < textStorage.length {
-            textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-                                     value: deleteColor, range: NSMakeRange(offset, 1))
+            textStorage.addAttribute(
+              .backgroundColor, value: deleteColor,
+              range: NSRange(location: offset, length: 1))
           } else if offset > 0 {
-            textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-                                     value: deleteColor, range: NSMakeRange(offset-1, 1))
+            textStorage.addAttribute(
+              .backgroundColor, value: deleteColor,
+              range: NSRange(location: offset-1, length: 1))
           }
         } else {
           let length = diff.text.distance(from: diff.text.startIndex, to: diff.text.endIndex)
@@ -227,8 +231,8 @@ class SourceView: NSViewController {
           if diff.diffOperation == .insert {
             lineRanges.append(OverviewRegion(firstLineIndex: lineCount,
                                              lineCount: lineSpan, color: insertColor1))
-            textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-                                     value: insertColor, range: NSMakeRange(offset, length))
+            textStorage.addAttribute(
+              .backgroundColor, value: insertColor, range: NSRange(location: offset, length: length))
           }
 
           lineCount += lineSpan
@@ -270,16 +274,16 @@ extension SourceView: NSPathControlDelegate {
   {
     var count = 0
 
-    info.enumerateDraggingItems(options: NSDraggingItemEnumerationOptions(),
-                                for: pathControl,
-                                classes: [NSURL.self],
-                                searchOptions: [:],
-                                using: {
-                                  (draggingItem: NSDraggingItem!, idx: Int,
-                                  stop: UnsafeMutablePointer<ObjCBool>) in
-                                  if let _ = self._allowedURLForItem(draggingItem) {
-                                    count += 1
-                                  }
+    info.enumerateDraggingItems(
+      options: NSDraggingItemEnumerationOptions(),
+      for: pathControl,
+      classes: [NSURL.self],
+      searchOptions: [:],
+      using: {
+        (draggingItem, _, _) in
+        if nil != self._allowedURLForItem(draggingItem) {
+          count += 1
+        }
     })
     return count == 1 ? NSDragOperation.every : NSDragOperation()
   }
@@ -289,17 +293,17 @@ extension SourceView: NSPathControlDelegate {
   {
     var theURL: URL? = nil
 
-    info.enumerateDraggingItems(options: NSDraggingItemEnumerationOptions(),
-                                for: pathControl,
-                                classes: [NSURL.self],
-                                searchOptions: [:],
-                                using: {
-                                  (draggingItem: NSDraggingItem!, idx: Int,
-                                  stop: UnsafeMutablePointer<ObjCBool>) in
-                                  if let url = self._allowedURLForItem(draggingItem) {
-                                    theURL = url
-                                    stop.pointee = true
-                                  }
+    info.enumerateDraggingItems(
+      options: NSDraggingItemEnumerationOptions(),
+      for: pathControl,
+      classes: [NSURL.self],
+      searchOptions: [:],
+      using: {
+        (draggingItem, _, stop) in
+        if let url = self._allowedURLForItem(draggingItem) {
+          theURL = url
+          stop.pointee = true
+        }
     })
 
     if let url = theURL {
@@ -311,13 +315,12 @@ extension SourceView: NSPathControlDelegate {
 
   fileprivate func _allowedURLForItem(_ draggingItem: NSDraggingItem) -> URL?
   {
-    let DC = NSDocumentController.shared
-    if let url  = draggingItem.item as? URL,
-      let type = try? DC.typeForContents(of: url)
+    if
+      let url  = draggingItem.item as? URL,
+      let type = try? NSDocumentController.shared.typeForContents(of: url),
+      self.allowedFileTypes.contains(type)
     {
-      if self.allowedFileTypes.contains(type) {
-        return url
-      }
+      return url
     }
     return nil
   }
@@ -358,20 +361,20 @@ extension SourceView {
       return
     }
 
-    let op = NSOpenPanel()
+    let openPanel = NSOpenPanel()
 
     if self.allowedFileTypes.count > 0 {
-      op.allowedFileTypes = self.allowedFileTypes
+      openPanel.allowedFileTypes = self.allowedFileTypes
     }
 
-    op.allowsOtherFileTypes = false
+    openPanel.allowsOtherFileTypes = false
 
-    op.beginSheetModal(for: self.view.window!, completionHandler:
-      { (result: NSApplication.ModalResponse) in
-        if (result.rawValue == NSFileHandlingPanelOKButton) {
-          self.tryLoadSourceFromURL(op.url!)
-        }
-    })
+    openPanel.beginSheetModal(for: self.view.window!) {
+      (result: NSApplication.ModalResponse) in
+      if result.rawValue == NSFileHandlingPanelOKButton {
+        self.tryLoadSourceFromURL(openPanel.url!)
+      }
+    }
   }
 
   override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
@@ -381,16 +384,18 @@ extension SourceView {
 
   fileprivate func _restoreSource()
   {
-    let UD = UserDefaults.standard
-    if let lastURL = UD.url(forKey: Private.LastSourceURLUDKey) {
-      if self.tryLoadSourceFromURL(lastURL) {
-        return
-      }
+    if
+      let lastURL = UserDefaults.standard.url(
+        forKey: Private.LastSourceURLUDKey),
+      self.tryLoadSourceFromURL(lastURL)
+    {
+      return
     }
 
-    let url = Bundle.main.url(forResource: Private.SampleFileName,
-                              withExtension: Private.ObjectiveCPPExtension,
-                              subdirectory: Private.SamplesFolderName)!
+    let url = Bundle.main.url(
+      forResource: Private.SampleFileName,
+      withExtension: Private.ObjectiveCPPExtension,
+      subdirectory: Private.SamplesFolderName)!
 
     if !self.tryLoadSourceFromURL(url) {
       NSException(name: NSExceptionName(rawValue: "No Source"),
@@ -404,11 +409,11 @@ extension SourceView {
     let resourcesURL = Bundle.main.resourceURL!
     let baseURL = resourcesURL.appendingPathComponent(
       Private.SamplesFolderName)
-    let fm = FileManager.default
     // TODO
-    if let urls = try? fm.contentsOfDirectory(at: baseURL,
-                                              includingPropertiesForKeys: nil,
-                                              options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles) {
+    if let urls = try? FileManager.default.contentsOfDirectory(
+      at: baseURL, includingPropertiesForKeys: nil,
+      options: .skipsHiddenFiles)
+    {
       return urls
     }
     return []
@@ -427,14 +432,15 @@ extension SourceView: CoiffeurControllerDelegate {
   func coiffeurController(_ coiffeurController: CoiffeurController,
                           setText text: String)
   {
-    let UD = UserDefaults.standard
     var pageGuideColumn = coiffeurController.pageGuideColumn
-    if UD.bool(forKey: "CoiffeurOverwritePageGuide") {
-      pageGuideColumn = UD.integer(forKey: "CoiffeurOverwritePageGuideValue")
+    if UserDefaults.standard.bool(forKey: "CoiffeurOverwritePageGuide") {
+      pageGuideColumn = UserDefaults.standard.integer(
+        forKey: "CoiffeurOverwritePageGuideValue")
     }
-    UD.set(pageGuideColumn,
-           forKey: MGSFragariaPrefsShowPageGuideAtColumn)
-    UD.set(pageGuideColumn != 0, forKey: MGSFragariaPrefsShowPageGuide)
+    UserDefaults.standard.set(
+      pageGuideColumn, forKey: MGSFragariaPrefsShowPageGuideAtColumn)
+    UserDefaults.standard.set(
+      pageGuideColumn != 0, forKey: MGSFragariaPrefsShowPageGuide)
     self.string = text
   }
 

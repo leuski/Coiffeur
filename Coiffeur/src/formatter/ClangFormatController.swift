@@ -117,8 +117,8 @@ class ClangFormatController: CoiffeurController {
     rst = rst.trim()
     rst += "\n"
 
-    let nl  = "__NL__"
-    let sp  = "__SP__"
+    let endl  = "__NL__"
+    let space  = "__SP__"
     let par = "__PAR__"
 
     // preserve all spacing inside \code ... \endcode
@@ -132,8 +132,8 @@ class ClangFormatController: CoiffeurController {
       }
 
       var code = rst.substringWithRange(match!.range(at: 1))
-      code = code.replacingOccurrences(of: "\n", with: nl)
-      code = code.replacingOccurrences(of: " ", with: sp)
+      code = code.replacingOccurrences(of: "\n", with: endl)
+      code = code.replacingOccurrences(of: " ", with: space)
       code += rst.substringWithRange(match!.range(at: 2))
       rst = rst.stringByReplacingCharactersInRange(match!.range(at: 0),
                                                    withString: code)
@@ -141,8 +141,8 @@ class ClangFormatController: CoiffeurController {
 
     // preserve double nl, breaks before * and - (list items)
     rst = rst.replacingOccurrences(of: "\n\n", with: par)
-    rst = rst.replacingOccurrences(of: "\n*", with: "\(nl)*")
-    rst = rst.replacingOccurrences(of: "\n-", with: "\(nl)-")
+    rst = rst.replacingOccurrences(of: "\n*", with: "\(endl)*")
+    rst = rst.replacingOccurrences(of: "\n-", with: "\(endl)-")
 
     // un-escape escaped characters
     let esc = NSRegularExpression.ci_dmls_re_WithPattern("\\\\(.)")
@@ -156,8 +156,8 @@ class ClangFormatController: CoiffeurController {
     rst = wsp.stringByReplacingMatchesInString(rst, withTemplate: " ")
 
     // restore saved spacing
-    rst = rst.replacingOccurrences(of: nl, with: "\n")
-    rst = rst.replacingOccurrences(of: sp, with: " ")
+    rst = rst.replacingOccurrences(of: endl, with: "\n")
+    rst = rst.replacingOccurrences(of: space, with: " ")
     rst = rst.replacingOccurrences(of: par, with: "\n\n")
 
     // quote the emphasized words
@@ -178,8 +178,8 @@ class ClangFormatController: CoiffeurController {
 
   override func readOptionsFromLineArray(_ lines: [String]) throws
   {
-    let section = ConfigSection.objectInContext(self.managedObjectContext,
-                                                parent: self.root, title: "Options")
+    let section = ConfigSection.objectInContext(
+      self.managedObjectContext, parent: self.root, title: "Options")
 
     var currentOption: ConfigOption?
 
@@ -206,33 +206,30 @@ class ClangFormatController: CoiffeurController {
         continue
       }
 
-      //              NSString* trimmedLine = [line trim)
-      //              if (trimmedLine.length == 0)
-      //                      line = trimmedLine
-
       line = line.trim()
 
       if let match = head.firstMatchInString(line) {
 
         self._closeOption(&currentOption)
 
-        let newOption = ConfigOption.objectInContext(self.managedObjectContext,
-                                                     parent: section)
+        let newOption = ConfigOption.objectInContext(
+          self.managedObjectContext, parent: section)
         newOption.indexKey   = line.substringWithRange(match.range(at: 1))
-        isInTitle             = true
+        isInTitle            = true
         let type             = line.substringWithRange(match.range(at: 2))
 
-        if type == "bool" {
+        switch type {
+        case "bool":
           newOption.type = "false,true"
-        } else if type == "unsigned" {
+        case "unsigned":
           newOption.type = OptionType.unsigned.rawValue
-        } else if type == "int" {
+        case "int":
           newOption.type = OptionType.signed.rawValue
-        } else if type == "std::string" {
+        case "std::string":
           newOption.type = OptionType.string.rawValue
-        } else if type == "std::vector<std::string>" {
+        case "std::vector<std::string>":
           newOption.type = OptionType.stringList.rawValue
-        } else {
+        default:
           newOption.type = ""
         }
 
@@ -245,29 +242,27 @@ class ClangFormatController: CoiffeurController {
         isInTitle = false
       }
 
-      if let option = currentOption {
+      guard let option = currentOption else { continue }
 
-        if let match = item.firstMatchInString(line) {
-          let token = line.substringWithRange(match.range(at: 2))
+      if let match = item.firstMatchInString(line) {
+        let token = line.substringWithRange(match.range(at: 2))
 
-          if !token.isEmpty {
-            option.type = option.type.stringByAppendingString(token,
-                                                              separatedBy: ConfigNode.typeSeparator)
-          }
-
-          let prefix = line.substringWithRange(match.range(at: 1))
-          option.documentation +=
-          "\(prefix)``\(token)``\n"
-          continue
+        if !token.isEmpty {
+          option.type = option.type.stringByAppendingString(
+            token, separatedBy: ConfigNode.typeSeparator)
         }
 
-        if isInTitle {
-          option.title = option.title.stringByAppendingString(line,
-                                                              separatedBy: " ")
-        }
-
-        option.documentation += "\(line)\n"
+        let prefix = line.substringWithRange(match.range(at: 1))
+        option.documentation += "\(prefix)``\(token)``\n"
+        continue
       }
+
+      if isInTitle {
+        option.title = option.title.stringByAppendingString(
+          line, separatedBy: " ")
+      }
+
+      option.documentation += "\(line)\n"
     }
 
     self._closeOption(&currentOption)
@@ -343,7 +338,8 @@ class ClangFormatController: CoiffeurController {
 
     var args = [Private.StyleFlag]
 
-    if let _ = arguments.language.clangFormatID,
+    if
+      nil != arguments.language.clangFormatID,
       let ext = arguments.language.defaultExtension
     {
       args.append(String(format: Private.SourceFileNameFormat, ext))

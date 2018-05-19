@@ -20,7 +20,7 @@ class TableCellView: NSTableCellView {
       }
 
       // Otherwise you need to change the color manually
-      switch (self.backgroundStyle) {
+      switch self.backgroundStyle {
       case NSBackgroundStyle.Light:
         if let textField = self.textField {
           textField.textColor = NSColor(calibratedWhite: 0.0, alpha: 1.0)

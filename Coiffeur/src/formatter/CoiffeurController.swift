@@ -71,13 +71,14 @@ class CoiffeurController: NSObject {
 
   class var currentExecutableURL: URL? {
     get {
-      let UD = UserDefaults.standard
-      if let url = UD.url(forKey: self.currentExecutableURLUDKey)
+      if let url = UserDefaults.standard.url(
+        forKey: self.currentExecutableURLUDKey)
       {
         if FileManager.default.isExecutableFile(atPath: url.path) {
           return url
         } else {
-          UD.removeObject(forKey: self.currentExecutableURLUDKey)
+          UserDefaults.standard.removeObject(
+            forKey: self.currentExecutableURLUDKey)
           NSApp.presentError(Error(
             "Cannot locate executable at %@. Using the default application",
             url.path))
@@ -153,10 +154,10 @@ class CoiffeurController: NSObject {
 
   class func coiffeurWithType(_ type: String) throws -> CoiffeurController
   {
-    for coiffeurClass in CoiffeurController.availableTypes  {
-      if type == coiffeurClass.documentType {
-        return try coiffeurClass.createCoiffeur()
-      }
+    for coiffeurClass in CoiffeurController.availableTypes
+      where type == coiffeurClass.documentType
+    {
+      return try coiffeurClass.createCoiffeur()
     }
     throw Error("Unknown document type “%@”", type)
   }
@@ -197,7 +198,7 @@ class CoiffeurController: NSObject {
       let arguments = del.coiffeurControllerArguments(self)
       result = self.format(arguments) {
         (result: StringResult) in
-        switch (result) {
+        switch result {
         case .failure(let err):
           NSLog("%@", err)
         case .success(let text):
@@ -325,7 +326,7 @@ class CoiffeurController: NSObject {
     for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }
 
-      var index = [String:[ConfigOption]]()
+      var index = [String: [ConfigOption]]()
 
       for node in section.children {
         guard let option = node as? ConfigOption else { continue }

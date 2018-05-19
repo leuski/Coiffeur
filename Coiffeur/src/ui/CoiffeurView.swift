@@ -27,7 +27,7 @@ class CoiffeurView: NSViewController {
   @IBOutlet weak var jumpMenu: NSPopUpButton!
   @IBOutlet var optionsController: NSTreeController!
 
-  fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
+  fileprivate var rowHeightCache = [String: CGFloat]()
 
   private var observer: NSKeyValueObservation?
 
@@ -107,15 +107,15 @@ extension CoiffeurView: NSOutlineViewDelegate {
   {
     if let node = item.representedObject as? ConfigNode {
       let tokens = node.tokens
-      if (tokens.count == 0) {
+      if tokens.count == 0 {
         return "view.section"
-      } else if (tokens.count == 1
-        && tokens[0] == CoiffeurController.OptionType.signed.rawValue) {
+      } else if tokens.count == 1
+        && tokens[0] == CoiffeurController.OptionType.signed.rawValue {
         return "view.signed"
-      } else if (tokens.count == 1
-        && tokens[0] == CoiffeurController.OptionType.unsigned.rawValue) {
+      } else if tokens.count == 1
+        && tokens[0] == CoiffeurController.OptionType.unsigned.rawValue {
         return "view.unsigned"
-      } else if (tokens.count == 1) {
+      } else if tokens.count == 1 {
         return "view.string"
       } else {
         return "view.choice"
@@ -127,8 +127,11 @@ extension CoiffeurView: NSOutlineViewDelegate {
   func outlineView(_ outlineView: NSOutlineView,
                    viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
   {
-    if let identifier = _cellViewIdentifierForItem(item as AnyObject),
-      let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner: self) ,
+    if
+      let identifier = _cellViewIdentifierForItem(item as AnyObject),
+      let view = outlineView.makeView(
+        withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
+        owner: self),
       let node = (item as AnyObject).representedObject as? ConfigNode
     {
       if let cell = view as? ConfigChoiceCellView, let segmented = cell.segmented {

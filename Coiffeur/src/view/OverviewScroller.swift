@@ -27,7 +27,7 @@ class OverviewRegion: NSObject {
 
   init(firstLineIndex: Int, lineCount: Int, color: NSColor?)
   {
-    self.lineRange = NSMakeRange(firstLineIndex, lineCount)
+    self.lineRange = NSRange(location: firstLineIndex, length: lineCount)
     self.color = color
   }
 }
@@ -76,12 +76,13 @@ class OverviewScroller: NSScroller {
 
     for region in self.regions {
       if let color = region.color {
-        let regionRect = NSMakeRect(0,
-                                    margin + scale * CGFloat(region.lineRange.location),
-                                    width,
-                                    max(scale * CGFloat(region.lineRange.length), 2.0))
+        let regionRect = NSRect(
+          x: 0,
+          y: margin + scale * CGFloat(region.lineRange.location),
+          width: width,
+          height: max(scale * CGFloat(region.lineRange.length), 2.0))
 
-        if NSIntersectsRect(slotRect, regionRect) {
+        if slotRect.intersects(regionRect) {
           color.setFill()
           regionRect.fill()
         }

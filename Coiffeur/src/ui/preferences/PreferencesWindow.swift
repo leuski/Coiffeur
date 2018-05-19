@@ -129,7 +129,7 @@ class PreferencesWindow: NSWindowController {
         var containerFrame = window.contentView!.frame
         window.contentView = childView
         window.recalculateKeyViewLoop()
-        if (window.firstResponder == self.window) {
+        if window.firstResponder == self.window {
           window.makeFirstResponder(currentPane.initialKeyView)
         }
 

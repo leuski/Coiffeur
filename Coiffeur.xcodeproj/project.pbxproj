@@ -42,7 +42,6 @@
 		6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB11AD451A600671D12 /* DocumentController.swift */; };
 		6275AEB81AD4734600671D12 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB71AD4734600671D12 /* Document.swift */; };
 		6275AEBD1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */; };
-		62A77BA320B0BE8C00B9099E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62A77BA220B0BE8B00B9099E /* .swiftlint.yml */; };
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -206,7 +205,7 @@
 		6275AEB71AD4734600671D12 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiffMatchPatch+ALSwiftEnum.h"; sourceTree = "<group>"; };
 		6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DiffMatchPatch+ALSwiftEnum.m"; sourceTree = "<group>"; };
-		62A77BA220B0BE8B00B9099E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
+		62A77BA220B0BE8B00B9099E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .swiftlint.yml; path = src/.swiftlint.yml; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
 		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
 		62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coiffeur.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -609,7 +608,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62A77BA320B0BE8C00B9099E /* .swiftlint.yml in Resources */,
 				6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */,
 				6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,
@@ -653,7 +651,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\ncd Sources\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if which swiftlint >/dev/null; then\ncd Coiffeur/src\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

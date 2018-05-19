@@ -22,8 +22,8 @@
 import Foundation
 
 /**
-Adds string processing utilities
-*/
+ Adds string processing utilities
+ */
 extension String {
 
   var commandLineComponents: [String] {
@@ -74,61 +74,61 @@ extension String {
     return result
   }
 
-	var words: [String] {
-		var result = [String]()
-		self.enumerateLinguisticTags(in: self.startIndex..<self.endIndex,
-			scheme: NSLinguisticTagScheme.tokenType.rawValue,
-			options: NSLinguisticTagger.Options.omitWhitespace,
-			orthography: nil) {
-				(tag: String,
-					tokenRange: Range<String.Index>,
-					sentenceRange: Range<String.Index>, stop:inout Bool) -> () in
-				result.append(String(self[tokenRange]))
-		}
-		return result
-	}
+  var words: [String] {
+    var result = [String]()
+    self.enumerateLinguisticTags(in: self.startIndex..<self.endIndex,
+                                 scheme: NSLinguisticTagScheme.tokenType.rawValue,
+                                 options: NSLinguisticTagger.Options.omitWhitespace,
+                                 orthography: nil) {
+                                  (tag: String,
+                                  tokenRange: Range<String.Index>,
+                                  sentenceRange: Range<String.Index>, stop:inout Bool) -> () in
+                                  result.append(String(self[tokenRange]))
+    }
+    return result
+  }
 
-	var stringByCapitalizingFirstWord: String {
-		if self.isEmpty {
-			return self
-		}
-		let nextIndex = self.index(after: self.startIndex)
-		return self[self.startIndex..<nextIndex].capitalized + self[nextIndex...]
-	}
+  var stringByCapitalizingFirstWord: String {
+    if self.isEmpty {
+      return self
+    }
+    let nextIndex = self.index(after: self.startIndex)
+    return self[self.startIndex..<nextIndex].capitalized + self[nextIndex...]
+  }
 
-	fileprivate func _stringByQuoting(_ quote: Character) -> String
-	{
-		let bs: Character = "\\"
-		var result = ""
-		result.append(quote)
+  fileprivate func _stringByQuoting(_ quote: Character) -> String
+  {
+    let bs: Character = "\\"
+    var result = ""
+    result.append(quote)
 
-		for ch in self {
-			switch ch {
-			case quote, "\\", "\"", "'", "`", " ", "\t", "\r", "\n":
-				result.append(bs)
-				fallthrough
-			default:
-				result.append(ch)
-			}
-		}
+    for ch in self {
+      switch ch {
+      case quote, "\\", "\"", "'", "`", " ", "\t", "\r", "\n":
+        result.append(bs)
+        fallthrough
+      default:
+        result.append(ch)
+      }
+    }
 
-		result.append(quote)
-		return result
-	}
+    result.append(quote)
+    return result
+  }
 
-	func stringByQuoting(_ quote: Character = "\"") -> String
-	{
-		let set = NSMutableCharacterSet(charactersIn: String(quote))
-		set.addCharacters(in: "\\\"'` \t\r\n")
+  func stringByQuoting(_ quote: Character = "\"") -> String
+  {
+    let set = NSMutableCharacterSet(charactersIn: String(quote))
+    set.addCharacters(in: "\\\"'` \t\r\n")
 
-		if self.isEmpty {
-			return _stringByQuoting(quote)
-		} else if let _ = self.rangeOfCharacter(from: set as CharacterSet) {
-			return _stringByQuoting(quote)
-		} else {
-			return self
-		}
-	}
+    if self.isEmpty {
+      return _stringByQuoting(quote)
+    } else if let _ = self.rangeOfCharacter(from: set as CharacterSet) {
+      return _stringByQuoting(quote)
+    } else {
+      return self
+    }
+  }
 
   func stringByAppendingString(_ string: String, separatedBy delimiter: String) -> String
   {
@@ -144,7 +144,7 @@ extension String {
   func trim() -> String
   {
     return self.trimmingCharacters(
-			in: CharacterSet.whitespacesAndNewlines)
+      in: CharacterSet.whitespacesAndNewlines)
   }
 
   func stringByTrimmingPrefix(_ prefix: String) -> String
@@ -155,28 +155,28 @@ extension String {
     }
     let length = prefix.distance(from: prefix.startIndex, to: prefix.endIndex)
     while result.hasPrefix(prefix) {
-			let nextIndex = result.index(result.startIndex, offsetBy: length)
+      let nextIndex = result.index(result.startIndex, offsetBy: length)
       result = String(result[nextIndex...]).trim()
     }
     return result
   }
 
-	func stringByTrimmingSuffix(_ suffix: String) -> String
-	{
-		var result = self.trim()
-		if suffix.isEmpty {
-			return result
-		}
-		let length = suffix.distance(from: suffix.startIndex, to: suffix.endIndex)
-		while result.hasSuffix(suffix) {
-			let resultLength = result.distance(from: result.startIndex, to: result.endIndex)
-			let nextIndex = result.index(result.startIndex, offsetBy: resultLength-length)
-			result = String(result[result.startIndex..<nextIndex]).trim()
-		}
-		return result
-	}
+  func stringByTrimmingSuffix(_ suffix: String) -> String
+  {
+    var result = self.trim()
+    if suffix.isEmpty {
+      return result
+    }
+    let length = suffix.distance(from: suffix.startIndex, to: suffix.endIndex)
+    while result.hasSuffix(suffix) {
+      let resultLength = result.distance(from: result.startIndex, to: result.endIndex)
+      let nextIndex = result.index(result.startIndex, offsetBy: resultLength-length)
+      result = String(result[result.startIndex..<nextIndex]).trim()
+    }
+    return result
+  }
 
-	func lineRangeForCharacterRange(_ range: Range<String.Index>) -> CountableClosedRange<Int>
+  func lineRangeForCharacterRange(_ range: Range<String.Index>) -> CountableClosedRange<Int>
   {
     var numberOfLines = 0
     var index = self.startIndex
@@ -248,12 +248,12 @@ extension String {
   }
 
   func stringByReplacingCharactersInRange(_ range: NSRange,
-		withString replacement: String) -> String
+                                          withString replacement: String) -> String
   {
     let start = self.index(self.startIndex, offsetBy: range.location)
     let end = self.index(start, offsetBy: range.length)
     return self.replacingCharacters(in: start..<end,
-			with: replacement)
+                                    with: replacement)
   }
 
   init?(data: Data, encoding: String.Encoding)

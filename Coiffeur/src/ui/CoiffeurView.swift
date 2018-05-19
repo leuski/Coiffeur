@@ -27,10 +27,10 @@ class CoiffeurView: NSViewController {
   @IBOutlet weak var jumpMenu: NSPopUpButton!
   @IBOutlet var optionsController: NSTreeController!
 
-	fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
+  fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
 
   override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "CoiffeurView"),
-		bundle nibBundleOrNil: Bundle? = nil)
+                bundle nibBundleOrNil: Bundle? = nil)
   {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
   }
@@ -42,27 +42,27 @@ class CoiffeurView: NSViewController {
   override func viewDidLoad()
   {
     super.viewDidLoad()
-		self.addOneShotObserverForKeyPath("optionsController.content") {
-			_, _ in self._finishSettingUpView()
-		}
+    self.addOneShotObserverForKeyPath("optionsController.content") {
+      _, _ in self._finishSettingUpView()
+    }
   }
 
-	fileprivate func _finishSettingUpView()
-	{
-		self.optionsView.expandItem(nil, expandChildren: true)
+  fileprivate func _finishSettingUpView()
+  {
+    self.optionsView.expandItem(nil, expandChildren: true)
 
-		if let node: AnyObject = self.optionsController.firstLeaf  {
-			self.optionsController.setSelectionIndexPath(node.indexPath)
-		}
+    if let node: AnyObject = self.optionsController.firstLeaf  {
+      self.optionsController.setSelectionIndexPath(node.indexPath)
+    }
 
-		for node in self.optionsController.nodes {
-			if let section = node.representedObject as? ConfigSection {
-				let item = NSMenuItem()
-				item.title = section.title
-				item.indentationLevel  = section.depth - 1
-				item.representedObject = node
-				self.jumpMenu.menu!.addItem(item)
-			}
+    for node in self.optionsController.nodes {
+      if let section = node.representedObject as? ConfigSection {
+        let item = NSMenuItem()
+        item.title = section.title
+        item.indentationLevel  = section.depth - 1
+        item.representedObject = node
+        self.jumpMenu.menu!.addItem(item)
+      }
     }
   }
 
@@ -70,7 +70,7 @@ class CoiffeurView: NSViewController {
   {
     if let popup = sender as? NSPopUpButton {
       self.optionsView.scrollItemToVisible(
-				popup.selectedItem?.representedObject)
+        popup.selectedItem?.representedObject)
     }
   }
 }
@@ -78,7 +78,7 @@ class CoiffeurView: NSViewController {
 extension CoiffeurView: NSOutlineViewDelegate {
 
   func outlineView(_ outlineView: NSOutlineView,
-		isGroupItem item: Any) -> Bool
+                   isGroupItem item: Any) -> Bool
   {
     if let node = (item as AnyObject).representedObject as? ConfigNode {
       return !node.leaf
@@ -86,159 +86,159 @@ extension CoiffeurView: NSOutlineViewDelegate {
     return false
   }
 
-	fileprivate func _rowViewIdentifierForItem(_ item: AnyObject) -> String?
-	{
-		if let node = item.representedObject as? ConfigNode {
-			if node is ConfigOption {
-				return "row.option"
-			} else if node is ConfigSection {
-				return "row.section"
-			}
-		}
-		return nil
-	}
-
-	fileprivate func _cellViewIdentifierForItem(_ item: AnyObject) -> String?
-	{
-		if let node = item.representedObject as? ConfigNode {
-			let tokens = node.tokens
-			if (tokens.count == 0) {
-				return "view.section"
-			} else if (tokens.count == 1
-					&& tokens[0] == CoiffeurController.OptionType.signed.rawValue) {
-				return "view.signed"
-			} else if (tokens.count == 1
-					&& tokens[0] == CoiffeurController.OptionType.unsigned.rawValue) {
-				return "view.unsigned"
-			} else if (tokens.count == 1) {
-				return "view.string"
-			} else {
-				return "view.choice"
-			}
-		}
-		return nil
-	}
-
-	func outlineView(_ outlineView: NSOutlineView,
-		viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
+  fileprivate func _rowViewIdentifierForItem(_ item: AnyObject) -> String?
   {
-		if let identifier = _cellViewIdentifierForItem(item as AnyObject),
-			 let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner: self) ,
-			 let node = (item as AnyObject).representedObject as? ConfigNode
-		{
-			if let cell = view as? ConfigChoiceCellView, let segmented = cell.segmented {
-				segmented.labels = node.tokens
-			}
-			if let cell = view as? ConfigOptionCellView {
-				cell.leftMargin.constant = 8
-			}
-			return view
-		}
+    if let node = item.representedObject as? ConfigNode {
+      if node is ConfigOption {
+        return "row.option"
+      } else if node is ConfigSection {
+        return "row.section"
+      }
+    }
     return nil
   }
 
-	fileprivate func _outlineView(_ outlineView: NSOutlineView,
-		heightOfRowByIdentifier identifier: String) -> CGFloat
-	{
-		if let height = rowHeightCache[identifier] {
-			return height
-		}
-		if let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
-				owner: self)
-		{
-			let height = view.frame.size.height
-			if height > 0 {
-				rowHeightCache[identifier] = height
-				return height
-			}
-		}
-		return 10
-	}
-
-	// this is a very, very, very frequently called method. We need to make it
-	// as fast as possible. We cache the view height based on the cell
-	// view identifier
-  func outlineView(_ outlineView: NSOutlineView,
-		heightOfRowByItem item: Any) -> CGFloat
+  fileprivate func _cellViewIdentifierForItem(_ item: AnyObject) -> String?
   {
-		if let identifier = _cellViewIdentifierForItem(item as AnyObject),
-			 let rowIdentifier = _rowViewIdentifierForItem(item as AnyObject)
-		{
-			return _outlineView(outlineView, heightOfRowByIdentifier: identifier)
-				+ _outlineView(outlineView, heightOfRowByIdentifier: rowIdentifier)
-		}
+    if let node = item.representedObject as? ConfigNode {
+      let tokens = node.tokens
+      if (tokens.count == 0) {
+        return "view.section"
+      } else if (tokens.count == 1
+        && tokens[0] == CoiffeurController.OptionType.signed.rawValue) {
+        return "view.signed"
+      } else if (tokens.count == 1
+        && tokens[0] == CoiffeurController.OptionType.unsigned.rawValue) {
+        return "view.unsigned"
+      } else if (tokens.count == 1) {
+        return "view.string"
+      } else {
+        return "view.choice"
+      }
+    }
+    return nil
+  }
+
+  func outlineView(_ outlineView: NSOutlineView,
+                   viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
+  {
+    if let identifier = _cellViewIdentifierForItem(item as AnyObject),
+      let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner: self) ,
+      let node = (item as AnyObject).representedObject as? ConfigNode
+    {
+      if let cell = view as? ConfigChoiceCellView, let segmented = cell.segmented {
+        segmented.labels = node.tokens
+      }
+      if let cell = view as? ConfigOptionCellView {
+        cell.leftMargin.constant = 8
+      }
+      return view
+    }
+    return nil
+  }
+
+  fileprivate func _outlineView(_ outlineView: NSOutlineView,
+                                heightOfRowByIdentifier identifier: String) -> CGFloat
+  {
+    if let height = rowHeightCache[identifier] {
+      return height
+    }
+    if let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
+                                       owner: self)
+    {
+      let height = view.frame.size.height
+      if height > 0 {
+        rowHeightCache[identifier] = height
+        return height
+      }
+    }
+    return 10
+  }
+
+  // this is a very, very, very frequently called method. We need to make it
+  // as fast as possible. We cache the view height based on the cell
+  // view identifier
+  func outlineView(_ outlineView: NSOutlineView,
+                   heightOfRowByItem item: Any) -> CGFloat
+  {
+    if let identifier = _cellViewIdentifierForItem(item as AnyObject),
+      let rowIdentifier = _rowViewIdentifierForItem(item as AnyObject)
+    {
+      return _outlineView(outlineView, heightOfRowByIdentifier: identifier)
+        + _outlineView(outlineView, heightOfRowByIdentifier: rowIdentifier)
+    }
     return 10
   }
 
   func outlineView(_ outlineView: NSOutlineView,
-		shouldSelectItem item: Any) -> Bool
+                   shouldSelectItem item: Any) -> Bool
   {
     return !self.outlineView(outlineView, isGroupItem: item)
   }
 
   func outlineView(_ outlineView: NSOutlineView,
-		rowViewForItem item: Any) -> NSTableRowView?
+                   rowViewForItem item: Any) -> NSTableRowView?
   {
-		if let identifier = _rowViewIdentifierForItem(item as AnyObject),
-			 let theNode = (item as AnyObject).representedObject as? ConfigNode,
-			 let container = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
-				owner: self) as? ConfigRowView
-		{
-			container.locations = theNode.path
-			container.textField.stringValue = theNode.title
-			container.leftMargin.constant = (1.5
-				+ CGFloat(outlineView.level(forItem: item)))
-					* outlineView.indentationPerLevel+4.0
-			container.drawSeparator = theNode is ConfigSection
-//				|| theNode.index == theNode.parent!.children.count-1
-			if !container.drawSeparator {
-				let row = outlineView.row(forItem: item) + 1
-				if row < outlineView.numberOfRows {
-					container.drawSeparator =
-						(outlineView.item(atRow: row) as AnyObject).representedObject is ConfigSection
-				}
-			}
-			return container
-		} else {
-			return nil
-		}
+    if let identifier = _rowViewIdentifierForItem(item as AnyObject),
+      let theNode = (item as AnyObject).representedObject as? ConfigNode,
+      let container = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
+                                           owner: self) as? ConfigRowView
+    {
+      container.locations = theNode.path
+      container.textField.stringValue = theNode.title
+      container.leftMargin.constant = (1.5
+        + CGFloat(outlineView.level(forItem: item)))
+        * outlineView.indentationPerLevel+4.0
+      container.drawSeparator = theNode is ConfigSection
+      //        || theNode.index == theNode.parent!.children.count-1
+      if !container.drawSeparator {
+        let row = outlineView.row(forItem: item) + 1
+        if row < outlineView.numberOfRows {
+          container.drawSeparator =
+            (outlineView.item(atRow: row) as AnyObject).representedObject is ConfigSection
+        }
+      }
+      return container
+    } else {
+      return nil
+    }
   }
 
-	// the row is added as the predicate changes. Restore the expanded state
-	// from the model.
-	// We do it asynchroniously, because node expansion
-	// can lead to more rows being added to the view.
-	func outlineView(_ outlineView: NSOutlineView,
-		didAdd rowView: NSTableRowView, forRow row: Int)
-	{
-		let item: AnyObject? = outlineView.item(atRow: row) as AnyObject
-		if let section = item?.representedObject as? ConfigSection {
-			if section.expanded {
-				DispatchQueue.main.async {
-					outlineView.animator().expandItem(item)
-				}
-			}
-		}
-	}
+  // the row is added as the predicate changes. Restore the expanded state
+  // from the model.
+  // We do it asynchroniously, because node expansion
+  // can lead to more rows being added to the view.
+  func outlineView(_ outlineView: NSOutlineView,
+                   didAdd rowView: NSTableRowView, forRow row: Int)
+  {
+    let item: AnyObject? = outlineView.item(atRow: row) as AnyObject
+    if let section = item?.representedObject as? ConfigSection {
+      if section.expanded {
+        DispatchQueue.main.async {
+          outlineView.animator().expandItem(item)
+        }
+      }
+    }
+  }
 
-	// records the state of the node in the model
-	func outlineViewItemDidExpand(_ notification: Notification)
-	{
-		if let section = (notification.userInfo!["NSObject"
-			as NSString]! as AnyObject).representedObject as? ConfigSection
-		{
-			section.expanded = true
-		}
-	}
+  // records the state of the node in the model
+  func outlineViewItemDidExpand(_ notification: Notification)
+  {
+    if let section = (notification.userInfo!["NSObject"
+      as NSString]! as AnyObject).representedObject as? ConfigSection
+    {
+      section.expanded = true
+    }
+  }
 
-	func outlineViewItemDidCollapse(_ notification: Notification)
-	{
-		if let section = (notification.userInfo!["NSObject"
-			as NSString]! as AnyObject).representedObject as? ConfigSection
-		{
-			section.expanded = false
-		}
-	}
+  func outlineViewItemDidCollapse(_ notification: Notification)
+  {
+    if let section = (notification.userInfo!["NSObject"
+      as NSString]! as AnyObject).representedObject as? ConfigSection
+    {
+      section.expanded = false
+    }
+  }
 
   // - (BOOL)outlineView:(NSOutlineView *)outlineView
   // shouldShowOutlineCellForItem:(id)item

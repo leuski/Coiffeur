@@ -22,50 +22,50 @@
 import Foundation
 
 /**
-	Simplifies parsing by shortening the argument list
+ Simplifies parsing by shortening the argument list
  */
 extension NSRegularExpression {
-	class func ci_dmls_re_WithPattern(_ pattern: String) -> NSRegularExpression
-	{
+  class func ci_dmls_re_WithPattern(_ pattern: String) -> NSRegularExpression
+  {
     do {
       return try NSRegularExpression(
         pattern: pattern, options: [.caseInsensitive, .dotMatchesLineSeparators])
     } catch {
       fatalError()
     }
-	}
+  }
 
-	class func ci_re_WithPattern(_ pattern: String) -> NSRegularExpression
-	{
+  class func ci_re_WithPattern(_ pattern: String) -> NSRegularExpression
+  {
     do {
       return try NSRegularExpression(
         pattern: pattern, options: .caseInsensitive)
     } catch {
-    fatalError()
+      fatalError()
     }
-	}
+  }
 
-	class func aml_re_WithPattern(_ pattern: String) -> NSRegularExpression
-	{
+  class func aml_re_WithPattern(_ pattern: String) -> NSRegularExpression
+  {
     do {
       return try NSRegularExpression(
         pattern: pattern, options: .anchorsMatchLines)
     } catch {
       fatalError()
     }
-	}
+  }
 
-	func firstMatchInString(_ string: String) -> NSTextCheckingResult?
-	{
-		return firstMatch(in: string,
-			options: NSRegularExpression.MatchingOptions(), range: string.nsRange)
-	}
+  func firstMatchInString(_ string: String) -> NSTextCheckingResult?
+  {
+    return firstMatch(in: string,
+                      options: NSRegularExpression.MatchingOptions(), range: string.nsRange)
+  }
 
-	func stringByReplacingMatchesInString(
+  func stringByReplacingMatchesInString(
     _ string: String,
-		withTemplate template: String) -> String
-	{
-		return self.stringByReplacingMatches(in: string,
-			options: NSRegularExpression.MatchingOptions(), range: string.nsRange, withTemplate: template)
-	}
+    withTemplate template: String) -> String
+  {
+    return self.stringByReplacingMatches(in: string,
+                                         options: NSRegularExpression.MatchingOptions(), range: string.nsRange, withTemplate: template)
+  }
 }

@@ -25,40 +25,40 @@ class Language: NSObject {
 
   fileprivate struct Private {
     fileprivate static let supportedLanguages = Language._supportedLanguages()
-		fileprivate static let FileName = "languages"
-		fileprivate static let FileNameExtension = "plist"
-		fileprivate static let UserDefaultsKey = "Language"
+    fileprivate static let FileName = "languages"
+    fileprivate static let FileNameExtension = "plist"
+    fileprivate static let UserDefaultsKey = "Language"
   }
 
   class var supportedLanguages: [Language] {
-		return Private.supportedLanguages }
+    return Private.supportedLanguages }
 
-	class var supportedLanguageUTIs: [String] {
-		var types = Set<String>()
-		for  language in Language.supportedLanguages {
-			types.formUnion(language.UTIs)
-		}
-		return [String](types)
-	}
+  class var supportedLanguageUTIs: [String] {
+    var types = Set<String>()
+    for  language in Language.supportedLanguages {
+      types.formUnion(language.UTIs)
+    }
+    return [String](types)
+  }
 
   @objc fileprivate(set) var uncrustifyID = ""
   @objc fileprivate(set) var displayName = ""
   @objc fileprivate(set) var fragariaID = ""
-	@objc fileprivate(set) var UTIs = [String]()
-	@objc fileprivate(set) var clangFormatID: String?
+  @objc fileprivate(set) var UTIs = [String]()
+  @objc fileprivate(set) var clangFormatID: String?
 
-	var defaultExtension: String? {
+  var defaultExtension: String? {
     return UTIs.isEmpty
-			? nil
-			: NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
+      ? nil
+      : NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
   }
 
   fileprivate class func _supportedLanguages() -> [Language]
   {
     let bundle = Bundle(for: self)
     if let url = bundle.url(forResource: Private.FileName,
-			withExtension: Private.FileNameExtension)
-		{
+                            withExtension: Private.FileNameExtension)
+    {
       if let dictionaries = NSArray(contentsOf: url) {
         var result = [Language]()
         for case let dictionary as [String: AnyObject] in dictionaries {
@@ -82,7 +82,7 @@ class Language: NSObject {
 
   class func languageFromUserDefaults() -> Language
   {
-		let UD = UserDefaults.standard
+    let UD = UserDefaults.standard
     if let uti = UD.string(forKey: Private.UserDefaultsKey) {
       if let language = Language.languageWithUTI(uti) {
         return language
@@ -101,7 +101,7 @@ class Language: NSObject {
   {
     if !UTIs.isEmpty {
       UserDefaults.standard.setValue(UTIs[0],
-				forKey: Private.UserDefaultsKey)
+                                     forKey: Private.UserDefaultsKey)
     }
   }
 }

@@ -24,7 +24,7 @@ import Foundation
 class UncrustifyController: CoiffeurController {
 
   fileprivate struct Private {
-		static var VersionArgument = "--version"
+    static var VersionArgument = "--version"
     static var ShowDocumentationArgument = "--update-config-with-doc"
     static var ShowDefaultConfigArgument = "--update-config"
     static var QuietFlag = "-q"
@@ -37,31 +37,31 @@ class UncrustifyController: CoiffeurController {
     static var DocumentType = "Uncrustify Style File"
     static var ExecutableName = "uncrustify"
     static var ExecutableURLUDKey = "UncrustifyExecutableURL"
-		static var ExecutableTitleUDKey = "Uncrustify Executable"
+    static var ExecutableTitleUDKey = "Uncrustify Executable"
 
     static var Options: String?
   }
 
-	override var pageGuideColumn: Int {
-		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
-			let int = Int(value)
-		{
-			return int
-		}
+  override var pageGuideColumn: Int {
+    if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
+      let int = Int(value)
+    {
+      return int
+    }
 
-		return super.pageGuideColumn
-	}
+    return super.pageGuideColumn
+  }
 
-	var versionString: String?
+  var versionString: String?
 
-	override class var localizedExecutableTitle: String {
-		return NSLocalizedString(Private.ExecutableTitleUDKey, comment: "") }
+  override class var localizedExecutableTitle: String {
+    return NSLocalizedString(Private.ExecutableTitleUDKey, comment: "") }
   override class var documentType: String {
-		return Private.DocumentType }
-	override class var currentExecutableName: String {
-		return Private.ExecutableName }
-	override class var currentExecutableURLUDKey: String {
-		return Private.ExecutableURLUDKey }
+    return Private.DocumentType }
+  override class var currentExecutableName: String {
+    return Private.ExecutableName }
+  override class var currentExecutableURLUDKey: String {
+    return Private.ExecutableURLUDKey }
 
   override class var currentExecutableURL: URL? {
     didSet {
@@ -69,37 +69,37 @@ class UncrustifyController: CoiffeurController {
     }
   }
 
-	override class func contentsIsValidInString(_ string: String) -> Bool
-	{
-		let keyValue = NSRegularExpression.aml_re_WithPattern(
-			"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
-		return nil != keyValue.firstMatchInString(string)
-	}
+  override class func contentsIsValidInString(_ string: String) -> Bool
+  {
+    let keyValue = NSRegularExpression.aml_re_WithPattern(
+      "^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
+    return nil != keyValue.firstMatchInString(string)
+  }
 
   override class func createCoiffeur() throws -> CoiffeurController
   {
     let controller = try super.createCoiffeur()
 
-		if Private.Options == nil {
-			Private.Options = try Process(controller.executableURL,
-				arguments: [Private.ShowDocumentationArgument]).run()
+    if Private.Options == nil {
+      Private.Options = try Process(controller.executableURL,
+                                    arguments: [Private.ShowDocumentationArgument]).run()
 
-			if let uncrustifyController = controller as? UncrustifyController {
-				uncrustifyController.versionString = try Process(controller.executableURL,
-					arguments: [Private.VersionArgument]).run()
-			}
-		}
+      if let uncrustifyController = controller as? UncrustifyController {
+        uncrustifyController.versionString = try Process(controller.executableURL,
+                                                         arguments: [Private.VersionArgument]).run()
+      }
+    }
 
-		try controller.readOptionsFromString(Private.Options!)
+    try controller.readOptionsFromString(Private.Options!)
 
-		return controller
+    return controller
   }
 
   override func readOptionsFromLineArray(_ lines: [String]) throws
   {
     var count = 0
     var currentSection: ConfigSection?
-		var currentComment: String = ""
+    var currentComment: String = ""
 
     for  aline in lines {
       count += 1
@@ -112,97 +112,97 @@ class UncrustifyController: CoiffeurController {
 
       if line.isEmpty {
 
-				currentComment = currentComment.trim()
-				if !currentComment.isEmpty {
-					if let _ = currentComment.rangeOfCharacter(
-						from: CharacterSet.newlines) {
-					} else {
-						currentSection = ConfigSection.objectInContext(
-							self.managedObjectContext, parent: self.root, title: currentComment)
-					}
-					currentComment = ""
-				}
+        currentComment = currentComment.trim()
+        if !currentComment.isEmpty {
+          if let _ = currentComment.rangeOfCharacter(
+            from: CharacterSet.newlines) {
+          } else {
+            currentSection = ConfigSection.objectInContext(
+              self.managedObjectContext, parent: self.root, title: currentComment)
+          }
+          currentComment = ""
+        }
 
-			} else if line.hasPrefix(Private.Comment) {
+      } else if line.hasPrefix(Private.Comment) {
 
-				line = line.stringByTrimmingPrefix(Private.Comment)
-				currentComment += "\(line)\n"
+        line = line.stringByTrimmingPrefix(Private.Comment)
+        currentComment += "\(line)\n"
 
-			} else if let range = line.range(of: Private.Comment) {
+      } else if let range = line.range(of: Private.Comment) {
 
         let keyValue = String(line[line.startIndex..<range.lowerBound])
-				var type = String(line[range.upperBound...])
+        var type = String(line[range.upperBound...])
 
-				if let (key, value) = _keyValuePairFromString(keyValue) {
+        if let (key, value) = _keyValuePairFromString(keyValue) {
 
-					type = type.trim().replacingOccurrences(of: "/",
-						with: ConfigNode.typeSeparator)
-					currentComment = currentComment.trim()
-					let option = ConfigOption.objectInContext(self.managedObjectContext,
-						parent: currentSection,
-						title: currentComment.components(
-							separatedBy: CharacterSet.newlines)[0])
-					option.indexKey = key
-					option.stringValue = value
-					option.documentation = currentComment
-					if type == "number" {
-						option.type = OptionType.signed.rawValue
-					} else {
-						option.type = type
-					}
+          type = type.trim().replacingOccurrences(of: "/",
+                                                  with: ConfigNode.typeSeparator)
+          currentComment = currentComment.trim()
+          let option = ConfigOption.objectInContext(self.managedObjectContext,
+                                                    parent: currentSection,
+                                                    title: currentComment.components(
+                                                      separatedBy: CharacterSet.newlines)[0])
+          option.indexKey = key
+          option.stringValue = value
+          option.documentation = currentComment
+          if type == "number" {
+            option.type = OptionType.signed.rawValue
+          } else {
+            option.type = type
+          }
 
-				}
-				currentComment = ""
-			}
+        }
+        currentComment = ""
+      }
 
     }
   }
 
-	fileprivate func _keyValuePairFromString(_ string: String)
-		-> (key: String, value: String)?
-	{
-		var line = string
+  fileprivate func _keyValuePairFromString(_ string: String)
+    -> (key: String, value: String)?
+  {
+    var line = string
 
-		if let range = line.range(of: Private.Comment) {
-			line = String(line[line.startIndex..<range.lowerBound])
-		}
+    if let range = line.range(of: Private.Comment) {
+      line = String(line[line.startIndex..<range.lowerBound])
+    }
 
-		if let range = line.range(of: "=") {
-			line = line.replacingCharacters(in: range, with: " ")
-		}
+    if let range = line.range(of: "=") {
+      line = line.replacingCharacters(in: range, with: " ")
+    }
 
-		while let range = line.range(of: ",") {
-			line = line.replacingCharacters(in: range, with: " ")
-		}
+    while let range = line.range(of: ",") {
+      line = line.replacingCharacters(in: range, with: " ")
+    }
 
-		let tokens = line.commandLineComponents
+    let tokens = line.commandLineComponents
 
-		if tokens.count == 0 {
-			return nil
-		}
+    if tokens.count == 0 {
+      return nil
+    }
 
-		if tokens.count == 1 {
-			NSLog("Warning: wrong number of arguments %@", line)
-			return nil
-		}
+    if tokens.count == 1 {
+      NSLog("Warning: wrong number of arguments %@", line)
+      return nil
+    }
 
-		let head = tokens[0]
+    let head = tokens[0]
 
-		if head == "type" {
-		} else if head == "define" {
-		} else if head == "macro-open" {
-		} else if head == "macro-close" {
-		} else if head == "macro-else" {
-		} else if head == "set" {
-		} else if head == "include" {
-		} else if head == "file_ext" {
-		} else {
-			return (key:head, value:tokens[1])
-		}
+    if head == "type" {
+    } else if head == "define" {
+    } else if head == "macro-open" {
+    } else if head == "macro-close" {
+    } else if head == "macro-else" {
+    } else if head == "set" {
+    } else if head == "include" {
+    } else if head == "file_ext" {
+    } else {
+      return (key:head, value:tokens[1])
+    }
 
-		return nil
+    return nil
 
-	}
+  }
 
   override func readValuesFromLineArray(_ lines: [String]) throws
   {
@@ -217,13 +217,13 @@ class UncrustifyController: CoiffeurController {
         continue
       }
 
-			if let (key, value) = _keyValuePairFromString(line) {
-				if let option = self.optionWithKey(key) {
-					option.stringValue = value
-				} else {
-					NSLog("Warning: unknown token %@ on line %@", key, line)
-				}
-			}
+      if let (key, value) = _keyValuePairFromString(line) {
+        if let option = self.optionWithKey(key) {
+          option.stringValue = value
+        } else {
+          NSLog("Warning: unknown token %@ on line %@", key, line)
+        }
+      }
 
     }
   }
@@ -232,53 +232,53 @@ class UncrustifyController: CoiffeurController {
   {
     var data=""
 
-		if let version = self.versionString {
-			data += "\(Private.Comment) \(version)\n"
-		}
+    if let version = self.versionString {
+      data += "\(Private.Comment) \(version)\n"
+    }
 
-		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
-			sortDescriptors: [CoiffeurController.keySortDescriptor])
+    let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
+                                                         sortDescriptors: [CoiffeurController.keySortDescriptor])
 
-		for option in allOptions {
-			if var value = option.stringValue {
-				value = value.stringByQuoting()
-				data += "\(option.indexKey) = \(value)\n"
-			}
-		}
+    for option in allOptions {
+      if var value = option.stringValue {
+        value = value.stringByQuoting()
+        data += "\(option.indexKey) = \(value)\n"
+      }
+    }
 
-		try data.write(to: absoluteURL, atomically: true,
-					encoding: String.Encoding.utf8)
+    try data.write(to: absoluteURL, atomically: true,
+                   encoding: String.Encoding.utf8)
   }
 
-	override func format(_ arguments: Arguments,
-		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
+  override func format(_ arguments: Arguments,
+                       completionHandler: @escaping (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configURL = URL(fileURLWithPath: workingDirectory).appendingPathComponent(
-			UUID().uuidString)
+      UUID().uuidString)
 
-		do {
-			try self.writeValuesToURL(configURL)
-		} catch let error as NSError {
+    do {
+      try self.writeValuesToURL(configURL)
+    } catch let error as NSError {
       completionHandler(StringResult(error))
       return false
     }
 
     var args = [Private.QuietFlag, Private.ConfigPathFlag, configURL.path]
 
-		args.append(Private.LanguageFlag)
-		args.append(arguments.language.uncrustifyID)
+    args.append(Private.LanguageFlag)
+    args.append(arguments.language.uncrustifyID)
 
-		if arguments.fragment {
-			args.append(Private.FragmentFlag)
-		}
+    if arguments.fragment {
+      args.append(Private.FragmentFlag)
+    }
 
-		Process(self.executableURL, arguments: args,
-			workingDirectory: workingDirectory).runAsync(arguments.text)
-		{
-			(result: StringResult) -> Void in
-			let _ = try? FileManager.default.removeItem(at: configURL)
-			completionHandler(result)
+    Process(self.executableURL, arguments: args,
+            workingDirectory: workingDirectory).runAsync(arguments.text)
+            {
+              (result: StringResult) -> Void in
+              let _ = try? FileManager.default.removeItem(at: configURL)
+              completionHandler(result)
     }
 
     return true

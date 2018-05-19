@@ -25,38 +25,38 @@ import Carbon
 class OutlineView: NSOutlineView {
   // to enable NSStepper in the outline view cells
   override func validateProposedFirstResponder(_ responder: NSResponder,
-		for event: NSEvent?) -> Bool
-	{
+                                               for event: NSEvent?) -> Bool
+  {
     return true
   }
 
-	override func keyDown(with theEvent: NSEvent)
-	{
-		let mods = theEvent.modifierFlags.intersection((NSEvent.ModifierFlags.shift.union(NSEvent.ModifierFlags.option).union(NSEvent.ModifierFlags.command).union(NSEvent.ModifierFlags.control)))
+  override func keyDown(with theEvent: NSEvent)
+  {
+    let mods = theEvent.modifierFlags.intersection((NSEvent.ModifierFlags.shift.union(NSEvent.ModifierFlags.option).union(NSEvent.ModifierFlags.command).union(NSEvent.ModifierFlags.control)))
 
-		if Int(theEvent.keyCode) == kVK_RightArrow {
-			if mods == NSEvent.ModifierFlags.command {
-				expandItem(parent(forItem: item(atRow: selectedRow)),
-					expandChildren: true)
-				return
-			}
-			if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
-				expandItem(nil, expandChildren: true)
-				return
-			}
-		} else if Int(theEvent.keyCode) == kVK_LeftArrow {
-			if mods == NSEvent.ModifierFlags.command {
-				collapseItem(parent(forItem: item(atRow: selectedRow)),
-					collapseChildren: true)
-				return
-			}
-			if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
-				collapseItem(nil, collapseChildren: true)
-				return
-			}
-		}
-		super.keyDown(with: theEvent)
-	}
+    if Int(theEvent.keyCode) == kVK_RightArrow {
+      if mods == NSEvent.ModifierFlags.command {
+        expandItem(parent(forItem: item(atRow: selectedRow)),
+                   expandChildren: true)
+        return
+      }
+      if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
+        expandItem(nil, expandChildren: true)
+        return
+      }
+    } else if Int(theEvent.keyCode) == kVK_LeftArrow {
+      if mods == NSEvent.ModifierFlags.command {
+        collapseItem(parent(forItem: item(atRow: selectedRow)),
+                     collapseChildren: true)
+        return
+      }
+      if mods == NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option) {
+        collapseItem(nil, collapseChildren: true)
+        return
+      }
+    }
+    super.keyDown(with: theEvent)
+  }
 
   func scrollItemToVisible(_ item: Any?)
   {
@@ -64,7 +64,7 @@ class OutlineView: NSOutlineView {
     let rowFrame = self.frameOfCell(atColumn: 0, row: row)
     var visRect = self.visibleRect
     visRect.origin.y = rowFrame.origin.y - 1.0
-		// +1 because of the row frame? separator?, otherwise
+    // +1 because of the row frame? separator?, otherwise
     // it's going to scroll a bit, once you move the selection
 
     self.scrollToVisible(visRect)

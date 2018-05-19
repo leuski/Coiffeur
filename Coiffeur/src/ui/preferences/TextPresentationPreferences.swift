@@ -22,6 +22,6 @@
 import Foundation
 
 class TextPresentationPreferences: DefaultPreferencePane {
-	override var toolbarItemImage: NSImage? { return NSImage(named: NSImage.Name(rawValue: "SourceCode")) }
+  override var toolbarItemImage: NSImage? { return NSImage(named: NSImage.Name(rawValue: "SourceCode")) }
 
 }

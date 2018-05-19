@@ -23,46 +23,46 @@ import Cocoa
 
 extension NSSegmentedControl {
 
-	var labels: [String] {
-		get {
-			var value = [String]()
-			for segment in 0 ..< self.segmentCount {
-				value.append(label(forSegment: segment)!)
-			}
-			return value
-		}
+  var labels: [String] {
+    get {
+      var value = [String]()
+      for segment in 0 ..< self.segmentCount {
+        value.append(label(forSegment: segment)!)
+      }
+      return value
+    }
 
-		set (value) {
-			self.segmentCount = value.count
+    set (value) {
+      self.segmentCount = value.count
 
-			let font       = self.font!
-			let fontName = font.familyName!
+      let font       = self.font!
+      let fontName = font.familyName!
       let fontSize: NSNumber = NSNumber(value: Double(font.xHeight))
 
-			let attributes: [NSAttributedStringKey: Any] = [
+      let attributes: [NSAttributedStringKey: Any] = [
         NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.family.rawValue): fontName,
-				NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.size.rawValue): fontSize
-			]
+        NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.size.rawValue): fontSize
+      ]
 
-			var width = CGFloat(40.0)
-			var index     = 0
+      var width = CGFloat(40.0)
+      var index     = 0
 
-			for token in value {
-				let attributedString = NSAttributedString(string: token, attributes: attributes)
-				let size = attributedString.size()
+      for token in value {
+        let attributedString = NSAttributedString(string: token, attributes: attributes)
+        let size = attributedString.size()
 
-				if (width < size.width) {
-					width = size.width
-				}
+        if (width < size.width) {
+          width = size.width
+        }
 
-				setLabel(token, forSegment: index)
+        setLabel(token, forSegment: index)
         index += 1
-			}
+      }
 
-			for segment in 0 ..< self.segmentCount {
-				setWidth(width+12, forSegment: segment)
-			}
-		}
-	}
+      for segment in 0 ..< self.segmentCount {
+        setWidth(width+12, forSegment: segment)
+      }
+    }
+  }
 
 }

@@ -24,38 +24,38 @@ import Cocoa
 class DocumentController: NSDocumentController {
 
   override func beginOpenPanel(_ openPanel: NSOpenPanel,
-		forTypes inTypes: [String]?, completionHandler: @escaping (Int) -> Void)
+                               forTypes inTypes: [String]?, completionHandler: @escaping (Int) -> Void)
   {
     openPanel.showsHiddenFiles = true
     super.beginOpenPanel(openPanel, forTypes: inTypes,
-			completionHandler: completionHandler)
+                         completionHandler: completionHandler)
   }
 
   @discardableResult
-	fileprivate func _classForType(_ type: String) throws -> CoiffeurController.Type
-	{
-		for aClass in CoiffeurController.availableTypes {
-			if type == aClass.documentType {
-				return aClass
-			}
-		}
-		throw Error("Unknown type \(type)")
-	}
+  fileprivate func _classForType(_ type: String) throws -> CoiffeurController.Type
+  {
+    for aClass in CoiffeurController.availableTypes {
+      if type == aClass.documentType {
+        return aClass
+      }
+    }
+    throw Error("Unknown type \(type)")
+  }
 
   override func typeForContents(of url: URL) throws -> String
   {
     let type = try super.typeForContents(of: url)
-		try _classForType(type)
+    try _classForType(type)
 
-		let data = try String(contentsOf: url, encoding: String.Encoding.utf8)
+    let data = try String(contentsOf: url, encoding: String.Encoding.utf8)
 
-		for conroller in CoiffeurController.availableTypes {
-			if conroller.contentsIsValidInString(data) {
-				return conroller.documentType
-			}
-		}
+    for conroller in CoiffeurController.availableTypes {
+      if conroller.contentsIsValidInString(data) {
+        return conroller.documentType
+      }
+    }
 
-		throw Error("Unknown data at URL \(url)")
+    throw Error("Unknown data at URL \(url)")
   }
 
 }

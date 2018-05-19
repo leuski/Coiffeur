@@ -47,41 +47,41 @@ class MainWindowController: NSWindowController {
     super.windowDidLoad()
 
     self.sourceView = SourceView()
-		self.splitView.addSubview(self.sourceView.view)
+    self.splitView.addSubview(self.sourceView.view)
 
-		let uncrustify: BlockObserver = { _, _ in self.uncrustify() }
-		self.sourceView.addObserverForKeyPath("language", observer: uncrustify)
-		self.sourceView.addObserverForKeyPath("sourceString",
-			options: .initial, observer: uncrustify)
+    let uncrustify: BlockObserver = { _, _ in self.uncrustify() }
+    self.sourceView.addObserverForKeyPath("language", observer: uncrustify)
+    self.sourceView.addObserverForKeyPath("sourceString",
+                                          options: .initial, observer: uncrustify)
 
-		self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
-			(_, change: [AnyHashable: Any]) in
+    self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
+      (_, change: [AnyHashable: Any]) in
 
-			if let _ = change[NSKeyValueChangeKey.oldKey] as? Document {
-				if self.styleView != nil {
-					self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
-					self.styleView = nil
-				}
-			}
+      if let _ = change[NSKeyValueChangeKey.oldKey] as? Document {
+        if self.styleView != nil {
+          self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
+          self.styleView = nil
+        }
+      }
 
-			if let newDocument = change[NSKeyValueChangeKey.newKey] as? Document  {
-				self.styleView = CoiffeurView()
-				self.splitView.subviews.insert(self.styleView.view, at: 0)
-				self.window?.initialFirstResponder = self.styleView.optionsView
-				self.styleView.representedObject = newDocument.model!
-				newDocument.model!.delegate = self.sourceView
-			}
+      if let newDocument = change[NSKeyValueChangeKey.newKey] as? Document  {
+        self.styleView = CoiffeurView()
+        self.splitView.subviews.insert(self.styleView.view, at: 0)
+        self.window?.initialFirstResponder = self.styleView.optionsView
+        self.styleView.representedObject = newDocument.model!
+        newDocument.model!.delegate = self.sourceView
+      }
 
-			self.uncrustify()
-		}
-	}
+      self.uncrustify()
+    }
+  }
 
-	@IBAction func uncrustify(_ sender: AnyObject? = nil)
-	{
-		if let model = (self.document as? Document)?.model {
-			model.format()
-		}
-	}
+  @IBAction func uncrustify(_ sender: AnyObject? = nil)
+  {
+    if let model = (self.document as? Document)?.model {
+      model.format()
+    }
+  }
 
   @IBAction func changeLanguage(_ anItem: NSMenuItem)
   {
@@ -95,7 +95,7 @@ class MainWindowController: NSWindowController {
     if anItem.action == #selector(MainWindowController.changeLanguage(_:)) {
       if let language = anItem.representedObject as? Language {
         anItem.state = (self.sourceView.language == language)
-					? .on : .off
+          ? .on : .off
       }
     }
 
@@ -105,28 +105,28 @@ class MainWindowController: NSWindowController {
 
 extension MainWindowController: NSWindowDelegate
 {
-	func windowWillClose(_ notification: Notification)
-	{
-		self.removeAllObservers()
-		self.sourceView.removeAllObservers()
-		self.sourceView.representedObject = nil
-		self.sourceView = nil
-		self.styleView.representedObject = nil
-		self.styleView = nil
-	}
+  func windowWillClose(_ notification: Notification)
+  {
+    self.removeAllObservers()
+    self.sourceView.removeAllObservers()
+    self.sourceView.representedObject = nil
+    self.sourceView = nil
+    self.styleView.representedObject = nil
+    self.styleView = nil
+  }
 
-	func windowWillUseStandardFrame(
+  func windowWillUseStandardFrame(
     _ window: NSWindow,
     defaultFrame newFrame: NSRect) -> NSRect
-	{
-		var frame = newFrame
+  {
+    var frame = newFrame
     let target: NSWindow.CollectionBehavior =
       [.fullScreenPrimary, .fullScreenAuxiliary]
-		if self.window!.collectionBehavior.isDisjoint(with: target) {
-			frame.size.width = min(frame.size.width, 1200)
-		}
-		return frame
-	}
+    if self.window!.collectionBehavior.isDisjoint(with: target) {
+      frame.size.width = min(frame.size.width, 1200)
+    }
+    return frame
+  }
 }
 
 extension MainWindowController: NSSplitViewDelegate

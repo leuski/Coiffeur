@@ -23,68 +23,68 @@ import Cocoa
 
 extension NSTreeController {
 
-	struct DepthFirstView: Sequence {
+  struct DepthFirstView: Sequence {
 
-		struct NodeGenerator: IteratorProtocol {
+    struct NodeGenerator: IteratorProtocol {
 
-			var stack = [IndexingIterator<[NSTreeNode]>]()
+      var stack = [IndexingIterator<[NSTreeNode]>]()
 
-			init(_ root: NSTreeNode)
-			{
-				if let array = root.children {
-					stack.append(array.makeIterator())
-				}
-			}
+      init(_ root: NSTreeNode)
+      {
+        if let array = root.children {
+          stack.append(array.makeIterator())
+        }
+      }
 
-			mutating func next() -> NSTreeNode?
-			{
-				while !stack.isEmpty {
-					var last = stack.last!
-					if let node = last.next() {
-						stack[stack.count-1] = last
-						if let array = node.children {
-							stack.append(array.makeIterator())
-						}
-						return node
-					} else {
-						stack.removeLast()
-					}
-				}
-				return nil
-			}
+      mutating func next() -> NSTreeNode?
+      {
+        while !stack.isEmpty {
+          var last = stack.last!
+          if let node = last.next() {
+            stack[stack.count-1] = last
+            if let array = node.children {
+              stack.append(array.makeIterator())
+            }
+            return node
+          } else {
+            stack.removeLast()
+          }
+        }
+        return nil
+      }
 
-		}
+    }
 
-		typealias Iterator = NodeGenerator
+    typealias Iterator = NodeGenerator
 
-		let owner: NSTreeController
+    let owner: NSTreeController
 
-		init(_ owner: NSTreeController)
-		{
-			self.owner = owner
-		}
+    init(_ owner: NSTreeController)
+    {
+      self.owner = owner
+    }
 
-		func makeIterator() -> Iterator
-		{
-			return NodeGenerator(self.owner.arrangedObjects )
-		}
+    func makeIterator() -> Iterator
+    {
+      return NodeGenerator(self.owner.arrangedObjects )
+    }
 
-		func filter(_ includeElement: (NSTreeNode) -> Bool) -> [NSTreeNode]
-		{
-			return self.filter(includeElement)
-		}
+    func filter(_ includeElement: (NSTreeNode) -> Bool) -> [NSTreeNode]
+    {
+      return self.filter(includeElement)
+    }
 
-	}
+  }
 
-	var nodes: DepthFirstView {
-		return DepthFirstView(self)
-	}
+  var nodes: DepthFirstView {
+    return DepthFirstView(self)
+  }
 
-	var firstLeaf: NSTreeNode? {
-		for node in self.nodes where node.isLeaf {
+  var firstLeaf: NSTreeNode? {
+    for node in self.nodes where node.isLeaf {
       return node
-		}
-		return nil
-	}
+    }
+    return nil
+  }
 
 }

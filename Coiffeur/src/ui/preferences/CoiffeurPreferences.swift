@@ -22,129 +22,129 @@
 import Foundation
 
 class CoiffeurControllerClass: NSObject {
-	@objc let controllerClass: CoiffeurController.Type
-	var documentType: String { return controllerClass.documentType }
+  @objc let controllerClass: CoiffeurController.Type
+  var documentType: String { return controllerClass.documentType }
 
-	init(_ type: CoiffeurController.Type)
-	{
-		controllerClass = type
-	}
+  init(_ type: CoiffeurController.Type)
+  {
+    controllerClass = type
+  }
 
-	func contentsIsValidInString(_ string: String) -> Bool
-	{
-		return controllerClass.contentsIsValidInString(string)
-	}
+  func contentsIsValidInString(_ string: String) -> Bool
+  {
+    return controllerClass.contentsIsValidInString(string)
+  }
 
-	func createCoiffeur() throws -> CoiffeurController
-	{
-		return try controllerClass.createCoiffeur()
-	}
+  func createCoiffeur() throws -> CoiffeurController
+  {
+    return try controllerClass.createCoiffeur()
+  }
 
   @objc class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
   {
     return NSSet(object: "controllerClass.currentExecutableURL")
   }
 
-	@objc dynamic var currentExecutableURL: URL? {
-		get {
-			return controllerClass.currentExecutableURL
-		}
-		set (value) {
+  @objc dynamic var currentExecutableURL: URL? {
+    get {
+      return controllerClass.currentExecutableURL
+    }
+    set (value) {
       willChangeValue(forKey: "currentExecutableURL")
-			controllerClass.currentExecutableURL = value
+      controllerClass.currentExecutableURL = value
       didChangeValue(forKey: "currentExecutableURL")
-		}
-	}
+    }
+  }
 
-	var defaultExecutableURL: URL? {
-		return controllerClass.defaultExecutableURL
-	}
+  var defaultExecutableURL: URL? {
+    return controllerClass.defaultExecutableURL
+  }
 
-	@objc var executableDisplayName: String {
-		return controllerClass.localizedExecutableTitle
-	}
+  @objc var executableDisplayName: String {
+    return controllerClass.localizedExecutableTitle
+  }
 }
 
 class CoiffeurPreferences: DefaultPreferencePane {
 
-	@IBOutlet weak var tableView: NSTableView!
-	@IBOutlet weak var constraint: NSLayoutConstraint!
+  @IBOutlet weak var tableView: NSTableView!
+  @IBOutlet weak var constraint: NSLayoutConstraint!
 
-	override var toolbarItemImage: NSImage? {
-		return NSImage(named: NSImage.Name(rawValue: "Locations")) }
+  override var toolbarItemImage: NSImage? {
+    return NSImage(named: NSImage.Name(rawValue: "Locations")) }
 
-	@objc let formatters = CoiffeurController.availableTypes.map {
-		CoiffeurControllerClass($0) }
+  @objc let formatters = CoiffeurController.availableTypes.map {
+    CoiffeurControllerClass($0) }
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		let height = self.tableView.bounds.size.height + 2
-		let delta = self.tableView.enclosingScrollView!.frame.size.height - height
-		self.constraint.constant -= delta
-		self.view.frame.size.height -= delta
-	}
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    let height = self.tableView.bounds.size.height + 2
+    let delta = self.tableView.enclosingScrollView!.frame.size.height - height
+    self.constraint.constant -= delta
+    self.view.frame.size.height -= delta
+  }
 }
 
 extension CoiffeurPreferences: NSTableViewDelegate {
-	func tableView(
+  func tableView(
     _ tableView: NSTableView,
-		rowViewForRow row: Int) -> NSTableRowView?
-	{
-		return TransparentTableRowView()
-	}
+    rowViewForRow row: Int) -> NSTableRowView?
+  {
+    return TransparentTableRowView()
+  }
 }
 
 extension CoiffeurPreferences: NSPathControlDelegate {
-	func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
-	{
-		if let tcv = pathControl.superview as? NSTableCellView,
-			let ccc = tcv.objectValue as? CoiffeurControllerClass,
-			let url = ccc.defaultExecutableURL
-		{
-			let item = menu.insertItem(
-				withTitle: String(format: NSLocalizedString("Built-in %@", comment: ""),
-					url.lastPathComponent),
-				action: #selector(CoiffeurPreferences.selectURL(_:)),
-				keyEquivalent: "", at: 0)
-			item.representedObject = [ "class" : ccc, "url" : url ]
-				as Dictionary<String, AnyObject>
-		}
-	}
+  func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
+  {
+    if let tcv = pathControl.superview as? NSTableCellView,
+      let ccc = tcv.objectValue as? CoiffeurControllerClass,
+      let url = ccc.defaultExecutableURL
+    {
+      let item = menu.insertItem(
+        withTitle: String(format: NSLocalizedString("Built-in %@", comment: ""),
+                          url.lastPathComponent),
+        action: #selector(CoiffeurPreferences.selectURL(_:)),
+        keyEquivalent: "", at: 0)
+      item.representedObject = [ "class" : ccc, "url" : url ]
+        as Dictionary<String, AnyObject>
+    }
+  }
 
-	@objc func selectURL(_ sender: AnyObject)
-	{
-		if
+  @objc func selectURL(_ sender: AnyObject)
+  {
+    if
       let dictionary = sender.representedObject as? Dictionary<String, AnyObject>,
       let theClass = dictionary["class"] as? CoiffeurControllerClass
     {
-			theClass.currentExecutableURL = dictionary["url"] as? URL
-		}
-	}
+      theClass.currentExecutableURL = dictionary["url"] as? URL
+    }
+  }
 }
 
 class TransparentTableView: NSTableView {
 
-	override func awakeFromNib()
-	{
-		self.enclosingScrollView!.drawsBackground = false
-	}
+  override func awakeFromNib()
+  {
+    self.enclosingScrollView!.drawsBackground = false
+  }
 
-	override var isOpaque: Bool {
-		return false
-	}
+  override var isOpaque: Bool {
+    return false
+  }
 
-	override func drawBackground(inClipRect clipRect: NSRect)
-	{
-	// don't draw a background rect
-	}
+  override func drawBackground(inClipRect clipRect: NSRect)
+  {
+    // don't draw a background rect
+  }
 }
 
 class TransparentTableRowView: NSTableRowView {
-	override func drawBackground(in dirtyRect: NSRect)
-	{
+  override func drawBackground(in dirtyRect: NSRect)
+  {
 
-	}
-	override var isOpaque: Bool {
-			return false
-	}
+  }
+  override var isOpaque: Bool {
+    return false
+  }
 }

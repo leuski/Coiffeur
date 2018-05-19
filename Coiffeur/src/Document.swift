@@ -53,12 +53,12 @@ class Document: NSDocument {
 
   fileprivate func _ensureWeHaveModelOfType(
     _ typeName: String,
-		errorFormatKey: String) throws
+    errorFormatKey: String) throws
   {
     if let model = self.model {
       let documentType = type(of: model).documentType
       if typeName != documentType {
-				throw Error(errorFormatKey, typeName, documentType)
+        throw Error(errorFormatKey, typeName, documentType)
       }
     } else {
       self.model = try CoiffeurController.coiffeurWithType(typeName)
@@ -68,7 +68,7 @@ class Document: NSDocument {
   override func read(from absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
-			errorFormatKey: "Cannot read content of document “%@” into document “%@”")
+                                      errorFormatKey: "Cannot read content of document “%@” into document “%@”")
 
     try self.model!.readValuesFromURL(absoluteURL)
   }
@@ -76,7 +76,7 @@ class Document: NSDocument {
   override func write(to absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
-			errorFormatKey: "Cannot write content of document “%2$@” as “%1$@”")
+                                      errorFormatKey: "Cannot write content of document “%2$@” as “%1$@”")
 
     try self.model!.writeValuesToURL(absoluteURL)
   }
@@ -91,16 +91,16 @@ class Document: NSDocument {
     self.addWindowController(MainWindowController())
   }
 
-//  override func canCloseDocumentWithDelegate(delegate: AnyObject,
-//		shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
-//  {
-//    self.model?.managedObjectContext.commitEditing()
-//    super.canCloseDocumentWithDelegate(delegate,
-//			shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
-//  }
+  //  override func canCloseDocumentWithDelegate(delegate: AnyObject,
+  //    shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
+  //  {
+  //    self.model?.managedObjectContext.commitEditing()
+  //    super.canCloseDocumentWithDelegate(delegate,
+  //      shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
+  //  }
 
   override func writableTypes(for _: NSDocument.SaveOperationType)
-		-> [String]
+    -> [String]
   {
     if let model = self.model {
       return [type(of: model).documentType]

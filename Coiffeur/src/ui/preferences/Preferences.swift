@@ -23,29 +23,29 @@ import Cocoa
 
 class Preferences: PreferencesWindow {
 
-	override init(window: NSWindow?)
-	{
-		super.init(window: window)
-	}
+  override init(window: NSWindow?)
+  {
+    super.init(window: window)
+  }
 
-	required init?(coder: NSCoder)
-	{
-		super.init(coder: coder)
-	}
+  required init?(coder: NSCoder)
+  {
+    super.init(coder: coder)
+  }
 
-	convenience init(panes: [Pane])
-	{
-		self.init(windowNibName: NSNib.Name(rawValue: "PreferencesWindow"))
-		self.panes = panes
-	}
+  convenience init(panes: [Pane])
+  {
+    self.init(windowNibName: NSNib.Name(rawValue: "PreferencesWindow"))
+    self.panes = panes
+  }
 
-	convenience init()
-	{
-		self.init(panes: [
-			ColorAndFontPreferences(),
-			TextPresentationPreferences(),
-			CoiffeurPreferences()
-			])
-	}
+  convenience init()
+  {
+    self.init(panes: [
+      ColorAndFontPreferences(),
+      TextPresentationPreferences(),
+      CoiffeurPreferences()
+      ])
+  }
 
 }

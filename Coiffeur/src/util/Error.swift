@@ -27,13 +27,13 @@ class Error: NSError {
   init(localizedDescription: String)
   {
     super.init(domain: Error.domain, code: 0,
-			userInfo: [NSLocalizedDescriptionKey: localizedDescription])
+               userInfo: [NSLocalizedDescriptionKey: localizedDescription])
   }
 
   convenience init(_ format: String, _ args: CVarArg...)
   {
     self.init(localizedDescription: String(
-			format: NSLocalizedString(format, comment: ""), arguments: args))
+      format: NSLocalizedString(format, comment: ""), arguments: args))
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -54,38 +54,38 @@ extension NSError {
 //enum Result<T:AnyObject> {
 //  case Success(T)
 //  case Failure(NSError)
-//	init(_ value:T)
-//	{
-//		self = .Success(value)
-//	}
-//	init(_ error:NSError)
-//	{
-//		self = .Failure(error)
-//	}
+//  init(_ value:T)
+//  {
+//    self = .Success(value)
+//  }
+//  init(_ error:NSError)
+//  {
+//    self = .Failure(error)
+//  }
 //}
 
 enum StringResult {
   case success(String)
   case failure(NSError)
-	init(_ value: String)
-	{
-		self = .success(value)
-	}
-	init(_ error: NSError)
-	{
-		self = .failure(error)
-	}
+  init(_ value: String)
+  {
+    self = .success(value)
+  }
+  init(_ error: NSError)
+  {
+    self = .failure(error)
+  }
 }
 
 enum URLResult {
   case success(URL)
   case failure(NSError)
-	init(_ value: URL)
-	{
-		self = .success(value)
-	}
-	init(_ error: NSError)
-	{
-		self = .failure(error)
-	}
+  init(_ value: URL)
+  {
+    self = .success(value)
+  }
+  init(_ error: NSError)
+  {
+    self = .failure(error)
+  }
 }

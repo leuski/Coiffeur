@@ -31,9 +31,9 @@ class String2NumberTransformer: ValueTransformer {
   override func transformedValue(_ value: Any?) -> Any?
   {
     if let string = value as? String {
-			if let number = Int(string) {
-				return number
-			}
+      if let number = Int(string) {
+        return number
+      }
       return 0
     }
     return nil
@@ -50,30 +50,30 @@ class String2NumberTransformer: ValueTransformer {
 
 class OnlyIntegers: NumberFormatter {
 
-	override init()
-	{
-		super.init()
-		self.allowsFloats = false
-	}
+  override init()
+  {
+    super.init()
+    self.allowsFloats = false
+  }
 
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-		self.allowsFloats = false
-	}
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    self.allowsFloats = false
+  }
 
-	override func getObjectValue(
+  override func getObjectValue(
     _ object: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
-		for string: String,
-		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
-	{
-		if string.isEmpty {
-			if err != nil {
-				err?.pointee = NSLocalizedString(
-					"Empty string is not a valid number. Please provide a number",
-					comment: "") as NSString
-			}
-			return false
-		}
-		return super.getObjectValue(object, for: string, errorDescription: err)
-	}
+    for string: String,
+    errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
+  {
+    if string.isEmpty {
+      if err != nil {
+        err?.pointee = NSLocalizedString(
+          "Empty string is not a valid number. Please provide a number",
+          comment: "") as NSString
+      }
+      return false
+    }
+    return super.getObjectValue(object, for: string, errorDescription: err)
+  }
 }

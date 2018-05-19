@@ -42,6 +42,7 @@
 		6275AEB21AD451A600671D12 /* DocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB11AD451A600671D12 /* DocumentController.swift */; };
 		6275AEB81AD4734600671D12 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEB71AD4734600671D12 /* Document.swift */; };
 		6275AEBD1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */; };
+		62A77BA320B0BE8C00B9099E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62A77BA220B0BE8B00B9099E /* .swiftlint.yml */; };
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -107,13 +108,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = AB648E2A11FB385700AEF7BD;
 			remoteInfo = "Fragaria Doc";
-		};
-		6217C8E81B05879300377B14 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6217C8DF1B05879300377B14 /* Fragaria.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D1107320486CEB800E47090;
-			remoteInfo = "Fragaria GC";
 		};
 		6217C8EA1B05879300377B14 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -213,6 +207,7 @@
 		6275AEB71AD4734600671D12 /* Document.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DiffMatchPatch+ALSwiftEnum.h"; sourceTree = "<group>"; };
 		6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DiffMatchPatch+ALSwiftEnum.m"; sourceTree = "<group>"; };
+		62A77BA220B0BE8B00B9099E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
 		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
 		62B64F591AE4C7BB009C53EE /* NSObject+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+al.swift"; sourceTree = "<group>"; };
@@ -312,7 +307,6 @@
 			isa = PBXGroup;
 			children = (
 				6217C8E71B05879300377B14 /* Fragaria Doc.app */,
-				6217C8E91B05879300377B14 /* Fragaria GC.app */,
 				6217C8EB1B05879300377B14 /* Fragaria.app */,
 				6217C8ED1B05879300377B14 /* MGSFragaria.framework */,
 			);
@@ -402,6 +396,7 @@
 		62D1C2DF1AC34C7500B7F996 /* Coiffeur */ = {
 			isa = PBXGroup;
 			children = (
+				62A77BA220B0BE8B00B9099E /* .swiftlint.yml */,
 				626185121AC351CC0095CCD2 /* rsrc */,
 				6261851B1AC351CC0095CCD2 /* src */,
 			);
@@ -596,13 +591,6 @@
 			remoteRef = 6217C8E61B05879300377B14 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6217C8E91B05879300377B14 /* Fragaria GC.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = "Fragaria GC.app";
-			remoteRef = 6217C8E81B05879300377B14 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		6217C8EB1B05879300377B14 /* Fragaria.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
@@ -624,6 +612,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62A77BA320B0BE8C00B9099E /* .swiftlint.yml in Resources */,
 				6248C5331ADF6E25005ED75A /* PreferencesWindow.xib in Resources */,
 				6248C53F1ADF6E41005ED75A /* MainWindowController.xib in Resources */,
 				626185931AC51C780095CCD2 /* languages.plist in Resources */,

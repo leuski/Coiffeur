@@ -21,20 +21,20 @@
 
 import Cocoa
 
-class OverviewRegion : NSObject {
-  let lineRange : NSRange
-  let color : NSColor?
+class OverviewRegion: NSObject {
+  let lineRange: NSRange
+  let color: NSColor?
 
-	init(firstLineIndex:Int, lineCount:Int, color:NSColor?)
+	init(firstLineIndex: Int, lineCount: Int, color: NSColor?)
   {
     self.lineRange = NSMakeRange(firstLineIndex, lineCount)
     self.color = color
   }
 }
 
-class OverviewScroller : NSScroller {
+class OverviewScroller: NSScroller {
 
-  var regions : [OverviewRegion] = [] {
+  var regions: [OverviewRegion] = [] {
     didSet {
       self.needsDisplay = true
     }
@@ -46,9 +46,9 @@ class OverviewScroller : NSScroller {
     }
   }
 
-  override init(frame:NSRect)
+  override init(frame: NSRect)
   {
-    super.init(frame:frame)
+    super.init(frame: frame)
   }
 
   required init?(coder: NSCoder) {
@@ -90,4 +90,3 @@ class OverviewScroller : NSScroller {
 
   }
 }
-

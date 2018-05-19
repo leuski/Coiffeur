@@ -21,15 +21,15 @@
 
 import Cocoa
 
-class MainWindowController : NSWindowController {
+class MainWindowController: NSWindowController {
 
-  @IBOutlet weak var splitView : NSSplitView!
+  @IBOutlet weak var splitView: NSSplitView!
   var sourceView: SourceView!
   var styleView: CoiffeurView!
 
-  override init(window:NSWindow?)
+  override init(window: NSWindow?)
   {
-    super.init(window:window)
+    super.init(window: window)
   }
 
   required init?(coder: NSCoder)
@@ -39,7 +39,7 @@ class MainWindowController : NSWindowController {
 
   convenience init()
   {
-    self.init(windowNibName:NSNib.Name(rawValue: "MainWindowController"))
+    self.init(windowNibName: NSNib.Name(rawValue: "MainWindowController"))
   }
 
   override func windowDidLoad()
@@ -49,13 +49,13 @@ class MainWindowController : NSWindowController {
     self.sourceView = SourceView()
 		self.splitView.addSubview(self.sourceView.view)
 
-		let uncrustify : BlockObserver = { _, _ in self.uncrustify() }
-		self.sourceView.addObserverForKeyPath("language", observer:uncrustify)
+		let uncrustify: BlockObserver = { _, _ in self.uncrustify() }
+		self.sourceView.addObserverForKeyPath("language", observer: uncrustify)
 		self.sourceView.addObserverForKeyPath("sourceString",
-			options: .initial, observer:uncrustify)
+			options: .initial, observer: uncrustify)
 
 		self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
-			(_, change:[AnyHashable: Any]) in
+			(_, change: [AnyHashable: Any]) in
 
 			if let _ = change[NSKeyValueChangeKey.oldKey] as? Document {
 				if self.styleView != nil {
@@ -76,21 +76,21 @@ class MainWindowController : NSWindowController {
 		}
 	}
 
-	@IBAction func uncrustify(_ sender : AnyObject? = nil)
+	@IBAction func uncrustify(_ sender: AnyObject? = nil)
 	{
 		if let model = (self.document as? Document)?.model {
 			model.format()
 		}
 	}
 
-  @IBAction func changeLanguage(_ anItem:NSMenuItem)
+  @IBAction func changeLanguage(_ anItem: NSMenuItem)
   {
     if let language = anItem.representedObject as? Language {
       self.sourceView.language = language
     }
   }
 
-  override func validateMenuItem(_ anItem:NSMenuItem) -> Bool
+  override func validateMenuItem(_ anItem: NSMenuItem) -> Bool
   {
     if anItem.action == #selector(MainWindowController.changeLanguage(_:)) {
       if let language = anItem.representedObject as? Language {
@@ -103,9 +103,9 @@ class MainWindowController : NSWindowController {
   }
 }
 
-extension MainWindowController : NSWindowDelegate
+extension MainWindowController: NSWindowDelegate
 {
-	func windowWillClose(_ notification:Notification)
+	func windowWillClose(_ notification: Notification)
 	{
 		self.removeAllObservers()
 		self.sourceView.removeAllObservers()
@@ -115,71 +115,35 @@ extension MainWindowController : NSWindowDelegate
 		self.styleView = nil
 	}
 
-	func windowWillUseStandardFrame(_ window: NSWindow,
-		defaultFrame newFrame: NSRect) -> NSRect
+	func windowWillUseStandardFrame(
+    _ window: NSWindow,
+    defaultFrame newFrame: NSRect) -> NSRect
 	{
 		var frame = newFrame
-		if (self.window!.collectionBehavior.intersection((NSWindow.CollectionBehavior.fullScreenPrimary.union(NSWindow.CollectionBehavior.fullScreenAuxiliary)))).rawValue == 0
-		{
+    let target: NSWindow.CollectionBehavior =
+      [.fullScreenPrimary, .fullScreenAuxiliary]
+		if self.window!.collectionBehavior.isDisjoint(with: target) {
 			frame.size.width = min(frame.size.width, 1200)
 		}
 		return frame
 	}
 }
 
-extension MainWindowController : NSSplitViewDelegate
+extension MainWindowController: NSSplitViewDelegate
 {
-  func splitView(_ splitView: NSSplitView,
-		constrainMaxCoordinate proposedMax: CGFloat,
-		ofSubviewAt dividerIndex: Int) -> CGFloat
+  func splitView(
+    _ splitView: NSSplitView,
+    constrainMaxCoordinate proposedMax: CGFloat,
+    ofSubviewAt dividerIndex: Int) -> CGFloat
   {
     return self.splitView.frame.size.width - 370
   }
 
-  func splitView(_ splitView: NSSplitView,
-		constrainMinCoordinate proposedMin: CGFloat,
-		ofSubviewAt dividerIndex: Int) -> CGFloat
+  func splitView(
+    _ splitView: NSSplitView,
+    constrainMinCoordinate proposedMin: CGFloat,
+    ofSubviewAt dividerIndex: Int) -> CGFloat
   {
     return 200
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

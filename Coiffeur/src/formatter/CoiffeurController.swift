@@ -22,44 +22,44 @@
 import Foundation
 import CoreData
 
-protocol CoiffeurControllerDelegate : class {
-	func coiffeurControllerArguments(_ controller:CoiffeurController)
+protocol CoiffeurControllerDelegate: class {
+	func coiffeurControllerArguments(_ controller: CoiffeurController)
 		-> CoiffeurController.Arguments
-	func coiffeurController(_ coiffeurController:CoiffeurController,
-		setText text:String)
+	func coiffeurController(_ coiffeurController: CoiffeurController,
+		setText text: String)
 }
 
-class CoiffeurController : NSObject {
+class CoiffeurController: NSObject {
 
 	class Arguments {
-		let text:String
-		let language:Language
+		let text: String
+		let language: Language
 		var fragment = false
 
-		init(_ text:String, language:Language)
+		init(_ text: String, language: Language)
 		{
 			self.text = text
 			self.language = language
 		}
 	}
 
-	enum OptionType : Swift.String {
+	enum OptionType: Swift.String {
 		case signed = "signed"
 		case unsigned = "unsigned"
 		case string = "string"
 		case stringList = "stringList"
 	}
 
-	class var availableTypes : [CoiffeurController.Type] {
+	class var availableTypes: [CoiffeurController.Type] {
 		return [ ClangFormatController.self, UncrustifyController.self ] }
 
-	class var documentType : String { return "" }
-	class var localizedExecutableTitle : String { return "Executable" }
-	class var currentExecutableName : String { return "" }
-	class var currentExecutableURLUDKey : String { return "" }
+	class var documentType: String { return "" }
+	class var localizedExecutableTitle: String { return "Executable" }
+	class var currentExecutableName: String { return "" }
+	class var currentExecutableURLUDKey: String { return "" }
 
-	class var defaultExecutableURL : URL? {
-		let bundle = Bundle(for:self)
+	class var defaultExecutableURL: URL? {
+		let bundle = Bundle(for: self)
 		if let url = bundle.url(forAuxiliaryExecutable: self.currentExecutableName)
 		{
 			if FileManager.default.isExecutableFile(atPath: url.path) {
@@ -69,7 +69,7 @@ class CoiffeurController : NSObject {
 		return nil
 	}
 
-	class var currentExecutableURL : URL? {
+	class var currentExecutableURL: URL? {
 		get {
 			let UD = UserDefaults.standard
 			if let url = UD.url(forKey: self.currentExecutableURLUDKey)
@@ -96,16 +96,16 @@ class CoiffeurController : NSObject {
 		}
 	}
 
-	class var keySortDescriptor : NSSortDescriptor
+	class var keySortDescriptor: NSSortDescriptor
 	{
-		return NSSortDescriptor(key: "indexKey", ascending:true)
+		return NSSortDescriptor(key: "indexKey", ascending: true)
 	}
 
-	let managedObjectContext : NSManagedObjectContext
-	let managedObjectModel : NSManagedObjectModel
-	let executableURL : URL
+	let managedObjectContext: NSManagedObjectContext
+	let managedObjectModel: NSManagedObjectModel
+	let executableURL: URL
 
-	@objc var root : ConfigRoot? {
+	@objc var root: ConfigRoot? {
 		do {
 			return try self.managedObjectContext.fetchSingle(ConfigRoot.self)
 		} catch _ {
@@ -113,8 +113,8 @@ class CoiffeurController : NSObject {
 		}
 	}
 
-	var pageGuideColumn : Int { return 0 }
-	weak var delegate : CoiffeurControllerDelegate?
+	var pageGuideColumn: Int { return 0 }
+	weak var delegate: CoiffeurControllerDelegate?
 
 	class func findExecutableURL() throws -> URL
 	{
@@ -144,8 +144,8 @@ class CoiffeurController : NSObject {
 				throw Error("Failed to initialize coiffeur persistent store coordinator")
 			}
 			moc.undoManager = UndoManager()
-			return self.init(executableURL:url,
-				managedObjectModel:mom, managedObjectContext:moc)
+			return self.init(executableURL: url,
+				managedObjectModel: mom, managedObjectContext: moc)
 		} else {
 			throw Error("Failed to initialize coiffeur managed object model")
 		}
@@ -161,13 +161,13 @@ class CoiffeurController : NSObject {
 		throw Error("Unknown document type “%@”", type)
 	}
 
-	class func contentsIsValidInString(_ string:String) -> Bool
+	class func contentsIsValidInString(_ string: String) -> Bool
 	{
 		return false
 	}
 
-	required init(executableURL:URL, managedObjectModel:NSManagedObjectModel,
-		managedObjectContext:NSManagedObjectContext)
+	required init(executableURL: URL, managedObjectModel: NSManagedObjectModel,
+		managedObjectContext: NSManagedObjectContext)
 	{
 		self.executableURL = executableURL
 		self.managedObjectModel = managedObjectModel
@@ -196,46 +196,46 @@ class CoiffeurController : NSObject {
 		if let del = self.delegate {
 			let arguments = del.coiffeurControllerArguments(self)
 			result = self.format(arguments) {
-				(result:StringResult) in
+				(result: StringResult) in
 				switch (result) {
 				case .failure(let err):
 					NSLog("%@", err)
 				case .success(let text):
-					del.coiffeurController(self, setText:text)
+					del.coiffeurController(self, setText: text)
 				}
 			}
 		}
 		return result
 	}
 
-	func format(_ args:Arguments,
+	func format(_ args: Arguments,
 		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
 	{
 		return false
 	}
 
-	func readOptionsFromLineArray(_ lines:[String]) throws
+	func readOptionsFromLineArray(_ lines: [String]) throws
 	{
 	}
 
-	func readValuesFromLineArray(_ lines:[String]) throws
+	func readValuesFromLineArray(_ lines: [String]) throws
 	{
 	}
 
-	func readOptionsFromString(_ text:String) throws
+	func readOptionsFromString(_ text: String) throws
 	{
 		let lines = text.components(separatedBy: "\n")
 
 		self.managedObjectContext.disableUndoRegistration()
 		defer { self.managedObjectContext.enableUndoRegistration() }
 
-		ConfigRoot.objectInContext(self.managedObjectContext, parent:nil)
+		ConfigRoot.objectInContext(self.managedObjectContext, parent: nil)
 
 		try self.readOptionsFromLineArray(lines)
 		_clusterOptions()
 	}
 
-	func readValuesFromString(_ text:String) throws
+	func readValuesFromString(_ text: String) throws
 	{
 		let lines = text.components(separatedBy: "\n")
 
@@ -245,23 +245,23 @@ class CoiffeurController : NSObject {
 		try self.readValuesFromLineArray(lines)
 	}
 
-	func readValuesFromURL(_ absoluteURL:URL) throws
+	func readValuesFromURL(_ absoluteURL: URL) throws
 	{
-		let data = try String(contentsOf:absoluteURL,
-			encoding:String.Encoding.utf8)
+		let data = try String(contentsOf: absoluteURL,
+			encoding: String.Encoding.utf8)
 		try self.readValuesFromString(data)
 	}
 
-	func writeValuesToURL(_ absoluteURL:URL) throws
+	func writeValuesToURL(_ absoluteURL: URL) throws
 	{
 		throw Error("Unknown error while trying to write style to %@", absoluteURL as CVarArg)
 	}
 
-	func optionWithKey(_ key:String) -> ConfigOption?
+	func optionWithKey(_ key: String) -> ConfigOption?
 	{
 		do {
 			return try self.managedObjectContext.fetchSingle(ConfigOption.self,
-				withFormat:"indexKey = %@", key)
+				withFormat: "indexKey = %@", key)
 		} catch _ {
 			return nil
 		}
@@ -291,8 +291,8 @@ class CoiffeurController : NSObject {
 		self.root?.sortAndIndexChildren()
 	}
 
-	fileprivate func _splitTokens(_ title:String, boundary:Int, stem:Bool = false)
-		-> (head:[String], tail:[String])
+	fileprivate func _splitTokens(_ title: String, boundary: Int, stem: Bool = false)
+		-> (head: [String], tail: [String])
 	{
 		let tokens = title.components(separatedBy: " ")
 		var head = [String]()
@@ -320,7 +320,7 @@ class CoiffeurController : NSObject {
 		return (head:head, tail:tail)
 	}
 
-	fileprivate func _cluster(_ tokenLimit:Int)
+	fileprivate func _cluster(_ tokenLimit: Int)
 	{
 		for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }
@@ -331,7 +331,7 @@ class CoiffeurController : NSObject {
         guard let option = node as? ConfigOption else { continue }
 
         let (head, tail) = _splitTokens(option.title,
-					boundary:tokenLimit, stem:true)
+					boundary: tokenLimit, stem: true)
 
 				if tail.isEmpty {
 					continue
@@ -353,12 +353,12 @@ class CoiffeurController : NSObject {
 
 				let subsection = ConfigSection.objectInContext(
 					self.managedObjectContext,
-					parent:section, title:"\(key) …")
+					parent: section, title: "\(key) …")
 
 				var count = 0
 				for option in list {
 					option.parent = subsection
-					let (head, tail) = _splitTokens(option.title, boundary:tokenLimit)
+					let (head, tail) = _splitTokens(option.title, boundary: tokenLimit)
 					option.title  = tail.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
           count += 1
 					if count == 1 {
@@ -390,11 +390,11 @@ class CoiffeurController : NSObject {
 				continue
 			}
 
-			let other = String(format:NSLocalizedString("Other %@", comment:""),
+			let other = String(format: NSLocalizedString("Other %@", comment: ""),
 				section.title.lowercased())
 			let subsection = ConfigSection.objectInContext(self.managedObjectContext,
-				parent:section,
-				title:"\u{200B}\(other)")
+				parent: section,
+				title: "\u{200B}\(other)")
 
 			for option in index {
 				option.parent = subsection
@@ -403,24 +403,3 @@ class CoiffeurController : NSObject {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

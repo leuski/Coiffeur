@@ -21,18 +21,18 @@
 
 import Cocoa
 
-class DocumentController : NSDocumentController {
+class DocumentController: NSDocumentController {
 
   override func beginOpenPanel(_ openPanel: NSOpenPanel,
 		forTypes inTypes: [String]?, completionHandler: @escaping (Int) -> Void)
   {
     openPanel.showsHiddenFiles = true
-    super.beginOpenPanel(openPanel, forTypes:inTypes,
-			completionHandler:completionHandler)
+    super.beginOpenPanel(openPanel, forTypes: inTypes,
+			completionHandler: completionHandler)
   }
 
   @discardableResult
-	fileprivate func _classForType(_ type:String) throws -> CoiffeurController.Type
+	fileprivate func _classForType(_ type: String) throws -> CoiffeurController.Type
 	{
 		for aClass in CoiffeurController.availableTypes {
 			if type == aClass.documentType {
@@ -47,7 +47,7 @@ class DocumentController : NSDocumentController {
     let type = try super.typeForContents(of: url)
 		try _classForType(type)
 
-		let data = try String(contentsOf:url, encoding:String.Encoding.utf8)
+		let data = try String(contentsOf: url, encoding: String.Encoding.utf8)
 
 		for conroller in CoiffeurController.availableTypes {
 			if conroller.contentsIsValidInString(data) {

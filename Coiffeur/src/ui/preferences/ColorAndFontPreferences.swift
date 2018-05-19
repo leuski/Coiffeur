@@ -22,14 +22,14 @@
 import Cocoa
 
 extension UserDefaults {
-	func archivedObjectForKey<T:AnyObject>(_ key: String) -> T?
+	func archivedObjectForKey<T: AnyObject>(_ key: String) -> T?
 	{
 		if let data = self.data(forKey: key) {
 			return NSUnarchiver.unarchiveObject(with: data) as? T
 		}
 		return nil
 	}
-	func setArchivedObject<T:AnyObject>(_ value:T?, forKey key: String)
+	func setArchivedObject<T: AnyObject>(_ value: T?, forKey key: String)
 	{
 		if value != nil {
 			self.set(NSArchiver.archivedData(withRootObject: value!), forKey: key)
@@ -39,14 +39,14 @@ extension UserDefaults {
 	}
 }
 
-class FragariaColor : NSObject {
-	let fragariaUDKey : String
-	let displayNameUDKey : String
+class FragariaColor: NSObject {
+	let fragariaUDKey: String
+	let displayNameUDKey: String
 
-	@objc var displayName : String {
+	@objc var displayName: String {
 		return NSLocalizedString(self.displayNameUDKey, comment: "") }
 
-	@objc var color : NSColor? {
+	@objc var color: NSColor? {
 		get {
 			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(self.fragariaUDKey)
@@ -57,16 +57,16 @@ class FragariaColor : NSObject {
 		}
 	}
 
-	init(_ fragariaKey : String, _ displayNameKey: String)
+	init(_ fragariaKey: String, _ displayNameKey: String)
 	{
 		self.fragariaUDKey = fragariaKey
 		self.displayNameUDKey = displayNameKey
 	}
 }
 
-class ColorAndFontPreferences : DefaultPreferencePane {
+class ColorAndFontPreferences: DefaultPreferencePane {
 
-	override var toolbarItemImage : NSImage? {
+	override var toolbarItemImage: NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "FontAndColors")) }
 
 	@objc let colors = [
@@ -83,7 +83,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		FragariaColor(MGSFragariaPrefsInvisibleCharactersColourWell, "Invisibles")
 	]
 
-	@objc dynamic var font : NSFont? {
+	@objc dynamic var font: NSFont? {
 		get {
 			let UD = UserDefaults.standard
 			return UD.archivedObjectForKey(MGSFragariaPrefsTextFont)
@@ -99,7 +99,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		return NSSet(object: "font")
 	}
 
-	@objc dynamic var fontName : String {
+	@objc dynamic var fontName: String {
 		if let font = self.font {
 			return "\(font.displayName!) \(font.pointSize) pts"
 		}

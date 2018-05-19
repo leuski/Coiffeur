@@ -22,7 +22,7 @@
 import Cocoa
 import Carbon
 
-class OutlineView : NSOutlineView {
+class OutlineView: NSOutlineView {
   // to enable NSStepper in the outline view cells
   override func validateProposedFirstResponder(_ responder: NSResponder,
 		for event: NSEvent?) -> Bool
@@ -70,4 +70,3 @@ class OutlineView : NSOutlineView {
     self.scrollToVisible(visRect)
   }
 }
-

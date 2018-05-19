@@ -31,8 +31,10 @@ extension Process {
 		initializes the task with exetubale url, arguments, and working directory.
 		Sets the standard streams to pipes
 	*/
-	convenience init(_ url:URL, arguments:[String] = [],
-		workingDirectory:String? = nil)
+	convenience init(
+    _ url: URL,
+    arguments: [String] = [],
+		workingDirectory: String? = nil)
 	{
 		self.init()
 
@@ -47,7 +49,7 @@ extension Process {
 		self.standardError = Pipe()
 	}
 
-	fileprivate func _runThrowsNSException(_ input:String?) -> StringResult
+	fileprivate func _runThrowsNSException(_ input: String?) -> StringResult
 	{
 		let writeHandle = input != nil
 			? (self.standardInput! as AnyObject).fileHandleForWriting
@@ -71,7 +73,7 @@ extension Process {
 		let status = self.terminationStatus
 
 		if status == 0 {
-			if let string = String(data:outData!, encoding: String.Encoding.utf8) {
+			if let string = String(data: outData!, encoding: String.Encoding.utf8) {
 				return StringResult(string)
 			} else {
 				return StringResult(
@@ -87,9 +89,9 @@ extension Process {
 		}
 	}
 
-	fileprivate func _run(_ input:String? = nil) -> StringResult
+	fileprivate func _run(_ input: String? = nil) -> StringResult
 	{
-		var result : StringResult?
+		var result: StringResult?
 		ALExceptions.`try`({
 			result = self._runThrowsNSException(input)
 		}, catch: { (ex:NSException?) in
@@ -104,19 +106,21 @@ extension Process {
 		Runs the task synchroniously with the given string as the standard input.
 		@return Returns a string from stadard output or an error
 	*/
-	func run(_ input:String? = nil) throws -> String
-	{
-		switch _run(input) {
-		 case .success(let value): return value
-		 case .failure(let error): throw error
-		}
-	}
+  func run(_ input: String? = nil) throws -> String
+  {
+    switch _run(input) {
+    case .success(let value): return value
+    case .failure(let error): throw error
+    }
+  }
 
 	/**
 		Runs the task asynchroniously with the given string as the standard input.
 		Calls the provided block with the string from stadard output or an error
 	*/
-	func runAsync(_ input:String? = nil, completionHandler:@escaping (_:StringResult)->Void)
+	func runAsync(
+    _ input: String? = nil,
+    completionHandler:@escaping (_:StringResult)->Void)
 	{
 		DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async(execute: {
 			let result = self._run(input)

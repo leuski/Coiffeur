@@ -21,11 +21,11 @@
 
 import Cocoa
 
-class CoiffeurView : NSViewController {
+class CoiffeurView: NSViewController {
 
-  @IBOutlet weak var optionsView : OutlineView!
-  @IBOutlet weak var jumpMenu : NSPopUpButton!
-  @IBOutlet var optionsController : NSTreeController!
+  @IBOutlet weak var optionsView: OutlineView!
+  @IBOutlet weak var jumpMenu: NSPopUpButton!
+  @IBOutlet var optionsController: NSTreeController!
 
 	fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
 
@@ -36,7 +36,7 @@ class CoiffeurView : NSViewController {
   }
 
   required init?(coder: NSCoder) {
-    super.init(coder:coder)
+    super.init(coder: coder)
   }
 
   override func viewDidLoad()
@@ -49,7 +49,7 @@ class CoiffeurView : NSViewController {
 
 	fileprivate func _finishSettingUpView()
 	{
-		self.optionsView.expandItem(nil, expandChildren:true)
+		self.optionsView.expandItem(nil, expandChildren: true)
 
 		if let node: AnyObject = self.optionsController.firstLeaf  {
 			self.optionsController.setSelectionIndexPath(node.indexPath)
@@ -66,7 +66,7 @@ class CoiffeurView : NSViewController {
     }
   }
 
-  @IBAction func jumpToSection(_ sender:AnyObject)
+  @IBAction func jumpToSection(_ sender: AnyObject)
   {
     if let popup = sender as? NSPopUpButton {
       self.optionsView.scrollItemToVisible(
@@ -75,10 +75,10 @@ class CoiffeurView : NSViewController {
   }
 }
 
-extension CoiffeurView : NSOutlineViewDelegate {
+extension CoiffeurView: NSOutlineViewDelegate {
 
-  func outlineView(_ outlineView:NSOutlineView,
-		isGroupItem item:Any) -> Bool
+  func outlineView(_ outlineView: NSOutlineView,
+		isGroupItem item: Any) -> Bool
   {
     if let node = (item as AnyObject).representedObject as? ConfigNode {
       return !node.leaf
@@ -86,7 +86,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
     return false
   }
 
-	fileprivate func _rowViewIdentifierForItem(_ item:AnyObject) -> String?
+	fileprivate func _rowViewIdentifierForItem(_ item: AnyObject) -> String?
 	{
 		if let node = item.representedObject as? ConfigNode {
 			if node is ConfigOption {
@@ -98,7 +98,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		return nil
 	}
 
-	fileprivate func _cellViewIdentifierForItem(_ item:AnyObject) -> String?
+	fileprivate func _cellViewIdentifierForItem(_ item: AnyObject) -> String?
 	{
 		if let node = item.representedObject as? ConfigNode {
 			let tokens = node.tokens
@@ -119,11 +119,11 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		return nil
 	}
 
-	func outlineView(_ outlineView:NSOutlineView,
-		viewFor tableColumn:NSTableColumn?, item:Any) -> NSView?
+	func outlineView(_ outlineView: NSOutlineView,
+		viewFor tableColumn: NSTableColumn?, item: Any) -> NSView?
   {
 		if let identifier = _cellViewIdentifierForItem(item as AnyObject),
-			 let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner:self) ,
+			 let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner: self) ,
 			 let node = (item as AnyObject).representedObject as? ConfigNode
 		{
 			if let cell = view as? ConfigChoiceCellView, let segmented = cell.segmented {
@@ -144,7 +144,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			return height
 		}
 		if let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
-				owner:self)
+				owner: self)
 		{
 			let height = view.frame.size.height
 			if height > 0 {
@@ -164,8 +164,8 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		if let identifier = _cellViewIdentifierForItem(item as AnyObject),
 			 let rowIdentifier = _rowViewIdentifierForItem(item as AnyObject)
 		{
-			return _outlineView(outlineView, heightOfRowByIdentifier:identifier)
-				+ _outlineView(outlineView, heightOfRowByIdentifier:rowIdentifier)
+			return _outlineView(outlineView, heightOfRowByIdentifier: identifier)
+				+ _outlineView(outlineView, heightOfRowByIdentifier: rowIdentifier)
 		}
     return 10
   }
@@ -173,7 +173,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
   func outlineView(_ outlineView: NSOutlineView,
 		shouldSelectItem item: Any) -> Bool
   {
-    return !self.outlineView(outlineView, isGroupItem:item)
+    return !self.outlineView(outlineView, isGroupItem: item)
   }
 
   func outlineView(_ outlineView: NSOutlineView,
@@ -182,7 +182,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		if let identifier = _rowViewIdentifierForItem(item as AnyObject),
 			 let theNode = (item as AnyObject).representedObject as? ConfigNode,
 			 let container = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier),
-				owner:self) as? ConfigRowView
+				owner: self) as? ConfigRowView
 		{
 			container.locations = theNode.path
 			container.textField.stringValue = theNode.title

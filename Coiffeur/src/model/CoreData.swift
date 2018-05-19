@@ -23,7 +23,7 @@ import CoreData
 
 extension NSManagedObjectContext {
 
-	func entity<T:NSManagedObject>(_ entityClass:T.Type) -> NSEntityDescription?
+	func entity<T: NSManagedObject>(_ entityClass: T.Type) -> NSEntityDescription?
 	{
 		let mom = self.persistentStoreCoordinator!.managedObjectModel
 		let className = NSStringFromClass(entityClass)
@@ -35,7 +35,7 @@ extension NSManagedObjectContext {
 		return nil
 	}
 
-	func fetch(_ entity:NSEntityDescription?, sortDescriptors:[NSSortDescriptor]? = nil,
+	func fetch(_ entity: NSEntityDescription?, sortDescriptors: [NSSortDescriptor]? = nil,
 		withPredicate predicate: NSPredicate? = nil) throws -> [AnyObject]
 	{
 		if let theEntity = entity {
@@ -50,44 +50,44 @@ extension NSManagedObjectContext {
 		return []
 	}
 
-	func fetch<T:NSManagedObject>(_ entityClass:T.Type,
-		sortDescriptors:[NSSortDescriptor]? = nil,
+	func fetch<T: NSManagedObject>(_ entityClass: T.Type,
+		sortDescriptors: [NSSortDescriptor]? = nil,
 		withPredicate predicate: NSPredicate? = nil) throws -> [T]
 	{
-		return (try fetch(entity(entityClass), sortDescriptors:sortDescriptors,
-			withPredicate:predicate)) as? [T] ?? []
+		return (try fetch(entity(entityClass), sortDescriptors: sortDescriptors,
+			withPredicate: predicate)) as? [T] ?? []
 	}
 
-	func fetch<T:NSManagedObject>(_ entityClass:T.Type,
-		sortDescriptors:[NSSortDescriptor]? = nil,
+	func fetch<T: NSManagedObject>(_ entityClass: T.Type,
+		sortDescriptors: [NSSortDescriptor]? = nil,
 		withFormat format: String, _ args: CVarArg ...) throws -> [T]
 	{
-		return try fetch(entityClass, sortDescriptors:sortDescriptors,
-			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
+		return try fetch(entityClass, sortDescriptors: sortDescriptors,
+			withPredicate: withVaList(args) {NSPredicate(format: format, arguments: $0)})
 	}
 
-	func fetchSingle<T:NSManagedObject>(_ entityClass:T.Type,
-	                 sortDescriptors:[NSSortDescriptor]? = nil,
+	func fetchSingle<T: NSManagedObject>(_ entityClass: T.Type,
+	                 sortDescriptors: [NSSortDescriptor]? = nil,
 	                 withPredicate predicate: NSPredicate? = nil) throws -> T?
 	{
 		let array = try fetch(entity(entityClass),
-			sortDescriptors:sortDescriptors, withPredicate:predicate)
+			sortDescriptors: sortDescriptors, withPredicate: predicate)
 
 		return array.isEmpty ? nil : (array[0] as? T)
 	}
 
-	func fetchSingle<T:NSManagedObject>(_ entityClass:T.Type,
-		sortDescriptors:[NSSortDescriptor]? = nil, withFormat format: String,
+	func fetchSingle<T: NSManagedObject>(_ entityClass: T.Type,
+		sortDescriptors: [NSSortDescriptor]? = nil, withFormat format: String,
 		_ args: CVarArg ...) throws -> T?
 	{
-		return try fetchSingle(entityClass, sortDescriptors:sortDescriptors,
-			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
+		return try fetchSingle(entityClass, sortDescriptors: sortDescriptors,
+			withPredicate: withVaList(args) {NSPredicate(format: format, arguments: $0)})
 	}
 
-	func insert<T:NSManagedObject>(_ entityClass:T.Type) -> T
+	func insert<T: NSManagedObject>(_ entityClass: T.Type) -> T
 	{
-		return entityClass.init(entity:entity(entityClass)!,
-			insertInto:self)
+		return entityClass.init(entity: entity(entityClass)!,
+			insertInto: self)
 	}
 
   func disableUndoRegistration()
@@ -102,7 +102,7 @@ extension NSManagedObjectContext {
     self.undoManager?.enableUndoRegistration()
   }
 
-  func beginActionWithName(_ name:String)
+  func beginActionWithName(_ name: String)
   {
     self.undoManager?.beginUndoGrouping()
     self.undoManager?.setActionName(name)
@@ -202,5 +202,3 @@ extension NSManagedObject {
 //  }
 //}
 //
-
-

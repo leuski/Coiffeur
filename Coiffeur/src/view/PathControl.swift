@@ -21,7 +21,7 @@
 
 import Cocoa
 
-class PathControl : NSPathControl {
+class PathControl: NSPathControl {
   // there is a bug in NSPathControl where clicking outside of the
   // button label results in the focus not transferring to the control. Fixing.
   override func mouseDown(with theEvent: NSEvent) {

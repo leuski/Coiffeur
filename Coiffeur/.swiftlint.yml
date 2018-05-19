@@ -1,6 +1,6 @@
 disabled_rules: # rule identifiers to exclude from running
   - opening_brace
-#   - closure_parameter_position
+  - closure_parameter_position
 #   - type_name
 #   - todo
 #   - trailing_whitespace

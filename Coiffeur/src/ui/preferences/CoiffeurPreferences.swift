@@ -21,16 +21,16 @@
 
 import Foundation
 
-class CoiffeurControllerClass : NSObject {
-	@objc let controllerClass : CoiffeurController.Type
-	var documentType : String { return controllerClass.documentType }
+class CoiffeurControllerClass: NSObject {
+	@objc let controllerClass: CoiffeurController.Type
+	var documentType: String { return controllerClass.documentType }
 
-	init(_ type:CoiffeurController.Type)
+	init(_ type: CoiffeurController.Type)
 	{
 		controllerClass = type
 	}
 
-	func contentsIsValidInString(_ string:String) -> Bool
+	func contentsIsValidInString(_ string: String) -> Bool
 	{
 		return controllerClass.contentsIsValidInString(string)
 	}
@@ -42,10 +42,10 @@ class CoiffeurControllerClass : NSObject {
 
   @objc class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
   {
-    return NSSet(object:"controllerClass.currentExecutableURL")
+    return NSSet(object: "controllerClass.currentExecutableURL")
   }
 
-	@objc dynamic var currentExecutableURL : URL? {
+	@objc dynamic var currentExecutableURL: URL? {
 		get {
 			return controllerClass.currentExecutableURL
 		}
@@ -56,21 +56,21 @@ class CoiffeurControllerClass : NSObject {
 		}
 	}
 
-	var defaultExecutableURL : URL? {
+	var defaultExecutableURL: URL? {
 		return controllerClass.defaultExecutableURL
 	}
 
-	@objc var executableDisplayName : String {
+	@objc var executableDisplayName: String {
 		return controllerClass.localizedExecutableTitle
 	}
 }
 
-class CoiffeurPreferences : DefaultPreferencePane {
+class CoiffeurPreferences: DefaultPreferencePane {
 
 	@IBOutlet weak var tableView: NSTableView!
 	@IBOutlet weak var constraint: NSLayoutConstraint!
 
-	override var toolbarItemImage : NSImage? {
+	override var toolbarItemImage: NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "Locations")) }
 
 	@objc let formatters = CoiffeurController.availableTypes.map {
@@ -85,15 +85,16 @@ class CoiffeurPreferences : DefaultPreferencePane {
 	}
 }
 
-extension CoiffeurPreferences : NSTableViewDelegate {
-	func tableView(_ tableView: NSTableView,
+extension CoiffeurPreferences: NSTableViewDelegate {
+	func tableView(
+    _ tableView: NSTableView,
 		rowViewForRow row: Int) -> NSTableRowView?
 	{
 		return TransparentTableRowView()
 	}
 }
 
-extension CoiffeurPreferences : NSPathControlDelegate {
+extension CoiffeurPreferences: NSPathControlDelegate {
 	func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
 	{
 		if let tcv = pathControl.superview as? NSTableCellView,
@@ -101,7 +102,7 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 			let url = ccc.defaultExecutableURL
 		{
 			let item = menu.insertItem(
-				withTitle: String(format:NSLocalizedString("Built-in %@", comment:""),
+				withTitle: String(format: NSLocalizedString("Built-in %@", comment: ""),
 					url.lastPathComponent),
 				action: #selector(CoiffeurPreferences.selectURL(_:)),
 				keyEquivalent: "", at: 0)
@@ -110,7 +111,7 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 		}
 	}
 
-	@objc func selectURL(_ sender:AnyObject)
+	@objc func selectURL(_ sender: AnyObject)
 	{
 		if
       let dictionary = sender.representedObject as? Dictionary<String, AnyObject>,
@@ -121,29 +122,29 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 	}
 }
 
-class TransparentTableView : NSTableView {
+class TransparentTableView: NSTableView {
 
 	override func awakeFromNib()
 	{
 		self.enclosingScrollView!.drawsBackground = false
 	}
 
-	override var isOpaque : Bool {
+	override var isOpaque: Bool {
 		return false
 	}
 
-	override func drawBackground(inClipRect clipRect : NSRect)
+	override func drawBackground(inClipRect clipRect: NSRect)
 	{
 	// don't draw a background rect
 	}
 }
 
-class TransparentTableRowView : NSTableRowView {
+class TransparentTableRowView: NSTableRowView {
 	override func drawBackground(in dirtyRect: NSRect)
 	{
 
 	}
-	override var isOpaque : Bool {
+	override var isOpaque: Bool {
 			return false
 	}
 }

@@ -21,28 +21,28 @@
 
 import Foundation
 
-class Error : NSError {
-  class var domain : String { return "CoiffeurErrorDomain" }
+class Error: NSError {
+  class var domain: String { return "CoiffeurErrorDomain" }
 
-  init(localizedDescription:String)
+  init(localizedDescription: String)
   {
     super.init(domain: Error.domain, code: 0,
-			userInfo: [NSLocalizedDescriptionKey:localizedDescription])
+			userInfo: [NSLocalizedDescriptionKey: localizedDescription])
   }
 
-  convenience init(_ format:String, _ args: CVarArg...)
+  convenience init(_ format: String, _ args: CVarArg...)
   {
-    self.init(localizedDescription:String(
-			format:NSLocalizedString(format, comment:""), arguments:args))
+    self.init(localizedDescription: String(
+			format: NSLocalizedString(format, comment: ""), arguments: args))
   }
 
   required init?(coder aDecoder: NSCoder) {
-    super.init(coder:aDecoder)
+    super.init(coder: aDecoder)
   }
 }
 
 extension NSError {
-  func assignTo(_ outError:NSErrorPointer?)
+  func assignTo(_ outError: NSErrorPointer?)
   {
     if outError != nil {
       outError??.pointee = self
@@ -67,11 +67,11 @@ extension NSError {
 enum StringResult {
   case success(String)
   case failure(NSError)
-	init(_ value:String)
+	init(_ value: String)
 	{
 		self = .success(value)
 	}
-	init(_ error:NSError)
+	init(_ error: NSError)
 	{
 		self = .failure(error)
 	}
@@ -80,11 +80,11 @@ enum StringResult {
 enum URLResult {
   case success(URL)
   case failure(NSError)
-	init(_ value:URL)
+	init(_ value: URL)
 	{
 		self = .success(value)
 	}
-	init(_ error:NSError)
+	init(_ error: NSError)
 	{
 		self = .failure(error)
 	}

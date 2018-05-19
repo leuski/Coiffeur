@@ -22,9 +22,9 @@
 import Cocoa
 
 @objc(Document)
-class Document : NSDocument {
+class Document: NSDocument {
 
-  var model : CoiffeurController?
+  var model: CoiffeurController?
 
   override init()
   {
@@ -38,7 +38,7 @@ class Document : NSDocument {
     self.model = try CoiffeurController.coiffeurWithType(typeName)
   }
 
-  override var undoManager : UndoManager? {
+  override var undoManager: UndoManager? {
     get {
       if let model = self.model {
         return model.managedObjectContext.undoManager
@@ -51,8 +51,9 @@ class Document : NSDocument {
     }
   }
 
-  fileprivate func _ensureWeHaveModelOfType(_ typeName:String,
-		errorFormatKey:String) throws
+  fileprivate func _ensureWeHaveModelOfType(
+    _ typeName: String,
+		errorFormatKey: String) throws
   {
     if let model = self.model {
       let documentType = type(of: model).documentType
@@ -67,7 +68,7 @@ class Document : NSDocument {
   override func read(from absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
-			errorFormatKey:"Cannot read content of document “%@” into document “%@”")
+			errorFormatKey: "Cannot read content of document “%@” into document “%@”")
 
     try self.model!.readValuesFromURL(absoluteURL)
   }
@@ -75,7 +76,7 @@ class Document : NSDocument {
   override func write(to absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
-			errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”")
+			errorFormatKey: "Cannot write content of document “%2$@” as “%1$@”")
 
     try self.model!.writeValuesToURL(absoluteURL)
   }

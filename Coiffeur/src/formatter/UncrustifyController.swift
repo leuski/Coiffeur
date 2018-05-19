@@ -21,7 +21,7 @@
 
 import Foundation
 
-class UncrustifyController : CoiffeurController {
+class UncrustifyController: CoiffeurController {
 
   fileprivate struct Private {
 		static var VersionArgument = "--version"
@@ -39,10 +39,10 @@ class UncrustifyController : CoiffeurController {
     static var ExecutableURLUDKey = "UncrustifyExecutableURL"
 		static var ExecutableTitleUDKey = "Uncrustify Executable"
 
-    static var Options : String? = nil
+    static var Options: String?
   }
 
-	override var pageGuideColumn : Int {
+	override var pageGuideColumn: Int {
 		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
 			let int = Int(value)
 		{
@@ -52,24 +52,24 @@ class UncrustifyController : CoiffeurController {
 		return super.pageGuideColumn
 	}
 
-	var versionString : String? = nil
+	var versionString: String?
 
-	override class var localizedExecutableTitle : String {
-		return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
-  override class var documentType : String {
+	override class var localizedExecutableTitle: String {
+		return NSLocalizedString(Private.ExecutableTitleUDKey, comment: "") }
+  override class var documentType: String {
 		return Private.DocumentType }
-	override class var currentExecutableName : String {
+	override class var currentExecutableName: String {
 		return Private.ExecutableName }
-	override class var currentExecutableURLUDKey : String {
+	override class var currentExecutableURLUDKey: String {
 		return Private.ExecutableURLUDKey }
 
-  override class var currentExecutableURL : URL? {
+  override class var currentExecutableURL: URL? {
     didSet {
       Private.Options = nil
     }
   }
 
-	override class func contentsIsValidInString(_ string:String) -> Bool
+	override class func contentsIsValidInString(_ string: String) -> Bool
 	{
 		let keyValue = NSRegularExpression.aml_re_WithPattern(
 			"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
@@ -95,11 +95,11 @@ class UncrustifyController : CoiffeurController {
 		return controller
   }
 
-  override func readOptionsFromLineArray(_ lines:[String]) throws
+  override func readOptionsFromLineArray(_ lines: [String]) throws
   {
     var count = 0
-    var currentSection : ConfigSection?
-		var currentComment : String = ""
+    var currentSection: ConfigSection?
+		var currentComment: String = ""
 
     for  aline in lines {
       count += 1
@@ -118,7 +118,7 @@ class UncrustifyController : CoiffeurController {
 						from: CharacterSet.newlines) {
 					} else {
 						currentSection = ConfigSection.objectInContext(
-							self.managedObjectContext, parent:self.root, title:currentComment)
+							self.managedObjectContext, parent: self.root, title: currentComment)
 					}
 					currentComment = ""
 				}
@@ -139,8 +139,8 @@ class UncrustifyController : CoiffeurController {
 						with: ConfigNode.typeSeparator)
 					currentComment = currentComment.trim()
 					let option = ConfigOption.objectInContext(self.managedObjectContext,
-						parent:currentSection,
-						title:currentComment.components(
+						parent: currentSection,
+						title: currentComment.components(
 							separatedBy: CharacterSet.newlines)[0])
 					option.indexKey = key
 					option.stringValue = value
@@ -158,8 +158,8 @@ class UncrustifyController : CoiffeurController {
     }
   }
 
-	fileprivate func _keyValuePairFromString(_ string:String)
-		-> (key:String, value:String)?
+	fileprivate func _keyValuePairFromString(_ string: String)
+		-> (key: String, value: String)?
 	{
 		var line = string
 
@@ -204,7 +204,7 @@ class UncrustifyController : CoiffeurController {
 
 	}
 
-  override func readValuesFromLineArray(_ lines:[String]) throws
+  override func readValuesFromLineArray(_ lines: [String]) throws
   {
     for aline in lines {
       let line = aline.trim()
@@ -228,7 +228,7 @@ class UncrustifyController : CoiffeurController {
     }
   }
 
-  override func writeValuesToURL(_ absoluteURL:URL) throws
+  override func writeValuesToURL(_ absoluteURL: URL) throws
   {
     var data=""
 
@@ -237,7 +237,7 @@ class UncrustifyController : CoiffeurController {
 		}
 
 		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
-			sortDescriptors:[CoiffeurController.keySortDescriptor])
+			sortDescriptors: [CoiffeurController.keySortDescriptor])
 
 		for option in allOptions {
 			if var value = option.stringValue {
@@ -246,11 +246,11 @@ class UncrustifyController : CoiffeurController {
 			}
 		}
 
-		try data.write(to: absoluteURL, atomically:true,
-					encoding:String.Encoding.utf8)
+		try data.write(to: absoluteURL, atomically: true,
+					encoding: String.Encoding.utf8)
   }
 
-	override func format(_ arguments:Arguments,
+	override func format(_ arguments: Arguments,
 		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
@@ -276,13 +276,12 @@ class UncrustifyController : CoiffeurController {
 		Process(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text)
 		{
-			(result:StringResult) -> Void in
+			(result: StringResult) -> Void in
 			let _ = try? FileManager.default.removeItem(at: configURL)
 			completionHandler(result)
     }
 
     return true
   }
-
 
 }

@@ -26,15 +26,15 @@ extension NSObject {
 	typealias BlockObserver = (AnyObject, [AnyHashable: Any]) -> Void
 	typealias ObserverToken = UUID
 
-	class BlockObserverImplementation : NSObject {
+	class BlockObserverImplementation: NSObject {
 		let observer: BlockObserver
 		let keyPath: String
 		let token: ObserverToken
 		let removeWhenChangedOnce: Bool
 		weak var target: NSObject?
 
-		init(_ observer:@escaping BlockObserver, keyPath:String, removeWhenChangedOnce:Bool,
-			token:ObserverToken, target:NSObject)
+		init(_ observer:@escaping BlockObserver, keyPath: String, removeWhenChangedOnce: Bool,
+			token: ObserverToken, target: NSObject)
 		{
 			self.observer = observer
 			self.keyPath = keyPath
@@ -45,7 +45,7 @@ extension NSObject {
 
 		override func observeValue(forKeyPath keyPath: String?,
 			of object: Any?,
-			change: [NSKeyValueChangeKey : Any]?,
+			change: [NSKeyValueChangeKey: Any]?,
 			context: UnsafeMutableRawPointer?)
 		{
 			if context != &AssociatedKeys.Context { return }
@@ -84,14 +84,14 @@ extension NSObject {
 	}
 
   @discardableResult
-	func addObserverForKeyPath(_ keyPath:String,
+	func addObserverForKeyPath(_ keyPath: String,
 		options: NSKeyValueObservingOptions = NSKeyValueObservingOptions(),
 		removeWhenChangedOnce: Bool = false,
 		observer: @escaping (AnyObject, [AnyHashable: Any]) -> Void) -> ObserverToken
 	{
 		let token = ObserverToken()
-		let observer = BlockObserverImplementation(observer, keyPath:keyPath,
-			removeWhenChangedOnce:removeWhenChangedOnce, token:token, target:self)
+		let observer = BlockObserverImplementation(observer, keyPath: keyPath,
+			removeWhenChangedOnce: removeWhenChangedOnce, token: token, target: self)
 		self.addObserver(observer, forKeyPath: keyPath, options: options,
 			context: &AssociatedKeys.Context)
 		_observers.setObject(observer, forKey: token as NSCopying)
@@ -99,15 +99,15 @@ extension NSObject {
 	}
 
   @discardableResult
-	func addOneShotObserverForKeyPath(_ keyPath:String,
+	func addOneShotObserverForKeyPath(_ keyPath: String,
 		options: NSKeyValueObservingOptions = NSKeyValueObservingOptions(),
 		observer: @escaping (AnyObject, [AnyHashable: Any]) -> Void) -> ObserverToken
 	{
-		return addObserverForKeyPath(keyPath, options:options,
-			removeWhenChangedOnce:true, observer:observer)
+		return addObserverForKeyPath(keyPath, options: options,
+			removeWhenChangedOnce: true, observer: observer)
 	}
 
-	func removeObserverWithToken(_ token:ObserverToken)
+	func removeObserverWithToken(_ token: ObserverToken)
 	{
 		if let dict = objc_getAssociatedObject(self,
 			&AssociatedKeys.AOName) as? NSMutableDictionary
@@ -126,15 +126,3 @@ extension NSObject {
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-

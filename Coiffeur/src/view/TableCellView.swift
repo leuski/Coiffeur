@@ -10,7 +10,7 @@ import Cocoa
 
 // actually, this code is not being used currently. I keep it here for reference...
 
-class TableCellView : NSTableCellView {
+class TableCellView: NSTableCellView {
 
   override var backgroundStyle: NSBackgroundStyle {
     didSet {
@@ -25,13 +25,13 @@ class TableCellView : NSTableCellView {
         if let textField = self.textField {
           textField.textColor = NSColor(calibratedWhite: 0.0, alpha: 1.0)
         }
-        break;
+        break
 
       default:
         if let textField = self.textField {
           textField.textColor = NSColor(calibratedWhite: 1.0, alpha: 1.0)
         }
-        break;
+        break
       }
     }
   }

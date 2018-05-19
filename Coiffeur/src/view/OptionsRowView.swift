@@ -21,34 +21,34 @@
 
 import Cocoa
 
-class ConfigCellView : NSTableCellView {
+class ConfigCellView: NSTableCellView {
   // prevent the state restoration mechanism to save/restore this view properties
   override class var restorableStateKeyPaths: [String] { return [] }
 }
 
-class ConfigOptionCellView : ConfigCellView {
+class ConfigOptionCellView: ConfigCellView {
 	// will use this to shift the content of the cell appropriately
-	@IBOutlet weak var leftMargin : NSLayoutConstraint!
+	@IBOutlet weak var leftMargin: NSLayoutConstraint!
 }
 
-class ConfigChoiceCellView : ConfigOptionCellView {
-	@IBOutlet weak var segmented : NSSegmentedControl!
+class ConfigChoiceCellView: ConfigOptionCellView {
+	@IBOutlet weak var segmented: NSSegmentedControl!
 }
 
 extension ConfigNodeLocation {
-	var color : NSColor {
+	var color: NSColor {
 		// section color
 		return NSColor(calibratedHue: CGFloat(index)/CGFloat(12),
 			saturation: 0.7, brightness: 0.7, alpha: 1)
 	}
 }
 
-class ConfigRowView : NSTableRowView {
+class ConfigRowView: NSTableRowView {
   // prevent the state restoration mechanism to save/restore this view properties
   override class var restorableStateKeyPaths: [String] { return [] }
 
-	@IBOutlet weak var leftMargin : NSLayoutConstraint!
-	@IBOutlet weak var textField : NSTextField!
+	@IBOutlet weak var leftMargin: NSLayoutConstraint!
+	@IBOutlet weak var textField: NSTextField!
 
 	var drawSeparator = false
 	typealias Location = ConfigNode.Location
@@ -63,7 +63,7 @@ class ConfigRowView : NSTableRowView {
       if self.locations.count > 1 {
 				// if this is a subsection, add a splash of supersection color
         backgroundColor = backgroundColor.blended(withFraction: 0.1,
-					of:locations.first!.color)!
+					of: locations.first!.color)!
       }
 			// make it a bit darker
       backgroundColor = backgroundColor.shadow(withLevel: 0.025)!
@@ -143,11 +143,11 @@ class ConfigRowView : NSTableRowView {
 		var color = NSColor.selectedMenuItemColor
 		// add a hint of the current sectio color
     color = color.blended(withFraction: 0.25,
-			of:locations.first!.color)!
+			of: locations.first!.color)!
 		if self.interiorBackgroundStyle == .light {
 			// if we are out of focus, lighten the color
 			color = color.blended(withFraction: 0.9,
-				of:NSColor(calibratedWhite: 0.9, alpha: 1))!
+				of: NSColor(calibratedWhite: 0.9, alpha: 1))!
 		}
 		// make sure it is not transparent
     color = color.withAlphaComponent(1)

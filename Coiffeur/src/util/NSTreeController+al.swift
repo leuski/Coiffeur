@@ -23,7 +23,7 @@ import Cocoa
 
 extension NSTreeController {
 
-	struct DepthFirstView : Sequence {
+	struct DepthFirstView: Sequence {
 
 		struct NodeGenerator: IteratorProtocol {
 
@@ -59,7 +59,7 @@ extension NSTreeController {
 
 		let owner: NSTreeController
 
-		init(_ owner:NSTreeController)
+		init(_ owner: NSTreeController)
 		{
 			self.owner = owner
 		}
@@ -81,10 +81,8 @@ extension NSTreeController {
 	}
 
 	var firstLeaf: NSTreeNode? {
-		for node in self.nodes {
-			if node.isLeaf {
-				return node
-			}
+		for node in self.nodes where node.isLeaf {
+      return node
 		}
 		return nil
 	}

@@ -21,7 +21,7 @@
 
 import Cocoa
 
-class BorderlessTextView : NSTextView {
+class BorderlessTextView: NSTextView {
 
   override func awakeFromNib()
   {

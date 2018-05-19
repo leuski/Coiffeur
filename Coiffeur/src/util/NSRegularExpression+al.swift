@@ -55,23 +55,17 @@ extension NSRegularExpression {
     }
 	}
 
-	func firstMatchInString(_ string:String) -> NSTextCheckingResult?
+	func firstMatchInString(_ string: String) -> NSTextCheckingResult?
 	{
 		return firstMatch(in: string,
 			options: NSRegularExpression.MatchingOptions(), range: string.nsRange)
 	}
 
-	func stringByReplacingMatchesInString(_ string: String,
+	func stringByReplacingMatchesInString(
+    _ string: String,
 		withTemplate template: String) -> String
 	{
 		return self.stringByReplacingMatches(in: string,
-			options:NSRegularExpression.MatchingOptions(), range:string.nsRange, withTemplate: template)
+			options: NSRegularExpression.MatchingOptions(), range: string.nsRange, withTemplate: template)
 	}
 }
-
-
-
-
-
-
-

@@ -21,7 +21,7 @@
 
 import Cocoa
 
-class Language : NSObject {
+class Language: NSObject {
 
   fileprivate struct Private {
     fileprivate static let supportedLanguages = Language._supportedLanguages()
@@ -30,10 +30,10 @@ class Language : NSObject {
 		fileprivate static let UserDefaultsKey = "Language"
   }
 
-  class var supportedLanguages : [Language] {
+  class var supportedLanguages: [Language] {
 		return Private.supportedLanguages }
 
-	class var supportedLanguageUTIs : [String] {
+	class var supportedLanguageUTIs: [String] {
 		var types = Set<String>()
 		for  language in Language.supportedLanguages {
 			types.formUnion(language.UTIs)
@@ -45,9 +45,9 @@ class Language : NSObject {
   @objc fileprivate(set) var displayName = ""
   @objc fileprivate(set) var fragariaID = ""
 	@objc fileprivate(set) var UTIs = [String]()
-	@objc fileprivate(set) var clangFormatID : String?
+	@objc fileprivate(set) var clangFormatID: String?
 
-	var defaultExtension : String? {
+	var defaultExtension: String? {
     return UTIs.isEmpty
 			? nil
 			: NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
@@ -70,7 +70,7 @@ class Language : NSObject {
     return []
   }
 
-  class func languageWithUTI(_ uti:String) -> Language?
+  class func languageWithUTI(_ uti: String) -> Language?
   {
     for language in self.supportedLanguages {
       if let _ = language.UTIs.index(of: uti) {
@@ -91,7 +91,7 @@ class Language : NSObject {
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
 
-  fileprivate init(dictionary:[String : AnyObject])
+  fileprivate init(dictionary: [String: AnyObject])
   {
     super.init()
     setValuesForKeys(dictionary)

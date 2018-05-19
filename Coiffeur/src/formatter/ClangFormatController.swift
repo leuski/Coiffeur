@@ -21,7 +21,7 @@
 
 import Foundation
 
-class ClangFormatController : CoiffeurController {
+class ClangFormatController: CoiffeurController {
 
   fileprivate struct Private {
     static var DocumentationFileName = "ClangFormatStyleOptions"
@@ -39,27 +39,27 @@ class ClangFormatController : CoiffeurController {
     static var ExecutableURLUDKey = "ClangFormatExecutableURL"
 		static var ExecutableTitleUDKey = "Clang-Format Executable"
 
-    static var Options : String? = nil
-    static var DefaultValues : String? = nil
+    static var Options: String?
+    static var DefaultValues: String?
   }
 
-	override class var localizedExecutableTitle : String {
-		return NSLocalizedString(Private.ExecutableTitleUDKey, comment:"") }
-  override class var documentType : String {
+	override class var localizedExecutableTitle: String {
+		return NSLocalizedString(Private.ExecutableTitleUDKey, comment: "") }
+  override class var documentType: String {
 		return Private.DocumentType }
-	override class var currentExecutableName : String {
+	override class var currentExecutableName: String {
 		return Private.ExecutableName }
-	override class var currentExecutableURLUDKey : String {
+	override class var currentExecutableURLUDKey: String {
 		return Private.ExecutableURLUDKey }
 
-	override class var currentExecutableURL : URL? {
+	override class var currentExecutableURL: URL? {
 		didSet {
 			Private.Options = nil
 			Private.DefaultValues = nil
 		}
 	}
 
-	override var pageGuideColumn : Int
+	override var pageGuideColumn: Int
   {
 		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
 			let int = Int(value)
@@ -70,7 +70,7 @@ class ClangFormatController : CoiffeurController {
 		return super.pageGuideColumn
 	}
 
-	override class func contentsIsValidInString(_ string:String) -> Bool
+	override class func contentsIsValidInString(_ string: String) -> Bool
 	{
 		let keyValue = NSRegularExpression.aml_re_WithPattern(
 			"^\\s*[a-zA-Z_]+\\s*:\\s*[^#\\s]")
@@ -111,7 +111,7 @@ class ClangFormatController : CoiffeurController {
 		return controller
   }
 
-  fileprivate class func _cleanUpRST(_ string:String) -> String
+  fileprivate class func _cleanUpRST(_ string: String) -> String
   {
     var rst = string
     rst = rst.trim()
@@ -132,37 +132,37 @@ class ClangFormatController : CoiffeurController {
       }
 
       var code = rst.substringWithRange(match!.range(at: 1))
-      code = code.replacingOccurrences(of: "\n", with:nl)
-      code = code.replacingOccurrences(of: " ", with:sp)
+      code = code.replacingOccurrences(of: "\n", with: nl)
+      code = code.replacingOccurrences(of: " ", with: sp)
       code += rst.substringWithRange(match!.range(at: 2))
       rst = rst.stringByReplacingCharactersInRange(match!.range(at: 0),
-				withString:code)
+				withString: code)
     }
 
     // preserve double nl, breaks before * and - (list items)
-    rst = rst.replacingOccurrences(of: "\n\n", with:par)
-    rst = rst.replacingOccurrences(of: "\n*", with:"\(nl)*")
-    rst = rst.replacingOccurrences(of: "\n-", with:"\(nl)-")
+    rst = rst.replacingOccurrences(of: "\n\n", with: par)
+    rst = rst.replacingOccurrences(of: "\n*", with: "\(nl)*")
+    rst = rst.replacingOccurrences(of: "\n-", with: "\(nl)-")
 
     // un-escape escaped characters
     let esc = NSRegularExpression.ci_dmls_re_WithPattern("\\\\(.)")
 
-    rst = esc.stringByReplacingMatchesInString(rst, withTemplate:"$1")
+    rst = esc.stringByReplacingMatchesInString(rst, withTemplate: "$1")
 
     // wipe out remaining whitespaces as single space
-    rst = rst.replacingOccurrences(of: "\n", with:" ")
+    rst = rst.replacingOccurrences(of: "\n", with: " ")
 
     let wsp = NSRegularExpression.ci_dmls_re_WithPattern("\\s\\s+")
-    rst = wsp.stringByReplacingMatchesInString(rst, withTemplate:" ")
+    rst = wsp.stringByReplacingMatchesInString(rst, withTemplate: " ")
 
     // restore saved spacing
-    rst = rst.replacingOccurrences(of: nl, with:"\n")
-    rst = rst.replacingOccurrences(of: sp, with:" ")
-    rst = rst.replacingOccurrences(of: par, with:"\n\n")
+    rst = rst.replacingOccurrences(of: nl, with: "\n")
+    rst = rst.replacingOccurrences(of: sp, with: " ")
+    rst = rst.replacingOccurrences(of: par, with: "\n\n")
 
     // quote the emphasized words
     let quot = NSRegularExpression.ci_dmls_re_WithPattern("``(.*?)``")
-    rst = quot.stringByReplacingMatchesInString(rst, withTemplate:"“$1”")
+    rst = quot.stringByReplacingMatchesInString(rst, withTemplate: "“$1”")
 
     //      NSLog(@"%@", mutableRST)
     return rst
@@ -179,9 +179,9 @@ class ClangFormatController : CoiffeurController {
   override func readOptionsFromLineArray(_ lines: [String]) throws
   {
 		let section = ConfigSection.objectInContext(self.managedObjectContext,
-			parent:self.root, title:"Options")
+			parent: self.root, title: "Options")
 
-    var currentOption : ConfigOption?
+    var currentOption: ConfigOption?
 
     var isInDoc = false
 
@@ -217,7 +217,7 @@ class ClangFormatController : CoiffeurController {
         self._closeOption(&currentOption)
 
 				let newOption = ConfigOption.objectInContext(self.managedObjectContext,
-					parent:section)
+					parent: section)
         newOption.indexKey   = line.substringWithRange(match.range(at: 1))
         isInTitle             = true
         let type             = line.substringWithRange(match.range(at: 2))
@@ -263,7 +263,7 @@ class ClangFormatController : CoiffeurController {
 
         if isInTitle {
           option.title = option.title.stringByAppendingString(line,
-						separatedBy:" ")
+						separatedBy: " ")
         }
 
         option.documentation += "\(line)\n"
@@ -273,7 +273,7 @@ class ClangFormatController : CoiffeurController {
     self._closeOption(&currentOption)
   }
 
-  override func readValuesFromLineArray(_ lines:[String]) throws
+  override func readValuesFromLineArray(_ lines: [String]) throws
   {
     for aLine in lines {
       var line = aLine
@@ -301,14 +301,14 @@ class ClangFormatController : CoiffeurController {
     }
   }
 
-  override func writeValuesToURL(_ absoluteURL:URL) throws
+  override func writeValuesToURL(_ absoluteURL: URL) throws
   {
     var data = ""
 
     data += "\(Private.SectionBegin)\n"
 
 		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
-			sortDescriptors:[CoiffeurController.keySortDescriptor])
+			sortDescriptors: [CoiffeurController.keySortDescriptor])
 
 		for option in allOptions {
 			if var value = option.stringValue {
@@ -323,11 +323,11 @@ class ClangFormatController : CoiffeurController {
 
 		data += "\(Private.SectionEnd)\n"
 
-		try data.write(to: absoluteURL, atomically:true,
-					encoding:String.Encoding.utf8)
+		try data.write(to: absoluteURL, atomically: true,
+					encoding: String.Encoding.utf8)
   }
 
-	override func format(_ arguments:Arguments,
+	override func format(_ arguments: Arguments,
 		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
@@ -346,13 +346,13 @@ class ClangFormatController : CoiffeurController {
 		if let _ = arguments.language.clangFormatID,
 			let ext = arguments.language.defaultExtension
 		{
-			args.append(String(format:Private.SourceFileNameFormat, ext))
+			args.append(String(format: Private.SourceFileNameFormat, ext))
 		}
 
 		Process(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text) {
-				(result:StringResult) in
-        let _ = try? FileManager.default.removeItem(at: configURL)
+				(result: StringResult) in
+        try? FileManager.default.removeItem(at: configURL)
 				completionHandler(result)
 		}
 

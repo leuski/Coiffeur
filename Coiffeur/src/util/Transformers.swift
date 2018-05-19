@@ -21,7 +21,7 @@
 
 import Foundation
 
-class String2NumberTransformer : ValueTransformer {
+class String2NumberTransformer: ValueTransformer {
 
   override class func allowsReverseTransformation() -> Bool
   {
@@ -48,7 +48,7 @@ class String2NumberTransformer : ValueTransformer {
   }
 }
 
-class OnlyIntegers : NumberFormatter {
+class OnlyIntegers: NumberFormatter {
 
 	override init()
 	{
@@ -57,11 +57,12 @@ class OnlyIntegers : NumberFormatter {
 	}
 
 	required init?(coder aDecoder: NSCoder) {
-		super.init(coder:aDecoder)
+		super.init(coder: aDecoder)
 		self.allowsFloats = false
 	}
 
-	override func getObjectValue(_ object: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
+	override func getObjectValue(
+    _ object: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
 		for string: String,
 		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
 	{
@@ -69,10 +70,10 @@ class OnlyIntegers : NumberFormatter {
 			if err != nil {
 				err?.pointee = NSLocalizedString(
 					"Empty string is not a valid number. Please provide a number",
-					comment:"") as NSString
+					comment: "") as NSString
 			}
 			return false
 		}
-		return super.getObjectValue(object, for:string, errorDescription: err)
+		return super.getObjectValue(object, for: string, errorDescription: err)
 	}
 }

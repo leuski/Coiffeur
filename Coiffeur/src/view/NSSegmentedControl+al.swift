@@ -23,7 +23,7 @@ import Cocoa
 
 extension NSSegmentedControl {
 
-	var labels : [String] {
+	var labels: [String] {
 		get {
 			var value = [String]()
 			for segment in 0 ..< self.segmentCount {
@@ -37,9 +37,9 @@ extension NSSegmentedControl {
 
 			let font       = self.font!
 			let fontName = font.familyName!
-      let fontSize : NSNumber = NSNumber(value: Double(font.xHeight))
+      let fontSize: NSNumber = NSNumber(value: Double(font.xHeight))
 
-			let attributes : [NSAttributedStringKey : Any] = [
+			let attributes: [NSAttributedStringKey: Any] = [
         NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.family.rawValue): fontName,
 				NSAttributedStringKey(rawValue: NSFontDescriptor.AttributeName.size.rawValue): fontSize
 			]
@@ -48,7 +48,7 @@ extension NSSegmentedControl {
 			var index     = 0
 
 			for token in value {
-				let attributedString = NSAttributedString(string:token, attributes:attributes)
+				let attributedString = NSAttributedString(string: token, attributes: attributes)
 				let size = attributedString.size()
 
 				if (width < size.width) {

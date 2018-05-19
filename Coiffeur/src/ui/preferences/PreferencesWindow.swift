@@ -23,45 +23,45 @@ import Cocoa
 
 // base protocol for a preferecne pane.
 @objc protocol PreferencePaneViewController {
-	var view : NSView { get set }
+	var view: NSView { get set }
 	func commitEditing() -> Bool
 }
 
 // NSViewController satisfies it
-extension NSViewController : PreferencePaneViewController {
+extension NSViewController: PreferencePaneViewController {
 }
 
 // a preference is the base plus these methods/properties
-protocol PreferencePane : class, PreferencePaneViewController {
-	var toolbarIdentifier : String { get }
-	var toolbarItemLabel : String { get }
-	var toolbarItemToolTip : String? { get }
-	var toolbarItemImage : NSImage? { get }
-	var initialKeyView : NSView? { get }
+protocol PreferencePane: class, PreferencePaneViewController {
+	var toolbarIdentifier: String { get }
+	var toolbarItemLabel: String { get }
+	var toolbarItemToolTip: String? { get }
+	var toolbarItemImage: NSImage? { get }
+	var initialKeyView: NSView? { get }
 }
 
 // a default implementation to support the basic fuctionality
-class DefaultPreferencePane : NSViewController, PreferencePane {
+class DefaultPreferencePane: NSViewController, PreferencePane {
 
-	@IBOutlet var initialKeyView : NSView?
+	@IBOutlet var initialKeyView: NSView?
 
-	var toolbarIdentifier : String { return self._referenceClassName }
+	var toolbarIdentifier: String { return self._referenceClassName }
 
-	var toolbarItemLabel : String {
-		return NSLocalizedString("\(self._referenceClassName).label", comment:"")
+	var toolbarItemLabel: String {
+		return NSLocalizedString("\(self._referenceClassName).label", comment: "")
 	}
 
-	var toolbarItemToolTip : String? {
+	var toolbarItemToolTip: String? {
 		let key = "\(self._referenceClassName).tooltip"
-		let tooltip = NSLocalizedString(key, comment:"")
+		let tooltip = NSLocalizedString(key, comment: "")
 		if key == tooltip {
 			return self.toolbarItemLabel
 		}
 		return tooltip
 	}
-	var toolbarItemImage : NSImage? { return nil }
+	var toolbarItemImage: NSImage? { return nil }
 
-	fileprivate var _referenceClassName : String {
+	fileprivate var _referenceClassName: String {
 		return self._unqualifiedClassName
 	}
 
@@ -75,21 +75,21 @@ class DefaultPreferencePane : NSViewController, PreferencePane {
 		return name
 	}
 
-	override var nibName : NSNib.Name? {
+	override var nibName: NSNib.Name? {
     return NSNib.Name(rawValue: self._unqualifiedClassName)
 	}
 }
 
 // the preferences window class. Manages a collection of panes and a
 // toolbar to switch among them
-class PreferencesWindow : NSWindowController {
+class PreferencesWindow: NSWindowController {
 
 	@IBOutlet weak var containerView: NSView!
 
 	typealias Pane = PreferencePane
 
 	var panes = [Pane]()
-	var selectedPane : Pane? {
+	var selectedPane: Pane? {
 		get { return storedSelectedPane }
 		set (newSelectedPane) {
 			if (storedSelectedPane == nil
@@ -146,10 +146,10 @@ class PreferencesWindow : NSWindowController {
 		}
 	}
 
-	fileprivate var storedSelectedPane : Pane?
+	fileprivate var storedSelectedPane: Pane?
 	fileprivate let selectedPaneUDKey = "selectedPaneUDKey"
 
-	var toolbarItemIdentifiers : [NSToolbarItem.Identifier] {
+	var toolbarItemIdentifiers: [NSToolbarItem.Identifier] {
     return self.panes.map { NSToolbarItem.Identifier(rawValue: $0.toolbarIdentifier) }
 	}
 
@@ -160,12 +160,12 @@ class PreferencesWindow : NSWindowController {
 
   required init?(coder: NSCoder)
   {
-    super.init(coder:coder)
+    super.init(coder: coder)
   }
 
-	convenience init(panes:[Pane])
+	convenience init(panes: [Pane])
   {
-    self.init(windowNibName:NSNib.Name(rawValue: "PreferencesWindow"))
+    self.init(windowNibName: NSNib.Name(rawValue: "PreferencesWindow"))
 		self.panes = panes
   }
 
@@ -183,7 +183,7 @@ class PreferencesWindow : NSWindowController {
 		self.window!.makeKeyAndOrderFront(sender)
 	}
 
-	func paneWithID(_ paneIdentifier:String?) -> Pane?
+	func paneWithID(_ paneIdentifier: String?) -> Pane?
 	{
 		if let identifier = paneIdentifier {
 			return (self.panes.filter { $0.toolbarIdentifier == identifier }).first
@@ -192,28 +192,28 @@ class PreferencesWindow : NSWindowController {
 		}
 	}
 
-	func selectPane(index : Int)
+	func selectPane(index: Int)
 	{
 		if index >= self.panes.startIndex && index < self.panes.endIndex {
 			self.selectedPane = self.panes[index]
 		}
 	}
 
-	func selectPane(identifier : String)
+	func selectPane(identifier: String)
 	{
 		self.selectedPane = self.paneWithID(identifier)
 	}
 
 }
 
-extension PreferencesWindow : NSWindowDelegate {
+extension PreferencesWindow: NSWindowDelegate {
 	func windowShouldClose(_ sender: NSWindow) -> Bool
 	{
 		return self.selectedPane == nil || self.selectedPane!.commitEditing()
 	}
 }
 
-extension PreferencesWindow : NSToolbarDelegate {
+extension PreferencesWindow: NSToolbarDelegate {
 
 	func toolbar(_ toolbar: NSToolbar,
 		itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
@@ -245,7 +245,7 @@ extension PreferencesWindow : NSToolbarDelegate {
 		return self.toolbarItemIdentifiers
 	}
 
-	@objc func itemSelected(_ toolbarItem:AnyObject)
+	@objc func itemSelected(_ toolbarItem: AnyObject)
 	{
 		self.selectedPane = self.paneWithID(toolbarItem.itemIdentifier.rawValue)
 	}

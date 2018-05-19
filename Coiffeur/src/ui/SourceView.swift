@@ -29,11 +29,11 @@ class SourceView: NSViewController {
 		didSet {
 			self.language.saveToUserDefaults()
 			let fragariaName = self.language.fragariaID
-			self.fragaria.setObject(fragariaName, forKey:MGSFOSyntaxDefinitionName)
+			self.fragaria.setObject(fragariaName, forKey: MGSFOSyntaxDefinitionName)
 		}
 	}
 
-	@objc dynamic var fileURL : URL? {
+	@objc dynamic var fileURL: URL? {
 		didSet {
 			if let url = self.fileURL {
 				UserDefaults.standard.set(url,
@@ -55,20 +55,20 @@ class SourceView: NSViewController {
 
 	@IBOutlet weak var containerView: NSView!
 
-	var fragaria : MGSFragaria
-	var diffMatchPatch : DiffMatchPatch
+	var fragaria: MGSFragaria
+	var diffMatchPatch: DiffMatchPatch
 
-	var overviewScroller : OverviewScroller? {
+	var overviewScroller: OverviewScroller? {
 		return self.fragaria.textView().enclosingScrollView?.verticalScroller
 			as? OverviewScroller
 	}
 
-	var string:String {
+	var string: String {
 		get {
 			return self.fragaria.string()
 		}
 		set (string) {
-			let oldString : String = self.fragaria.string()
+			let oldString: String = self.fragaria.string()
 			let scrollLocation = self.sourceTextViewScrollLocation
 
 			self.fragaria.setString(string)
@@ -79,13 +79,13 @@ class SourceView: NSViewController {
 			} else {
 				self.sourceTextViewScrollLocation = scrollLocation
 				let diffs = self.diffMatchPatch.diff_main(ofOldString: oldString,
-					andNewString:string)
-				self.overviewScroller?.regions = self._showDiffs(diffs!, intensity:1)
+					andNewString: string)
+				self.overviewScroller?.regions = self._showDiffs(diffs!, intensity: 1)
 			}
 		}
 	}
 
-	var sourceTextViewScrollLocation : ScrollLocation {
+	var sourceTextViewScrollLocation: ScrollLocation {
 		get {
 			// we will try and preserve visible frame position in the source document
 			// across changes.
@@ -104,7 +104,7 @@ class SourceView: NSViewController {
 	}
 
 	fileprivate func _scrollLocation()
-		-> (textView:NSTextView, visRect:NSRect, maxScrollLocaiton:CGFloat)
+		-> (textView: NSTextView, visRect: NSRect, maxScrollLocaiton: CGFloat)
 	{
 		let textView: NSTextView     = self.fragaria.textView()
 		let textStorage   = textView.textStorage!
@@ -140,7 +140,7 @@ class SourceView: NSViewController {
 	{
 		self.diffMatchPatch = DiffMatchPatch()
 		self.fragaria       = MGSFragaria()
-		super.init(nibName:nibNameOrNil, bundle:nibBundleOrNil)
+		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 		_restoreSource()
 	}
 
@@ -148,7 +148,7 @@ class SourceView: NSViewController {
 	{
 		self.diffMatchPatch = DiffMatchPatch()
 		self.fragaria       = MGSFragaria()
-		super.init(coder:coder)
+		super.init(coder: coder)
 		_restoreSource()
 	}
 
@@ -159,45 +159,45 @@ class SourceView: NSViewController {
 		// we want to be the delegate
 		self.fragaria.embed(in: self.containerView)
 
-		let textView : NSTextView = self.fragaria.textView()
+		let textView: NSTextView = self.fragaria.textView()
 		textView.isEditable = false
 		textView.textContainer!.widthTracksTextView = false
 		textView.textContainer!.containerSize = NSMakeSize(CGFloat.greatestFiniteMagnitude, CGFloat.greatestFiniteMagnitude)
 
 		let       scrollView       = textView.enclosingScrollView!
-		scrollView.verticalScroller = OverviewScroller(frame:NSMakeRect(0,0,0,0))
+		scrollView.verticalScroller = OverviewScroller(frame: NSMakeRect(0,0,0,0))
 		scrollView.verticalScroller!.scrollerStyle = NSScroller.Style.legacy
 	}
 
-	fileprivate func _showDiffs(_ diffs:NSMutableArray, intensity:CGFloat)
+	fileprivate func _showDiffs(_ diffs: NSMutableArray, intensity: CGFloat)
 		-> [OverviewRegion]
 	{
 		let textStorage = self.fragaria.textView().textStorage!
 
 		textStorage.removeAttribute(NSAttributedStringKey.backgroundColor,
-			range:NSMakeRange(0, textStorage.length))
+			range: NSMakeRange(0, textStorage.length))
 
 		if intensity == 0 {
 			return []
 		}
 
 		var lineRanges = [OverviewRegion]()
-		let saturation : CGFloat  = 0.5
-		let insertHue : CGFloat = 1.0 / 3.0
-		let deleteHue : CGFloat = 0.0 / 3.0
-		let textViewBrightness : CGFloat = 1.0
-		let scrollerBrightness : CGFloat = 0.75
+		let saturation: CGFloat  = 0.5
+		let insertHue: CGFloat = 1.0 / 3.0
+		let deleteHue: CGFloat = 0.0 / 3.0
+		let textViewBrightness: CGFloat = 1.0
+		let scrollerBrightness: CGFloat = 0.75
 
-		let insertColor = NSColor(calibratedHue:insertHue, saturation:saturation,
-			brightness:textViewBrightness, alpha:intensity)
-		let deleteColor = NSColor(calibratedHue:deleteHue, saturation:saturation,
-			brightness:textViewBrightness, alpha:intensity)
-		let insertColor1 = NSColor(calibratedHue:insertHue, saturation:saturation,
-			brightness:scrollerBrightness, alpha:intensity)
-		let deleteColor1 = NSColor(calibratedHue:deleteHue, saturation:saturation,
-			brightness:scrollerBrightness, alpha:intensity)
+		let insertColor = NSColor(calibratedHue: insertHue, saturation: saturation,
+			brightness: textViewBrightness, alpha: intensity)
+		let deleteColor = NSColor(calibratedHue: deleteHue, saturation: saturation,
+			brightness: textViewBrightness, alpha: intensity)
+		let insertColor1 = NSColor(calibratedHue: insertHue, saturation: saturation,
+			brightness: scrollerBrightness, alpha: intensity)
+		let deleteColor1 = NSColor(calibratedHue: deleteHue, saturation: saturation,
+			brightness: scrollerBrightness, alpha: intensity)
 
-		var index : String.Index = textStorage.string.startIndex
+		var index: String.Index = textStorage.string.startIndex
 		var lineCount: Int = 0
 		var offset  = 0
 
@@ -212,10 +212,10 @@ class SourceView: NSViewController {
 						lineCount: 0, color: deleteColor1))
 					if offset < textStorage.length {
 						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-							value:deleteColor, range:NSMakeRange(offset, 1))
+							value: deleteColor, range: NSMakeRange(offset, 1))
 					} else if offset > 0 {
 						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-							value:deleteColor, range:NSMakeRange(offset-1, 1))
+							value: deleteColor, range: NSMakeRange(offset-1, 1))
 					}
 				} else {
 					let length = diff.text.distance(from: diff.text.startIndex, to: diff.text.endIndex)
@@ -228,7 +228,7 @@ class SourceView: NSViewController {
 						lineRanges.append(OverviewRegion(firstLineIndex: lineCount,
 							lineCount: lineSpan, color: insertColor1))
 						textStorage.addAttribute(NSAttributedStringKey.backgroundColor,
-							value:insertColor, range:NSMakeRange(offset, length))
+							value: insertColor, range: NSMakeRange(offset, length))
 					}
 
 					lineCount += lineSpan
@@ -244,7 +244,7 @@ class SourceView: NSViewController {
 
 }
 
-extension SourceView : NSPathControlDelegate {
+extension SourceView: NSPathControlDelegate {
 
 	func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu)
 	{
@@ -255,13 +255,13 @@ extension SourceView : NSPathControlDelegate {
 			let item = NSMenuItem(title: url.lastPathComponent,
 				action: #selector(SourceView.openDocumentInView(_:)), keyEquivalent: "")
 			item.representedObject = url
-			menu.insertItem(item, at:index)
+			menu.insertItem(item, at: index)
       index += 1
 		}
 
-		let item = NSMenuItem(title: NSLocalizedString("Choose…", comment:""),
+		let item = NSMenuItem(title: NSLocalizedString("Choose…", comment: ""),
 			action: #selector(SourceView.openDocumentInView(_:)), keyEquivalent: "")
-		menu.insertItem(item, at:index)
+		menu.insertItem(item, at: index)
     index += 1
 	}
 
@@ -271,11 +271,11 @@ extension SourceView : NSPathControlDelegate {
 		var count = 0
 
 		info.enumerateDraggingItems(options: NSDraggingItemEnumerationOptions(),
-			for:pathControl,
-			classes:[NSURL.self],
-			searchOptions:[:],
+			for: pathControl,
+			classes: [NSURL.self],
+			searchOptions: [:],
 			using: {
-				(draggingItem: NSDraggingItem!, idx:Int,
+				(draggingItem: NSDraggingItem!, idx: Int,
 					stop: UnsafeMutablePointer<ObjCBool>) in
 				if let _ = self._allowedURLForItem(draggingItem) {
 					count += 1
@@ -287,14 +287,14 @@ extension SourceView : NSPathControlDelegate {
 	func pathControl(_ pathControl: NSPathControl,
 		acceptDrop info: NSDraggingInfo) -> Bool
 	{
-		var theURL : URL? = nil
+		var theURL: URL? = nil
 
 		info.enumerateDraggingItems(options: NSDraggingItemEnumerationOptions(),
-			for:pathControl,
-			classes:[NSURL.self],
-			searchOptions:[:],
+			for: pathControl,
+			classes: [NSURL.self],
+			searchOptions: [:],
 			using: {
-				(draggingItem: NSDraggingItem!, idx:Int,
+				(draggingItem: NSDraggingItem!, idx: Int,
 					stop: UnsafeMutablePointer<ObjCBool>) in
 				if let url = self._allowedURLForItem(draggingItem) {
 					theURL = url
@@ -333,15 +333,15 @@ extension SourceView {
 		static let ObjectiveCPPExtension = "mm"
 	}
 
-	func loadSourceFromURL(_ url:URL) throws
+	func loadSourceFromURL(_ url: URL) throws
 	{
-		let source = try String(contentsOf:url, encoding:String.Encoding.utf8)
+		let source = try String(contentsOf: url, encoding: String.Encoding.utf8)
 		self.sourceString = source
 		self.fileURL = url
 	}
 
   @discardableResult
-	func tryLoadSourceFromURL(_ url:URL) -> Bool
+	func tryLoadSourceFromURL(_ url: URL) -> Bool
 	{
 		do {
 			try loadSourceFromURL(url)
@@ -351,7 +351,7 @@ extension SourceView {
 		}
 	}
 
-	@IBAction func openDocumentInView(_ sender : AnyObject)
+	@IBAction func openDocumentInView(_ sender: AnyObject)
 	{
 		if let url = sender.representedObject as? URL {
 			tryLoadSourceFromURL(url)
@@ -367,14 +367,14 @@ extension SourceView {
 		op.allowsOtherFileTypes = false
 
 		op.beginSheetModal(for: self.view.window!, completionHandler:
-		{ (result:NSApplication.ModalResponse) in
+		{ (result: NSApplication.ModalResponse) in
 			if (result.rawValue == NSFileHandlingPanelOKButton) {
 				self.tryLoadSourceFromURL(op.url!)
 			}
 		})
 	}
 
-	override func validateMenuItem(_ menuItem:NSMenuItem) -> Bool
+	override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool
 	{
 		return true
 	}
@@ -389,8 +389,8 @@ extension SourceView {
 		}
 
 		let url = Bundle.main.url(forResource: Private.SampleFileName,
-			withExtension:Private.ObjectiveCPPExtension,
-			subdirectory:Private.SamplesFolderName)!
+			withExtension: Private.ObjectiveCPPExtension,
+			subdirectory: Private.SamplesFolderName)!
 
 		if !self.tryLoadSourceFromURL(url) {
 			NSException(name: NSExceptionName(rawValue: "No Source"),
@@ -407,25 +407,25 @@ extension SourceView {
 		let fm = FileManager.default
 		// TODO
 		if let urls = try? fm.contentsOfDirectory(at: baseURL,
-			includingPropertiesForKeys:nil,
-			options:FileManager.DirectoryEnumerationOptions.skipsHiddenFiles) {
+			includingPropertiesForKeys: nil,
+			options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles) {
 				return urls
 		}
 		return []
 	}
 }
 
-extension SourceView : CoiffeurControllerDelegate {
+extension SourceView: CoiffeurControllerDelegate {
 
 	func coiffeurControllerArguments(_ controller: CoiffeurController)
 		-> CoiffeurController.Arguments
 	{
 		return CoiffeurController.Arguments(self.sourceString,
-			language:self.language)
+			language: self.language)
 	}
 
-	func coiffeurController(_ coiffeurController:CoiffeurController,
-		setText text:String)
+	func coiffeurController(_ coiffeurController: CoiffeurController,
+		setText text: String)
 	{
 		let UD = UserDefaults.standard
 		var pageGuideColumn = coiffeurController.pageGuideColumn

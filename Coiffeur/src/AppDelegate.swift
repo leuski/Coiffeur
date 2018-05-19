@@ -21,7 +21,7 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate : NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate {
 
 	fileprivate struct Private {
 		static fileprivate let AboutFileName = "about"
@@ -30,16 +30,16 @@ class AppDelegate : NSObject, NSApplicationDelegate {
 		static fileprivate let UserDefaultsFileName   = "UserDefaults"
 	}
 
-  @IBOutlet weak var languagesMenu : NSMenu!
-  @IBOutlet weak var makeNewDocumentMenu : NSMenu!
+  @IBOutlet weak var languagesMenu: NSMenu!
+  @IBOutlet weak var makeNewDocumentMenu: NSMenu!
 
-	@objc var bundle : Bundle {
+	@objc var bundle: Bundle {
 		return Bundle.main
 	}
 
-	@objc var aboutURL : URL? {
+	@objc var aboutURL: URL? {
 		return self.bundle.url(forResource: Private.AboutFileName,
-			withExtension:Private.AboutFileNameExtension)
+			withExtension: Private.AboutFileNameExtension)
 	}
 
 	override init()
@@ -49,16 +49,16 @@ class AppDelegate : NSObject, NSApplicationDelegate {
 
     MGSFragaria.initializeFramework()
 
-    let bundle = Bundle(for:type(of: self))
+    let bundle = Bundle(for: type(of: self))
     if let UDURL = bundle.url(forResource: Private.UserDefaultsFileName,
-					withExtension:Private.UserDefaultsFileNameExtension),
-       let ud = NSDictionary(contentsOf:UDURL) as? [String:AnyObject]
+					withExtension: Private.UserDefaultsFileNameExtension),
+       let ud = NSDictionary(contentsOf: UDURL) as? [String: AnyObject]
     {
       UserDefaults.standard.register(defaults: ud)
     }
   }
 
-  func applicationDidFinishLaunching(_ aNotification:Notification)
+  func applicationDidFinishLaunching(_ aNotification: Notification)
   {
     for language in Language.supportedLanguages {
       let item = NSMenuItem(title: language.displayName,
@@ -90,12 +90,12 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     }
   }
 
-  func applicationWillTerminate(_ aNotification:Notification)
+  func applicationWillTerminate(_ aNotification: Notification)
   {
     // Insert code here to tear down your application
   }
 
-  @IBAction func openUntitledDocumentOfType(_ sender : AnyObject)
+  @IBAction func openUntitledDocumentOfType(_ sender: AnyObject)
   {
     if let type = sender.representedObject as? String {
 			do {
@@ -110,6 +110,4 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     }
   }
 
-
 }
-

@@ -28,47 +28,47 @@ extension String {
   
   var commandLineComponents : [String] {
     
-    let null_char : Character = "\0"
+    let nullChar : Character = "\0"
     var result = [String]()
-    var in_arg = false
-    var in_backslash = false
-    var cur_quote : Character = null_char
-    var current_token : String = ""
+    var isArg = false
+    var isBackslash = false
+    var curQuote : Character = nullChar
+    var currentToken : String = ""
     
     for ch in self {
       
-      let is_space = ch == " " || ch == "\t" || ch == "\n" || ch == "\r"
+      let isSpace = ch == " " || ch == "\t" || ch == "\n" || ch == "\r"
       
-      if !in_arg {
-        if is_space {
+      if !isArg {
+        if isSpace {
           continue
         }
         
-        in_arg = true
-        current_token = ""
+        isArg = true
+        currentToken = ""
       }
       
-      if in_backslash {
-        in_backslash = false
-        current_token.append(ch)
+      if isBackslash {
+        isBackslash = false
+        currentToken.append(ch)
       } else if ch == "\\" {
-        in_backslash = true
-      } else if ch == cur_quote {
-        cur_quote = null_char
+        isBackslash = true
+      } else if ch == curQuote {
+        curQuote = nullChar
       } else if (ch == "'") || (ch == "\"") || (ch == "`") {
-        cur_quote = ch
-      } else if cur_quote != null_char {
-        current_token.append(ch)
-      } else if (is_space) {
-        in_arg = false
-        result.append(current_token)
+        curQuote = ch
+      } else if curQuote != nullChar {
+        currentToken.append(ch)
+      } else if (isSpace) {
+        isArg = false
+        result.append(currentToken)
       } else {
-        current_token.append(ch)
+        currentToken.append(ch)
       }
     }
     
-    if in_arg {
-      result.append(current_token)
+    if isArg {
+      result.append(currentToken)
     }
 
     return result
@@ -130,7 +130,7 @@ extension String {
 		}
 	}
 	
-  func stringByAppendingString(_ s:String, separatedBy delimiter:String) -> String
+  func stringByAppendingString(_ string:String, separatedBy delimiter:String) -> String
   {
     var result = self
     
@@ -138,7 +138,7 @@ extension String {
       result += delimiter
     }
     
-    return result + s
+    return result + string
   }
   
   func trim() -> String

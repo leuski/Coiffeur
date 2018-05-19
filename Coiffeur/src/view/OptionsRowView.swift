@@ -114,9 +114,9 @@ class ConfigRowView : NSTableRowView {
     }
 
 		// draw the colored lines using the section colors
-    for i in 0 ..< min(1, locations.count - 1) {
-			locations[i].color.setFill()
-			NSMakeRect(CGFloat(3 + i*5), CGFloat(0),
+    for index in 0 ..< min(1, locations.count - 1) {
+			locations[index].color.setFill()
+			NSMakeRect(CGFloat(3 + index*5), CGFloat(0),
 				CGFloat(3), self.bounds.size.height-1).fill()
 		}
 		

@@ -51,14 +51,14 @@ extension NSObject {
 			if context != &AssociatedKeys.Context { return }
 			self.observer(object! as AnyObject, change!)
 			if !self.removeWhenChangedOnce { return }
-			if let t = self.target {
-				t.al_observers.removeObject(forKey: self.token)
+			if let target = self.target {
+				target._observers.removeObject(forKey: self.token)
 			}
 		}
 		
 		deinit {
-			if let t = self.target {
-				t.removeObserver(self, forKeyPath: self.keyPath,
+			if let target = self.target {
+				target.removeObserver(self, forKeyPath: self.keyPath,
 					context: &AssociatedKeys.Context)
 			}
 		}
@@ -69,7 +69,7 @@ extension NSObject {
 		fileprivate static var Context = 57
 	}
 	
-	var al_observers: NSMutableDictionary {
+	private var _observers: NSMutableDictionary {
 		get {
 			if let dict = objc_getAssociatedObject(self,
 				&AssociatedKeys.AOName) as? NSMutableDictionary
@@ -94,7 +94,7 @@ extension NSObject {
 			removeWhenChangedOnce:removeWhenChangedOnce, token:token, target:self)
 		self.addObserver(observer, forKeyPath: keyPath, options: options,
 			context: &AssociatedKeys.Context)
-		al_observers.setObject(observer, forKey: token as NSCopying)
+		_observers.setObject(observer, forKey: token as NSCopying)
 		return token
 	}
 

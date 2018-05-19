@@ -84,8 +84,8 @@ class UncrustifyController : CoiffeurController {
 			Private.Options = try Process(controller.executableURL,
 				arguments: [Private.ShowDocumentationArgument]).run()
 
-			if let c = controller as? UncrustifyController {
-				c.versionString = try Process(controller.executableURL,
+			if let uncrustifyController = controller as? UncrustifyController {
+				uncrustifyController.versionString = try Process(controller.executableURL,
 					arguments: [Private.VersionArgument]).run()
 			}
 		}
@@ -136,7 +136,7 @@ class UncrustifyController : CoiffeurController {
 				if let (key, value) = _keyValuePairFromString(keyValue) {
 
 					type = type.trim().replacingOccurrences(of: "/",
-						with: ConfigNode.TypeSeparator)
+						with: ConfigNode.typeSeparator)
 					currentComment = currentComment.trim()
 					let option = ConfigOption.objectInContext(self.managedObjectContext,
 						parent:currentSection,
@@ -146,7 +146,7 @@ class UncrustifyController : CoiffeurController {
 					option.stringValue = value
 					option.documentation = currentComment
 					if type == "number" {
-						option.type = OptionType.Signed.rawValue
+						option.type = OptionType.signed.rawValue
 					} else {
 						option.type = type
 					}
@@ -237,7 +237,7 @@ class UncrustifyController : CoiffeurController {
 		}
 		
 		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
-			sortDescriptors:[CoiffeurController.KeySortDescriptor])
+			sortDescriptors:[CoiffeurController.keySortDescriptor])
 
 		for option in allOptions {
 			if var value = option.stringValue {

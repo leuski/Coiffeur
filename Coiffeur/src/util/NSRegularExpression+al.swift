@@ -27,20 +27,32 @@ import Foundation
 extension NSRegularExpression {
 	class func ci_dmls_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
-		return try! NSRegularExpression(pattern: pattern,
-			options: [NSRegularExpression.Options.caseInsensitive, NSRegularExpression.Options.dotMatchesLineSeparators])
+    do {
+      return try NSRegularExpression(
+        pattern: pattern, options: [.caseInsensitive, .dotMatchesLineSeparators])
+    } catch {
+      fatalError()
+    }
 	}
 	
 	class func ci_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
-		return try! NSRegularExpression(pattern: pattern,
-			options: NSRegularExpression.Options.caseInsensitive)
+    do {
+      return try NSRegularExpression(
+        pattern: pattern, options: .caseInsensitive)
+    } catch {
+    fatalError()
+    }
 	}
 	
 	class func aml_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
-		return try! NSRegularExpression(pattern: pattern,
-			options: NSRegularExpression.Options.anchorsMatchLines)
+    do {
+      return try NSRegularExpression(
+        pattern: pattern, options: .anchorsMatchLines)
+    } catch {
+      fatalError()
+    }
 	}
 	
 	func firstMatchInString(_ string:String) -> NSTextCheckingResult?

@@ -78,8 +78,8 @@ class MainWindowController : NSWindowController {
 	
 	@IBAction func uncrustify(_ sender : AnyObject? = nil)
 	{
-		if let m = (self.document as? Document)?.model {
-			m.format()
+		if let model = (self.document as? Document)?.model {
+			model.format()
 		}
 	}
 	

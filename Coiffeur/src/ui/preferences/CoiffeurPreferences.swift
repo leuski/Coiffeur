@@ -80,7 +80,7 @@ class CoiffeurPreferences : DefaultPreferencePane {
 		super.viewDidLoad()
 		let height = self.tableView.bounds.size.height + 2
 		let delta = self.tableView.enclosingScrollView!.frame.size.height - height
-		self.constraint.constant = self.constraint.constant - delta
+		self.constraint.constant -= delta
 		self.view.frame.size.height -= delta
 	}
 }
@@ -112,9 +112,11 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 	
 	@objc func selectURL(_ sender:AnyObject)
 	{
-		if let d = sender.representedObject as? Dictionary<String, AnyObject> {
-			(d["class"] as! CoiffeurControllerClass).currentExecutableURL
-				= (d["url"] as! URL)
+		if
+      let dictionary = sender.representedObject as? Dictionary<String, AnyObject>,
+      let theClass = dictionary["class"] as? CoiffeurControllerClass
+    {
+			theClass.currentExecutableURL = dictionary["url"] as? URL
 		}
 	}
 }

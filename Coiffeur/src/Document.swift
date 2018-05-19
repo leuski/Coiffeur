@@ -101,8 +101,8 @@ class Document : NSDocument {
   override func writableTypes(for _: NSDocument.SaveOperationType)
 		-> [String]
   {
-    if let m = self.model {
-      return [type(of: m).documentType]
+    if let model = self.model {
+      return [type(of: model).documentType]
     } else {
       return []
     }

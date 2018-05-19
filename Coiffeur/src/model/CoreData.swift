@@ -55,7 +55,7 @@ extension NSManagedObjectContext {
 		withPredicate predicate: NSPredicate? = nil) throws -> [T]
 	{
 		return (try fetch(entity(entityClass), sortDescriptors:sortDescriptors,
-			withPredicate:predicate)) as! [T]
+			withPredicate:predicate)) as? [T] ?? []
 	}
 
 	func fetch<T:NSManagedObject>(_ entityClass:T.Type,

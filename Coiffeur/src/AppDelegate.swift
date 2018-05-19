@@ -60,10 +60,10 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   
   func applicationDidFinishLaunching(_ aNotification:Notification)
   {
-    for l in Language.supportedLanguages {
-      let item = NSMenuItem(title: l.displayName,
+    for language in Language.supportedLanguages {
+      let item = NSMenuItem(title: language.displayName,
 				action: #selector(MainWindowController.changeLanguage(_:)), keyEquivalent: "")
-      item.representedObject = l
+      item.representedObject = language
       self.languagesMenu.addItem(item)
     }
     

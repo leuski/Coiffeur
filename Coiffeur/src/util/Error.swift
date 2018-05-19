@@ -22,11 +22,11 @@
 import Foundation
 
 class Error : NSError {
-  class var Domain : String { return "CoiffeurErrorDomain" }
+  class var domain : String { return "CoiffeurErrorDomain" }
   
   init(localizedDescription:String)
   {
-    super.init(domain: Error.Domain, code: 0,
+    super.init(domain: Error.domain, code: 0,
 			userInfo: [NSLocalizedDescriptionKey:localizedDescription])
   }
   

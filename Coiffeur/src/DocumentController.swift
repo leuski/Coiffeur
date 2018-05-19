@@ -49,9 +49,9 @@ class DocumentController : NSDocumentController {
 		
 		let data = try String(contentsOf:url, encoding:String.Encoding.utf8)
 
-		for c in CoiffeurController.availableTypes {
-			if c.contentsIsValidInString(data) {
-				return c.documentType
+		for conroller in CoiffeurController.availableTypes {
+			if conroller.contentsIsValidInString(data) {
+				return conroller.documentType
 			}
 		}
 

@@ -100,8 +100,8 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 	}
 	
 	@objc dynamic var fontName : String {
-		if let f = self.font {
-			return "\(f.displayName!) \(f.pointSize) pts"
+		if let font = self.font {
+			return "\(font.displayName!) \(font.pointSize) pts"
 		}
 		return ""
 	}

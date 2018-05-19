@@ -26,8 +26,8 @@ extension NSSegmentedControl {
 	var labels : [String] {
 		get {
 			var value = [String]()
-			for i in 0 ..< self.segmentCount {
-				value.append(label(forSegment: i)!)
+			for segment in 0 ..< self.segmentCount {
+				value.append(label(forSegment: segment)!)
 			}
 			return value
 		}
@@ -45,7 +45,7 @@ extension NSSegmentedControl {
 			]
 			
 			var width = CGFloat(40.0)
-			var i     = 0
+			var index     = 0
 			
 			for token in value {
 				let attributedString = NSAttributedString(string:token, attributes:attributes)
@@ -55,12 +55,12 @@ extension NSSegmentedControl {
 					width = size.width
 				}
 				
-				setLabel(token, forSegment: i)
-        i += 1
+				setLabel(token, forSegment: index)
+        index += 1
 			}
 			
-			for j in 0 ..< self.segmentCount {
-				setWidth(width+12, forSegment: j)
+			for segment in 0 ..< self.segmentCount {
+				setWidth(width+12, forSegment: segment)
 			}
 		}
 	}

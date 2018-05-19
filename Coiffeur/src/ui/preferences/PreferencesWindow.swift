@@ -102,22 +102,22 @@ class PreferencesWindow : NSWindowController {
 				return
 			}
 
-			let w = self.window!
+			let window = self.window!
 
 			if let currentPane = storedSelectedPane {
 				if !currentPane.commitEditing() {
-					w.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
+					window.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
 					return
 				}
 				currentPane.view.removeFromSuperview()
-				w.title = ""
+				window.title = ""
 			}
 			
 			self.storedSelectedPane = newSelectedPane
 			
 			if let currentPane = self.storedSelectedPane {
-				w.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
-				w.title = currentPane.toolbarItemLabel
+				window.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
+				window.title = currentPane.toolbarItemLabel
 				UserDefaults.standard.set(
 					currentPane.toolbarIdentifier, forKey: selectedPaneUDKey)
 
@@ -126,21 +126,21 @@ class PreferencesWindow : NSWindowController {
 
 				let childDesiredFrame = childView.frame
 
-				var containerFrame = w.contentView!.frame
-				w.contentView = childView
-				w.recalculateKeyViewLoop()
-				if (w.firstResponder == self.window) {
-					w.makeFirstResponder(currentPane.initialKeyView)
+				var containerFrame = window.contentView!.frame
+				window.contentView = childView
+				window.recalculateKeyViewLoop()
+				if (window.firstResponder == self.window) {
+					window.makeFirstResponder(currentPane.initialKeyView)
 				}
 				
 				containerFrame.size.height = childDesiredFrame.size.height
-				let desiredWindowFrame = w.frameRect(forContentRect: containerFrame)
-				var currentWindowFrame = w.frame
+				let desiredWindowFrame = window.frameRect(forContentRect: containerFrame)
+				var currentWindowFrame = window.frame
 				currentWindowFrame.origin.y += currentWindowFrame.size.height
 					- desiredWindowFrame.size.height
 				currentWindowFrame.size.height = desiredWindowFrame.size.height
 				
-				w.setFrame(currentWindowFrame, display: true, animate: w.isVisible)
+				window.setFrame(currentWindowFrame, display: true, animate: window.isVisible)
 			}
 			
 		}

@@ -35,8 +35,8 @@ class Language : NSObject {
 	
 	class var supportedLanguageUTIs : [String] {
 		var types = Set<String>()
-		for  l in Language.supportedLanguages {
-			types.formUnion(l.UTIs)
+		for  language in Language.supportedLanguages {
+			types.formUnion(language.UTIs)
 		}
 		return [String](types)
 	}
@@ -61,8 +61,8 @@ class Language : NSObject {
 		{
       if let dictionaries = NSArray(contentsOf: url) {
         var result = [Language]()
-        for d in dictionaries {
-          result.append(Language(dictionary:d as! [String : AnyObject]))
+        for case let dictionary as [String: AnyObject] in dictionaries {
+          result.append(Language(dictionary: dictionary))
         }
         return result
       }
@@ -72,9 +72,9 @@ class Language : NSObject {
 
   class func languageWithUTI(_ uti:String) -> Language?
   {
-    for l in self.supportedLanguages {
-      if let _ = l.UTIs.index(of: uti) {
-        return l
+    for language in self.supportedLanguages {
+      if let _ = language.UTIs.index(of: uti) {
+        return language
       }
     }
     return nil

@@ -105,10 +105,10 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			if (tokens.count == 0) {
 				return "view.section"
 			} else if (tokens.count == 1
-					&& tokens[0] == CoiffeurController.OptionType.Signed.rawValue) {
+					&& tokens[0] == CoiffeurController.OptionType.signed.rawValue) {
 				return "view.signed"
 			} else if (tokens.count == 1
-					&& tokens[0] == CoiffeurController.OptionType.Unsigned.rawValue) {
+					&& tokens[0] == CoiffeurController.OptionType.unsigned.rawValue) {
 				return "view.unsigned"
 			} else if (tokens.count == 1) {
 				return "view.string"
@@ -126,11 +126,11 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			 let view = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner:self) ,
 			 let node = (item as AnyObject).representedObject as? ConfigNode
 		{
-			if let v = view as? ConfigChoiceCellView, let segmented = v.segmented {
+			if let cell = view as? ConfigChoiceCellView, let segmented = cell.segmented {
 				segmented.labels = node.tokens
 			}
-			if let v = view as? ConfigOptionCellView {
-				v.leftMargin.constant = 8
+			if let cell = view as? ConfigOptionCellView {
+				cell.leftMargin.constant = 8
 			}
 			return view
 		}

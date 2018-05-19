@@ -183,26 +183,26 @@ class ClangFormatController : CoiffeurController {
 		
     var currentOption : ConfigOption?
     
-    var in_doc = false
+    var isInDoc = false
     
     let head = NSRegularExpression.ci_re_WithPattern(
 			"^\\*\\*(.*?)\\*\\* \\(``(.*?)``\\)")
     let item = NSRegularExpression.ci_re_WithPattern(
 			"^(\\s*\\* )``.*\\(in configuration: ``(.*?)``\\)")
     
-    var in_title = false
+    var isInTitle = false
     
     for aLine in lines {
       var line = aLine
-      if !in_doc {
+      if !isInDoc {
         if line.hasPrefix(".. START_FORMAT_STYLE_OPTIONS") {
-          in_doc = true
+          isInDoc = true
         }
         continue
       }
       
       if line.hasPrefix(".. END_FORMAT_STYLE_OPTIONS") {
-        in_doc = false
+        isInDoc = false
         continue
       }
       
@@ -219,19 +219,19 @@ class ClangFormatController : CoiffeurController {
 				let newOption = ConfigOption.objectInContext(self.managedObjectContext,
 					parent:section)
         newOption.indexKey   = line.substringWithRange(match.range(at: 1))
-        in_title             = true
+        isInTitle             = true
         let type             = line.substringWithRange(match.range(at: 2))
         
         if type == "bool" {
           newOption.type = "false,true"
         } else if type == "unsigned" {
-          newOption.type = OptionType.Unsigned.rawValue
+          newOption.type = OptionType.unsigned.rawValue
         } else if type == "int" {
-          newOption.type = OptionType.Signed.rawValue
+          newOption.type = OptionType.signed.rawValue
         } else if type == "std::string" {
-          newOption.type = OptionType.String.rawValue
+          newOption.type = OptionType.string.rawValue
         } else if type == "std::vector<std::string>" {
-          newOption.type = OptionType.StringList.rawValue
+          newOption.type = OptionType.stringList.rawValue
         } else {
           newOption.type = ""
         }
@@ -242,7 +242,7 @@ class ClangFormatController : CoiffeurController {
       }
       
       if line.isEmpty {
-        in_title = false
+        isInTitle = false
       }
       
       if let option = currentOption {
@@ -252,7 +252,7 @@ class ClangFormatController : CoiffeurController {
         
           if !token.isEmpty {
             option.type = option.type.stringByAppendingString(token,
-							separatedBy: ConfigNode.TypeSeparator)
+							separatedBy: ConfigNode.typeSeparator)
           }
         
           let prefix = line.substringWithRange(match.range(at: 1))
@@ -261,7 +261,7 @@ class ClangFormatController : CoiffeurController {
           continue
         }
       
-        if in_title {
+        if isInTitle {
           option.title = option.title.stringByAppendingString(line,
 						separatedBy:" ")
         }
@@ -287,7 +287,7 @@ class ClangFormatController : CoiffeurController {
         let key = String(line[line.startIndex..<range.lowerBound]).trim()
         if let option = self.optionWithKey(key) {
 					var value = String(line[range.upperBound...]).trim()
-					if option.type == OptionType.StringList.rawValue {
+					if option.type == OptionType.stringList.rawValue {
 						value = value.stringByTrimmingPrefix("[")
 						value = value.stringByTrimmingSuffix("]")
 					} else {
@@ -308,11 +308,11 @@ class ClangFormatController : CoiffeurController {
     data += "\(Private.SectionBegin)\n"
 		
 		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
-			sortDescriptors:[CoiffeurController.KeySortDescriptor])
+			sortDescriptors:[CoiffeurController.keySortDescriptor])
 
 		for option in allOptions {
 			if var value = option.stringValue {
-				if option.type == OptionType.StringList.rawValue {
+				if option.type == OptionType.stringList.rawValue {
 					value = "[\(value)]"
 				} else {
 					value = value.stringByQuoting("'")

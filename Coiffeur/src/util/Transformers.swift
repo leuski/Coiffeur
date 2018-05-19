@@ -61,7 +61,7 @@ class OnlyIntegers : NumberFormatter {
 		self.allowsFloats = false
 	}
 
-	override func getObjectValue(_ o: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
+	override func getObjectValue(_ object: AutoreleasingUnsafeMutablePointer<AnyObject?>?,
 		for string: String,
 		errorDescription err: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
 	{
@@ -73,6 +73,6 @@ class OnlyIntegers : NumberFormatter {
 			}
 			return false
 		}
-		return super.getObjectValue(o, for:string, errorDescription: err)
+		return super.getObjectValue(object, for:string, errorDescription: err)
 	}
 }

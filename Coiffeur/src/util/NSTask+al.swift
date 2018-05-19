@@ -107,8 +107,8 @@ extension Process {
 	func run(_ input:String? = nil) throws -> String
 	{
 		switch _run(input) {
-		 case .success(let s): return s
-		 case .failure(let e): throw e
+		 case .success(let value): return value
+		 case .failure(let error): throw error
 		}
 	}
 	

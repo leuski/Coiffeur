@@ -40,12 +40,12 @@ extension NSTreeController {
 			{
 				while !stack.isEmpty {
 					var last = stack.last!
-					if let x: NSTreeNode = last.next() {
+					if let node = last.next() {
 						stack[stack.count-1] = last
-						if let array = x.children {
+						if let array = node.children {
 							stack.append(array.makeIterator())
 						}
-						return x
+						return node
 					} else {
 						stack.removeLast()
 					}

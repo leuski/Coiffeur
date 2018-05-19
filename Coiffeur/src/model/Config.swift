@@ -51,7 +51,7 @@ extension ConfigNode {
 		return locations
 	}
 	
-  class var TypeSeparator : String { return "," }
+  class var typeSeparator : String { return "," }
 	
 	class func keyPathsForValuesAffectingFilteredChildrenCount() -> NSSet
 	{
@@ -69,14 +69,14 @@ extension ConfigNode {
   @objc var name : String { return "" }
   
   var tokens : [String] {
-    let t = self.type
-    return t.components(separatedBy: ConfigNode.TypeSeparator).filter {
+    let type = self.type
+    return type.components(separatedBy: ConfigNode.typeSeparator).filter {
 			!$0.isEmpty }
   }
 
 	var predicate : NSPredicate? {
-		get { return self._getPredicate() }
-		set (value) { self._setPredicate(value) }
+		get { return self.privateGetPredicate() }
+		set (value) { self.privateSetPredicate(value) }
 	}
 	
 	@objc var filteredChildrenCount : Int {
@@ -88,8 +88,8 @@ extension ConfigNode {
 	}
 	
   var depth : Int {
-    if let p = self.parent {
-      return 1 + p.depth
+    if let parent = self.parent {
+      return 1 + parent.depth
     } else {
       return 0
     }
@@ -117,7 +117,9 @@ extension ConfigNode {
 		parent:ConfigNode?,
 		title:String) -> T
 	{
-		let node = super.objectInContext(managedObjectContext) as! T
+    guard let node = super.objectInContext(managedObjectContext) as? T else {
+      fatalError()
+    }
 		node.parent = parent
 		node.title = title
 		return node
@@ -130,10 +132,10 @@ extension ConfigNode {
 	
 	// HACK As of Swift 1.2 the compiler complains that
 	// it cannot override declarations in extensions. Working around...
-	@objc func _setPredicate(_ value:NSPredicate?)
+	@objc func privateSetPredicate(_ value:NSPredicate?)
 	{
 	}
-	@objc func _getPredicate() -> NSPredicate?
+	@objc func privateGetPredicate() -> NSPredicate?
 	{
 		return self.parent?.predicate
 	}
@@ -186,7 +188,9 @@ extension ConfigOption {
 		_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode?, title:String) -> T
 	{
-		let option = super.objectInContext(managedObjectContext) as! T
+    guard let option = super.objectInContext(managedObjectContext) as? T else {
+      fatalError()
+    }
 		option.title = title
 		option.parent = parent
 		option.documentation = ""
@@ -213,8 +217,8 @@ extension ConfigSection {
 	// the cache goes into storedFilteredChildren
 	// I need to reset the cache every time the predicate is updated 
 	fileprivate var _filteredChildren : NSOrderedSet {
-		if let p = self.predicate {
-			return self.children.filtered(using: p)
+		if let predicate = self.predicate {
+			return self.children.filtered(using: predicate)
 		} else {
 			return self.children
 		}
@@ -228,52 +232,51 @@ extension ConfigSection {
 		if let array = self.storedFilteredChildren as? NSArray {
 			return array
 		}
-		self.storedFilteredChildren = self._filteredChildren.array as NSArray
-		return self.storedFilteredChildren as! NSArray
+    let array = self._filteredChildren.array as NSArray
+		self.storedFilteredChildren = array
+		return array
 	}
 	
 	override func sortAndIndexChildren()
 	{
 		mutableOrderedSetValue(forKey: "children").sort(
 			using: Private.titleSortDescriptors)
-		var i = 0
-		for child in self.children {
-			if let node = child as? ConfigNode {
-				node.index = i
-        i += 1
-				node.sortAndIndexChildren()
-				if let section = node as? ConfigSection {
-					var indexString = ""
-					var n = section
-					for _ in 0...self.depth {
-						indexString = "\(n.index+1).\(indexString)"
-						n = n.parent as! ConfigSection
-					}
-					let digitsInCount = _digitsIn(section.parent!.children.count)
-					let digitsInIndex = _digitsIn(section.index+1)
-					let numberMargin = digitsInCount - digitsInIndex
-					for _ in 0 ..< numberMargin {
-						indexString = "\u{2007}\(indexString)"
-					}
-					section.title = "\(indexString) \(section.title)"
-				}
-			}
+		var index = 0
+		for case let node as ConfigNode in self.children {
+      node.index = index
+      index += 1
+      node.sortAndIndexChildren()
+      guard let section = node as? ConfigSection else { continue }
+
+      var indexString = ""
+      var sectionNode: ConfigSection? = section
+      for _ in 0...self.depth {
+        indexString = "\((sectionNode?.index ?? 0)+1).\(indexString)"
+        sectionNode = sectionNode?.parent as? ConfigSection
+      }
+      let digitsInCount = _digitsIn(section.parent!.children.count)
+      let digitsInIndex = _digitsIn(section.index+1)
+      let numberMargin = digitsInCount - digitsInIndex
+      for _ in 0 ..< numberMargin {
+        indexString = "\u{2007}\(indexString)"
+      }
+      section.title = "\(indexString) \(section.title)"
 		}
 	}
 	
-	override func _setPredicate(_ value:NSPredicate?)
+	override func privateSetPredicate(_ value:NSPredicate?)
 	{
 		willChangeValue(forKey: "filteredChildren")
 		self.storedFilteredChildren = nil
-		for node in self.children {
-			(node as! ConfigNode).predicate = value
+		for case let node as ConfigNode in self.children {
+			node.predicate = value
 		}
 		didChangeValue(forKey: "filteredChildren")
 	}
 	
-	fileprivate func _digitsIn(_ x:Int) -> Int
+	fileprivate func _digitsIn(_ number:Int) -> Int
 	{
-		return Int(floor(log10(Double(x))))
+		return Int(floor(log10(Double(number))))
 	}
 }
 
@@ -283,15 +286,15 @@ extension ConfigRoot {
     return NSSet(object:"storedPredicate")
   }
 
-	override func _setPredicate(_ value:NSPredicate?)
+	override func privateSetPredicate(_ value:NSPredicate?)
 	{
 		self.storedPredicate = value
-		super._setPredicate(value)
+		super.privateSetPredicate(value)
 	}
 
-	override func _getPredicate() -> NSPredicate?
+	override func privateGetPredicate() -> NSPredicate?
 	{
-		return self.storedPredicate as! NSPredicate?
+		return self.storedPredicate as? NSPredicate
 	}
 
 }

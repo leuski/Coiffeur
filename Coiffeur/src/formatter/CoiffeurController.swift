@@ -44,10 +44,10 @@ class CoiffeurController : NSObject {
 	}
 	
 	enum OptionType : Swift.String {
-		case Signed = "signed"
-		case Unsigned = "unsigned"
-		case String = "string"
-		case StringList = "stringList"
+		case signed = "signed"
+		case unsigned = "unsigned"
+		case string = "string"
+		case stringList = "stringList"
 	}
 	
 	class var availableTypes : [CoiffeurController.Type] {
@@ -86,17 +86,17 @@ class CoiffeurController : NSObject {
 			return self.defaultExecutableURL
 		}
 		set (value) {
-			let UD = UserDefaults.standard
+			let defaults = UserDefaults.standard
 			let url = self.defaultExecutableURL
 			if value == nil || value == url {
-				UD.removeObject(forKey: self.currentExecutableURLUDKey)
+				defaults.removeObject(forKey: self.currentExecutableURLUDKey)
 			} else {
-				UD.set(value!, forKey: self.currentExecutableURLUDKey)
+				defaults.set(value!, forKey: self.currentExecutableURLUDKey)
 			}
 		}
 	}
 	
-	class var KeySortDescriptor : NSSortDescriptor
+	class var keySortDescriptor : NSSortDescriptor
 	{
 		return NSSortDescriptor(key: "indexKey", ascending:true)
 	}
@@ -269,22 +269,23 @@ class CoiffeurController : NSObject {
 	
 	fileprivate func _clusterOptions()
 	{
-		for i in stride(from: 8, to: 1, by: -1) {
-			self._cluster(i)
+		for index in stride(from: 8, to: 1, by: -1) {
+			self._cluster(index)
 		}
 		
 		_makeOthersSubsection()
 		
 		// if the root contains only one child, pull its children into the root,
 		// and remove it
-		if let root = self.root {
-			if root.children.count == 1 {
-				let subroot = root.children.object(at: 0) as! ConfigNode
-				for node in subroot.children.array as! [ConfigNode] {
-					node.parent = root
-				}
-				self.managedObjectContext.delete(subroot)
-			}
+		if
+      let root = self.root,
+      root.children.count == 1,
+      let subroot = root.children.object(at: 0) as? ConfigNode
+    {
+      for case let node as ConfigNode in subroot.children.array {
+        node.parent = root
+      }
+      self.managedObjectContext.delete(subroot)
 		}
 		
 		self.root?.sortAndIndexChildren()
@@ -322,19 +323,14 @@ class CoiffeurController : NSObject {
 	fileprivate func _cluster(_ tokenLimit:Int)
 	{
 		for child in self.root!.children  {
-			if !(child is ConfigSection) {
-				continue
-			}
-			let section = child as! ConfigSection
-			
+      guard let section = child as? ConfigSection else { continue }
+      
 			var index = [String:[ConfigOption]]()
 			
 			for node in section.children {
-				if !(node is ConfigOption) {
-					continue
-				}
-				let option : ConfigOption = node as! ConfigOption
-				let (head, tail) = _splitTokens(option.title,
+        guard let option = node as? ConfigOption else { continue }
+
+        let (head, tail) = _splitTokens(option.title,
 					boundary:tokenLimit, stem:true)
 				
 				if tail.isEmpty {
@@ -377,31 +373,28 @@ class CoiffeurController : NSObject {
 	fileprivate func _makeOthersSubsection()
 	{
 		for child in self.root!.children  {
-			if !(child is ConfigSection) {
-				continue
-			}
-			let section = child as! ConfigSection
+      guard let section = child as? ConfigSection else { continue }
 			
 			var index = [ConfigOption]()
 			var foundSubSection = false
 			
 			for node in section.children {
-				if !(node is ConfigOption) {
-					foundSubSection = true
-				} else {
-					index.append(node as! ConfigOption)
-				}
+        if let section = node as? ConfigOption {
+          index.append(section)
+        } else {
+          foundSubSection = true
+        }
 			}
 			
 			if !foundSubSection || index.isEmpty {
 				continue
 			}
 			
-			let Other = String(format:NSLocalizedString("Other %@", comment:""),
+			let other = String(format:NSLocalizedString("Other %@", comment:""),
 				section.title.lowercased())
 			let subsection = ConfigSection.objectInContext(self.managedObjectContext,
 				parent:section,
-				title:"\u{200B}\(Other)")
+				title:"\u{200B}\(other)")
 			
 			for option in index {
 				option.parent = subsection

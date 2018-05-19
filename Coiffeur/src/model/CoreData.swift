@@ -22,7 +22,7 @@
 import CoreData
 
 extension NSManagedObjectContext {
-  
+
 	func entity<T:NSManagedObject>(_ entityClass:T.Type) -> NSEntityDescription?
 	{
 		let mom = self.persistentStoreCoordinator!.managedObjectModel
@@ -40,11 +40,11 @@ extension NSManagedObjectContext {
 	{
 		if let theEntity = entity {
 			let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
-			
+
 			fetchRequest.entity = theEntity
 			fetchRequest.predicate = predicate
 			fetchRequest.sortDescriptors = sortDescriptors
-			
+
 			return try self.fetch(fetchRequest)
 		}
 		return []
@@ -75,7 +75,7 @@ extension NSManagedObjectContext {
 
 		return array.isEmpty ? nil : (array[0] as? T)
 	}
-	
+
 	func fetchSingle<T:NSManagedObject>(_ entityClass:T.Type,
 		sortDescriptors:[NSSortDescriptor]? = nil, withFormat format: String,
 		_ args: CVarArg ...) throws -> T?
@@ -83,7 +83,7 @@ extension NSManagedObjectContext {
 		return try fetchSingle(entityClass, sortDescriptors:sortDescriptors,
 			withPredicate:withVaList(args) {NSPredicate(format:format, arguments:$0)})
 	}
-	
+
 	func insert<T:NSManagedObject>(_ entityClass:T.Type) -> T
 	{
 		return entityClass.init(entity:entity(entityClass)!,
@@ -95,19 +95,19 @@ extension NSManagedObjectContext {
     self.processPendingChanges()
     self.undoManager?.disableUndoRegistration()
   }
-  
+
   func enableUndoRegistration()
   {
     self.processPendingChanges()
     self.undoManager?.enableUndoRegistration()
   }
-  
+
   func beginActionWithName(_ name:String)
   {
     self.undoManager?.beginUndoGrouping()
     self.undoManager?.setActionName(name)
   }
-  
+
   func endAction()
   {
     self.undoManager?.endUndoGrouping()
@@ -115,13 +115,13 @@ extension NSManagedObjectContext {
 }
 
 extension NSManagedObject {
-	
+
 	class func objectInContext(_ managedObjectContext: NSManagedObjectContext)
 		-> Self
   {
     return managedObjectContext.insert(self)
   }
-	
+
 }
 
 //extension NSManagedObjectModel {
@@ -134,7 +134,7 @@ extension NSManagedObject {
 //  // things will break as the original module name is hardcoded in the
 //  // model file.
 //  // Moreover, if you create a test case in the original project,
-//  // the test case will have a different target name and, hence, a different 
+//  // the test case will have a different target name and, hence, a different
 //  // module name. And, the model will break.
 //  //
 //  // Here we assume that the model file contains unqualified class names and
@@ -150,11 +150,11 @@ extension NSManagedObject {
 //    }
 //    return copyForModuleWithName(moduleName)
 //  }
-//  
+//
 //  func copyForModuleWithName(_ moduleName: String) -> NSManagedObjectModel
 //  {
 //    if moduleName.isEmpty { return self }
-//    
+//
 //    let momCopy = NSManagedObjectModel()
 //    var entityCache : Dictionary<String, NSEntityDescription> = [:]
 //    var newEntities : [NSEntityDescription] = []
@@ -162,29 +162,29 @@ extension NSManagedObject {
 //    for e in self.entities {
 //      newEntities.append(e.copyWithModuleName(moduleName, cache:&entityCache))
 //    }
-//    
+//
 //    momCopy.entities = newEntities
 //    return momCopy
 //  }
 //}
 //
 //extension NSEntityDescription {
-//  
+//
 //  typealias Cache = Dictionary<String, NSEntityDescription>
-//  
+//
 //  func copyWithModuleName(_ moduleName: String, cache:inout Cache)
 //    -> NSEntityDescription
 //  {
 //    if moduleName.isEmpty { return self }
-//    
+//
 //    let entityName = self.name!
 //    if let existingEntity = cache[entityName] {
 //      return existingEntity
 //    }
-//    
+//
 //    let newEntity = copy() as! NSEntityDescription
 //    cache[entityName] = newEntity
-//    
+//
 //    if newEntity.managedObjectClassName == NSManagedObject.className() {
 //      newEntity.managedObjectClassName = self.managedObjectClassName
 //    } else {
@@ -192,15 +192,15 @@ extension NSManagedObject {
 //        = "\(moduleName)\(self.managedObjectClassName)"
 //    }
 //    var newSubEntities : [NSEntityDescription] = []
-//    
+//
 //    for e in newEntity.subentities {
 //      newSubEntities.append(e.copyWithModuleName(moduleName, cache:&cache))
 //    }
-//    
+//
 //    newEntity.subentities = newSubEntities
 //    return newEntity
 //  }
 //}
 //
 
- 
+

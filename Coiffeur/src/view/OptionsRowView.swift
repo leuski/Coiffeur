@@ -49,15 +49,15 @@ class ConfigRowView : NSTableRowView {
 
 	@IBOutlet weak var leftMargin : NSLayoutConstraint!
 	@IBOutlet weak var textField : NSTextField!
-	
+
 	var drawSeparator = false
 	typealias Location = ConfigNode.Location
 	var locations = [Location]()
-	
+
 	override func drawBackground(in dirtyRect: NSRect)
 	{
     if self.isGroupRowStyle {
-			
+
 			// start with the background color
       var backgroundColor = self.backgroundColor
       if self.locations.count > 1 {
@@ -74,11 +74,11 @@ class ConfigRowView : NSTableRowView {
       backgroundColor.setFill()
 
 		} else {
-			
+
 			let tf = self.textField
 			if self.interiorBackgroundStyle == .dark {
 				tf?.textColor = NSColor.selectedTextColor
-				
+
 				if self.window?.backingScaleFactor == 1 {
 					// light on dark looks bad on regular resolution screen,
 					// so we make the font bold to improve readability
@@ -94,13 +94,13 @@ class ConfigRowView : NSTableRowView {
 				tf?.font = NSFontManager.shared.convert(
 					(tf?.font!)!, toNotHaveTrait: NSFontTraitMask.boldFontMask)
 			}
-			
+
       self.backgroundColor.setFill()
     }
-    
+
     NSMakeRect(CGFloat(0), CGFloat(0),
 			self.bounds.size.width, self.bounds.size.height).fill()
-   
+
     if drawSeparator {
 			// draw the top border
       let path = NSBezierPath()
@@ -119,7 +119,7 @@ class ConfigRowView : NSTableRowView {
 			NSMakeRect(CGFloat(3 + index*5), CGFloat(0),
 				CGFloat(3), self.bounds.size.height-1).fill()
 		}
-		
+
 		// if we are a group, underline the title with the appropriate color
     if self.isGroupRowStyle && locations.count == 1 {
       locations.last!.color.set()
@@ -134,11 +134,11 @@ class ConfigRowView : NSTableRowView {
       path.stroke()
     }
 	}
-	
+
 	override func drawSelection(in dirtyRect: NSRect)
 	{
 		let margin = CGFloat(7)
-		
+
 		// start with the regular selection color
 		var color = NSColor.selectedMenuItemColor
 		// add a hint of the current sectio color

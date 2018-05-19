@@ -22,7 +22,7 @@
 import Cocoa
 
 class Language : NSObject {
-    
+
   fileprivate struct Private {
     fileprivate static let supportedLanguages = Language._supportedLanguages()
 		fileprivate static let FileName = "languages"
@@ -32,7 +32,7 @@ class Language : NSObject {
 
   class var supportedLanguages : [Language] {
 		return Private.supportedLanguages }
-	
+
 	class var supportedLanguageUTIs : [String] {
 		var types = Set<String>()
 		for  language in Language.supportedLanguages {
@@ -52,7 +52,7 @@ class Language : NSObject {
 			? nil
 			: NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
   }
-  
+
   fileprivate class func _supportedLanguages() -> [Language]
   {
     let bundle = Bundle(for: self)
@@ -79,7 +79,7 @@ class Language : NSObject {
     }
     return nil
   }
-  
+
   class func languageFromUserDefaults() -> Language
   {
 		let UD = UserDefaults.standard
@@ -90,13 +90,13 @@ class Language : NSObject {
     }
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
-  
+
   fileprivate init(dictionary:[String : AnyObject])
   {
     super.init()
     setValuesForKeys(dictionary)
   }
-  
+
   func saveToUserDefaults()
   {
     if !UTIs.isEmpty {

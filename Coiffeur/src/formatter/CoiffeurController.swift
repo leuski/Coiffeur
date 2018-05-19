@@ -42,22 +42,22 @@ class CoiffeurController : NSObject {
 			self.language = language
 		}
 	}
-	
+
 	enum OptionType : Swift.String {
 		case signed = "signed"
 		case unsigned = "unsigned"
 		case string = "string"
 		case stringList = "stringList"
 	}
-	
+
 	class var availableTypes : [CoiffeurController.Type] {
 		return [ ClangFormatController.self, UncrustifyController.self ] }
-	
+
 	class var documentType : String { return "" }
 	class var localizedExecutableTitle : String { return "Executable" }
 	class var currentExecutableName : String { return "" }
 	class var currentExecutableURLUDKey : String { return "" }
-	
+
 	class var defaultExecutableURL : URL? {
 		let bundle = Bundle(for:self)
 		if let url = bundle.url(forAuxiliaryExecutable: self.currentExecutableName)
@@ -68,7 +68,7 @@ class CoiffeurController : NSObject {
 		}
 		return nil
 	}
-	
+
 	class var currentExecutableURL : URL? {
 		get {
 			let UD = UserDefaults.standard
@@ -95,16 +95,16 @@ class CoiffeurController : NSObject {
 			}
 		}
 	}
-	
+
 	class var keySortDescriptor : NSSortDescriptor
 	{
 		return NSSortDescriptor(key: "indexKey", ascending:true)
 	}
-	
+
 	let managedObjectContext : NSManagedObjectContext
 	let managedObjectModel : NSManagedObjectModel
 	let executableURL : URL
-	
+
 	@objc var root : ConfigRoot? {
 		do {
 			return try self.managedObjectContext.fetchSingle(ConfigRoot.self)
@@ -112,10 +112,10 @@ class CoiffeurController : NSObject {
 			return nil
 		}
 	}
-	
+
 	var pageGuideColumn : Int { return 0 }
 	weak var delegate : CoiffeurControllerDelegate?
-	
+
 	class func findExecutableURL() throws -> URL
 	{
 		if let url = self.currentExecutableURL {
@@ -123,7 +123,7 @@ class CoiffeurController : NSObject {
 		}
 		throw Error("Format executable URL is not specified")
 	}
-	
+
 	class func createCoiffeur() throws -> CoiffeurController
 	{
 		let url = try self.findExecutableURL()
@@ -150,7 +150,7 @@ class CoiffeurController : NSObject {
 			throw Error("Failed to initialize coiffeur managed object model")
 		}
 	}
-	
+
 	class func coiffeurWithType(_ type: String) throws -> CoiffeurController
 	{
 		for coiffeurClass in CoiffeurController.availableTypes  {
@@ -160,7 +160,7 @@ class CoiffeurController : NSObject {
 		}
 		throw Error("Unknown document type “%@”", type)
 	}
-	
+
 	class func contentsIsValidInString(_ string:String) -> Bool
 	{
 		return false
@@ -178,23 +178,23 @@ class CoiffeurController : NSObject {
 			name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
 			object: self.managedObjectContext)
 	}
-	
+
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 	}
-	
+
 	@objc func modelDidChange(_:AnyObject?)
 	{
 		self.format()
 	}
-	
+
   @discardableResult
 	func format() -> Bool
 	{
 		var result = false
-		
+
 		if let del = self.delegate {
-			let arguments = del.coiffeurControllerArguments(self)			
+			let arguments = del.coiffeurControllerArguments(self)
 			result = self.format(arguments) {
 				(result:StringResult) in
 				switch (result) {
@@ -207,21 +207,21 @@ class CoiffeurController : NSObject {
 		}
 		return result
 	}
-	
+
 	func format(_ args:Arguments,
 		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
 	{
 		return false
 	}
-	
+
 	func readOptionsFromLineArray(_ lines:[String]) throws
 	{
 	}
-	
+
 	func readValuesFromLineArray(_ lines:[String]) throws
 	{
 	}
-	
+
 	func readOptionsFromString(_ text:String) throws
 	{
 		let lines = text.components(separatedBy: "\n")
@@ -230,33 +230,33 @@ class CoiffeurController : NSObject {
 		defer { self.managedObjectContext.enableUndoRegistration() }
 
 		ConfigRoot.objectInContext(self.managedObjectContext, parent:nil)
-		
+
 		try self.readOptionsFromLineArray(lines)
 		_clusterOptions()
 	}
-	
+
 	func readValuesFromString(_ text:String) throws
 	{
 		let lines = text.components(separatedBy: "\n")
 
 		self.managedObjectContext.disableUndoRegistration()
 		defer { self.managedObjectContext.enableUndoRegistration() }
-		
+
 		try self.readValuesFromLineArray(lines)
 	}
-	
+
 	func readValuesFromURL(_ absoluteURL:URL) throws
 	{
 		let data = try String(contentsOf:absoluteURL,
 			encoding:String.Encoding.utf8)
 		try self.readValuesFromString(data)
 	}
-	
+
 	func writeValuesToURL(_ absoluteURL:URL) throws
 	{
 		throw Error("Unknown error while trying to write style to %@", absoluteURL as CVarArg)
 	}
-	
+
 	func optionWithKey(_ key:String) -> ConfigOption?
 	{
 		do {
@@ -266,15 +266,15 @@ class CoiffeurController : NSObject {
 			return nil
 		}
 	}
-	
+
 	fileprivate func _clusterOptions()
 	{
 		for index in stride(from: 8, to: 1, by: -1) {
 			self._cluster(index)
 		}
-		
+
 		_makeOthersSubsection()
-		
+
 		// if the root contains only one child, pull its children into the root,
 		// and remove it
 		if
@@ -287,10 +287,10 @@ class CoiffeurController : NSObject {
       }
       self.managedObjectContext.delete(subroot)
 		}
-		
+
 		self.root?.sortAndIndexChildren()
 	}
-	
+
 	fileprivate func _splitTokens(_ title:String, boundary:Int, stem:Bool = false)
 		-> (head:[String], tail:[String])
 	{
@@ -319,42 +319,42 @@ class CoiffeurController : NSObject {
 		}
 		return (head:head, tail:tail)
 	}
-	
+
 	fileprivate func _cluster(_ tokenLimit:Int)
 	{
 		for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }
-      
+
 			var index = [String:[ConfigOption]]()
-			
+
 			for node in section.children {
         guard let option = node as? ConfigOption else { continue }
 
         let (head, tail) = _splitTokens(option.title,
 					boundary:tokenLimit, stem:true)
-				
+
 				if tail.isEmpty {
 					continue
 				}
-				
+
 				let key = head.reduce("") { $0.isEmpty ? $1 : "\($0) \($1)" }
-				
+
 				if index[key] == nil {
 					index[key] = [ConfigOption]()
 				}
-				
+
 				index[key]!.append(option)
 			}
-			
+
 			for (key, list) in index {
 				if list.count < 5 || list.count == section.children.count {
 					continue
 				}
-				
+
 				let subsection = ConfigSection.objectInContext(
 					self.managedObjectContext,
 					parent:section, title:"\(key) …")
-				
+
 				var count = 0
 				for option in list {
 					option.parent = subsection
@@ -369,15 +369,15 @@ class CoiffeurController : NSObject {
 			}
 		}
 	}
-	
+
 	fileprivate func _makeOthersSubsection()
 	{
 		for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }
-			
+
 			var index = [ConfigOption]()
 			var foundSubSection = false
-			
+
 			for node in section.children {
         if let section = node as? ConfigOption {
           index.append(section)
@@ -385,23 +385,23 @@ class CoiffeurController : NSObject {
           foundSubSection = true
         }
 			}
-			
+
 			if !foundSubSection || index.isEmpty {
 				continue
 			}
-			
+
 			let other = String(format:NSLocalizedString("Other %@", comment:""),
 				section.title.lowercased())
 			let subsection = ConfigSection.objectInContext(self.managedObjectContext,
 				parent:section,
 				title:"\u{200B}\(other)")
-			
+
 			for option in index {
 				option.parent = subsection
 			}
 		}
 	}
-	
+
 }
 
 

@@ -32,13 +32,13 @@ class ConfigNodeLocation {
 }
 
 extension ConfigNode {
-	
+
 	typealias Location = ConfigNodeLocation
-	
+
 	var path : [Location] {
 		var node : ConfigNode = self
 		var locations : [Location] = []
-		
+
 		while true {
 			if let parent = node.parent {
 				locations.insert(Location(node.index, of:parent.children.count),
@@ -50,9 +50,9 @@ extension ConfigNode {
 		}
 		return locations
 	}
-	
+
   class var typeSeparator : String { return "," }
-	
+
 	class func keyPathsForValuesAffectingFilteredChildrenCount() -> NSSet
 	{
 		return NSSet(object:"filteredChildren")
@@ -67,7 +67,7 @@ extension ConfigNode {
   @objc var documentation : String { return "" }
   @objc var type : String { return "" }
   @objc var name : String { return "" }
-  
+
   var tokens : [String] {
     let type = self.type
     return type.components(separatedBy: ConfigNode.typeSeparator).filter {
@@ -78,15 +78,15 @@ extension ConfigNode {
 		get { return self.privateGetPredicate() }
 		set (value) { self.privateSetPredicate(value) }
 	}
-	
+
 	@objc var filteredChildrenCount : Int {
 		return 0
 	}
-	
+
 	@objc var filteredChildren : NSArray {
 		return []
 	}
-	
+
   var depth : Int {
     if let parent = self.parent {
       return 1 + parent.depth
@@ -94,16 +94,16 @@ extension ConfigNode {
       return 0
     }
   }
-	
+
 	// this is a an alias to hide the type conversion
-	// Swift is VERY annoyning about not accepting Int and Int32 in the 
-	// same expression wuthout an explicit type conversion. We do it here 
+	// Swift is VERY annoyning about not accepting Int and Int32 in the
+	// same expression wuthout an explicit type conversion. We do it here
 	// and hide the actual size from the user
 	var index : Int {
 		get { return Int(self.storedIndex) }
 		set (value) { self.storedIndex = Int32(value) }
 	}
-	
+
   @objc @discardableResult
 	class func objectInContext(_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode? = nil,
@@ -111,7 +111,7 @@ extension ConfigNode {
   {
 		return _insertConfigNode(managedObjectContext, parent:parent, title:title)
   }
-	
+
 	fileprivate class func _insertConfigNode<T:ConfigNode>(
 		_ managedObjectContext: NSManagedObjectContext,
 		parent:ConfigNode?,
@@ -124,12 +124,12 @@ extension ConfigNode {
 		node.title = title
 		return node
 	}
-	
+
 	@objc func sortAndIndexChildren()
 	{
-		
+
 	}
-	
+
 	// HACK As of Swift 1.2 the compiler complains that
 	// it cannot override declarations in extensions. Working around...
 	@objc func privateSetPredicate(_ value:NSPredicate?)
@@ -143,7 +143,7 @@ extension ConfigNode {
 
 extension ConfigOption {
   override var leaf : Bool { return true }
-	
+
 	// I cannot override non-stored property with a stored property
 	// And I do not want to have these properties stored on Section nodes
 	// so I alias them to different variables
@@ -207,15 +207,15 @@ extension ConfigSection {
 			ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
     // we want to put "other..." subsection at the end of each section list.
     // we add a hidden character (non-breaking space) at the beginning
-    // of the "other..." title, so sorting should sort titles in the order 
+    // of the "other..." title, so sorting should sort titles in the order
 		// we need.
-    // you cannot use localized... message to sort the titles, this trick 
+    // you cannot use localized... message to sort the titles, this trick
 		// does not work. It looks like localized...compare strips the space out.
 	}
-	
+
 	// I want to cache filtered children, so I do not run the filter unnecessarily
 	// the cache goes into storedFilteredChildren
-	// I need to reset the cache every time the predicate is updated 
+	// I need to reset the cache every time the predicate is updated
 	fileprivate var _filteredChildren : NSOrderedSet {
 		if let predicate = self.predicate {
 			return self.children.filtered(using: predicate)
@@ -223,11 +223,11 @@ extension ConfigSection {
 			return self.children
 		}
 	}
-	
+
 	override var filteredChildrenCount : Int {
 		return self.filteredChildren.count
 	}
-	
+
 	override var filteredChildren : NSArray {
 		if let array = self.storedFilteredChildren as? NSArray {
 			return array
@@ -236,7 +236,7 @@ extension ConfigSection {
 		self.storedFilteredChildren = array
 		return array
 	}
-	
+
 	override func sortAndIndexChildren()
 	{
 		mutableOrderedSetValue(forKey: "children").sort(
@@ -263,7 +263,7 @@ extension ConfigSection {
       section.title = "\(indexString) \(section.title)"
 		}
 	}
-	
+
 	override func privateSetPredicate(_ value:NSPredicate?)
 	{
 		willChangeValue(forKey: "filteredChildren")
@@ -273,7 +273,7 @@ extension ConfigSection {
 		}
 		didChangeValue(forKey: "filteredChildren")
 	}
-	
+
 	fileprivate func _digitsIn(_ number:Int) -> Int
 	{
 		return Int(floor(log10(Double(number))))

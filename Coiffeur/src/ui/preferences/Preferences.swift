@@ -27,12 +27,12 @@ class Preferences : PreferencesWindow {
 	{
 		super.init(window: window)
 	}
-	
+
 	required init?(coder: NSCoder)
 	{
 		super.init(coder:coder)
 	}
-	
+
 	convenience init(panes:[Pane])
 	{
 		self.init(windowNibName:NSNib.Name(rawValue: "PreferencesWindow"))

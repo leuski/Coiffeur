@@ -22,20 +22,20 @@
 import Cocoa
 
 extension NSTreeController {
-	
+
 	struct DepthFirstView : Sequence {
 
 		struct NodeGenerator: IteratorProtocol {
-			
+
 			var stack = [IndexingIterator<[NSTreeNode]>]()
-			
+
 			init(_ root: NSTreeNode)
 			{
 				if let array = root.children {
 					stack.append(array.makeIterator())
 				}
 			}
-			
+
 			mutating func next() -> NSTreeNode?
 			{
 				while !stack.isEmpty {
@@ -52,34 +52,34 @@ extension NSTreeController {
 				}
 				return nil
 			}
-			
+
 		}
 
 		typealias Iterator = NodeGenerator
-		
+
 		let owner: NSTreeController
-		
+
 		init(_ owner:NSTreeController)
 		{
 			self.owner = owner
 		}
-		
+
 		func makeIterator() -> Iterator
 		{
 			return NodeGenerator(self.owner.arrangedObjects )
 		}
-		
+
 		func filter(_ includeElement: (NSTreeNode) -> Bool) -> [NSTreeNode]
 		{
 			return self.filter(includeElement)
 		}
-		
+
 	}
-	
+
 	var nodes: DepthFirstView {
 		return DepthFirstView(self)
 	}
-	
+
 	var firstLeaf: NSTreeNode? {
 		for node in self.nodes {
 			if node.isLeaf {
@@ -88,5 +88,5 @@ extension NSTreeController {
 		}
 		return nil
 	}
-	
+
 }

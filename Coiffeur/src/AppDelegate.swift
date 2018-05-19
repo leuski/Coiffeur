@@ -22,21 +22,21 @@ import Cocoa
 
 @NSApplicationMain
 class AppDelegate : NSObject, NSApplicationDelegate {
-  
+
 	fileprivate struct Private {
 		static fileprivate let AboutFileName = "about"
 		static fileprivate let AboutFileNameExtension = "html"
 		static fileprivate let UserDefaultsFileNameExtension = "plist"
 		static fileprivate let UserDefaultsFileName   = "UserDefaults"
 	}
-	
+
   @IBOutlet weak var languagesMenu : NSMenu!
   @IBOutlet weak var makeNewDocumentMenu : NSMenu!
-  
+
 	@objc var bundle : Bundle {
 		return Bundle.main
 	}
-	
+
 	@objc var aboutURL : URL? {
 		return self.bundle.url(forResource: Private.AboutFileName,
 			withExtension:Private.AboutFileNameExtension)
@@ -46,9 +46,9 @@ class AppDelegate : NSObject, NSApplicationDelegate {
   {
     super.init()
     let _ = DocumentController() // load ours...
-    
+
     MGSFragaria.initializeFramework()
-    
+
     let bundle = Bundle(for:type(of: self))
     if let UDURL = bundle.url(forResource: Private.UserDefaultsFileName,
 					withExtension:Private.UserDefaultsFileNameExtension),
@@ -57,7 +57,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
       UserDefaults.standard.register(defaults: ud)
     }
   }
-  
+
   func applicationDidFinishLaunching(_ aNotification:Notification)
   {
     for language in Language.supportedLanguages {
@@ -66,35 +66,35 @@ class AppDelegate : NSObject, NSApplicationDelegate {
       item.representedObject = language
       self.languagesMenu.addItem(item)
     }
-    
+
     var count = 0
-    
+
     for aClass in CoiffeurController.availableTypes {
       let item = NSMenuItem(title: aClass.documentType,
 				action: #selector(AppDelegate.openUntitledDocumentOfType(_:)), keyEquivalent: "")
       item.representedObject = aClass.documentType
-      
+
       if (count < 2) {
         item.keyEquivalent = "n"
         var mask = NSEvent.ModifierFlags.command
-        
+
         if (count > 0) {
           mask = mask.union(NSEvent.ModifierFlags.option)
         }
-        
+
         item.keyEquivalentModifierMask = NSEvent.ModifierFlags(rawValue: UInt(Int(mask.rawValue)))
       }
-      
+
       self.makeNewDocumentMenu.addItem(item)
       count += 1
     }
   }
-  
+
   func applicationWillTerminate(_ aNotification:Notification)
   {
     // Insert code here to tear down your application
   }
-  
+
   @IBAction func openUntitledDocumentOfType(_ sender : AnyObject)
   {
     if let type = sender.representedObject as? String {
@@ -109,7 +109,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
 			}
     }
   }
-  
-	
+
+
 }
 

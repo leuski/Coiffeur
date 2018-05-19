@@ -22,17 +22,17 @@
 import Foundation
 
 extension NSObject {
-	
+
 	typealias BlockObserver = (AnyObject, [AnyHashable: Any]) -> Void
 	typealias ObserverToken = UUID
-	
+
 	class BlockObserverImplementation : NSObject {
 		let observer: BlockObserver
 		let keyPath: String
 		let token: ObserverToken
 		let removeWhenChangedOnce: Bool
 		weak var target: NSObject?
-		
+
 		init(_ observer:@escaping BlockObserver, keyPath:String, removeWhenChangedOnce:Bool,
 			token:ObserverToken, target:NSObject)
 		{
@@ -55,7 +55,7 @@ extension NSObject {
 				target._observers.removeObject(forKey: self.token)
 			}
 		}
-		
+
 		deinit {
 			if let target = self.target {
 				target.removeObserver(self, forKeyPath: self.keyPath,
@@ -68,7 +68,7 @@ extension NSObject {
 		fileprivate static var AOName = 57
 		fileprivate static var Context = 57
 	}
-	
+
 	private var _observers: NSMutableDictionary {
 		get {
 			if let dict = objc_getAssociatedObject(self,
@@ -82,7 +82,7 @@ extension NSObject {
 			return dict
 		}
 	}
-	
+
   @discardableResult
 	func addObserverForKeyPath(_ keyPath:String,
 		options: NSKeyValueObservingOptions = NSKeyValueObservingOptions(),

@@ -29,11 +29,11 @@ class OutlineView : NSOutlineView {
 	{
     return true
   }
-	
+
 	override func keyDown(with theEvent: NSEvent)
 	{
 		let mods = theEvent.modifierFlags.intersection((NSEvent.ModifierFlags.shift.union(NSEvent.ModifierFlags.option).union(NSEvent.ModifierFlags.command).union(NSEvent.ModifierFlags.control)))
-		
+
 		if Int(theEvent.keyCode) == kVK_RightArrow {
 			if mods == NSEvent.ModifierFlags.command {
 				expandItem(parent(forItem: item(atRow: selectedRow)),
@@ -57,7 +57,7 @@ class OutlineView : NSOutlineView {
 		}
 		super.keyDown(with: theEvent)
 	}
-  
+
   func scrollItemToVisible(_ item: Any?)
   {
     let row = self.row(forItem: item)

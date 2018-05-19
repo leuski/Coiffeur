@@ -24,27 +24,27 @@ import Foundation
 class CoiffeurControllerClass : NSObject {
 	@objc let controllerClass : CoiffeurController.Type
 	var documentType : String { return controllerClass.documentType }
-	
+
 	init(_ type:CoiffeurController.Type)
 	{
 		controllerClass = type
 	}
-	
+
 	func contentsIsValidInString(_ string:String) -> Bool
 	{
 		return controllerClass.contentsIsValidInString(string)
 	}
-	
+
 	func createCoiffeur() throws -> CoiffeurController
 	{
 		return try controllerClass.createCoiffeur()
 	}
-	
+
   @objc class func keyPathsForValuesAffectingCurrentExecutableURL() -> NSSet
   {
     return NSSet(object:"controllerClass.currentExecutableURL")
   }
-  
+
 	@objc dynamic var currentExecutableURL : URL? {
 		get {
 			return controllerClass.currentExecutableURL
@@ -55,27 +55,27 @@ class CoiffeurControllerClass : NSObject {
       didChangeValue(forKey: "currentExecutableURL")
 		}
 	}
-	
+
 	var defaultExecutableURL : URL? {
 		return controllerClass.defaultExecutableURL
 	}
-	
+
 	@objc var executableDisplayName : String {
 		return controllerClass.localizedExecutableTitle
 	}
 }
 
 class CoiffeurPreferences : DefaultPreferencePane {
-	
+
 	@IBOutlet weak var tableView: NSTableView!
 	@IBOutlet weak var constraint: NSLayoutConstraint!
-	
+
 	override var toolbarItemImage : NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "Locations")) }
-	
+
 	@objc let formatters = CoiffeurController.availableTypes.map {
 		CoiffeurControllerClass($0) }
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let height = self.tableView.bounds.size.height + 2
@@ -109,7 +109,7 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 				as Dictionary<String, AnyObject>
 		}
 	}
-	
+
 	@objc func selectURL(_ sender:AnyObject)
 	{
 		if
@@ -122,16 +122,16 @@ extension CoiffeurPreferences : NSPathControlDelegate {
 }
 
 class TransparentTableView : NSTableView {
-	
+
 	override func awakeFromNib()
 	{
 		self.enclosingScrollView!.drawsBackground = false
 	}
-	
+
 	override var isOpaque : Bool {
 		return false
 	}
-	
+
 	override func drawBackground(inClipRect clipRect : NSRect)
 	{
 	// don't draw a background rect
@@ -141,7 +141,7 @@ class TransparentTableView : NSTableView {
 class TransparentTableRowView : NSTableRowView {
 	override func drawBackground(in dirtyRect: NSRect)
 	{
-		
+
 	}
 	override var isOpaque : Bool {
 			return false

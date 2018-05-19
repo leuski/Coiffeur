@@ -27,7 +27,7 @@ class String2NumberTransformer : ValueTransformer {
   {
     return true
   }
-  
+
   override func transformedValue(_ value: Any?) -> Any?
   {
     if let string = value as? String {
@@ -49,13 +49,13 @@ class String2NumberTransformer : ValueTransformer {
 }
 
 class OnlyIntegers : NumberFormatter {
-	
+
 	override init()
 	{
 		super.init()
 		self.allowsFloats = false
 	}
-	
+
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder:aDecoder)
 		self.allowsFloats = false

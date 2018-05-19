@@ -22,23 +22,23 @@
 import Cocoa
 
 class CoiffeurView : NSViewController {
-  
+
   @IBOutlet weak var optionsView : OutlineView!
   @IBOutlet weak var jumpMenu : NSPopUpButton!
   @IBOutlet var optionsController : NSTreeController!
-	
+
 	fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
-	
+
   override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "CoiffeurView"),
 		bundle nibBundleOrNil: Bundle? = nil)
   {
     super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
   }
-	
+
   required init?(coder: NSCoder) {
     super.init(coder:coder)
   }
-  
+
   override func viewDidLoad()
   {
     super.viewDidLoad()
@@ -46,7 +46,7 @@ class CoiffeurView : NSViewController {
 			_, _ in self._finishSettingUpView()
 		}
   }
-	
+
 	fileprivate func _finishSettingUpView()
 	{
 		self.optionsView.expandItem(nil, expandChildren:true)
@@ -54,7 +54,7 @@ class CoiffeurView : NSViewController {
 		if let node: AnyObject = self.optionsController.firstLeaf  {
 			self.optionsController.setSelectionIndexPath(node.indexPath)
 		}
-		
+
 		for node in self.optionsController.nodes {
 			if let section = node.representedObject as? ConfigSection {
 				let item = NSMenuItem()
@@ -65,7 +65,7 @@ class CoiffeurView : NSViewController {
 			}
     }
   }
-  
+
   @IBAction func jumpToSection(_ sender:AnyObject)
   {
     if let popup = sender as? NSPopUpButton {
@@ -76,7 +76,7 @@ class CoiffeurView : NSViewController {
 }
 
 extension CoiffeurView : NSOutlineViewDelegate {
-	
+
   func outlineView(_ outlineView:NSOutlineView,
 		isGroupItem item:Any) -> Bool
   {
@@ -85,7 +85,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
     }
     return false
   }
-	
+
 	fileprivate func _rowViewIdentifierForItem(_ item:AnyObject) -> String?
 	{
 		if let node = item.representedObject as? ConfigNode {
@@ -97,7 +97,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
 		return nil
 	}
-	
+
 	fileprivate func _cellViewIdentifierForItem(_ item:AnyObject) -> String?
 	{
 		if let node = item.representedObject as? ConfigNode {
@@ -118,7 +118,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
 		return nil
 	}
-	
+
 	func outlineView(_ outlineView:NSOutlineView,
 		viewFor tableColumn:NSTableColumn?, item:Any) -> NSView?
   {
@@ -136,7 +136,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
     return nil
   }
-	
+
 	fileprivate func _outlineView(_ outlineView: NSOutlineView,
 		heightOfRowByIdentifier identifier: String) -> CGFloat
 	{
@@ -154,9 +154,9 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
 		return 10
 	}
-	
+
 	// this is a very, very, very frequently called method. We need to make it
-	// as fast as possible. We cache the view height based on the cell 
+	// as fast as possible. We cache the view height based on the cell
 	// view identifier
   func outlineView(_ outlineView: NSOutlineView,
 		heightOfRowByItem item: Any) -> CGFloat
@@ -169,13 +169,13 @@ extension CoiffeurView : NSOutlineViewDelegate {
 		}
     return 10
   }
-  
+
   func outlineView(_ outlineView: NSOutlineView,
 		shouldSelectItem item: Any) -> Bool
   {
     return !self.outlineView(outlineView, isGroupItem:item)
   }
-  
+
   func outlineView(_ outlineView: NSOutlineView,
 		rowViewForItem item: Any) -> NSTableRowView?
   {
@@ -203,9 +203,9 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			return nil
 		}
   }
-	
+
 	// the row is added as the predicate changes. Restore the expanded state
-	// from the model. 
+	// from the model.
 	// We do it asynchroniously, because node expansion
 	// can lead to more rows being added to the view.
 	func outlineView(_ outlineView: NSOutlineView,
@@ -220,7 +220,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			}
 		}
 	}
-	
+
 	// records the state of the node in the model
 	func outlineViewItemDidExpand(_ notification: Notification)
 	{
@@ -230,7 +230,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			section.expanded = true
 		}
 	}
-	
+
 	func outlineViewItemDidCollapse(_ notification: Notification)
 	{
 		if let section = (notification.userInfo!["NSObject"
@@ -239,7 +239,7 @@ extension CoiffeurView : NSOutlineViewDelegate {
 			section.expanded = false
 		}
 	}
-	
+
   // - (BOOL)outlineView:(NSOutlineView *)outlineView
   // shouldShowOutlineCellForItem:(id)item
   // {

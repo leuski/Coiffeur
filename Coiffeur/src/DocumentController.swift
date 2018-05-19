@@ -22,7 +22,7 @@
 import Cocoa
 
 class DocumentController : NSDocumentController {
-  
+
   override func beginOpenPanel(_ openPanel: NSOpenPanel,
 		forTypes inTypes: [String]?, completionHandler: @escaping (Int) -> Void)
   {
@@ -30,7 +30,7 @@ class DocumentController : NSDocumentController {
     super.beginOpenPanel(openPanel, forTypes:inTypes,
 			completionHandler:completionHandler)
   }
-	
+
   @discardableResult
 	fileprivate func _classForType(_ type:String) throws -> CoiffeurController.Type
 	{
@@ -41,12 +41,12 @@ class DocumentController : NSDocumentController {
 		}
 		throw Error("Unknown type \(type)")
 	}
-	
+
   override func typeForContents(of url: URL) throws -> String
   {
     let type = try super.typeForContents(of: url)
 		try _classForType(type)
-		
+
 		let data = try String(contentsOf:url, encoding:String.Encoding.utf8)
 
 		for conroller in CoiffeurController.availableTypes {
@@ -57,5 +57,5 @@ class DocumentController : NSDocumentController {
 
 		throw Error("Unknown data at URL \(url)")
   }
-  
+
 }

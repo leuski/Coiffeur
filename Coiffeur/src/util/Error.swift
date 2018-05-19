@@ -23,19 +23,19 @@ import Foundation
 
 class Error : NSError {
   class var domain : String { return "CoiffeurErrorDomain" }
-  
+
   init(localizedDescription:String)
   {
     super.init(domain: Error.domain, code: 0,
 			userInfo: [NSLocalizedDescriptionKey:localizedDescription])
   }
-  
+
   convenience init(_ format:String, _ args: CVarArg...)
   {
     self.init(localizedDescription:String(
 			format:NSLocalizedString(format, comment:""), arguments:args))
   }
-  
+
   required init?(coder aDecoder: NSCoder) {
     super.init(coder:aDecoder)
   }

@@ -22,30 +22,30 @@
 import Cocoa
 
 class MainWindowController : NSWindowController {
-  
+
   @IBOutlet weak var splitView : NSSplitView!
   var sourceView: SourceView!
   var styleView: CoiffeurView!
-	
+
   override init(window:NSWindow?)
   {
     super.init(window:window)
   }
-  
+
   required init?(coder: NSCoder)
   {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   convenience init()
   {
     self.init(windowNibName:NSNib.Name(rawValue: "MainWindowController"))
   }
-	
+
   override func windowDidLoad()
   {
     super.windowDidLoad()
-    
+
     self.sourceView = SourceView()
 		self.splitView.addSubview(self.sourceView.view)
 
@@ -53,7 +53,7 @@ class MainWindowController : NSWindowController {
 		self.sourceView.addObserverForKeyPath("language", observer:uncrustify)
 		self.sourceView.addObserverForKeyPath("sourceString",
 			options: .initial, observer:uncrustify)
-		
+
 		self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
 			(_, change:[AnyHashable: Any]) in
 
@@ -63,7 +63,7 @@ class MainWindowController : NSWindowController {
 					self.styleView = nil
 				}
 			}
-			
+
 			if let newDocument = change[NSKeyValueChangeKey.newKey] as? Document  {
 				self.styleView = CoiffeurView()
 				self.splitView.subviews.insert(self.styleView.view, at: 0)
@@ -71,25 +71,25 @@ class MainWindowController : NSWindowController {
 				self.styleView.representedObject = newDocument.model!
 				newDocument.model!.delegate = self.sourceView
 			}
-			
+
 			self.uncrustify()
 		}
 	}
-	
+
 	@IBAction func uncrustify(_ sender : AnyObject? = nil)
 	{
 		if let model = (self.document as? Document)?.model {
 			model.format()
 		}
 	}
-	
+
   @IBAction func changeLanguage(_ anItem:NSMenuItem)
   {
     if let language = anItem.representedObject as? Language {
       self.sourceView.language = language
     }
   }
-  
+
   override func validateMenuItem(_ anItem:NSMenuItem) -> Bool
   {
     if anItem.action == #selector(MainWindowController.changeLanguage(_:)) {
@@ -98,7 +98,7 @@ class MainWindowController : NSWindowController {
 					? .on : .off
       }
     }
-    
+
     return true
   }
 }
@@ -114,7 +114,7 @@ extension MainWindowController : NSWindowDelegate
 		self.styleView.representedObject = nil
 		self.styleView = nil
 	}
-	
+
 	func windowWillUseStandardFrame(_ window: NSWindow,
 		defaultFrame newFrame: NSRect) -> NSRect
 	{
@@ -135,7 +135,7 @@ extension MainWindowController : NSSplitViewDelegate
   {
     return self.splitView.frame.size.width - 370
   }
-  
+
   func splitView(_ splitView: NSSplitView,
 		constrainMinCoordinate proposedMin: CGFloat,
 		ofSubviewAt dividerIndex: Int) -> CGFloat

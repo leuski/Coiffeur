@@ -22,7 +22,7 @@
 import Foundation
 
 class UncrustifyController : CoiffeurController {
-  
+
   fileprivate struct Private {
 		static var VersionArgument = "--version"
     static var ShowDocumentationArgument = "--update-config-with-doc"
@@ -41,14 +41,14 @@ class UncrustifyController : CoiffeurController {
 
     static var Options : String? = nil
   }
-  
+
 	override var pageGuideColumn : Int {
 		if let value = self.optionWithKey(Private.PageGuideKey)?.stringValue,
 			let int = Int(value)
 		{
 			return int
 		}
-		
+
 		return super.pageGuideColumn
 	}
 
@@ -62,24 +62,24 @@ class UncrustifyController : CoiffeurController {
 		return Private.ExecutableName }
 	override class var currentExecutableURLUDKey : String {
 		return Private.ExecutableURLUDKey }
-	
+
   override class var currentExecutableURL : URL? {
     didSet {
       Private.Options = nil
     }
   }
-  
+
 	override class func contentsIsValidInString(_ string:String) -> Bool
 	{
 		let keyValue = NSRegularExpression.aml_re_WithPattern(
 			"^\\s*[a-zA-Z_]+\\s*=\\s*[^#\\s]")
 		return nil != keyValue.firstMatchInString(string)
 	}
-	
+
   override class func createCoiffeur() throws -> CoiffeurController
   {
     let controller = try super.createCoiffeur()
-    
+
 		if Private.Options == nil {
 			Private.Options = try Process(controller.executableURL,
 				arguments: [Private.ShowDocumentationArgument]).run()
@@ -89,27 +89,27 @@ class UncrustifyController : CoiffeurController {
 					arguments: [Private.VersionArgument]).run()
 			}
 		}
-		
+
 		try controller.readOptionsFromString(Private.Options!)
-		
+
 		return controller
   }
-  
+
   override func readOptionsFromLineArray(_ lines:[String]) throws
   {
     var count = 0
     var currentSection : ConfigSection?
 		var currentComment : String = ""
-    
+
     for  aline in lines {
       count += 1
-      
+
       if count == 1 {
         continue
       }
-      
+
       var line = aline.trim()
-      
+
       if line.isEmpty {
 
 				currentComment = currentComment.trim()
@@ -122,17 +122,17 @@ class UncrustifyController : CoiffeurController {
 					}
 					currentComment = ""
 				}
- 
+
 			} else if line.hasPrefix(Private.Comment) {
 
 				line = line.stringByTrimmingPrefix(Private.Comment)
 				currentComment += "\(line)\n"
 
 			} else if let range = line.range(of: Private.Comment) {
-				
+
         let keyValue = String(line[line.startIndex..<range.lowerBound])
 				var type = String(line[range.upperBound...])
-				
+
 				if let (key, value) = _keyValuePairFromString(keyValue) {
 
 					type = type.trim().replacingOccurrences(of: "/",
@@ -154,40 +154,40 @@ class UncrustifyController : CoiffeurController {
 				}
 				currentComment = ""
 			}
-			
+
     }
   }
-		
+
 	fileprivate func _keyValuePairFromString(_ string:String)
 		-> (key:String, value:String)?
 	{
 		var line = string
-		
+
 		if let range = line.range(of: Private.Comment) {
 			line = String(line[line.startIndex..<range.lowerBound])
 		}
-		
+
 		if let range = line.range(of: "=") {
 			line = line.replacingCharacters(in: range, with: " ")
 		}
-		
+
 		while let range = line.range(of: ",") {
 			line = line.replacingCharacters(in: range, with: " ")
 		}
-		
+
 		let tokens = line.commandLineComponents
-		
+
 		if tokens.count == 0 {
 			return nil
 		}
-		
+
 		if tokens.count == 1 {
 			NSLog("Warning: wrong number of arguments %@", line)
 			return nil
 		}
-		
+
 		let head = tokens[0]
-		
+
 		if head == "type" {
 		} else if head == "define" {
 		} else if head == "macro-open" {
@@ -199,24 +199,24 @@ class UncrustifyController : CoiffeurController {
 		} else {
 			return (key:head, value:tokens[1])
 		}
-		
+
 		return nil
 
 	}
-	
+
   override func readValuesFromLineArray(_ lines:[String]) throws
   {
     for aline in lines {
       let line = aline.trim()
-			
+
       if line.isEmpty {
         continue
       }
-      
+
       if line.hasPrefix(Private.Comment) {
         continue
       }
-			
+
 			if let (key, value) = _keyValuePairFromString(line) {
 				if let option = self.optionWithKey(key) {
 					option.stringValue = value
@@ -224,18 +224,18 @@ class UncrustifyController : CoiffeurController {
 					NSLog("Warning: unknown token %@ on line %@", key, line)
 				}
 			}
-			
+
     }
   }
-  
+
   override func writeValuesToURL(_ absoluteURL:URL) throws
   {
     var data=""
-		
+
 		if let version = self.versionString {
 			data += "\(Private.Comment) \(version)\n"
 		}
-		
+
 		let allOptions = try self.managedObjectContext.fetch(ConfigOption.self,
 			sortDescriptors:[CoiffeurController.keySortDescriptor])
 
@@ -245,34 +245,34 @@ class UncrustifyController : CoiffeurController {
 				data += "\(option.indexKey) = \(value)\n"
 			}
 		}
-		
+
 		try data.write(to: absoluteURL, atomically:true,
 					encoding:String.Encoding.utf8)
   }
-  
+
 	override func format(_ arguments:Arguments,
 		completionHandler: @escaping (_:StringResult) -> Void) -> Bool
   {
     let workingDirectory = NSTemporaryDirectory()
     let configURL = URL(fileURLWithPath: workingDirectory).appendingPathComponent(
 			UUID().uuidString)
-		
+
 		do {
 			try self.writeValuesToURL(configURL)
 		} catch let error as NSError {
       completionHandler(StringResult(error))
       return false
     }
-    
+
     var args = [Private.QuietFlag, Private.ConfigPathFlag, configURL.path]
-    
+
 		args.append(Private.LanguageFlag)
 		args.append(arguments.language.uncrustifyID)
-		
+
 		if arguments.fragment {
 			args.append(Private.FragmentFlag)
 		}
-		
+
 		Process(self.executableURL, arguments: args,
 			workingDirectory: workingDirectory).runAsync(arguments.text)
 		{
@@ -280,9 +280,9 @@ class UncrustifyController : CoiffeurController {
 			let _ = try? FileManager.default.removeItem(at: configURL)
 			completionHandler(result)
     }
-    
+
     return true
   }
-	
-  
+
+
 }

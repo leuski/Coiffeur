@@ -25,19 +25,19 @@ import Cocoa
 class Document : NSDocument {
 
   var model : CoiffeurController?
-  
+
   override init()
   {
     super.init()
   }
-  
+
   convenience init(type typeName: String) throws
   {
     self.init()
     self.fileType = typeName
     self.model = try CoiffeurController.coiffeurWithType(typeName)
   }
-  
+
   override var undoManager : UndoManager? {
     get {
       if let model = self.model {
@@ -50,7 +50,7 @@ class Document : NSDocument {
       super.undoManager = um
     }
   }
-  
+
   fileprivate func _ensureWeHaveModelOfType(_ typeName:String,
 		errorFormatKey:String) throws
   {
@@ -63,7 +63,7 @@ class Document : NSDocument {
       self.model = try CoiffeurController.coiffeurWithType(typeName)
     }
   }
-  
+
   override func read(from absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
@@ -71,33 +71,33 @@ class Document : NSDocument {
 
     try self.model!.readValuesFromURL(absoluteURL)
   }
-  
+
   override func write(to absoluteURL: URL, ofType typeName: String) throws
   {
     try self._ensureWeHaveModelOfType(typeName,
 			errorFormatKey:"Cannot write content of document “%2$@” as “%1$@”")
-		
+
     try self.model!.writeValuesToURL(absoluteURL)
   }
-  
+
   override class var autosavesInPlace: Bool
   {
     return true
   }
-  
+
   override func makeWindowControllers()
   {
     self.addWindowController(MainWindowController())
   }
-  
-//  override func canCloseDocumentWithDelegate(delegate: AnyObject, 
+
+//  override func canCloseDocumentWithDelegate(delegate: AnyObject,
 //		shouldCloseSelector: Selector, contextInfo: UnsafeMutablePointer<Void>)
 //  {
 //    self.model?.managedObjectContext.commitEditing()
-//    super.canCloseDocumentWithDelegate(delegate, 
+//    super.canCloseDocumentWithDelegate(delegate,
 //			shouldCloseSelector:shouldCloseSelector, contextInfo:contextInfo)
 //  }
-	
+
   override func writableTypes(for _: NSDocument.SaveOperationType)
 		-> [String]
   {
@@ -107,5 +107,5 @@ class Document : NSDocument {
       return []
     }
   }
-  
+
 }

@@ -45,7 +45,7 @@ class FragariaColor : NSObject {
 
 	@objc var displayName : String {
 		return NSLocalizedString(self.displayNameUDKey, comment: "") }
-	
+
 	@objc var color : NSColor? {
 		get {
 			let UD = UserDefaults.standard
@@ -56,7 +56,7 @@ class FragariaColor : NSObject {
 			UD.setArchivedObject(value, forKey: self.fragariaUDKey)
 		}
 	}
-	
+
 	init(_ fragariaKey : String, _ displayNameKey: String)
 	{
 		self.fragariaUDKey = fragariaKey
@@ -68,7 +68,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 
 	override var toolbarItemImage : NSImage? {
 		return NSImage(named: NSImage.Name(rawValue: "FontAndColors")) }
-	
+
 	@objc let colors = [
 		FragariaColor(MGSFragariaPrefsBackgroundColourWell, "Background"),
 		FragariaColor(MGSFragariaPrefsTextColourWell, "Plain Text"),
@@ -82,7 +82,7 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 		FragariaColor(MGSFragariaPrefsCommandsColourWell, "Commands"),
 		FragariaColor(MGSFragariaPrefsInvisibleCharactersColourWell, "Invisibles")
 	]
-	
+
 	@objc dynamic var font : NSFont? {
 		get {
 			let UD = UserDefaults.standard
@@ -93,19 +93,19 @@ class ColorAndFontPreferences : DefaultPreferencePane {
 			UD.setArchivedObject(value, forKey: MGSFragariaPrefsTextFont)
 		}
 	}
-	
+
 	@objc class func keyPathsForValuesAffectingFontName() -> NSSet
 	{
 		return NSSet(object: "font")
 	}
-	
+
 	@objc dynamic var fontName : String {
 		if let font = self.font {
 			return "\(font.displayName!) \(font.pointSize) pts"
 		}
 		return ""
 	}
-	
+
 	override func changeFont(_ sender: Any?)
 	{
 		self.font = NSFontManager.shared.convert(self.font!)

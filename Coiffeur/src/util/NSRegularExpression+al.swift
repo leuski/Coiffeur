@@ -34,7 +34,7 @@ extension NSRegularExpression {
       fatalError()
     }
 	}
-	
+
 	class func ci_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
     do {
@@ -44,7 +44,7 @@ extension NSRegularExpression {
     fatalError()
     }
 	}
-	
+
 	class func aml_re_WithPattern(_ pattern: String) -> NSRegularExpression
 	{
     do {
@@ -54,13 +54,13 @@ extension NSRegularExpression {
       fatalError()
     }
 	}
-	
+
 	func firstMatchInString(_ string:String) -> NSTextCheckingResult?
 	{
 		return firstMatch(in: string,
 			options: NSRegularExpression.MatchingOptions(), range: string.nsRange)
 	}
-	
+
 	func stringByReplacingMatchesInString(_ string: String,
 		withTemplate template: String) -> String
 	{

@@ -22,11 +22,11 @@
 import Foundation
 
 /**
-setup and exceute a task with arguments, working  directory, and input passed 
-to the task standard input. 
+setup and exceute a task with arguments, working  directory, and input passed
+to the task standard input.
 */
 extension Process {
-	
+
 	/**
 		initializes the task with exetubale url, arguments, and working directory.
 		Sets the standard streams to pipes
@@ -35,13 +35,13 @@ extension Process {
 		workingDirectory:String? = nil)
 	{
 		self.init()
-		
+
 		self.launchPath = url.path
 		self.arguments = arguments
 		if workingDirectory != nil {
 			self.currentDirectoryPath = workingDirectory!
 		}
-		
+
 		self.standardOutput = Pipe()
 		self.standardInput = Pipe()
 		self.standardError = Pipe()
@@ -52,24 +52,24 @@ extension Process {
 		let writeHandle = input != nil
 			? (self.standardInput! as AnyObject).fileHandleForWriting
 			: nil
-		
+
 		self.launch()
-		
+
 		if writeHandle != nil {
 			writeHandle?.write(input!.data(using: String.Encoding.utf8)!)
 			writeHandle?.closeFile()
 		}
-		
+
 		let outHandle = (self.standardOutput! as AnyObject).fileHandleForReading
 		let outData = outHandle?.readDataToEndOfFile()
-		
+
 		let errHandle = (self.standardError! as AnyObject).fileHandleForReading
 		let errData = errHandle?.readDataToEndOfFile()
-		
+
 		self.waitUntilExit()
-		
+
 		let status = self.terminationStatus
-		
+
 		if status == 0 {
 			if let string = String(data:outData!, encoding: String.Encoding.utf8) {
 				return StringResult(string)
@@ -111,7 +111,7 @@ extension Process {
 		 case .failure(let error): throw error
 		}
 	}
-	
+
 	/**
 		Runs the task asynchroniously with the given string as the standard input.
 		Calls the provided block with the string from stadard output or an error

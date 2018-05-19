@@ -94,10 +94,10 @@ extension Process {
     var result: StringResult?
     ALExceptions.`try`({
       result = self._runThrowsNSException(input)
-    }, catch: { (ex:NSException?) in
+    }, catch: { (exception: NSException?) in
       result = StringResult(
         Error("An error while running format executable: %@",
-              ex?.reason ?? "unknown error"))
+              exception?.reason ?? "unknown error"))
     }, finally: {})
     return result!
   }
@@ -120,7 +120,7 @@ extension Process {
    */
   func runAsync(
     _ input: String? = nil,
-    completionHandler:@escaping (_:StringResult)->Void)
+    completionHandler: @escaping (_:StringResult) -> Void)
   {
     DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async(execute: {
       let result = self._run(input)

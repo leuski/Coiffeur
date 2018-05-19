@@ -46,8 +46,8 @@ class Document: NSDocument {
         return super.undoManager
       }
     }
-    set (um) {
-      super.undoManager = um
+    set {
+      super.undoManager = newValue
     }
   }
 

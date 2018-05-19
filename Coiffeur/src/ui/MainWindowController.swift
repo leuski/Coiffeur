@@ -27,6 +27,8 @@ class MainWindowController: NSWindowController {
   var sourceView: SourceView!
   var styleView: CoiffeurView!
 
+  private var observers = [NSKeyValueObservation]()
+
   override init(window: NSWindow?)
   {
     super.init(window: window)
@@ -49,31 +51,39 @@ class MainWindowController: NSWindowController {
     self.sourceView = SourceView()
     self.splitView.addSubview(self.sourceView.view)
 
-    let uncrustify: BlockObserver = { _, _ in self.uncrustify() }
-    self.sourceView.addObserverForKeyPath("language", observer: uncrustify)
-    self.sourceView.addObserverForKeyPath("sourceString",
-                                          options: .initial, observer: uncrustify)
+    observers.append(sourceView.observe(\.language, options: []) {
+      [weak self] _, _ in self?.uncrustify()
+    })
+    observers.append(sourceView.observe(\.sourceString, options: [.initial]) {
+      [weak self] _, _ in self?.uncrustify()
+    })
+    observers.append(observe(
+      \MainWindowController.document, options: [.new, .initial, .old])
+    {
+      [weak self] _, change in self?.handleDocumentChange(change)
+    })
+  }
 
-    self.addObserverForKeyPath("document", options: [.new, .initial, .old]) {
-      (_, change: [AnyHashable: Any]) in
-
-      if let _ = change[NSKeyValueChangeKey.oldKey] as? Document {
-        if self.styleView != nil {
-          self.styleView.view.removeFromSuperviewWithoutNeedingDisplay()
-          self.styleView = nil
-        }
+  private func handleDocumentChange<T>(_ change: NSKeyValueObservedChange<T>) {
+    if let oldValue = change.oldValue, nil != oldValue as? Document {
+      if styleView != nil {
+        styleView.view.removeFromSuperviewWithoutNeedingDisplay()
+        styleView = nil
       }
-
-      if let newDocument = change[NSKeyValueChangeKey.newKey] as? Document  {
-        self.styleView = CoiffeurView()
-        self.splitView.subviews.insert(self.styleView.view, at: 0)
-        self.window?.initialFirstResponder = self.styleView.optionsView
-        self.styleView.representedObject = newDocument.model!
-        newDocument.model!.delegate = self.sourceView
-      }
-
-      self.uncrustify()
     }
+
+    if
+      let newValue = change.newValue,
+      let newDocument = newValue as? Document
+    {
+      styleView = CoiffeurView()
+      splitView.subviews.insert(styleView.view, at: 0)
+      window?.initialFirstResponder = styleView.optionsView
+      styleView.representedObject = newDocument.model!
+      newDocument.model!.delegate = sourceView
+    }
+
+    self.uncrustify()
   }
 
   @IBAction func uncrustify(_ sender: AnyObject? = nil)
@@ -107,8 +117,6 @@ extension MainWindowController: NSWindowDelegate
 {
   func windowWillClose(_ notification: Notification)
   {
-    self.removeAllObservers()
-    self.sourceView.removeAllObservers()
     self.sourceView.representedObject = nil
     self.sourceView = nil
     self.styleView.representedObject = nil

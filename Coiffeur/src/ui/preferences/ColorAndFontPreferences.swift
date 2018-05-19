@@ -48,12 +48,10 @@ class FragariaColor: NSObject {
 
   @objc var color: NSColor? {
     get {
-      let UD = UserDefaults.standard
-      return UD.archivedObjectForKey(self.fragariaUDKey)
+      return UserDefaults.standard.archivedObjectForKey(self.fragariaUDKey)
     }
     set (value) {
-      let UD = UserDefaults.standard
-      UD.setArchivedObject(value, forKey: self.fragariaUDKey)
+      UserDefaults.standard.setArchivedObject(value, forKey: self.fragariaUDKey)
     }
   }
 
@@ -85,12 +83,11 @@ class ColorAndFontPreferences: DefaultPreferencePane {
 
   @objc dynamic var font: NSFont? {
     get {
-      let UD = UserDefaults.standard
-      return UD.archivedObjectForKey(MGSFragariaPrefsTextFont)
+      return UserDefaults.standard.archivedObjectForKey(MGSFragariaPrefsTextFont)
     }
     set (value) {
-      let UD = UserDefaults.standard
-      UD.setArchivedObject(value, forKey: MGSFragariaPrefsTextFont)
+      UserDefaults.standard.setArchivedObject(
+        value, forKey: MGSFragariaPrefsTextFont)
     }
   }
 

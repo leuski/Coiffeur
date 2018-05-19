@@ -82,8 +82,7 @@ class Language: NSObject {
 
   class func languageFromUserDefaults() -> Language
   {
-    let UD = UserDefaults.standard
-    if let uti = UD.string(forKey: Private.UserDefaultsKey) {
+    if let uti = UserDefaults.standard.string(forKey: Private.UserDefaultsKey) {
       if let language = Language.languageWithUTI(uti) {
         return language
       }

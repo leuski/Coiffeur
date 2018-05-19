@@ -32,7 +32,8 @@ class OutlineView: NSOutlineView {
 
   override func keyDown(with theEvent: NSEvent)
   {
-    let mods = theEvent.modifierFlags.intersection((NSEvent.ModifierFlags.shift.union(NSEvent.ModifierFlags.option).union(NSEvent.ModifierFlags.command).union(NSEvent.ModifierFlags.control)))
+    let mods = theEvent.modifierFlags
+      .intersection([.shift, .option, .command, .control])
 
     if Int(theEvent.keyCode) == kVK_RightArrow {
       if mods == NSEvent.ModifierFlags.command {

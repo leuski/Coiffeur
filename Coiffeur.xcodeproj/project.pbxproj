@@ -46,7 +46,6 @@
 		62B0C3691AC7C73600A91E0C /* ClangFormatStyleOptions.rst in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */; };
 		62B0C36E1AC7DE3A00A91E0C /* clang-format in Resources */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; };
 		62B0C36F1AC7DE3D00A91E0C /* clang-format in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62B0C36D1AC7DE3A00A91E0C /* clang-format */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		62B64F5A1AE4C7BB009C53EE /* NSObject+al.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B64F591AE4C7BB009C53EE /* NSObject+al.swift */; };
 		62D1C3001AC34C7500B7F996 /* CoiffeurTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D1C2FF1AC34C7500B7F996 /* CoiffeurTests.m */; };
 		62EC8A241AD354F00068E9AD /* ALExceptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 62EC8A231AD354F00068E9AD /* ALExceptions.m */; };
 		62F263281AD4DD30000B5DFE /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F263271AD4DD30000B5DFE /* Error.swift */; };
@@ -210,7 +209,6 @@
 		62A77BA220B0BE8B00B9099E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .swiftlint.yml; sourceTree = "<group>"; };
 		62B0C3681AC7C73600A91E0C /* ClangFormatStyleOptions.rst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ClangFormatStyleOptions.rst; sourceTree = "<group>"; };
 		62B0C36D1AC7DE3A00A91E0C /* clang-format */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "clang-format"; sourceTree = "<group>"; };
-		62B64F591AE4C7BB009C53EE /* NSObject+al.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+al.swift"; sourceTree = "<group>"; };
 		62D1C2DD1AC34C7500B7F996 /* Coiffeur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coiffeur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D1C2F91AC34C7500B7F996 /* CoiffeurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoiffeurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D1C2FE1AC34C7500B7F996 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -441,7 +439,6 @@
 				6275AEBB1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.h */,
 				6275AEBC1AD48FC600671D12 /* DiffMatchPatch+ALSwiftEnum.m */,
 				62F263271AD4DD30000B5DFE /* Error.swift */,
-				62B64F591AE4C7BB009C53EE /* NSObject+al.swift */,
 				6248C5491AE2076D005ED75A /* NSRegularExpression+al.swift */,
 				6248C5471AE1FAEB005ED75A /* NSTask+al.swift */,
 				6210563E1AEC1EDC00D17964 /* NSTreeController+al.swift */,
@@ -683,7 +680,6 @@
 				6275AEB81AD4734600671D12 /* Document.swift in Sources */,
 				62F9F1D51AD23B26002B7F1B /* OutlineView.swift in Sources */,
 				62F9F1B91AD1A7A7002B7F1B /* ConfigOption.swift in Sources */,
-				62B64F5A1AE4C7BB009C53EE /* NSObject+al.swift in Sources */,
 				62F9F1D31AD23127002B7F1B /* NSSegmentedControl+al.swift in Sources */,
 				62F9F1BF1AD1A7EC002B7F1B /* Config.swift in Sources */,
 				620668DC1ADAF3CB00F807B0 /* ColorAndFontPreferences.swift in Sources */,

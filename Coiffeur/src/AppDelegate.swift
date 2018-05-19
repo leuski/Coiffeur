@@ -45,16 +45,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   override init()
   {
     super.init()
-    let _ = DocumentController() // load ours...
+    _ = DocumentController() // load ours...
 
     MGSFragaria.initializeFramework()
 
     let bundle = Bundle(for: type(of: self))
-    if let UDURL = bundle.url(forResource: Private.UserDefaultsFileName,
-                              withExtension: Private.UserDefaultsFileNameExtension),
-      let ud = NSDictionary(contentsOf: UDURL) as? [String: AnyObject]
+    if
+      let UDURL = bundle.url(
+        forResource: Private.UserDefaultsFileName,
+        withExtension: Private.UserDefaultsFileNameExtension),
+      let defaults = NSDictionary(contentsOf: UDURL) as? [String: AnyObject]
     {
-      UserDefaults.standard.register(defaults: ud)
+      UserDefaults.standard.register(defaults: defaults)
     }
   }
 
@@ -70,19 +72,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var count = 0
 
     for aClass in CoiffeurController.availableTypes {
-      let item = NSMenuItem(title: aClass.documentType,
-                            action: #selector(AppDelegate.openUntitledDocumentOfType(_:)), keyEquivalent: "")
+      let item = NSMenuItem(
+        title: aClass.documentType,
+        action: #selector(AppDelegate.openUntitledDocumentOfType(_:)),
+        keyEquivalent: "")
       item.representedObject = aClass.documentType
 
-      if (count < 2) {
+      if count < 2 {
         item.keyEquivalent = "n"
         var mask = NSEvent.ModifierFlags.command
 
-        if (count > 0) {
-          mask = mask.union(NSEvent.ModifierFlags.option)
+        if count > 0 {
+          mask = mask.union(.option)
         }
 
-        item.keyEquivalentModifierMask = NSEvent.ModifierFlags(rawValue: UInt(Int(mask.rawValue)))
+        item.keyEquivalentModifierMask = mask
       }
 
       self.makeNewDocumentMenu.addItem(item)

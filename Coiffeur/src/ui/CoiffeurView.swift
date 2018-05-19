@@ -29,6 +29,8 @@ class CoiffeurView: NSViewController {
 
   fileprivate var rowHeightCache = Dictionary<String,CGFloat>()
 
+  private var observer: NSKeyValueObservation?
+
   override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "CoiffeurView"),
                 bundle nibBundleOrNil: Bundle? = nil)
   {
@@ -42,8 +44,11 @@ class CoiffeurView: NSViewController {
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    self.addOneShotObserverForKeyPath("optionsController.content") {
-      _, _ in self._finishSettingUpView()
+
+    observer = observe(\.optionsController.content, options: [.new]) {
+      [weak self] _, _ in
+      self?._finishSettingUpView()
+      self?.observer = nil
     }
   }
 

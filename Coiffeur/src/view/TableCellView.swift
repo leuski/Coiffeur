@@ -18,20 +18,18 @@ class TableCellView: NSTableCellView {
       if let cell = self.textField?.cell() as? NSCell {
         cell.backgroundStyle = self.backgroundStyle
       }
-      
+
       // Otherwise you need to change the color manually
       switch (self.backgroundStyle) {
       case NSBackgroundStyle.Light:
         if let textField = self.textField {
           textField.textColor = NSColor(calibratedWhite: 0.0, alpha: 1.0)
         }
-        break
 
       default:
         if let textField = self.textField {
           textField.textColor = NSColor(calibratedWhite: 1.0, alpha: 1.0)
         }
-        break
       }
     }
   }

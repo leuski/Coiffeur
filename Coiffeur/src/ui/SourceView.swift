@@ -89,22 +89,22 @@ class SourceView: NSViewController {
     get {
       // we will try and preserve visible frame position in the source document
       // across changes.
-      let (_, visRect, maxScrollLocation) = _scrollLocation()
+      let (visRect, maxScrollLocation) = _scrollLocation(fragaria.textView())
       let relativeScrollLocation = (maxScrollLocation > 0)
         ? visRect.origin.y / maxScrollLocation
         : 0
       return relativeScrollLocation
     }
     set (relativeScrollLocation) {
-      var (textView, visRect, maxScrollLocation) = _scrollLocation()
+      var (visRect, maxScrollLocation) = _scrollLocation(fragaria.textView())
       visRect.origin.y = round(relativeScrollLocation * maxScrollLocation)
       visRect.origin.x = 0
-      textView.scrollToVisible(visRect)
+      fragaria.textView().scrollToVisible(visRect)
     }
   }
 
-  fileprivate func _scrollLocation()
-    -> (textView: NSTextView, visRect: NSRect, maxScrollLocaiton: CGFloat)
+  fileprivate func _scrollLocation(_ textView: NSTextView)
+    -> (visRect: NSRect, maxScrollLocaiton: CGFloat)
   {
     let textView: NSTextView     = self.fragaria.textView()
     let textStorage   = textView.textStorage!
@@ -131,8 +131,7 @@ class SourceView: NSViewController {
     //                                      visRect.origin.y, maxScrollLocation,
     // relativeScrollLocation, textStorage.string.length)
 
-    return (textView:textView, visRect:visRect,
-            maxScrollLocaiton:maxScrollLocation)
+    return (visRect:visRect, maxScrollLocaiton:maxScrollLocation)
   }
 
   override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "SourceView"),

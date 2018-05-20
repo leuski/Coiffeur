@@ -20,6 +20,10 @@ file_length:
   warning: 600
   error: 1200
 
+function_body_length:
+  warning: 60
+  error: 120
+
 nesting:
   type_level:
     warning: 3

@@ -122,12 +122,12 @@ extension Process {
     _ input: String? = nil,
     completionHandler: @escaping (_:StringResult) -> Void)
   {
-    DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async(execute: {
+    DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
       let result = self._run(input)
-      DispatchQueue.main.async(execute: {
+      DispatchQueue.main.async {
         completionHandler(result)
-      })
-    })
+      }
+    }
   }
 
 }

@@ -194,6 +194,7 @@ class ClangFormatController: CoiffeurController {
 
     for aLine in lines {
       var line = aLine
+      
       if !isInDoc {
         if line.hasPrefix(".. START_FORMAT_STYLE_OPTIONS") {
           isInDoc = true

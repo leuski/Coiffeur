@@ -103,7 +103,7 @@ class SourceView: NSViewController {
     }
   }
 
-  fileprivate func _scrollLocation(_ textView: NSTextView)
+  private func _scrollLocation(_ textView: NSTextView)
     -> (visRect: NSRect, maxScrollLocaiton: CGFloat)
   {
     let textView: NSTextView     = self.fragaria.textView()
@@ -170,7 +170,7 @@ class SourceView: NSViewController {
     scrollView.verticalScroller!.scrollerStyle = NSScroller.Style.legacy
   }
 
-  fileprivate func _showDiffs(_ diffs: NSMutableArray, intensity: CGFloat)
+  private func _showDiffs(_ diffs: NSMutableArray, intensity: CGFloat)
     -> [OverviewRegion]
   {
     let textStorage = self.fragaria.textView().textStorage!
@@ -312,7 +312,7 @@ extension SourceView: NSPathControlDelegate {
     return false
   }
 
-  fileprivate func _allowedURLForItem(_ draggingItem: NSDraggingItem) -> URL?
+  private func _allowedURLForItem(_ draggingItem: NSDraggingItem) -> URL?
   {
     if
       let url  = draggingItem.item as? URL,
@@ -328,7 +328,7 @@ extension SourceView: NSPathControlDelegate {
 
 extension SourceView {
 
-  fileprivate struct Private {
+  private struct Private {
     static let LastSourceURLUDKey    = "LastSourceURL"
     static let SamplesFolderName     = "samples"
     static let SampleFileName        = "sample"
@@ -381,7 +381,7 @@ extension SourceView {
     return true
   }
 
-  fileprivate func _restoreSource()
+  private func _restoreSource()
   {
     if
       let lastURL = UserDefaults.standard.url(
@@ -403,7 +403,7 @@ extension SourceView {
     }
   }
 
-  fileprivate class func _knownSampleURLs() -> [URL]
+  private class func _knownSampleURLs() -> [URL]
   {
     let resourcesURL = Bundle.main.resourceURL!
     let baseURL = resourcesURL.appendingPathComponent(

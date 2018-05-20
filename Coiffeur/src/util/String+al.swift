@@ -97,7 +97,7 @@ extension String {
     return self[self.startIndex..<nextIndex].capitalized + self[nextIndex...]
   }
 
-  fileprivate func _stringByQuoting(_ quote: Character) -> String
+  private func _stringByQuoting(_ quote: Character) -> String
   {
     let backSpace: Character = "\\"
     var result = ""

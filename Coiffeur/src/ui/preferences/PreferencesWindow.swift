@@ -61,11 +61,11 @@ class DefaultPreferencePane: NSViewController, PreferencePane {
   }
   var toolbarItemImage: NSImage? { return nil }
 
-  fileprivate var _referenceClassName: String {
+  private var _referenceClassName: String {
     return self._unqualifiedClassName
   }
 
-  fileprivate var _unqualifiedClassName: String {
+  private var _unqualifiedClassName: String {
     let name = type(of: self).className()
     if let range = name.range(of: ".", options: NSString.CompareOptions(),
                               range: name.startIndex..<name.endIndex, locale: nil)
@@ -146,8 +146,8 @@ class PreferencesWindow: NSWindowController {
     }
   }
 
-  fileprivate var storedSelectedPane: Pane?
-  fileprivate let selectedPaneUDKey = "selectedPaneUDKey"
+  private var storedSelectedPane: Pane?
+  private let selectedPaneUDKey = "selectedPaneUDKey"
 
   var toolbarItemIdentifiers: [NSToolbarItem.Identifier] {
     return self.panes.map { NSToolbarItem.Identifier(rawValue: $0.toolbarIdentifier) }

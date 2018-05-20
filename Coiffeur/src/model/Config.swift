@@ -112,7 +112,7 @@ extension ConfigNode {
     return _insertConfigNode(managedObjectContext, parent: parent, title: title)
   }
 
-  fileprivate class func _insertConfigNode<T: ConfigNode>(
+  private class func _insertConfigNode<T: ConfigNode>(
     _ managedObjectContext: NSManagedObjectContext,
     parent: ConfigNode?,
     title: String) -> T
@@ -184,7 +184,7 @@ extension ConfigOption {
     return _insertConfigOption(managedObjectContext, parent: parent, title: title)
   }
 
-  fileprivate class func _insertConfigOption<T: ConfigOption>(
+  private class func _insertConfigOption<T: ConfigOption>(
     _ managedObjectContext: NSManagedObjectContext,
     parent: ConfigNode?, title: String) -> T
   {
@@ -202,7 +202,7 @@ extension ConfigOption {
 }
 
 extension ConfigSection {
-  fileprivate struct Private {
+  private struct Private {
     static let titleSortDescriptors = [
       NSSortDescriptor(
         key: "title", ascending: true,
@@ -218,7 +218,7 @@ extension ConfigSection {
   // I want to cache filtered children, so I do not run the filter unnecessarily
   // the cache goes into storedFilteredChildren
   // I need to reset the cache every time the predicate is updated
-  fileprivate var _filteredChildren: NSOrderedSet {
+  private var _filteredChildren: NSOrderedSet {
     if let predicate = self.predicate {
       return self.children.filtered(using: predicate)
     } else {
@@ -276,7 +276,7 @@ extension ConfigSection {
     didChangeValue(forKey: "filteredChildren")
   }
 
-  fileprivate func _digitsIn(_ number: Int) -> Int
+  private func _digitsIn(_ number: Int) -> Int
   {
     return Int(floor(log10(Double(number))))
   }

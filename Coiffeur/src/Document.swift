@@ -51,7 +51,7 @@ class Document: NSDocument {
     }
   }
 
-  fileprivate func _ensureWeHaveModelOfType(
+  private func _ensureWeHaveModelOfType(
     _ typeName: String,
     errorFormatKey: String) throws
   {

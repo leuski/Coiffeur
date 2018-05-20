@@ -49,7 +49,7 @@ extension Process {
     self.standardError = Pipe()
   }
 
-  fileprivate func _runThrowsNSException(_ input: String?) -> StringResult
+  private func _runThrowsNSException(_ input: String?) -> StringResult
   {
     let writeHandle = input != nil
       ? (self.standardInput! as AnyObject).fileHandleForWriting
@@ -89,7 +89,7 @@ extension Process {
     }
   }
 
-  fileprivate func _run(_ input: String? = nil) -> StringResult
+  private func _run(_ input: String? = nil) -> StringResult
   {
     var result: StringResult?
     ALExceptions.`try`({

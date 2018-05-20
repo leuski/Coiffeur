@@ -23,12 +23,10 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-  fileprivate struct Private {
-    static fileprivate let AboutFileName = "about"
-    static fileprivate let AboutFileNameExtension = "html"
-    static fileprivate let UserDefaultsFileNameExtension = "plist"
-    static fileprivate let UserDefaultsFileName   = "UserDefaults"
-  }
+  static private let AboutFileName = "about"
+  static private let AboutFileNameExtension = "html"
+  static private let UserDefaultsFileNameExtension = "plist"
+  static private let UserDefaultsFileName   = "UserDefaults"
 
   @IBOutlet weak var languagesMenu: NSMenu!
   @IBOutlet weak var makeNewDocumentMenu: NSMenu!
@@ -38,8 +36,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @objc var aboutURL: URL? {
-    return self.bundle.url(forResource: Private.AboutFileName,
-                           withExtension: Private.AboutFileNameExtension)
+    return self.bundle.url(forResource: AppDelegate.AboutFileName,
+                           withExtension: AppDelegate.AboutFileNameExtension)
   }
 
   override init()
@@ -52,8 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let bundle = Bundle(for: type(of: self))
     if
       let UDURL = bundle.url(
-        forResource: Private.UserDefaultsFileName,
-        withExtension: Private.UserDefaultsFileNameExtension),
+        forResource: AppDelegate.UserDefaultsFileName,
+        withExtension: AppDelegate.UserDefaultsFileNameExtension),
       let defaults = NSDictionary(contentsOf: UDURL) as? [String: AnyObject]
     {
       UserDefaults.standard.register(defaults: defaults)
@@ -63,8 +61,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification)
   {
     for language in Language.supportedLanguages {
-      let item = NSMenuItem(title: language.displayName,
-                            action: #selector(MainWindowController.changeLanguage(_:)), keyEquivalent: "")
+      let item = NSMenuItem(
+        title: language.displayName,
+        action: #selector(MainWindowController.changeLanguage(_:)),
+        keyEquivalent: "")
       item.representedObject = language
       self.languagesMenu.addItem(item)
     }

@@ -32,7 +32,7 @@ class DocumentController: NSDocumentController {
   }
 
   @discardableResult
-  fileprivate func _classForType(_ type: String) throws -> CoiffeurController.Type
+  private func _classForType(_ type: String) throws -> CoiffeurController.Type
   {
     for aClass in CoiffeurController.availableTypes
       where type == aClass.documentType

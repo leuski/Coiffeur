@@ -27,7 +27,7 @@ class CoiffeurView: NSViewController {
   @IBOutlet weak var jumpMenu: NSPopUpButton!
   @IBOutlet var optionsController: NSTreeController!
 
-  fileprivate var rowHeightCache = [String: CGFloat]()
+  private var rowHeightCache = [String: CGFloat]()
 
   private var observer: NSKeyValueObservation?
 
@@ -52,7 +52,7 @@ class CoiffeurView: NSViewController {
     }
   }
 
-  fileprivate func _finishSettingUpView()
+  private func _finishSettingUpView()
   {
     self.optionsView.expandItem(nil, expandChildren: true)
 
@@ -91,7 +91,7 @@ extension CoiffeurView: NSOutlineViewDelegate {
     return false
   }
 
-  fileprivate func _rowViewIdentifierForItem(_ item: AnyObject) -> String?
+  private func _rowViewIdentifierForItem(_ item: AnyObject) -> String?
   {
     if let node = item.representedObject as? ConfigNode {
       if node is ConfigOption {
@@ -103,7 +103,7 @@ extension CoiffeurView: NSOutlineViewDelegate {
     return nil
   }
 
-  fileprivate func _cellViewIdentifierForItem(_ item: AnyObject) -> String?
+  private func _cellViewIdentifierForItem(_ item: AnyObject) -> String?
   {
     if let node = item.representedObject as? ConfigNode {
       let tokens = node.tokens
@@ -145,8 +145,9 @@ extension CoiffeurView: NSOutlineViewDelegate {
     return nil
   }
 
-  fileprivate func _outlineView(_ outlineView: NSOutlineView,
-                                heightOfRowByIdentifier identifier: String) -> CGFloat
+  private func _outlineView(
+    _ outlineView: NSOutlineView,
+    heightOfRowByIdentifier identifier: String) -> CGFloat
   {
     if let height = rowHeightCache[identifier] {
       return height

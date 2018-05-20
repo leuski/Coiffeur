@@ -174,10 +174,11 @@ class CoiffeurController: NSObject {
     self.managedObjectModel = managedObjectModel
     self.managedObjectContext = managedObjectContext
     super.init()
-    NotificationCenter.default.addObserver(self,
-                                           selector: #selector(CoiffeurController.modelDidChange(_:)),
-                                           name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
-                                           object: self.managedObjectContext)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(CoiffeurController.modelDidChange(_:)),
+      name: NSNotification.Name.NSManagedObjectContextObjectsDidChange,
+      object: self.managedObjectContext)
   }
 
   deinit {
@@ -268,7 +269,7 @@ class CoiffeurController: NSObject {
     }
   }
 
-  fileprivate func _clusterOptions()
+  private func _clusterOptions()
   {
     for index in stride(from: 8, to: 1, by: -1) {
       self._cluster(index)
@@ -292,7 +293,7 @@ class CoiffeurController: NSObject {
     self.root?.sortAndIndexChildren()
   }
 
-  fileprivate func _splitTokens(_ title: String, boundary: Int, stem: Bool = false)
+  private func _splitTokens(_ title: String, boundary: Int, stem: Bool = false)
     -> (head: [String], tail: [String])
   {
     let tokens = title.components(separatedBy: " ")
@@ -321,7 +322,7 @@ class CoiffeurController: NSObject {
     return (head:head, tail:tail)
   }
 
-  fileprivate func _cluster(_ tokenLimit: Int)
+  private func _cluster(_ tokenLimit: Int)
   {
     for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }
@@ -371,7 +372,7 @@ class CoiffeurController: NSObject {
     }
   }
 
-  fileprivate func _makeOthersSubsection()
+  private func _makeOthersSubsection()
   {
     for child in self.root!.children  {
       guard let section = child as? ConfigSection else { continue }

@@ -23,7 +23,7 @@ import Foundation
 
 class ClangFormatController: CoiffeurController {
 
-  fileprivate struct Private {
+  private struct Private {
     static var DocumentationFileName = "ClangFormatStyleOptions"
     static var DocumentationFileExtension = "rst"
     static var ShowDefaultConfigArgument = "-dump-config"
@@ -111,7 +111,7 @@ class ClangFormatController: CoiffeurController {
     return controller
   }
 
-  fileprivate class func _cleanUpRST(_ string: String) -> String
+  private class func _cleanUpRST(_ string: String) -> String
   {
     var rst = string
     rst = rst.trim()
@@ -168,7 +168,7 @@ class ClangFormatController: CoiffeurController {
     return rst
   }
 
-  fileprivate func _closeOption(_ option: inout ConfigOption?)
+  private func _closeOption(_ option: inout ConfigOption?)
   {
     if let opt = option {
       opt.title = ClangFormatController._cleanUpRST(opt.title)

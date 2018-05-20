@@ -23,7 +23,7 @@ import Foundation
 
 class UncrustifyController: CoiffeurController {
 
-  fileprivate struct Private {
+  private struct Private {
     static var VersionArgument = "--version"
     static var ShowDocumentationArgument = "--update-config-with-doc"
     static var ShowDefaultConfigArgument = "--update-config"
@@ -158,7 +158,7 @@ class UncrustifyController: CoiffeurController {
     }
   }
 
-  fileprivate func _keyValuePairFromString(_ string: String)
+  private func _keyValuePairFromString(_ string: String)
     -> (key: String, value: String)?
   {
     var line = string

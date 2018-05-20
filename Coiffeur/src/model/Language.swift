@@ -23,41 +23,14 @@ import Cocoa
 
 class Language: NSObject {
 
-  fileprivate struct Private {
-    fileprivate static let supportedLanguages = Language._supportedLanguages()
-    fileprivate static let FileName = "languages"
-    fileprivate static let FileNameExtension = "plist"
-    fileprivate static let UserDefaultsKey = "Language"
-  }
+  private static let FileName = "languages"
+  private static let FileNameExtension = "plist"
+  private static let UserDefaultsKey = "Language"
 
-  class var supportedLanguages: [Language] {
-    return Private.supportedLanguages }
-
-  class var supportedLanguageUTIs: [String] {
-    var types = Set<String>()
-    for  language in Language.supportedLanguages {
-      types.formUnion(language.UTIs)
-    }
-    return [String](types)
-  }
-
-  @objc fileprivate(set) var uncrustifyID = ""
-  @objc fileprivate(set) var displayName = ""
-  @objc fileprivate(set) var fragariaID = ""
-  @objc fileprivate(set) var UTIs = [String]()
-  @objc fileprivate(set) var clangFormatID: String?
-
-  var defaultExtension: String? {
-    return UTIs.isEmpty
-      ? nil
-      : NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
-  }
-
-  fileprivate class func _supportedLanguages() -> [Language]
-  {
-    let bundle = Bundle(for: self)
-    if let url = bundle.url(forResource: Private.FileName,
-                            withExtension: Private.FileNameExtension)
+  static var supportedLanguages: [Language] = {
+    let bundle = Bundle(for: Language.self)
+    if let url = bundle.url(forResource: Language.FileName,
+                            withExtension: Language.FileNameExtension)
     {
       if let dictionaries = NSArray(contentsOf: url) {
         var result = [Language]()
@@ -68,6 +41,26 @@ class Language: NSObject {
       }
     }
     return []
+  }()
+
+  class var supportedLanguageUTIs: [String] {
+    var types = Set<String>()
+    for  language in Language.supportedLanguages {
+      types.formUnion(language.UTIs)
+    }
+    return [String](types)
+  }
+
+  @objc private(set) var uncrustifyID = ""
+  @objc private(set) var displayName = ""
+  @objc private(set) var fragariaID = ""
+  @objc private(set) var UTIs = [String]()
+  @objc private(set) var clangFormatID: String?
+
+  var defaultExtension: String? {
+    return UTIs.isEmpty
+      ? nil
+      : NSWorkspace.shared.preferredFilenameExtension(forType: UTIs[0])
   }
 
   class func languageWithUTI(_ uti: String) -> Language? {
@@ -77,7 +70,7 @@ class Language: NSObject {
   class func languageFromUserDefaults() -> Language
   {
     if
-      let uti = UserDefaults.standard.string(forKey: Private.UserDefaultsKey),
+      let uti = UserDefaults.standard.string(forKey: Language.UserDefaultsKey),
       let language = Language.languageWithUTI(uti)
     {
         return language
@@ -85,7 +78,7 @@ class Language: NSObject {
     return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
   }
 
-  fileprivate init(dictionary: [String: AnyObject])
+  private init(dictionary: [String: AnyObject])
   {
     super.init()
     setValuesForKeys(dictionary)
@@ -94,8 +87,7 @@ class Language: NSObject {
   func saveToUserDefaults()
   {
     if !UTIs.isEmpty {
-      UserDefaults.standard.setValue(UTIs[0],
-                                     forKey: Private.UserDefaultsKey)
+      UserDefaults.standard.setValue(UTIs[0], forKey: Language.UserDefaultsKey)
     }
   }
 }

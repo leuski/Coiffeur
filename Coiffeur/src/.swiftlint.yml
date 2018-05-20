@@ -3,7 +3,7 @@ disabled_rules: # rule identifiers to exclude from running
   - closure_parameter_position
 #   - type_name
   - todo
-#   - trailing_whitespace
+  - trailing_whitespace
 #   - cyclomatic_complexity
 #  - discarded_notification_center_observer # broken. Warns if we store in array
 #  - identifier_name # warns about unicode symbols

@@ -36,8 +36,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   }
 
   @objc var aboutURL: URL? {
-    return self.bundle.url(forResource: AppDelegate.AboutFileName,
-                           withExtension: AppDelegate.AboutFileNameExtension)
+    return self.bundle.url(
+      forResource: AppDelegate.AboutFileName,
+      withExtension: AppDelegate.AboutFileNameExtension)
   }
 
   override init()
@@ -52,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       let UDURL = bundle.url(
         forResource: AppDelegate.UserDefaultsFileName,
         withExtension: AppDelegate.UserDefaultsFileNameExtension),
-      let defaults = NSDictionary(contentsOf: UDURL) as? [String: AnyObject]
+      let defaults = NSDictionary(contentsOf: UDURL) as? [String: Any]
     {
       UserDefaults.standard.register(defaults: defaults)
     }
@@ -108,8 +109,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         controller.addDocument(document)
         document.makeWindowControllers()
         document.showWindows()
-      } catch let err as NSError {
-        NSApp.presentError(err)
+      } catch let error {
+        NSApp.presentError(error)
       }
     }
   }

@@ -39,7 +39,7 @@ class DocumentController: NSDocumentController {
     {
       return aClass
     }
-    throw Error("Unknown type \(type)")
+    throw Errors.unknownType(type)
   }
 
   override func typeForContents(of url: URL) throws -> String
@@ -55,7 +55,7 @@ class DocumentController: NSDocumentController {
       }
     }
 
-    throw Error("Unknown data at URL \(url)")
+    throw Errors.unknownData(url)
   }
 
 }

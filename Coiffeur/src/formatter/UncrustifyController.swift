@@ -138,10 +138,9 @@ class UncrustifyController: CoiffeurController {
           type = type.trim().replacingOccurrences(of: "/",
                                                   with: ConfigNode.typeSeparator)
           currentComment = currentComment.trim()
-          let option = ConfigOption.objectInContext(self.managedObjectContext,
-                                                    parent: currentSection,
-                                                    title: currentComment.components(
-                                                      separatedBy: CharacterSet.newlines)[0])
+          let option = ConfigOption.objectInContext(
+            self.managedObjectContext, parent: currentSection,
+            title: currentComment.components(separatedBy: CharacterSet.newlines)[0])
           option.indexKey = key
           option.stringValue = value
           option.documentation = currentComment
@@ -252,7 +251,7 @@ class UncrustifyController: CoiffeurController {
 
     do {
       try self.writeValuesToURL(configURL)
-    } catch let error as NSError {
+    } catch let error {
       completionHandler(StringResult(error))
       return false
     }

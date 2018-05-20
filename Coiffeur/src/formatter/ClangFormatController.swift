@@ -92,9 +92,7 @@ class ClangFormatController: CoiffeurController {
         Private.Options = try String(contentsOf: docURL,
                                      encoding: String.Encoding.utf8)
       } else {
-        throw Error(
-          "Cannot find %@.%@",
-          Private.DocumentationFileName,
+        throw Errors.failedToFindFile(Private.DocumentationFileName,
           Private.DocumentationFileExtension)
       }
     }
@@ -176,6 +174,23 @@ class ClangFormatController: CoiffeurController {
     }
   }
 
+  private func optionType(for nativeType: String) -> String {
+    switch nativeType {
+    case "bool":
+      return "false,true"
+    case "unsigned":
+      return OptionType.unsigned.rawValue
+    case "int":
+      return OptionType.signed.rawValue
+    case "std::string":
+      return OptionType.string.rawValue
+    case "std::vector<std::string>":
+      return OptionType.stringList.rawValue
+    default:
+      return ""
+    }
+  }
+
   override func readOptionsFromLineArray(_ lines: [String]) throws
   {
     let section = ConfigSection.objectInContext(
@@ -214,28 +229,12 @@ class ClangFormatController: CoiffeurController {
         self._closeOption(&currentOption)
 
         let newOption = ConfigOption.objectInContext(
-          self.managedObjectContext, parent: section)
-        newOption.indexKey   = line.substringWithRange(match.range(at: 1))
-        isInTitle            = true
-        let type             = line.substringWithRange(match.range(at: 2))
-
-        switch type {
-        case "bool":
-          newOption.type = "false,true"
-        case "unsigned":
-          newOption.type = OptionType.unsigned.rawValue
-        case "int":
-          newOption.type = OptionType.signed.rawValue
-        case "std::string":
-          newOption.type = OptionType.string.rawValue
-        case "std::vector<std::string>":
-          newOption.type = OptionType.stringList.rawValue
-        default:
-          newOption.type = ""
-        }
+          managedObjectContext, parent: section)
+        newOption.indexKey = line.substringWithRange(match.range(at: 1))
+        newOption.type = optionType(for: line.substringWithRange(match.range(at: 2)))
+        isInTitle = true
 
         currentOption = newOption
-
         continue
       }
 
@@ -332,7 +331,7 @@ class ClangFormatController: CoiffeurController {
 
     do {
       try self.writeValuesToURL(configURL)
-    } catch let error as NSError {
+    } catch let error {
       completionHandler(StringResult(error))
       return false
     }

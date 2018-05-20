@@ -43,11 +43,11 @@ class CoiffeurController: NSObject {
     }
   }
 
-  enum OptionType: Swift.String {
-    case signed = "signed"
-    case unsigned = "unsigned"
-    case string = "string"
-    case stringList = "stringList"
+  enum OptionType: String {
+    case signed
+    case unsigned
+    case string
+    case stringList
   }
 
   class var availableTypes: [CoiffeurController.Type] {
@@ -79,9 +79,7 @@ class CoiffeurController: NSObject {
         } else {
           UserDefaults.standard.removeObject(
             forKey: self.currentExecutableURLUDKey)
-          NSApp.presentError(Error(
-            "Cannot locate executable at %@. Using the default application",
-            url.path))
+          NSApp.presentError(Errors.failedLocateExecutable(url))
         }
       }
       return self.defaultExecutableURL
@@ -122,7 +120,7 @@ class CoiffeurController: NSObject {
     if let url = self.currentExecutableURL {
       return url
     }
-    throw Error("Format executable URL is not specified")
+    throw Errors.noFormatExecutableURL
   }
 
   class func createCoiffeur() throws -> CoiffeurController
@@ -130,26 +128,24 @@ class CoiffeurController: NSObject {
     let url = try self.findExecutableURL()
 
     let bundles = [Bundle(for: CoiffeurController.self)]
-    if let originalModel = NSManagedObjectModel.mergedModel(from: bundles)
-    {
-      let mom = originalModel //.copyForModuleWithClass(ConfigNode.self)
-      let concurrency
-        = NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType
-      let moc = NSManagedObjectContext(concurrencyType: concurrency)
-      moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(
-        managedObjectModel: mom)
-      if let psc = moc.persistentStoreCoordinator {
-        try psc.addPersistentStore(ofType: NSInMemoryStoreType,
-                                   configurationName: nil, at: nil, options: nil)
-      } else {
-        throw Error("Failed to initialize coiffeur persistent store coordinator")
-      }
-      moc.undoManager = UndoManager()
-      return self.init(executableURL: url,
-                       managedObjectModel: mom, managedObjectContext: moc)
-    } else {
-      throw Error("Failed to initialize coiffeur managed object model")
-    }
+    guard let mom = NSManagedObjectModel.mergedModel(from: bundles)
+      else { throw Errors.failedToInitializeManagedObjectModel }
+
+    let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    moc.persistentStoreCoordinator = NSPersistentStoreCoordinator(
+      managedObjectModel: mom)
+
+    guard let psc = moc.persistentStoreCoordinator
+      else { throw Errors.failedToInitializeStoreCoordinator }
+
+    try psc.addPersistentStore(
+      ofType: NSInMemoryStoreType, configurationName: nil,
+      at: nil, options: nil)
+
+    moc.undoManager = UndoManager()
+
+    return self.init(
+      executableURL: url, managedObjectModel: mom, managedObjectContext: moc)
   }
 
   class func coiffeurWithType(_ type: String) throws -> CoiffeurController
@@ -159,7 +155,7 @@ class CoiffeurController: NSObject {
     {
       return try coiffeurClass.createCoiffeur()
     }
-    throw Error("Unknown document type “%@”", type)
+    throw Errors.unknownType(type)
   }
 
   class func contentsIsValidInString(_ string: String) -> Bool
@@ -201,7 +197,7 @@ class CoiffeurController: NSObject {
         (result: StringResult) in
         switch result {
         case .failure(let err):
-          NSLog("%@", err)
+          NSLog("%@", err.localizedDescription)
         case .success(let text):
           del.coiffeurController(self, setText: text)
         }
@@ -247,23 +243,20 @@ class CoiffeurController: NSObject {
     try self.readValuesFromLineArray(lines)
   }
 
-  func readValuesFromURL(_ absoluteURL: URL) throws
-  {
-    let data = try String(contentsOf: absoluteURL,
-                          encoding: String.Encoding.utf8)
+  func readValuesFromURL(_ absoluteURL: URL) throws {
+    let data = try String(contentsOf: absoluteURL, encoding: .utf8)
     try self.readValuesFromString(data)
   }
 
-  func writeValuesToURL(_ absoluteURL: URL) throws
-  {
-    throw Error("Unknown error while trying to write style to %@", absoluteURL as CVarArg)
+  func writeValuesToURL(_ absoluteURL: URL) throws {
+    throw Errors.failedToWriteStyle(absoluteURL)
   }
 
   func optionWithKey(_ key: String) -> ConfigOption?
   {
     do {
-      return try self.managedObjectContext.fetchSingle(ConfigOption.self,
-                                                       withFormat: "indexKey = %@", key)
+      return try self.managedObjectContext.fetchSingle(
+        ConfigOption.self, withFormat: "indexKey = %@", key)
     } catch _ {
       return nil
     }

@@ -73,19 +73,18 @@ extension Process {
     let status = self.terminationStatus
 
     if status == 0 {
-      if let string = String(data: outData!, encoding: String.Encoding.utf8) {
+      if let string = String(data: outData!, encoding: .utf8) {
         return StringResult(string)
       } else {
-        return StringResult(
-          Error("Failed to interpret the output of the format executable"))
+        return StringResult(Errors.formatExecutableError(nil, nil))
       }
+    } else if
+        let data = errData,
+        let errText = String(data: data, encoding: .utf8)
+    {
+      return StringResult(Errors.formatExecutableError(status, errText))
     } else {
-      if let errText = String(data: errData!, encoding: String.Encoding.utf8) {
-        return StringResult(Error("Format excutable error code %d: %@",
-                                  status, errText))
-      } else {
-        return StringResult(Error("Format excutable error code %d", status))
-      }
+      return StringResult(Errors.formatExecutableError(status, nil))
     }
   }
 
@@ -95,9 +94,7 @@ extension Process {
     ALExceptions.`try`({
       result = self._runThrowsNSException(input)
     }, catch: { (exception: NSException?) in
-      result = StringResult(
-        Error("An error while running format executable: %@",
-              exception?.reason ?? "unknown error"))
+      result = StringResult(Errors.formatExecutableError(nil, exception?.reason))
     }, finally: {})
     return result!
   }

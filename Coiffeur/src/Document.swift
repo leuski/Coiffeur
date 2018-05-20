@@ -52,33 +52,36 @@ class Document: NSDocument {
   }
 
   private func _ensureWeHaveModelOfType(
-    _ typeName: String,
-    errorFormatKey: String) throws
+    _ typeName: String) throws -> String
   {
     if let model = self.model {
-      let documentType = type(of: model).documentType
-      if typeName != documentType {
-        throw Error(errorFormatKey, typeName, documentType)
-      }
-    } else {
-      self.model = try CoiffeurController.coiffeurWithType(typeName)
+      return type(of: model).documentType
     }
+
+    self.model = try CoiffeurController.coiffeurWithType(typeName)
+    return typeName
   }
 
   override func read(from absoluteURL: URL, ofType typeName: String) throws
   {
-    try self._ensureWeHaveModelOfType(typeName,
-                                      errorFormatKey: "Cannot read content of document “%@” into document “%@”")
+    let modelTypeName = try _ensureWeHaveModelOfType(typeName)
 
-    try self.model!.readValuesFromURL(absoluteURL)
+    if modelTypeName != typeName {
+      throw Errors.cannotReadAs(typeName, modelTypeName)
+    }
+
+    try self.model?.readValuesFromURL(absoluteURL)
   }
 
   override func write(to absoluteURL: URL, ofType typeName: String) throws
   {
-    try self._ensureWeHaveModelOfType(typeName,
-                                      errorFormatKey: "Cannot write content of document “%2$@” as “%1$@”")
+    let modelTypeName = try _ensureWeHaveModelOfType(typeName)
 
-    try self.model!.writeValuesToURL(absoluteURL)
+    if modelTypeName != typeName {
+      throw Errors.cannotWriteAs(typeName, modelTypeName)
+    }
+
+    try self.model?.writeValuesToURL(absoluteURL)
   }
 
   override class var autosavesInPlace: Bool

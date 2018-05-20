@@ -21,71 +21,60 @@
 
 import Foundation
 
-class Error: NSError {
-  class var domain: String { return "CoiffeurErrorDomain" }
+enum Errors: Swift.Error {
+  case unknownType(String)
+  case unknownData(URL)
+  case failedLocateExecutable(URL)
+  case noFormatExecutableURL
+  case failedToInitializeStoreCoordinator
+  case failedToInitializeManagedObjectModel
+  case failedToWriteStyle(URL)
+  case failedToFindFile(String, String)
 
-  init(localizedDescription: String)
-  {
-    super.init(domain: Error.domain, code: 0,
-               userInfo: [NSLocalizedDescriptionKey: localizedDescription])
-  }
+  case formatExecutableError(Int32?, String?)
+  case cannotReadAs(String, String)
+  case cannotWriteAs(String, String)
 
-  convenience init(_ format: String, _ args: CVarArg...)
-  {
-    self.init(localizedDescription: String(
-      format: NSLocalizedString(format, comment: ""), arguments: args))
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-  }
-}
-
-extension NSError {
-  func assignTo(_ outError: NSErrorPointer?)
-  {
-    if outError != nil {
-      outError??.pointee = self
+  var localizedDescription: String {
+    switch self {
+    case .unknownType(let type):
+      return "Unknown type \(type)."
+    case .unknownData(let url):
+      return "Unknown data at URL \(url)."
+    case .failedLocateExecutable(let url):
+      return "Cannot locate executable at \(url.path). Using the default application."
+    case .noFormatExecutableURL:
+      return "Format executable URL is not specified."
+    case .failedToInitializeStoreCoordinator:
+      return "Failed to initialize coiffeur persistent store coordinator."
+    case .failedToInitializeManagedObjectModel:
+      return "Failed to initialize coiffeur managed object model."
+    case .failedToWriteStyle(let url):
+      return "Unknown error while trying to write style to \(url.path)."
+    case .failedToFindFile(let name, let ext):
+      return "Cannot locate \(name).\(ext)."
+    case .formatExecutableError(let status, let text):
+      let errText = (text ?? "an unknown error")
+        + (status == nil ? "" : " (code \(status ?? 0))")
+      return "Format executable returned \(errText)."
+    case .cannotReadAs(let fileType, let modelType):
+      return "Cannot read content of document “\(fileType)” as “\(modelType)”."
+    case .cannotWriteAs(let fileType, let modelType):
+      return "Cannot write content of document “\(modelType)” as “\(fileType)”."
     }
   }
 }
 
 // Compiler crashes if I use this as of Swift 1.2
-//enum Result<T:AnyObject> {
-//  case Success(T)
-//  case Failure(NSError)
-//  init(_ value:T)
-//  {
-//    self = .Success(value)
-//  }
-//  init(_ error:NSError)
-//  {
-//    self = .Failure(error)
-//  }
-//}
-
-enum StringResult {
-  case success(String)
-  case failure(NSError)
-  init(_ value: String)
-  {
+enum Result<T> {
+  case success(T)
+  case failure(Swift.Error)
+  init(_ value: T) {
     self = .success(value)
   }
-  init(_ error: NSError)
-  {
+  init(_ error: Swift.Error) {
     self = .failure(error)
   }
 }
 
-enum URLResult {
-  case success(URL)
-  case failure(NSError)
-  init(_ value: URL)
-  {
-    self = .success(value)
-  }
-  init(_ error: NSError)
-  {
-    self = .failure(error)
-  }
-}
+typealias StringResult = Result<String>

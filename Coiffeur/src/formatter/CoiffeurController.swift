@@ -85,12 +85,10 @@ class CoiffeurController: NSObject {
       return self.defaultExecutableURL
     }
     set (value) {
-      let defaults = UserDefaults.standard
-      let url = self.defaultExecutableURL
-      if value == nil || value == url {
-        defaults.removeObject(forKey: self.currentExecutableURLUDKey)
+      if let value = value, value != self.defaultExecutableURL {
+        UserDefaults.standard.set(value, forKey: self.currentExecutableURLUDKey)
       } else {
-        defaults.set(value!, forKey: self.currentExecutableURLUDKey)
+        UserDefaults.standard.removeObject(forKey: self.currentExecutableURLUDKey)
       }
     }
   }
@@ -317,16 +315,13 @@ class CoiffeurController: NSObject {
 
   private func _cluster(_ tokenLimit: Int)
   {
-    for child in self.root!.children  {
-      guard let section = child as? ConfigSection else { continue }
-
+    for case let section as ConfigSection in self.root?.children ?? [] {
       var index = [String: [ConfigOption]]()
 
-      for node in section.children {
-        guard let option = node as? ConfigOption else { continue }
+      for case let option as ConfigOption in section.children {
 
-        let (head, tail) = _splitTokens(option.title,
-                                        boundary: tokenLimit, stem: true)
+        let (head, tail) = _splitTokens(
+          option.title, boundary: tokenLimit, stem: true)
 
         if tail.isEmpty {
           continue
@@ -338,7 +333,7 @@ class CoiffeurController: NSObject {
           index[key] = [ConfigOption]()
         }
 
-        index[key]!.append(option)
+        index[key]?.append(option)
       }
 
       for (key, list) in index {
@@ -367,9 +362,7 @@ class CoiffeurController: NSObject {
 
   private func _makeOthersSubsection()
   {
-    for child in self.root!.children  {
-      guard let section = child as? ConfigSection else { continue }
-
+    for case let section as ConfigSection in self.root?.children ?? [] {
       var index = [ConfigOption]()
       var foundSubSection = false
 

@@ -256,7 +256,7 @@ extension ConfigSection {
         indexString = "\((sectionNode?.index ?? 0)+1).\(indexString)"
         sectionNode = sectionNode?.parent as? ConfigSection
       }
-      let digitsInCount = _digitsIn(section.parent!.children.count)
+      let digitsInCount = _digitsIn(section.parent?.children.count)
       let digitsInIndex = _digitsIn(section.index+1)
       let numberMargin = digitsInCount - digitsInIndex
       for _ in 0 ..< numberMargin {
@@ -276,9 +276,9 @@ extension ConfigSection {
     didChangeValue(forKey: "filteredChildren")
   }
 
-  private func _digitsIn(_ number: Int) -> Int
+  private func _digitsIn(_ number: Int?) -> Int
   {
-    return Int(floor(log10(Double(number))))
+    return Int(floor(log10(Double(number ?? 1))))
   }
 }
 

@@ -66,7 +66,7 @@ class CoiffeurView: NSViewController {
         item.title = section.title
         item.indentationLevel  = section.depth - 1
         item.representedObject = node
-        self.jumpMenu.menu!.addItem(item)
+        self.jumpMenu.menu?.addItem(item)
       }
     }
   }
@@ -230,28 +230,19 @@ extension CoiffeurView: NSOutlineViewDelegate {
     }
   }
 
+  private func _section(_ notification: Notification) -> ConfigSection? {
+    return (notification.userInfo?["NSObject"] as AnyObject)
+      .representedObject as? ConfigSection
+  }
+
   // records the state of the node in the model
   func outlineViewItemDidExpand(_ notification: Notification)
   {
-    if let section = (notification.userInfo!["NSObject"
-      as NSString]! as AnyObject).representedObject as? ConfigSection
-    {
-      section.expanded = true
-    }
+    _section(notification)?.expanded = true
   }
 
   func outlineViewItemDidCollapse(_ notification: Notification)
   {
-    if let section = (notification.userInfo!["NSObject"
-      as NSString]! as AnyObject).representedObject as? ConfigSection
-    {
-      section.expanded = false
-    }
+    _section(notification)?.expanded = false
   }
-
-  // - (BOOL)outlineView:(NSOutlineView *)outlineView
-  // shouldShowOutlineCellForItem:(id)item
-  // {
-  //      return false
-  // }
 }

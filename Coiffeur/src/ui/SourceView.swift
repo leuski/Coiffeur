@@ -36,9 +36,10 @@ class SourceView: NSViewController {
   @objc dynamic var fileURL: URL? {
     didSet {
       if let url = self.fileURL {
-        UserDefaults.standard.set(url,
-                                  forKey: Private.LastSourceURLUDKey)
-        if let uti = try? NSWorkspace.shared.type(ofFile: url.path),
+        UserDefaults.standard.set(
+          url, forKey: Private.LastSourceURLUDKey)
+        if
+          let uti = try? NSWorkspace.shared.type(ofFile: url.path),
           let lang = Language.languageWithUTI(uti)
         {
           self.language = lang
@@ -78,9 +79,9 @@ class SourceView: NSViewController {
         self.overviewScroller?.regions = []
       } else {
         self.sourceTextViewScrollLocation = scrollLocation
-        let diffs = self.diffMatchPatch.diff_main(ofOldString: oldString,
-                                                  andNewString: string)
-        self.overviewScroller?.regions = self._showDiffs(diffs!, intensity: 1)
+        let diffs = self.diffMatchPatch.diff_main(
+          ofOldString: oldString, andNewString: string) ?? []
+        self.overviewScroller?.regions = self._showDiffs(diffs, intensity: 1)
       }
     }
   }
@@ -106,22 +107,25 @@ class SourceView: NSViewController {
   private func _scrollLocation(_ textView: NSTextView)
     -> (visRect: NSRect, maxScrollLocaiton: CGFloat)
   {
-    let textView: NSTextView     = self.fragaria.textView()
-    let textStorage   = textView.textStorage!
-    let layoutManager = textView.layoutManager!
+    guard
+      let textStorage   = textView.textStorage,
+      let layoutManager = textView.layoutManager,
+      let textContainer = textView.textContainer,
+      let font          = textView.font
+      else { return (textView.visibleRect, 0) }
 
     // first we need the document height.
     // textView lays text out lazily, so we cannot just use the textView frame
     // to get the height. It's not computed yet.
 
-    layoutManager.ensureLayout(for: textView.textContainer!)
+    layoutManager.ensureLayout(for: textContainer)
 
     // Here we are taking advantage of two assumptions:
     // 1. the text is not wrapping, so we only count hard line breaks
     let oldDocumentLineCount = textStorage.string.lineCount()
 
     // 2. the text is laid out in one font size, so the line height is constant
-    let lineHeight = layoutManager.defaultLineHeight(for: textView.font!)
+    let lineHeight = layoutManager.defaultLineHeight(for: font)
 
     let frameHeight = CGFloat(oldDocumentLineCount) * lineHeight
     let visRect = textView.visibleRect
@@ -134,8 +138,9 @@ class SourceView: NSViewController {
     return (visRect:visRect, maxScrollLocaiton:maxScrollLocation)
   }
 
-  override init(nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "SourceView"),
-                bundle nibBundleOrNil: Bundle? = nil)
+  override init(
+    nibName nibNameOrNil: NSNib.Name? = NSNib.Name(rawValue: "SourceView"),
+    bundle nibBundleOrNil: Bundle? = nil)
   {
     self.diffMatchPatch = DiffMatchPatch()
     self.fragaria       = MGSFragaria()
@@ -160,20 +165,23 @@ class SourceView: NSViewController {
 
     let textView: NSTextView = self.fragaria.textView()
     textView.isEditable = false
-    textView.textContainer!.widthTracksTextView = false
-    textView.textContainer!.containerSize = NSSize(
+    textView.textContainer?.widthTracksTextView = false
+    textView.textContainer?.containerSize = NSSize(
       width: CGFloat.greatestFiniteMagnitude,
       height: CGFloat.greatestFiniteMagnitude)
 
-    let       scrollView       = textView.enclosingScrollView!
-    scrollView.verticalScroller = OverviewScroller(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
-    scrollView.verticalScroller!.scrollerStyle = NSScroller.Style.legacy
+    let       scrollView       = textView.enclosingScrollView
+    scrollView?.verticalScroller = OverviewScroller(
+      frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+    scrollView?.verticalScroller?.scrollerStyle = NSScroller.Style.legacy
   }
 
   private func _showDiffs(_ diffs: NSMutableArray, intensity: CGFloat)
     -> [OverviewRegion]
   {
-    let textStorage = self.fragaria.textView().textStorage!
+    guard let textStorage = self.fragaria.textView().textStorage else {
+      return []
+    }
 
     textStorage.removeAttribute(
       .backgroundColor, range: NSRange(location: 0, length: textStorage.length))
@@ -368,10 +376,15 @@ extension SourceView {
 
     openPanel.allowsOtherFileTypes = false
 
-    openPanel.beginSheetModal(for: self.view.window!) {
+    guard let window = self.view.window else { return }
+
+    openPanel.beginSheetModal(for: window) {
       (result: NSApplication.ModalResponse) in
-      if result.rawValue == NSFileHandlingPanelOKButton {
-        self.tryLoadSourceFromURL(openPanel.url!)
+      if
+        result.rawValue == NSFileHandlingPanelOKButton,
+        let url = openPanel.url
+      {
+        self.tryLoadSourceFromURL(url)
       }
     }
   }
@@ -391,27 +404,27 @@ extension SourceView {
       return
     }
 
-    let url = Bundle.main.url(
-      forResource: Private.SampleFileName,
-      withExtension: Private.ObjectiveCPPExtension,
-      subdirectory: Private.SamplesFolderName)!
-
-    if !self.tryLoadSourceFromURL(url) {
-      NSException(name: NSExceptionName(rawValue: "No Source"),
-                  reason: "Failed to load the sample source file",
-                  userInfo: nil).raise()
+    if
+      let url = Bundle.main.url(
+        forResource: Private.SampleFileName,
+        withExtension: Private.ObjectiveCPPExtension,
+        subdirectory: Private.SamplesFolderName),
+      !self.tryLoadSourceFromURL(url)
+    {
+      NSApp.presentError(
+        Errors.failedToFindFile(
+          Private.SampleFileName, Private.ObjectiveCPPExtension))
     }
   }
 
   private class func _knownSampleURLs() -> [URL]
   {
-    let resourcesURL = Bundle.main.resourceURL!
-    let baseURL = resourcesURL.appendingPathComponent(
-      Private.SamplesFolderName)
-    // TODO
-    if let urls = try? FileManager.default.contentsOfDirectory(
-      at: baseURL, includingPropertiesForKeys: nil,
-      options: .skipsHiddenFiles)
+    if
+      let baseURL = Bundle.main.resourceURL?
+        .appendingPathComponent(Private.SamplesFolderName),
+      let urls = try? FileManager.default.contentsOfDirectory(
+        at: baseURL, includingPropertiesForKeys: nil,
+        options: .skipsHiddenFiles)
     {
       return urls
     }

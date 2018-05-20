@@ -71,11 +71,12 @@ class Language: NSObject {
   {
     if
       let uti = UserDefaults.standard.string(forKey: Language.UserDefaultsKey),
-      let language = Language.languageWithUTI(uti)
+      let language = languageWithUTI(uti)
     {
-        return language
+      return language
     }
-    return Language.languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String)!
+    return languageWithUTI(kUTTypeObjectiveCPlusPlusSource as String) ??
+      { fatalError("Missing language description for C++") }()
   }
 
   private init(dictionary: [String: AnyObject])

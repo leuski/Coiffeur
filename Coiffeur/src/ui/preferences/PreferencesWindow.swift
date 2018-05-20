@@ -92,17 +92,10 @@ class PreferencesWindow: NSWindowController {
   var selectedPane: Pane? {
     get { return storedSelectedPane }
     set (newSelectedPane) {
-      if (storedSelectedPane == nil
-        && newSelectedPane == nil)
-        || (storedSelectedPane != nil
-          && newSelectedPane != nil
-          && storedSelectedPane!.toolbarIdentifier
-          == newSelectedPane!.toolbarIdentifier)
-      {
-        return
-      }
+      if storedSelectedPane?.toolbarIdentifier
+        == newSelectedPane?.toolbarIdentifier { return }
 
-      let window = self.window!
+      guard let window = self.window else { return }
 
       if let currentPane = storedSelectedPane {
         if !currentPane.commitEditing() {
@@ -115,34 +108,35 @@ class PreferencesWindow: NSWindowController {
 
       self.storedSelectedPane = newSelectedPane
 
-      if let currentPane = self.storedSelectedPane {
-        window.toolbar?.selectedItemIdentifier = NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
-        window.title = currentPane.toolbarItemLabel
-        UserDefaults.standard.set(
-          currentPane.toolbarIdentifier, forKey: selectedPaneUDKey)
+      guard let currentPane = self.storedSelectedPane else { return }
 
-        let childView = currentPane.view
-        childView.translatesAutoresizingMaskIntoConstraints = false
+      window.toolbar?.selectedItemIdentifier =
+        NSToolbarItem.Identifier(rawValue: currentPane.toolbarIdentifier)
+      window.title = currentPane.toolbarItemLabel
+      UserDefaults.standard.set(
+        currentPane.toolbarIdentifier, forKey: selectedPaneUDKey)
 
-        let childDesiredFrame = childView.frame
+      let childView = currentPane.view
+      childView.translatesAutoresizingMaskIntoConstraints = false
 
-        var containerFrame = window.contentView!.frame
-        window.contentView = childView
-        window.recalculateKeyViewLoop()
-        if window.firstResponder == self.window {
-          window.makeFirstResponder(currentPane.initialKeyView)
-        }
+      let childDesiredFrame = childView.frame
 
-        containerFrame.size.height = childDesiredFrame.size.height
-        let desiredWindowFrame = window.frameRect(forContentRect: containerFrame)
-        var currentWindowFrame = window.frame
-        currentWindowFrame.origin.y += currentWindowFrame.size.height
-          - desiredWindowFrame.size.height
-        currentWindowFrame.size.height = desiredWindowFrame.size.height
+      guard var containerFrame = window.contentView?.frame else { return }
 
-        window.setFrame(currentWindowFrame, display: true, animate: window.isVisible)
+      window.contentView = childView
+      window.recalculateKeyViewLoop()
+      if window.firstResponder == self.window {
+        window.makeFirstResponder(currentPane.initialKeyView)
       }
 
+      containerFrame.size.height = childDesiredFrame.size.height
+      let desiredWindowFrame = window.frameRect(forContentRect: containerFrame)
+      var currentWindowFrame = window.frame
+      currentWindowFrame.origin.y += currentWindowFrame.size.height
+        - desiredWindowFrame.size.height
+      currentWindowFrame.size.height = desiredWindowFrame.size.height
+
+      window.setFrame(currentWindowFrame, display: true, animate: window.isVisible)
     }
   }
 
@@ -180,7 +174,7 @@ class PreferencesWindow: NSWindowController {
 
   override func showWindow(_ sender: Any?)
   {
-    self.window!.makeKeyAndOrderFront(sender)
+    self.window?.makeKeyAndOrderFront(sender)
   }
 
   func paneWithID(_ paneIdentifier: String?) -> Pane?
@@ -209,7 +203,7 @@ class PreferencesWindow: NSWindowController {
 extension PreferencesWindow: NSWindowDelegate {
   func windowShouldClose(_ sender: NSWindow) -> Bool
   {
-    return self.selectedPane == nil || self.selectedPane!.commitEditing()
+    return self.selectedPane?.commitEditing() ?? true
   }
 }
 

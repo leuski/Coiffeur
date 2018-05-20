@@ -80,32 +80,40 @@ class ClangFormatController: CoiffeurController {
       && nil != keyValue.firstMatchInString(string)
   }
 
+  private static func _options() throws -> String {
+    if let options = Private.Options { return options }
+
+    guard let docURL = Bundle(for: self).url(
+      forResource: Private.DocumentationFileName,
+      withExtension: Private.DocumentationFileExtension)
+      else
+    {
+      throw Errors.failedToFindFile(
+        Private.DocumentationFileName, Private.DocumentationFileExtension)
+    }
+
+    let options = try String(contentsOf: docURL, encoding: .utf8)
+    Private.Options = options
+    return options
+  }
+
+  private static func _defaultValues(_ controller: CoiffeurController) throws
+    -> String
+  {
+    if let defaultValues = Private.DefaultValues { return defaultValues }
+
+    let defaultValues: String = try Process(
+      controller.executableURL,
+      arguments: [Private.ShowDefaultConfigArgument]).run()
+    Private.DefaultValues = defaultValues
+    return defaultValues
+  }
+
   override class func createCoiffeur() throws -> CoiffeurController
   {
     let controller = try super.createCoiffeur()
-
-    if Private.Options == nil {
-      let bundle = Bundle(for: self)
-      if let docURL = bundle.url(forResource: Private.DocumentationFileName,
-                                 withExtension: Private.DocumentationFileExtension)
-      {
-        Private.Options = try String(contentsOf: docURL,
-                                     encoding: String.Encoding.utf8)
-      } else {
-        throw Errors.failedToFindFile(Private.DocumentationFileName,
-          Private.DocumentationFileExtension)
-      }
-    }
-
-    try controller.readOptionsFromString(Private.Options!)
-
-    if Private.DefaultValues == nil {
-      Private.DefaultValues = try Process(controller.executableURL,
-                                          arguments: [Private.ShowDefaultConfigArgument]).run()
-    }
-
-    try controller.readValuesFromString(Private.DefaultValues!)
-
+    try controller.readOptionsFromString(try _options())
+    try controller.readValuesFromString(try _defaultValues(controller))
     return controller
   }
 
@@ -124,17 +132,14 @@ class ClangFormatController: CoiffeurController {
       "\\\\code(.*?)\\\\endcode(\\s)")
 
     while true {
-      let match = lif.firstMatchInString(rst)
-      if match == nil {
-        break
-      }
+      guard let match = lif.firstMatchInString(rst) else { break }
 
-      var code = rst.substringWithRange(match!.range(at: 1))
+      var code = rst.substringWithRange(match.range(at: 1))
       code = code.replacingOccurrences(of: "\n", with: endl)
       code = code.replacingOccurrences(of: " ", with: space)
-      code += rst.substringWithRange(match!.range(at: 2))
-      rst = rst.stringByReplacingCharactersInRange(match!.range(at: 0),
-                                                   withString: code)
+      code += rst.substringWithRange(match.range(at: 2))
+      rst = rst.stringByReplacingCharactersInRange(
+        match.range(at: 0), withString: code)
     }
 
     // preserve double nl, breaks before * and - (list items)

@@ -58,11 +58,10 @@ class OverviewScroller: NSScroller {
   override func drawKnobSlot(in slotRect: NSRect, highlight flag: Bool) {
     super.drawKnobSlot(in: slotRect, highlight: flag)
 
-    if self.regions.isEmpty {
+    guard let lastRegion = self.regions.last else {
       return
     }
 
-    let lastRegion = self.regions.last!
     let lineCount = lastRegion.lineRange.location
 
     if lineCount == 0 {

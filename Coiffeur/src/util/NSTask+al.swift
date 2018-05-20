@@ -40,8 +40,8 @@ extension Process {
 
     self.launchPath = url.path
     self.arguments = arguments
-    if workingDirectory != nil {
-      self.currentDirectoryPath = workingDirectory!
+    if let workingDirectory = workingDirectory {
+      self.currentDirectoryPath = workingDirectory
     }
 
     self.standardOutput = Pipe()
@@ -52,20 +52,20 @@ extension Process {
   private func _runThrowsNSException(_ input: String?) -> StringResult
   {
     let writeHandle = input != nil
-      ? (self.standardInput! as AnyObject).fileHandleForWriting
+      ? (self.standardInput as? Pipe)?.fileHandleForWriting
       : nil
 
     self.launch()
 
-    if writeHandle != nil {
-      writeHandle?.write(input!.data(using: String.Encoding.utf8)!)
+    if let input = input, let data = input.data(using: .utf8) {
+      writeHandle?.write(data)
       writeHandle?.closeFile()
     }
 
-    let outHandle = (self.standardOutput! as AnyObject).fileHandleForReading
+    let outHandle = (self.standardOutput as? Pipe)?.fileHandleForReading
     let outData = outHandle?.readDataToEndOfFile()
 
-    let errHandle = (self.standardError! as AnyObject).fileHandleForReading
+    let errHandle = (self.standardError as? Pipe)?.fileHandleForReading
     let errData = errHandle?.readDataToEndOfFile()
 
     self.waitUntilExit()
@@ -73,7 +73,7 @@ extension Process {
     let status = self.terminationStatus
 
     if status == 0 {
-      if let string = String(data: outData!, encoding: .utf8) {
+      if let data = outData, let string = String(data: data, encoding: .utf8) {
         return StringResult(string)
       } else {
         return StringResult(Errors.formatExecutableError(nil, nil))
@@ -96,7 +96,7 @@ extension Process {
     }, catch: { (exception: NSException?) in
       result = StringResult(Errors.formatExecutableError(nil, exception?.reason))
     }, finally: {})
-    return result!
+    return result ?? StringResult(Errors.formatExecutableError(nil, nil))
   }
 
   /**

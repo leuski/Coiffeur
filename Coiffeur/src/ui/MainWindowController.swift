@@ -79,8 +79,8 @@ class MainWindowController: NSWindowController {
       styleView = CoiffeurView()
       splitView.subviews.insert(styleView.view, at: 0)
       window?.initialFirstResponder = styleView.optionsView
-      styleView.representedObject = newDocument.model!
-      newDocument.model!.delegate = sourceView
+      styleView.representedObject = newDocument.model
+      newDocument.model?.delegate = sourceView
     }
 
     self.uncrustify()
@@ -130,7 +130,10 @@ extension MainWindowController: NSWindowDelegate
     var frame = newFrame
     let target: NSWindow.CollectionBehavior =
       [.fullScreenPrimary, .fullScreenAuxiliary]
-    if self.window!.collectionBehavior.isDisjoint(with: target) {
+    if
+      let myWindow = self.window,
+      myWindow.collectionBehavior.isDisjoint(with: target)
+    {
       frame.size.width = min(frame.size.width, 1200)
     }
     return frame

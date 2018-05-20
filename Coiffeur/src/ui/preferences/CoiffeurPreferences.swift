@@ -79,7 +79,8 @@ class CoiffeurPreferences: DefaultPreferencePane {
   override func viewDidLoad() {
     super.viewDidLoad()
     let height = self.tableView.bounds.size.height + 2
-    let delta = self.tableView.enclosingScrollView!.frame.size.height - height
+    let delta = self.tableView.enclosingScrollView?.frame.size.height ?? 0
+      - height
     self.constraint.constant -= delta
     self.view.frame.size.height -= delta
   }
@@ -127,7 +128,7 @@ class TransparentTableView: NSTableView {
 
   override func awakeFromNib()
   {
-    self.enclosingScrollView!.drawsBackground = false
+    self.enclosingScrollView?.drawsBackground = false
   }
 
   override var isOpaque: Bool {

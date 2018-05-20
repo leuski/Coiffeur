@@ -31,8 +31,8 @@ extension UserDefaults {
   }
   func setArchivedObject<T: AnyObject>(_ value: T?, forKey key: String)
   {
-    if value != nil {
-      self.set(NSArchiver.archivedData(withRootObject: value!), forKey: key)
+    if let value = value {
+      self.set(NSArchiver.archivedData(withRootObject: value), forKey: key)
     } else {
       self.removeObject(forKey: key)
     }
@@ -81,9 +81,10 @@ class ColorAndFontPreferences: DefaultPreferencePane {
     FragariaColor(MGSFragariaPrefsInvisibleCharactersColourWell, "Invisibles")
   ]
 
-  @objc dynamic var font: NSFont? {
+  @objc dynamic var font: NSFont {
     get {
       return UserDefaults.standard.archivedObjectForKey(MGSFragariaPrefsTextFont)
+        ?? NSFont.systemFont(ofSize: NSFont.systemFontSize)
     }
     set (value) {
       UserDefaults.standard.setArchivedObject(
@@ -97,21 +98,18 @@ class ColorAndFontPreferences: DefaultPreferencePane {
   }
 
   @objc dynamic var fontName: String {
-    if let font = self.font {
-      return "\(font.displayName!) \(font.pointSize) pts"
-    }
-    return ""
+    return "\(font.displayName ?? "unknown") \(font.pointSize) pts"
   }
 
   override func changeFont(_ sender: Any?)
   {
-    self.font = NSFontManager.shared.convert(self.font!)
+    self.font = NSFontManager.shared.convert(self.font)
   }
 
   @IBAction func modifyFont(_ sender: AnyObject?)
   {
-    NSFontManager.shared.setSelectedFont(self.font!,
-                                         isMultiple: false)
+    NSFontManager.shared.setSelectedFont(
+      self.font, isMultiple: false)
     NSFontManager.shared.orderFrontFontPanel(sender)
   }
 }

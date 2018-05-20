@@ -38,21 +38,21 @@ extension NSTreeController {
 
       mutating func next() -> NSTreeNode?
       {
-        while !stack.isEmpty {
-          var last = stack.last!
-          if let node = last.next() {
-            stack[stack.count-1] = last
-            if let array = node.children {
-              stack.append(array.makeIterator())
-            }
-            return node
-          } else {
+        for index in stride(from: stack.count-1, through: 0, by: -1) {
+          guard let node = stack[index].next() else {
             stack.removeLast()
+            continue
           }
+
+          if let array = node.children {
+            stack.append(array.makeIterator())
+          }
+
+          return node
         }
+
         return nil
       }
-
     }
 
     typealias Iterator = NodeGenerator

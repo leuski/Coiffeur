@@ -62,11 +62,13 @@ class ConfigRowView: NSTableRowView {
       var backgroundColor = self.backgroundColor
       if self.locations.count > 1 {
         // if this is a subsection, add a splash of supersection color
-        backgroundColor = backgroundColor.blended(withFraction: 0.1,
-                                                  of: locations.first!.color)!
+        backgroundColor = backgroundColor.blended(
+          withFraction: 0.1, of: locations[0].color)
+          ?? backgroundColor
       }
       // make it a bit darker
-      backgroundColor = backgroundColor.shadow(withLevel: 0.025)!
+      backgroundColor = backgroundColor.shadow(withLevel: 0.025)
+        ?? backgroundColor
       if self.isFloating {
         // if the row is floating, add a bit of transparency
         backgroundColor = backgroundColor.withAlphaComponent(0.75)
@@ -94,7 +96,7 @@ class ConfigRowView: NSTableRowView {
 
     // if we are a group, underline the title with the appropriate color
     if self.isGroupRowStyle && locations.count == 1 {
-      locations.last!.color.set()
+      locations.last?.color.set()
       let path = NSBezierPath()
       let lineLength = 200
       let hOffset = 3 + 5*(locations.count-1)
@@ -151,13 +153,16 @@ class ConfigRowView: NSTableRowView {
 
     // start with the regular selection color
     var color = NSColor.selectedMenuItemColor
-    // add a hint of the current sectio color
-    color = color.blended(withFraction: 0.25,
-                          of: locations.first!.color)!
+    // add a hint of the current section color
+    if locations.count > 0 {
+      color = color.blended(
+        withFraction: 0.25, of: locations[0].color) ?? color
+    }
     if self.interiorBackgroundStyle == .light {
       // if we are out of focus, lighten the color
-      color = color.blended(withFraction: 0.9,
-                            of: NSColor(calibratedWhite: 0.9, alpha: 1))!
+      color = color.blended(
+        withFraction: 0.9, of: NSColor(calibratedWhite: 0.9, alpha: 1))
+      ?? color
     }
     // make sure it is not transparent
     color = color.withAlphaComponent(1)

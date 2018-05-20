@@ -26,6 +26,6 @@ class BorderlessTextView: NSTextView {
   override func awakeFromNib()
   {
     self.textContainerInset = NSSize(width: 0, height: 0)
-    self.textContainer!.lineFragmentPadding = 0
+    self.textContainer?.lineFragmentPadding = 0
   }
 }

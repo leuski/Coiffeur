@@ -76,22 +76,29 @@ class UncrustifyController: CoiffeurController {
     return nil != keyValue.firstMatchInString(string)
   }
 
+  private static func _options(_ controller: CoiffeurController) throws
+    -> String
+  {
+    if let options = Private.Options { return options }
+
+    let options: String = try Process(
+      controller.executableURL, arguments: [Private.ShowDocumentationArgument])
+      .run()
+
+    Private.Options = options
+
+    if let uncrustifyController = controller as? UncrustifyController {
+      uncrustifyController.versionString = try Process(
+        controller.executableURL, arguments: [Private.VersionArgument]).run()
+    }
+
+    return options
+  }
+
   override class func createCoiffeur() throws -> CoiffeurController
   {
     let controller = try super.createCoiffeur()
-
-    if Private.Options == nil {
-      Private.Options = try Process(controller.executableURL,
-                                    arguments: [Private.ShowDocumentationArgument]).run()
-
-      if let uncrustifyController = controller as? UncrustifyController {
-        uncrustifyController.versionString = try Process(controller.executableURL,
-                                                         arguments: [Private.VersionArgument]).run()
-      }
-    }
-
-    try controller.readOptionsFromString(Private.Options!)
-
+    try controller.readOptionsFromString(try _options(controller))
     return controller
   }
 
